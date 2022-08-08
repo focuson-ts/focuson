@@ -102,8 +102,8 @@ export function isSqlMutationThatIsAList ( s: MutationDetail ): s is SqlMutation
   return s.type === 'sql' && a.list
 }
 
-export function isMutationThatIsaList(m: MutationDetail): m is (SqlMutationThatIsAList | SelectMutation) {
-  return isSqlMutationThatIsAList(m) || isSelectMutationThatIsAList(m)
+export function isMutationThatIsaList ( m: MutationDetail ): m is (SqlMutationThatIsAList | SelectMutation) {
+  return isSqlMutationThatIsAList ( m ) || isSelectMutationThatIsAList ( m )
 }
 
 export interface StoredProcedureMutation {
@@ -313,9 +313,13 @@ export function requiredmentCheckCodeForJava ( paramsFromCall: MutationParam[], 
 export function nameOrSetParam ( m: InputMutationParam ) {
   const a: any = m
   if ( a.setParam ) return a.setParam
-  if ( isBodyMutationParam ( m ) && m.ifNull ) return `ognlForBodyAsJson.getStringOr(bodyAsJson, "${m.path}", "${m.ifNull}")`
+  if ( isBodyMutationParam ( m ) && m.ifNull ) return `ognlForBodyAsJson.getStringOr(bodyAsJson, "${m.path}", "${m.ifNull}", ${!!m.emptyStringCountsAsNull})`
   if ( isBodyMutationParam ( m ) ) return `ognlForBodyAsJson.getData(bodyAsJson, "${m.path}", ${m.javaType ? m.javaType : 'Object'}.class)`
-  if ( m.ifNull ) return `${a.name} == null ? "${m.ifNull}": ${a.name}`
+  if ( m.ifNull )
+    if ( m.emptyStringCountsAsNull )
+      return `${a.name} == null || ${a.name}.toString().trim().length()==0 ? "${m.ifNull}": ${a.name}`
+    else
+      return `${a.name} == null ? "${m.ifNull}": ${a.name}`
   return a.name;
 }
 export function setParam ( m: any ) {
@@ -357,6 +361,7 @@ interface SimpleInputMutationParam {
   required?: boolean;
   format?: Pattern
   ifNull?: string
+  emptyStringCountsAsNull?: boolean
 
 }
 interface FromParentMutationParam {
@@ -367,6 +372,7 @@ interface FromParentMutationParam {
   required?: boolean;
   format?: Pattern
   ifNull?: string
+  emptyStringCountsAsNull?: boolean
 
 }
 export function isParentMutationParam ( p: MutationParam ): p is FromParentMutationParam {
@@ -384,6 +390,7 @@ interface BodyMutationParam {
   required?: boolean;
   format?: Pattern;
   ifNull?: string
+  emptyStringCountsAsNull?: boolean
 }
 export function isBodyMutationParam ( p: MutationParam ): p is BodyMutationParam {
   const a: any = p

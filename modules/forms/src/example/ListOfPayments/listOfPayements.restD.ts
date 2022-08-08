@@ -128,7 +128,9 @@ export const PrintRecordRD: ExampleRestD = {
               {
                 type: 'sql', params: [
                   { type: 'input', javaType: 'Object', name: 'accountId', ifNull: ' ' },
-                  { type: 'body', javaType: 'String', path: 'a.b', ifNull: ' ' }
+                  { type: 'body', javaType: 'String', path: 'a.b', ifNull: ' ' },
+                  { type: 'input', javaType: 'Object', name: 'accountId', ifNull: ' ', emptyStringCountsAsNull: true },
+                  { type: 'body', javaType: 'String', path: 'a.b', ifNull: ' ', emptyStringCountsAsNull: true }
                 ], schema: onlySchema, sql: 'insert sqlBank1'
               },
               { type: 'sql', params: [ 'accountId' ], schema: onlySchema, sql: 'insert sqlBank2' },

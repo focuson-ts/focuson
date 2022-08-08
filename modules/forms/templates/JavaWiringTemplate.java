@@ -66,7 +66,6 @@ public class {wiringClass}  implements IManyGraphQl{
         return new DataFetcher<Res>(){
             @Override
             public Res get(DataFetchingEnvironment dataFetchingEnvironment)throws Exception{
-
                 throw new RuntimeException("Cannot find the unique fetcher for class "+ clazz.getSimpleName() + " " + dbName+ " candidates are [" + names + "]\n" +
                                            "//If this error is thrown it is often for one of the following reasons\n"+
                                            "//   Are you calling the endpoint with the correct verb? For example you have a create endpoint and you are calling it using createWithoutFetch\n"+
