@@ -333,17 +333,17 @@ export class Lenses {
   }
 
   /** This returns a lens from an array of T to the nth member of the array */
-  static nth<T> ( n: number ): Lens<T[], T> {
+  static nth<T> ( n: number ): Optional<T[], T> {
     const check = ( verb: string, length: number ) => {
       if ( n > length ) throw Error ( `Cannot Lens.nth(${n}).${verb}. arr.length is ${length}` )
     };
     if ( n < 0 ) throw Error ( `Cannot give Lens.nth a negative n [${n}]` )
-    return lens ( arr => {
-        check ( 'get', arr.length );
+    return optional ( arr => {
+        // check ( 'get', arr.length );
         return arr[ n ]
       },
       ( main, value ) => {
-        check ( 'set', main.length )
+        // check ( 'set', main.length )
         let result = main.slice ();
         result[ n ] = value;
         return result

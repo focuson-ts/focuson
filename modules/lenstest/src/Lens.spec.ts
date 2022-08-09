@@ -19,9 +19,9 @@ describe ( "Lens", () => {
   } )
   describe ( "nth", () => {
     it ( "should allow access to nth item", () => {
-      expect ( Lenses.nth ( 0 ).get ( list123 ) ).toBe ( 1 )
-      expect ( Lenses.nth ( 1 ).get ( list123 ) ).toBe ( 2 )
-      expect ( Lenses.nth ( 2 ).get ( list123 ) ).toBe ( 3 )
+      expect ( Lenses.nth ( 0 ).getOption ( list123 ) ).toBe ( 1 )
+      expect ( Lenses.nth ( 1 ).getOption ( list123 ) ).toBe ( 2 )
+      expect ( Lenses.nth ( 2 ).getOption ( list123 ) ).toBe ( 3 )
     } )
 
     it ( "should set the nth item", () => {
@@ -78,14 +78,14 @@ describe ( "Lens", () => {
       expect ( Lenses.nth ( 0 ).description ).toEqual ( '[0]' )
       expect ( Lenses.nth ( 5 ).description ).toEqual ( '[5]' )
     } )
-    describe ( "get", () => {
-      it ( "should  get", () => {
-        expect ( Lenses.nth<string> ( 0 ).get ( abc ) ).toEqual ( 'a' )
-        expect ( Lenses.nth<string> ( 1 ).get ( abc ) ).toEqual ( 'b' )
-        expect ( Lenses.nth<string> ( 2 ).get ( abc ) ).toEqual ( 'c' )
+    describe ( "getOption", () => {
+      it ( "should  getOption", () => {
+        expect ( Lenses.nth<string> ( 0 ).getOption ( abc ) ).toEqual ( 'a' )
+        expect ( Lenses.nth<string> ( 1 ).getOption ( abc ) ).toEqual ( 'b' )
+        expect ( Lenses.nth<string> ( 2 ).getOption ( abc ) ).toEqual ( 'c' )
       } )
-      it ( "should  report error if out of range", () => {
-        expect ( () => Lenses.nth<string> ( 4 ).get ( abc ) ).toThrow ( 'Cannot Lens.nth(4).get. arr.length is 3' )
+      it ( "should  return undefined if out of range", () => {
+        expect ( Lenses.nth<string> ( 4 ).getOption ( abc ) ).toEqual ( undefined )
       } )
     } )
     describe ( "set", () => {
@@ -93,8 +93,9 @@ describe ( "Lens", () => {
         expect ( Lenses.nth<string> ( 1 ).set ( abc, 'd' ) ).toEqual ( [ "a", "d", "c" ] )
         expect ( abc ).toEqual ( [ 'a', 'b', 'c' ] )
       } )
-      it ( "should report error with number out of bounds", () => {
-        expect ( () => Lenses.nth<string> ( 4 ).set ( abc, 'd' ) ).toThrow ( "Cannot Lens.nth(4).set. arr.length is 3" )
+      it ( "should set if n is too big", () => {
+        expect ( Lenses.nth<string> ( 4 ).set ( abc, 'd' ) ).toEqual (
+          [ "a", "b", "c", undefined, "d" ] )
       } )
     } )
 

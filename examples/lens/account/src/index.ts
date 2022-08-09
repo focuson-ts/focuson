@@ -50,7 +50,7 @@ let accountL = Lenses.identity<Account> ();
 const mainOrJointL = ( jointOrMain: boolean ) => jointOrMain ? accountL.focusOn ( 'main' ) : accountL.focusOn ( 'joint' )
 
 const nthOccupationL = ( jointOrMain: boolean, n: number ) =>
-  mainOrJointL ( jointOrMain ).focusOn ( 'occupations' ).chainLens ( Lenses.nth ( n ) );
+  mainOrJointL ( jointOrMain ).focusOn ( 'occupations' ).chain ( Lenses.nth ( n ) );
 
 const updateOccupationAddressWithLens = ( account: Account, jointOrMain: boolean, occupationIndex: number, address: Address ) =>
   nthOccupationL ( jointOrMain, occupationIndex ).focusOn ( 'employersAddress' ).set ( account, address );

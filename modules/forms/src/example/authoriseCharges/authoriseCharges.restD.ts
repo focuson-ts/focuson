@@ -93,3 +93,16 @@ export const SummaryOfChargesRD: ExampleRestD = {
   }
 }
 
+export const SummaryOfChargesqRD: ExampleRestD = {
+  dataDD: chargesSummaryDetailDD, //<--- has original data and editing data
+  params: { date: { ...StringParam, lens: '~/summaryOfChargesDates/date', testValue: '1/6/2016' } },
+  url: "/api/charges/details?{query}",
+  actions: [ 'updateWithoutFetch' ],
+  mutations: [
+    {restAction: 'updateWithoutFetch', mutateBy: [
+        {type: 'manual', code: `threeWayMerge.doit(connection, whoAmi, bodyAsJson)`, params:[
+          'bodyAsJson', 'whoAmI'
+          ]}
+      ], autowired: {variableName: 'threeWayMerge', class: 'com.something.ThreeWayMerge', imports: true}
+}]
+}
