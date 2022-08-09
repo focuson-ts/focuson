@@ -334,7 +334,8 @@ describe ( "generateGetSql", () => {
         "  CUST_TBL mainCustomer,",
         "  NAME_TBL jointName,",
         "  CUST_TBL jointCustomer",
-        " where mainCustomer.nameId = mainName.id and j.mainCustomerId = mainCustomer.id and jointCustomer.nameId = jointName.id and j.jointCustomerId = jointCustomer.id and  j.acc_id = ? and  j.brand_id = ? and 3=3 and 1=1 and 123=123 and ACC_TBL <> 'canceled'"
+        " where mainCustomer.nameId = mainName.id and j.mainCustomerId = mainCustomer.id and jointCustomer.nameId = jointName.id and j.jointCustomerId = jointCustomer.id and  j.acc_id = ? and  j.brand_id = ? and 3=3 and 1=1 and 123=123 and ACC_TBL <> 'canceled'",
+        " order by mainCustomer.nameId"
       ],
       [
         "select",
@@ -349,7 +350,8 @@ describe ( "generateGetSql", () => {
         "  ACC_TBL j,",
         "  CUST_TBL mainCustomer,",
         "  ADD_TBL mainAddress",
-        " where  j.acc_id = ? and  j.brand_id = ? and mainCustomer.id = mainAddress.customerId and j.mainCustomerId = mainCustomer.id and 123=123 and 2=2 and 1=1"
+        " where  j.acc_id = ? and  j.brand_id = ? and mainCustomer.id = mainAddress.customerId and j.mainCustomerId = mainCustomer.id and 123=123 and 2=2 and 1=1",
+        " order by mainCustomer.nameId"
       ],
       [
         "select",
@@ -364,7 +366,8 @@ describe ( "generateGetSql", () => {
         "  ACC_TBL j,",
         "  CUST_TBL jointCustomer,",
         "  ADD_TBL jointAddress",
-        " where  j.acc_id = ? and  j.brand_id = ? and jointCustomer.id = jointAddress.customerId and j.jointCustomerId = jointCustomer.id and 123=123"
+        " where  j.acc_id = ? and  j.brand_id = ? and jointCustomer.id = jointAddress.customerId and j.jointCustomerId = jointCustomer.id and 123=123",
+        " order by mainCustomer.nameId"
       ]
     ] )
   } )
@@ -530,7 +533,8 @@ describe ( "makeMapsForRest", () => {
         "  '  CUST_TBL mainCustomer,'+",
         "  '  NAME_TBL jointName,'+",
         "  '  CUST_TBL jointCustomer'+",
-        "  ' where mainCustomer.nameId = mainName.id and j.mainCustomerId = mainCustomer.id and jointCustomer.nameId = jointName.id and j.jointCustomerId = jointCustomer.id and  j.acc_id = ? and  j.brand_id = ? and 3=3 and 1=1 and 123=123 and ACC_TBL <> 'canceled'';",
+        "  ' where mainCustomer.nameId = mainName.id and j.mainCustomerId = mainCustomer.id and jointCustomer.nameId = jointName.id and j.jointCustomerId = jointCustomer.id and  j.acc_id = ? and  j.brand_id = ? and 3=3 and 1=1 and 123=123 and ACC_TBL <> 'canceled''+",
+        "  ' order by mainCustomer.nameId';",
         "  ",
         "  public static Optional<Map<String,Object>> getAll(Connection connection,int accountId,int brandRef) throws SQLException {",
         "  //from JointAccount.rest[jointAccount].dataDD which is of type JointAccount",
@@ -557,6 +561,7 @@ describe ( "makeMapsForRest", () => {
         "  '  NAME_TBL jointName,\\n'+",
         "  '  CUST_TBL jointCustomer\\n'+",
         "  ' where mainCustomer.nameId = mainName.id and j.mainCustomerId = mainCustomer.id and jointCustomer.nameId = jointName.id and j.jointCustomerId = jointCustomer.id and  j.acc_id = ? and  j.brand_id = ? and 3=3 and 1=1 and 123=123 and ACC_TBL <> 'canceled'\\n'+",
+        "  ' order by mainCustomer.nameId\\n'+",
         "  '\\n'+",
         "  'select\\n'+",
         "  '  j.acc_id as j_acc_id,\\n'+",
@@ -571,6 +576,7 @@ describe ( "makeMapsForRest", () => {
         "  '  CUST_TBL mainCustomer,\\n'+",
         "  '  ADD_TBL mainAddress\\n'+",
         "  ' where  j.acc_id = ? and  j.brand_id = ? and mainCustomer.id = mainAddress.customerId and j.mainCustomerId = mainCustomer.id and 123=123 and 2=2 and 1=1\\n'+",
+        "  ' order by mainCustomer.nameId\\n'+",
         "  '\\n'+",
         "  'select\\n'+",
         "  '  j.acc_id as j_acc_id,\\n'+",
@@ -585,6 +591,7 @@ describe ( "makeMapsForRest", () => {
         "  '  CUST_TBL jointCustomer,\\n'+",
         "  '  ADD_TBL jointAddress\\n'+",
         "  ' where  j.acc_id = ? and  j.brand_id = ? and jointCustomer.id = jointAddress.customerId and j.jointCustomerId = jointCustomer.id and 123=123\\n'+",
+        "  ' order by mainCustomer.nameId\\n'+",
         "  '\\n';",
         "  public static Optional<JointAccount_jointAccountMaps> get(Connection connection, int accountId, int brandRef, List<JointAccount_jointAccountMaps0> list0, List<JointAccount_jointAccountMaps1> list1) throws SQLException {",
         "      String sql = JointAccount_jointAccountMaps.sql;",
@@ -720,7 +727,8 @@ describe ( "makeMapsForRest", () => {
         "  '  ACC_TBL j,'+",
         "  '  CUST_TBL mainCustomer,'+",
         "  '  ADD_TBL mainAddress'+",
-        "  ' where  j.acc_id = ? and  j.brand_id = ? and mainCustomer.id = mainAddress.customerId and j.mainCustomerId = mainCustomer.id and 123=123 and 2=2 and 1=1';",
+        "  ' where  j.acc_id = ? and  j.brand_id = ? and mainCustomer.id = mainAddress.customerId and j.mainCustomerId = mainCustomer.id and 123=123 and 2=2 and 1=1'+",
+        "  ' order by mainCustomer.nameId';",
         "  ",
         "  public static Optional<Map<String,Object>> getAll(Connection connection,int accountId,int brandRef) throws SQLException {",
         "  //from JointAccount.rest[jointAccount].dataDD which is of type JointAccount",
@@ -747,6 +755,7 @@ describe ( "makeMapsForRest", () => {
         "  '  NAME_TBL jointName,\\n'+",
         "  '  CUST_TBL jointCustomer\\n'+",
         "  ' where mainCustomer.nameId = mainName.id and j.mainCustomerId = mainCustomer.id and jointCustomer.nameId = jointName.id and j.jointCustomerId = jointCustomer.id and  j.acc_id = ? and  j.brand_id = ? and 3=3 and 1=1 and 123=123 and ACC_TBL <> 'canceled'\\n'+",
+        "  ' order by mainCustomer.nameId\\n'+",
         "  '\\n'+",
         "  'select\\n'+",
         "  '  j.acc_id as j_acc_id,\\n'+",
@@ -761,6 +770,7 @@ describe ( "makeMapsForRest", () => {
         "  '  CUST_TBL mainCustomer,\\n'+",
         "  '  ADD_TBL mainAddress\\n'+",
         "  ' where  j.acc_id = ? and  j.brand_id = ? and mainCustomer.id = mainAddress.customerId and j.mainCustomerId = mainCustomer.id and 123=123 and 2=2 and 1=1\\n'+",
+        "  ' order by mainCustomer.nameId\\n'+",
         "  '\\n'+",
         "  'select\\n'+",
         "  '  j.acc_id as j_acc_id,\\n'+",
@@ -775,6 +785,7 @@ describe ( "makeMapsForRest", () => {
         "  '  CUST_TBL jointCustomer,\\n'+",
         "  '  ADD_TBL jointAddress\\n'+",
         "  ' where  j.acc_id = ? and  j.brand_id = ? and jointCustomer.id = jointAddress.customerId and j.jointCustomerId = jointCustomer.id and 123=123\\n'+",
+        "  ' order by mainCustomer.nameId\\n'+",
         "  '\\n';",
         "  public static Optional<JointAccount_jointAccountMaps> get(Connection connection, int accountId, int brandRef, List<JointAccount_jointAccountMaps0> list0, List<JointAccount_jointAccountMaps1> list1) throws SQLException {",
         "      String sql = JointAccount_jointAccountMaps.sql;",
@@ -896,7 +907,8 @@ describe ( "makeMapsForRest", () => {
         "  '  ACC_TBL j,'+",
         "  '  CUST_TBL jointCustomer,'+",
         "  '  ADD_TBL jointAddress'+",
-        "  ' where  j.acc_id = ? and  j.brand_id = ? and jointCustomer.id = jointAddress.customerId and j.jointCustomerId = jointCustomer.id and 123=123';",
+        "  ' where  j.acc_id = ? and  j.brand_id = ? and jointCustomer.id = jointAddress.customerId and j.jointCustomerId = jointCustomer.id and 123=123'+",
+        "  ' order by mainCustomer.nameId';",
         "  ",
         "  public static Optional<Map<String,Object>> getAll(Connection connection,int accountId,int brandRef) throws SQLException {",
         "  //from JointAccount.rest[jointAccount].dataDD which is of type JointAccount",
@@ -923,6 +935,7 @@ describe ( "makeMapsForRest", () => {
         "  '  NAME_TBL jointName,\\n'+",
         "  '  CUST_TBL jointCustomer\\n'+",
         "  ' where mainCustomer.nameId = mainName.id and j.mainCustomerId = mainCustomer.id and jointCustomer.nameId = jointName.id and j.jointCustomerId = jointCustomer.id and  j.acc_id = ? and  j.brand_id = ? and 3=3 and 1=1 and 123=123 and ACC_TBL <> 'canceled'\\n'+",
+        "  ' order by mainCustomer.nameId\\n'+",
         "  '\\n'+",
         "  'select\\n'+",
         "  '  j.acc_id as j_acc_id,\\n'+",
@@ -937,6 +950,7 @@ describe ( "makeMapsForRest", () => {
         "  '  CUST_TBL mainCustomer,\\n'+",
         "  '  ADD_TBL mainAddress\\n'+",
         "  ' where  j.acc_id = ? and  j.brand_id = ? and mainCustomer.id = mainAddress.customerId and j.mainCustomerId = mainCustomer.id and 123=123 and 2=2 and 1=1\\n'+",
+        "  ' order by mainCustomer.nameId\\n'+",
         "  '\\n'+",
         "  'select\\n'+",
         "  '  j.acc_id as j_acc_id,\\n'+",
@@ -951,6 +965,7 @@ describe ( "makeMapsForRest", () => {
         "  '  CUST_TBL jointCustomer,\\n'+",
         "  '  ADD_TBL jointAddress\\n'+",
         "  ' where  j.acc_id = ? and  j.brand_id = ? and jointCustomer.id = jointAddress.customerId and j.jointCustomerId = jointCustomer.id and 123=123\\n'+",
+        "  ' order by mainCustomer.nameId\\n'+",
         "  '\\n';",
         "  public static Optional<JointAccount_jointAccountMaps> get(Connection connection, int accountId, int brandRef, List<JointAccount_jointAccountMaps0> list0, List<JointAccount_jointAccountMaps1> list1) throws SQLException {",
         "      String sql = JointAccount_jointAccountMaps.sql;",

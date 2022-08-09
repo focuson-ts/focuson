@@ -206,6 +206,7 @@ export interface SqlLinkData {
   aliasAndTables: [ string, DBTable ][];
   fields: TableAndFieldAndAliasData<any>[],
   staticWheres: StaticWhere[],
+  orderBy: string[],
   whereLinks: WhereLink[]
 }
 export function simplifyAliasAndTables ( ats: [ string, DBTable ] [] ) {return ats.map ( ( [ alias, table ] ) => `${alias}->${table.name}` ).join ( "," )}
@@ -434,7 +435,7 @@ export function findSqlLinkDataFromRootAndDataD ( sqlRoot: SqlRoot, dataD: CompD
   const whereLinks: WhereLink[] = findWhereLinksForSqlRoot ( sqlRoot )
   const fields: TableAndFieldAndAliasData<any>[] = findAllFields ( sqlRoot, dataD, whereLinks, restParams )
   const staticWheres = findStaticWheres ( sqlRoot )
-  return { whereLinks, aliasAndTables, sqlRoot, fields, staticWheres }
+  return { whereLinks, aliasAndTables, sqlRoot, fields, staticWheres, orderBy: toArray ( sqlRoot.main.orderBy ) }
 }
 
 
@@ -468,11 +469,13 @@ export function makeWhereClause ( s: SqlLinkData ) {
 }
 
 export function generateGetSqlWithoutLeftJoin ( s: SqlLinkData ): string[] {
+  const orders = s.orderBy.length === 0 ? [] : [ ' order by ' + s.orderBy.join ( "," ) ]
   return [ `select`,
     ...indentList ( addStringToEndOfAllButLast ( ',' ) ( s.fields.map ( taf => `${taf.alias}.${taf.fieldData.dbFieldName} as ${sqlTafFieldName ( taf )}` ) ) ),
     ` from`,
     ...indentList ( addStringToEndOfAllButLast ( ',' ) ( s.aliasAndTables.map ( ( [ alias, table ] ) => `${tableName ( table )} ${alias}` ) ) ),
-    ` ${(makeWhereClause ( s ))}` ]
+    ` ${(makeWhereClause ( s ))}`,
+    ...orders ]
 }
 
 export function makeOnClause ( table: DBTable, alias: string, s: SqlLinkData ): string {
@@ -506,13 +509,16 @@ function makeWhereClauseForLeftJoinQuery ( s: SqlLinkData ): string {
 }
 
 export function generateGetSqlWithLeftJoin ( s: SqlLinkData ): string[] {
+  const orders = s.orderBy.length === 0 ? [] : [ ' order by ' + s.orderBy.join ( "," ) ]
   const sortedAliasAndTables = s.aliasAndTables.slice ( 1 ).reverse ()
   sortedAliasAndTables.unshift ( s.aliasAndTables[ 0 ] )
   return [ `select`,
     ...indentList ( addStringToEndOfAllButLast ( ',' ) ( s.fields.map ( taf => `${taf.alias}.${taf.fieldData.dbFieldName} as ${sqlTafFieldName ( taf )}` ) ) ),
     ` from`,
     ...indentList ( (addStringToStartOfAllButFirst ( 'LEFT JOIN ' ) ( sortedAliasAndTables.map ( ( [ alias, table ] ) =>
-      `${(makeOnClause ( table, alias, s ))}` ) )) ), makeWhereClauseForLeftJoinQuery ( s ) ]
+      `${(makeOnClause ( table, alias, s ))}` ) )) ),
+    makeWhereClauseForLeftJoinQuery ( s ),
+    ...orders ]
 }
 
 export const findAllTableAndFieldsIn = <G> ( rdps: RestDefnInPageProperties<G>[] ) => unique ( rdps.flatMap ( rdp => {
@@ -665,22 +671,22 @@ function newMap ( mapName: string, childCount: number, path: number[] ) {
   return `new ${mapName}(${[ 'rs', ...ints ( childCount ).map ( i => `list${i}` ) ].join ( "," )})`
 }
 
-function makeGetRestForRoot<B, G> ( params: JavaWiringParams,p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, childCount: number, queryParams: JavaQueryParamDetails[] ) {
-  return makeGetRestForMainOrChild (params, p, restName, [], childCount, queryParams, isRepeatingDd ( rdp.rest.dataDD ) )
+function makeGetRestForRoot<B, G> ( params: JavaWiringParams, p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, childCount: number, queryParams: JavaQueryParamDetails[] ) {
+  return makeGetRestForMainOrChild ( params, p, restName, [], childCount, queryParams, isRepeatingDd ( rdp.rest.dataDD ) )
 }
 
-function makeGetRestForChild<B, G> ( params: JavaWiringParams,p: RefD<G>, restName: string, path: number[], childCount: number, queryParams: JavaQueryParamDetails[] ) {
-  return makeGetRestForMainOrChild ( params,p, restName, path, childCount, queryParams, true )
+function makeGetRestForChild<B, G> ( params: JavaWiringParams, p: RefD<G>, restName: string, path: number[], childCount: number, queryParams: JavaQueryParamDetails[] ) {
+  return makeGetRestForMainOrChild ( params, p, restName, path, childCount, queryParams, true )
 
 }
 
-export function preTransactionSqlLogger (params: JavaWiringParams, paramsA: JavaQueryParamDetails[] ): string[] {
+export function preTransactionSqlLogger ( params: JavaWiringParams, paramsA: JavaQueryParamDetails[] ): string[] {
   const debugLevel = params.debugLevel;
-  if (debugLevel=== 'none')return []
-  if ( paramsA.length == 0 ) return [`    logger.debug(MessageFormat.format("sql: {${0}}", sql));`];
+  if ( debugLevel === 'none' ) return []
+  if ( paramsA.length == 0 ) return [ `    logger.debug(MessageFormat.format("sql: {${0}}", sql));` ];
   let i = 1;
   const prefixNamesAndIndex = `sql: {${0}}, `.concat ( paramsA.map ( p => `${(p.name)}: {${i++}}` ).join ( ", " ) );
-  return [`    logger.${debugLevel}(MessageFormat.format("${prefixNamesAndIndex}", sql, ${paramsA.map ( p => p.name )}));`];
+  return [ `    logger.${debugLevel}(MessageFormat.format("${prefixNamesAndIndex}", sql, ${paramsA.map ( p => p.name )}));` ];
 }
 export function addPrefixPostFix ( details: JavaQueryParamDetails ): string {
   const { name, paramPrefix, paramPostfix, datePattern } = details
@@ -688,7 +694,7 @@ export function addPrefixPostFix ( details: JavaQueryParamDetails ): string {
   return (paramPrefix ? '"' + paramPrefix + '"+' : '') + name + (paramPostfix ? '+"' + paramPostfix + '"' : '')
 }
 
-function makeGetRestForMainOrChild<B, G> ( params: JavaWiringParams,p: RefD<G>, restName: string, path: number[], childCount: number, queryParams: JavaQueryParamDetails[], repeating: Boolean ) {
+function makeGetRestForMainOrChild<B, G> ( params: JavaWiringParams, p: RefD<G>, restName: string, path: number[], childCount: number, queryParams: JavaQueryParamDetails[], repeating: Boolean ) {
   const mapName = `${sqlMapName ( p, restName, path )}`;
   const retreiveData: string[] = repeating ?
     [ `      List<${mapName}> result = new LinkedList<>();`,
@@ -705,7 +711,7 @@ function makeGetRestForMainOrChild<B, G> ( params: JavaWiringParams,p: RefD<G>, 
     `    String sql = ${mapName}.sql;`,
     `    PreparedStatement statement = connection.prepareStatement(sql);`,
     ...indentList ( indentList ( queryParams.map ( ( paramDetails, i ) => `statement.${paramDetails.param.rsSetter}(${i + 1},${addPrefixPostFix ( paramDetails )});` ) ) ),
-    ...preTransactionSqlLogger (params, queryParams ),
+    ...preTransactionSqlLogger ( params, queryParams ),
     `    long start = System.nanoTime();`,
     `    ResultSet rs = statement.executeQuery();`,
     `    try {`,
@@ -719,7 +725,7 @@ function makeGetRestForMainOrChild<B, G> ( params: JavaWiringParams,p: RefD<G>, 
 }
 
 export function makeGetForRestFromLinkData<B, G> ( params: JavaWiringParams, p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, queryParams: JavaQueryParamDetails[], path: number[], childCount: number ) {
-  return path.length === 0 ? makeGetRestForRoot ( params,p, restName, rdp, childCount, queryParams ) : makeGetRestForChild (params, p, restName, path, childCount, queryParams );
+  return path.length === 0 ? makeGetRestForRoot ( params, p, restName, rdp, childCount, queryParams ) : makeGetRestForChild ( params, p, restName, path, childCount, queryParams );
 }
 interface QueryAndGetters {
   query: JavaQueryParamDetails[],

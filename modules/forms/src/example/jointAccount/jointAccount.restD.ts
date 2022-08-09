@@ -17,6 +17,7 @@ export const jointAccountRestD: RestD<any> = {
       { table: accountT, alias: 'j', field: 'acc_id', paramName: 'accountId' },
       { table: accountT, alias: 'j', field: 'brand_id', paramName: 'brandRef' },
     ],
+    orderBy: ['mainCustomer.nameId'],
     entity: {
       type: 'Main',
       table: accountT,

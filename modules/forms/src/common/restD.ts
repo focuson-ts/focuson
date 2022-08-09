@@ -152,6 +152,7 @@ export interface ManualSqlStrategy {
 export interface EntityAndWhere {
   entity: MainEntity;
   where: WhereFromQuery[],
+  orderBy?: string | string[];
   staticWhere?: string
 }
 
