@@ -1,5 +1,6 @@
 import { CommonStateProps } from "./common";
-import { NameAnd } from "@focuson/utils";
+import { NameAnd, safeString } from "@focuson/utils";
+import { PageSelectionContext, replaceTextUsingPath } from "@focuson/pages";
 
 
 export interface DisplayStringWithLookupProps<S, C> extends CommonStateProps<S, string , C> {
@@ -8,10 +9,11 @@ export interface DisplayStringWithLookupProps<S, C> extends CommonStateProps<S, 
   className?: string
 }
 
-export function DisplayStringWithLookup<S, C> ( { id, state, lookup, ifUndefined, className }: DisplayStringWithLookupProps<S, C> ) {
+export function DisplayStringWithLookup<S, C extends PageSelectionContext<S>> ( { id, state, lookup, ifUndefined, className }: DisplayStringWithLookupProps<S, C> ) {
   const displayKey = state.optJson ()
   const displayValue = displayKey ? lookup?.[ displayKey ] : undefined
-  const realDisplayValue = displayValue ? displayValue : (ifUndefined ? ifUndefined : '')
+  const string = displayValue ? displayValue : (ifUndefined ? ifUndefined : '')
+  let realDisplayValue = string?.includes ( '{' ) ? replaceTextUsingPath ( state, safeString ( string ) ) : string;
   return <div id={id} className={className} dangerouslySetInnerHTML={{ __html: realDisplayValue }}/>
 
 }

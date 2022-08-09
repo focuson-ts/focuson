@@ -115,7 +115,7 @@ export const processParam = <B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G
   if ( dcdType.paramType === 'stateValue' ) return processState ( 'state', '.json()' )
   if ( dcdType.paramType === 'path' ) return processPath ( '' )
   if ( dcdType.paramType === 'nameAndPaths' ) return processNameAndPaths ()
-  if ( dcdType.paramType === 'pathValue' ) return processPath ( '.json()' )
+  if ( dcdType.paramType === 'pathValue' ) return processPath ( '.optJson()' )
   if ( dcdType.paramType === 'guards' ) {
     if ( typeof s === 'string' || Array.isArray ( s ) ) return "{" + toArray<string> ( s ).map ( guardName ).join ( ' && ' ) + "}"
     throw Error ( `${fullErrorPrefix} for guards. Could not process ${JSON.stringify ( s )}` )

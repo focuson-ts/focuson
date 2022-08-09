@@ -130,7 +130,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
     templateFile ( `${tsPublic}/index.css`, 'templates/raw/ts/public/index.css', params, directorySpec, details )
     const cssImports = params.cssDirectory && fs.existsSync ( params.cssDirectory ) ? GetFilelistRecursively2 ( params.cssDirectory, 0 )
       .filter ( res => !res.isDir && res.file.endsWith ( '.css' ) )
-      .map ( ( { isDir, file } ) => `    <link rel="stylesheet" href="%PUBLIC_URL%/css/${file}" type="text/css">` ).join ( "\n" ) : []
+      .map ( ( { isDir, file } ) => `    <link rel="stylesheet" href="%PUBLIC_URL%/css/${file}" type="text/css">` ).join ( "\n" ) : ''
     templateFile ( `${tsPublic}/index.html`, 'templates/raw/ts/public/index.html', { ...params, cssImports }, directorySpec, details )
 
     if ( fs.existsSync ( 'src/actions.ts' ) )

@@ -153,6 +153,7 @@ export interface EntityAndWhere {
   entity: MainEntity;
   where: WhereFromQuery[],
   orderBy?: string | string[];
+  noDataIs404?: boolean;
   staticWhere?: string
 }
 
