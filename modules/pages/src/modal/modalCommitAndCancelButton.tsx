@@ -30,9 +30,9 @@ interface ModalCommitCancelButtonProps<S, Context> extends LensProps<S, any, Con
 interface ModalCommitButtonProps<S, C> extends ModalCommitCancelButtonProps<S, C> {
   validate?: boolean
 }
-export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( { id, state, text, buttonType, confirm }: ModalCommitCancelButtonProps<S, Context> ) {
+export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( { id, state, text, buttonType, confirm, enabledBy }: ModalCommitCancelButtonProps<S, Context> ) {
   let onClick = () => { if ( confirmIt ( state, confirm ) ) state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popPage ( state ) );}
-  return <button className={getButtonClassName ( buttonType )} id={id} disabled={!canCommitOrCancel ( state )} onClick={onClick}>{text ? text : 'Cancel'} </button>
+  return <button className={getButtonClassName ( buttonType )} id={id} disabled={enabledBy===false ||!canCommitOrCancel ( state )} onClick={onClick} >{text ? text : 'Cancel'} </button>
 }
 
 

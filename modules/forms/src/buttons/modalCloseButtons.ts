@@ -10,7 +10,7 @@ export interface ModalCommitButtonInPage extends EnabledBy {
   confirm?: boolean | string;
   text?: string
 }
-export interface ModalCancelButtonInPage extends CustomButtonType {
+export interface ModalCancelButtonInPage extends EnabledBy {
   control: 'ModalCancelButton';
   text?: string;
   confirm?: boolean | string;
@@ -34,7 +34,7 @@ export function makeModalCommitButton<B extends ModalCommitButtonInPage, G> (): 
 export const makeSimpleButton: <G> ( imp: string ) => ButtonCreator<ModalCommitButtonInPage, G> = imp => ({
   import: imp,
   makeButton: ( { name, button } ) =>
-    [ [ `<${button.control} id=${makeIdForButton ( button.text ? button.text : name )} state={state}`,
+    [ [ `<${button.control} id=${makeIdForButton ( button.text ? button.text : name )} state={state} ${enabledByString ( button )}`,
       ...opt ( 'text', button.text ),
       ...optT ( 'confirm', button.confirm ),
       ...opt ( 'buttonType', button.buttonType ? button.buttonType : 'secondary' ),
