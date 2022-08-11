@@ -43,12 +43,12 @@ export const loadingPage = <S extends any, D extends any, Context> ( title:  ( s
  * pageFn will only be called if the `D` is defined.
  */
 
-export const focusedPageWithExtraState = <S extends any, Full extends any, D extends any, Context> ( title: ( d?: Full ) => string ) =>
-  ( lensFn: ( lens: LensState<S, Full, Context> ) => LensState<S, D, Context>, displayLoading?: ( s: LensState<S, Full, Context> ) => boolean ) =>
+export const focusedPageWithExtraState = <S extends any, Full extends any, D extends any, Context> ( title: ( d:  LensState<S, Full, Context> ) => string ) =>
+  ( lensFn: ( state: LensState<S, Full, Context> ) => LensState<S, D, Context>, displayLoading?: ( s: LensState<S, Full, Context> ) => boolean ) =>
     ( pageFn: ( fullState: LensState<S, Full, Context>, state: LensState<S, D, Context>, f: Full, d: D, mode: PageMode, index: number ) => JSX.Element ): FocusedPage<S, Full, Context> => {
       const realDisplayLoading = displayLoading ? displayLoading : ( s: LensState<S, Full, Context> ) => lensFn ( s ).optJson () === undefined
       return ({
-        title: s => title ( s.optJson () ),
+        title: s => title ( s ),
         displayLoading: realDisplayLoading,
         display: ( s, pageMode, index: number ) => {
           let lensState: LensState<S, D, Context> = lensFn ( s );
@@ -60,9 +60,9 @@ export const focusedPageWithExtraState = <S extends any, Full extends any, D ext
       })
     }
 
-export const loadingPageWithExtraState = <S extends any, Full extends any, D extends any, Context> ( title: ( d?: Full ) => string ) =>
+export const loadingPageWithExtraState = <S extends any, Full extends any, D extends any, Context> ( titleFn: (state: LensState<S, Full, Context> ) => string ) =>
   ( lensFn: ( lens: LensState<S, Full, Context> ) => LensState<S, D, Context> ) => ( pageFn: ( fullState: LensState<S, Full, Context>, state: LensState<S, D, Context>, f: Full, d: D, pageMode: PageMode ) => JSX.Element ): ( s: LensState<S, Full, Context>, pageMode: PageMode, index: number ) => JSX.Element =>
     ( s, pageMode, index ) =>
-      focusedPageWithExtraState<S, Full, D, Context> ( title ) ( lensFn ) ( pageFn ).display ( s, pageMode, index )
+      focusedPageWithExtraState<S, Full, D, Context> ( titleFn ) ( lensFn ) ( pageFn ).display ( s, pageMode, index )
 
 

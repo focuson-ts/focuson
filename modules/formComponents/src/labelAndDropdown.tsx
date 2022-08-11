@@ -11,7 +11,7 @@ import { HasSimpleMessageL, PageSelectionContext } from "@focuson/pages";
 import { HasRestCommandL } from "@focuson/rest";
 
 export interface DropdownProps<S, T, Context> extends CommonStateProps<S, T , Context>, DropDownOnChangeProps<S, Context> ,HasButtons{
-  enums: NameAnd<string>;
+  enums: NameAnd<string|undefined>;
   readonly?: boolean
   pleaseSelect?: string;
   size?: number;

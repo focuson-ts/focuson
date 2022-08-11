@@ -69,7 +69,7 @@ const addButton: RawButtons<AllGuards> = {
   mode: "create",
   copyOnClose: { to: '~/display[$append]' },
   setToLengthOnClose: { variable: '~/selected', array: '~/display' },
-  restOnCommit: { restName: 'onePayment', action: 'createWithoutFetch', result: "refresh", pathToDelete: ['~/display'] }
+  restOnCommit: { restName: 'onePayment', action: 'createWithoutFetch', result: "refresh", pathToDelete: [ '~/display' ] }
 }
 
 const editButton: RawButtons<AllGuards> = {
@@ -78,12 +78,13 @@ const editButton: RawButtons<AllGuards> = {
   mode: "edit",
   copyOnClose: { to: '~/display[~/selected]' },
   copy: [ { from: '~/display[~/selected]' }, ...toArray ( addOrEditButton.copy ) ],
-  restOnCommit: { restName: 'onePayment', action: 'updateWithoutFetch', result: "refresh" , pathToDelete: ['~/display'] }
+  restOnCommit: { restName: 'onePayment', action: 'updateWithoutFetch', result: "refresh", pathToDelete: [ '~/display' ] }
 }
 
 export const ListOfPaymentsPagePD: ExampleMainPage = {
   pageType: "MainPage",
   name: "ListOfPaymentsPage",
+  title: "The List Of Payments",
   display: { target: '~/display', dataDD: PrintRecordHistoryDD },
   domain: {
     display: { dataDD: PrintRecordHistoryDD },
