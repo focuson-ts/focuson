@@ -630,6 +630,7 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: RefD<G>, re
     `import java.util.Map;`,
     `import java.util.stream.Collectors;`,
     `import ${params.thePackage}.${params.utilsPackage}.DateFormatter;`,
+    `import ${params.thePackage}.${params.utilsPackage}.FocusonNotFound404Exception;;`,
     `import ${params.thePackage}.${params.utilsPackage}.Messages;`,
     '',
     `//${JSON.stringify ( restD.params )}`,
@@ -665,19 +666,19 @@ export interface JavaQueryParamDetails {
 }
 
 function getParameters<B, G> ( childCount: number, p: RefD<G>, restName: string, path: number[], queryParams: JavaQueryParamDetails[] ) {
-  return [ 'Connection connection', ...queryParams.map ( ( { name, param, paramPostfix, paramPrefix } ) =>
+  return [ 'Connection connection', 'Messages msgs', ...queryParams.map ( ( { name, param, paramPostfix, paramPrefix } ) =>
     `${param.javaType} ${name}` ), ...mapPathPlusInts ( path, childCount ) ( pathAndI => `List<${sqlMapName ( p, restName, pathAndI )}> list${pathAndI}` ) ].join ( ", " );
 }
 function newMap ( mapName: string, childCount: number, path: number[] ) {
   return `new ${mapName}(${[ 'rs', ...ints ( childCount ).map ( i => `list${i}` ) ].join ( "," )})`
 }
 
-function makeGetRestForRoot<B, G> ( params: JavaWiringParams, p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, childCount: number, queryParams: JavaQueryParamDetails[] ) {
-  return makeGetRestForMainOrChild ( params, p, restName, [], childCount, queryParams, isRepeatingDd ( rdp.rest.dataDD ) )
+function makeGetRestForRoot<B, G> ( params: JavaWiringParams, p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, childCount: number, queryParams: JavaQueryParamDetails[], noDataIs404: boolean ) {
+  return makeGetRestForMainOrChild ( params, p, restName, [], childCount, queryParams, isRepeatingDd ( rdp.rest.dataDD ), noDataIs404 )
 }
 
-function makeGetRestForChild<B, G> ( params: JavaWiringParams, p: RefD<G>, restName: string, path: number[], childCount: number, queryParams: JavaQueryParamDetails[] ) {
-  return makeGetRestForMainOrChild ( params, p, restName, path, childCount, queryParams, true )
+function makeGetRestForChild<B, G> ( params: JavaWiringParams, p: RefD<G>, restName: string, path: number[], childCount: number, queryParams: JavaQueryParamDetails[], noDataIs404: boolean ) {
+  return makeGetRestForMainOrChild ( params, p, restName, path, childCount, queryParams, true, noDataIs404 )
 
 }
 
@@ -695,17 +696,19 @@ export function addPrefixPostFix ( details: JavaQueryParamDetails ): string {
   return (paramPrefix ? '"' + paramPrefix + '"+' : '') + name + (paramPostfix ? '+"' + paramPostfix + '"' : '')
 }
 
-function makeGetRestForMainOrChild<B, G> ( params: JavaWiringParams, p: RefD<G>, restName: string, path: number[], childCount: number, queryParams: JavaQueryParamDetails[], repeating: Boolean ) {
+function makeGetRestForMainOrChild<B, G> ( params: JavaWiringParams, p: RefD<G>, restName: string, path: number[], childCount: number, queryParams: JavaQueryParamDetails[], repeating: Boolean, noDataIs404: boolean ) {
   const mapName = `${sqlMapName ( p, restName, path )}`;
   const retreiveData: string[] = repeating ?
     [ `      List<${mapName}> result = new LinkedList<>();`,
       `      while (rs.next())`,
       `        result.add(${newMap ( mapName, childCount, [] )});`,
       `      logger.debug(MessageFormat.format("Duration: {0}, result: {1}", (System.nanoTime() - start) / 1000000.0, result ));`,
+      ...noDataIs404 ? [ `      if (result.size()==0) throw new FocusonNotFound404Exception(msgs); ` ] : [],
       `      return result;`,
     ] :
     [ `      logger.debug(MessageFormat.format("Duration: {0}", (System.nanoTime() - start) / 1000000.0));`,
-      `      return rs.next() ? Optional.of(${newMap ( mapName, childCount, [] )}) : Optional.empty();` ]
+      noDataIs404 ? `      if (!rs.next()) throw new FocusonNotFound404Exception(msgs); ` : `      if (!rs.next()) return Optional.empty();`,
+      `      return Optional.of(${newMap ( mapName, childCount, [] )});` ]
 
   return [
     `public static ${repeating ? 'List' : 'Optional'}<${mapName}> get${path.join ( '_' )}(${getParameters ( childCount, p, restName, [], queryParams )}) throws SQLException {`,
@@ -725,8 +728,8 @@ function makeGetRestForMainOrChild<B, G> ( params: JavaWiringParams, p: RefD<G>,
   ]
 }
 
-export function makeGetForRestFromLinkData<B, G> ( params: JavaWiringParams, p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, queryParams: JavaQueryParamDetails[], path: number[], childCount: number ) {
-  return path.length === 0 ? makeGetRestForRoot ( params, p, restName, rdp, childCount, queryParams ) : makeGetRestForChild ( params, p, restName, path, childCount, queryParams );
+export function makeGetForRestFromLinkData<B, G> ( params: JavaWiringParams, p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, queryParams: JavaQueryParamDetails[], path: number[], childCount: number, noDataIs404: boolean ) {
+  return path.length === 0 ? makeGetRestForRoot ( params, p, restName, rdp, childCount, queryParams, noDataIs404 ) : makeGetRestForChild ( params, p, restName, path, childCount, queryParams, noDataIs404 );
 }
 interface QueryAndGetters {
   query: JavaQueryParamDetails[],
@@ -744,18 +747,18 @@ export function makeAllGetsAndAllSqlForRest<B, G> ( params: JavaWiringParams, p:
     const ld = findSqlLinkDataFromRootAndDataD ( r, restD.dataDD, rdp.rest.params )
     if ( restD.tables === undefined ) throw Error ( `somehow have a sql root without a tables in ${p.name} ${restName}` )
     const query = findParamsForTable ( `Page ${p.name} rest ${restName}`, restD.params, restD.tables )
-    return { query, getter: makeGetForRestFromLinkData ( params, p, restName, rdp, query, path, r.children.length ), sql: [ ...generateGetSql ( ld ), '' ] }
+    return { query, getter: makeGetForRestFromLinkData ( params, p, restName, rdp, query, path, r.children.length, restD.tables?.noDataIs404 ), sql: [ ...generateGetSql ( ld ), '' ] }
   } )
   const paramsForMainGet = getters.slice ( 1 ).map ( g => g.query )
   function callingParams ( qs: JavaQueryParamDetails[] ) {return qs.map ( q => q.name )}
   const allParams = unique ( getters.flatMap ( g => g.query ), ( { name, param } ) => name + param.javaType )
   const mapString = isRepeatingDd ( rdp.rest.dataDD ) ? '.stream().map(x -> x._root).collect(Collectors.toList())' : '.map(x -> x._root)'
   const mainGet: string[] = [
-    `public static ${isListOrOptional ( rdp )}<Map<String,Object>> getAll(${[ 'Connection connection','Messages msgs', ...allParams.map ( ( { name, param } ) =>
+    `public static ${isListOrOptional ( rdp )}<Map<String,Object>> getAll(${[ 'Connection connection', 'Messages msgs', ...allParams.map ( ( { name, param } ) =>
       `${param.javaType} ${name}` ) ].join ( "," )}) throws SQLException {`,
     `//from ${p.name}.rest[${restName}].dataDD which is of type ${rdp.rest.dataDD.name}`,
-    `   return get(${[ 'connection', ...callingParams ( getters[ 0 ].query ), ...ints ( sqlRoot.children.length )
-      .map ( i => `get${i}(${[ 'connection', ...callingParams ( paramsForMainGet[ i ] ) ].join ( ',' )})` ) ].join ( "," )})${mapString};`, // Note not yet recursing here
+    `   return get(${[ 'connection', 'msgs', ...callingParams ( getters[ 0 ].query ), ...ints ( sqlRoot.children.length )
+      .map ( i => `get${i}(${[ 'connection', 'msgs', ...callingParams ( paramsForMainGet[ i ] ) ].join ( ',' )})` ) ].join ( "," )})${mapString};`, // Note not yet recursing here
     `}` ]
   const allSql = addBrackets ( `public static String allSql=`, ';' ) ( addStringToEndOfAllButLast ( "+" ) ( getters.flatMap ( g => g.sql.map ( s => '"' + s + '\\n"' ) ) ) )
   return [ ...mainGet, ...allSql, ...getters.flatMap ( g => g.getter ) ]
