@@ -87,6 +87,9 @@ export const ListOfPaymentsDD: ExampleDataD = {
   description: 'The information about the person who requested the payments',
   layout: { component: LayoutCd, displayParams: { details: '[[5,1]]' } },
   table: accountT,
+  guards:{
+    pageModeView: {condition: 'pageModeEquals', mode: 'view'}
+  },
   structure: {
     standingOrders: { dataDD: CheckboxAndNumberFromDatabaseDD, displayParams: { number: '~/currentPayments/standingOrders' }, sampleOffset: 0 },
     openBankingStandingOrders: { dataDD: CheckboxAndNumberFromDatabaseDD, displayParams: { number: '~/currentPayments/openBankingStandingOrders' }, sampleOffset: 1 },

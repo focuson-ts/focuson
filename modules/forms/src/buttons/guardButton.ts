@@ -8,7 +8,7 @@ import { PageMode } from "@focuson/pages";
 
 export type AllGuards = LocalVariableGuard | LocalVariableMoreThanZero | LocalVariableLessThanLengthMinusOne |
   LocalVariableValueEquals<any> | LocalVariableDefined | ALessThanB | BinaryCondition |
-  AndOrCondition | NotCondition | PageModeIs | ContainsGuard | NumberAndBooleanCondition | RegexCondition
+  AndOrCondition | NotCondition | PageModeIs | ContainsGuard | NumberAndBooleanCondition | RegexCondition | PageModeCondition
 
 function errorPrefix ( mainP: PageD<any, any>, p: PageD<any, any>, name: string, guard: any ) {
   if ( mainP.name === p.name ) return `MakeGuardVariable for ${p.name} ${name} ${JSON.stringify ( guard )}`
@@ -99,6 +99,12 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
     makeGuardVariable: ( params, mainP, page, name, guard: RegexCondition ) =>
       `const ${guardName ( name )} =  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJsonOr('').match(${guard.regex}) !== null `
 
+  },
+  pageModeEquals: {
+    imports:[],
+    makeGuardVariable:(params, mainPage, page, name, guard: PageModeCondition) =>
+      `const ${guardName ( name )} = mode == '${guard.mode}' `
+
   }
 }
 export interface GuardWithCondition {
@@ -179,6 +185,10 @@ export interface RegexCondition {
   condition: 'regex',
   regex: RegExp,
   path: string
+}
+export interface PageModeCondition {
+  condition: 'pageModeEquals',
+  mode: PageMode
 }
 
 export function isGuardButton<B, G> ( b: any ): b is GuardButtonInPage<B, G> {
