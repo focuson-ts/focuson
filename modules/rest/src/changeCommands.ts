@@ -1,6 +1,6 @@
 import { Optional, replaceTextFn, Transform } from "@focuson/lens";
 import { TagHolder } from "@focuson/template";
-import { filterObject } from "@focuson/utils";
+import { filterObject, toArray } from "@focuson/utils";
 
 export interface ChangeCommand {
   command: string
@@ -9,11 +9,11 @@ export interface ChangeCommandProcessor<S> {( c: ChangeCommand ): undefined | Tr
 
 export interface DeleteCommand extends ChangeCommand {
   command: 'delete';
-  path: string;
+  path: string | string[];
 }
 const isDeleteCommand = ( c: ChangeCommand ): c is DeleteCommand => c.command === 'delete';
 export const deleteCommandProcessor = <S> ( pathToLens: ( path: string ) => Optional<S, any> ): ChangeCommandProcessor<S> =>
-  ( c ) => isDeleteCommand ( c ) ? [ [ pathToLens ( c.path ), () => undefined ] ] : undefined;
+  ( c ) => isDeleteCommand ( c ) ? toArray ( c.path ).map ( p => [ pathToLens ( p ), () => undefined ] ) : undefined;
 
 
 export interface DeletePageTagsCommand extends ChangeCommand {

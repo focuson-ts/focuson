@@ -46,7 +46,7 @@ const modalProcessor = modalCommandProcessors ( modalConfig )
 
 describe ( "delete command", () => {
   const processor = deleteCommandProcessor ( toPathTolens );
-  let expected = [ [ "I.focus?(toA).focus?(a).focus?(b)", undefined ] ];
+  let expected = [ { opt: "I.focus?(toA).focus?(a).focus?(b)" } ];
   it ( "should ignore none deletes", () => {
     expect ( processor ( { command: 'something' } ) ).toEqual ( undefined )
   } )
@@ -67,7 +67,8 @@ describe ( "delete command", () => {
 describe ( "delete page tags command", () => {
   const processor = ( s: StateForChangeCommands ) => deletePageTagsCommandProcessor ( modalConfig.tagHolderL, modalConfig.pageNameFn, s );
   const state: StateForChangeCommands = { ...froma12, tags: { otherPage: [], 'somePage_~/somePath': [], 'somePage_asd': [], } }
-  let expected = [ [ "I.focus?(tags)", { "otherPage": [] } ] ];
+  let expected = [ { "opt": "I.focus?(tags)", "value": { "otherPage": [] } }
+  ];
   const deleteTagsCommand: DeletePageTagsCommand = { command: 'deletePageTags' };
   it ( "should ignore none deletePageTags", () => {
     expect ( processor ( { ...froma12 } ) ( { command: 'something' } ) ).toEqual ( undefined )
@@ -85,7 +86,7 @@ describe ( "delete page tags command", () => {
 describe ( "strict copy command", () => {
   const command: StrictCopyCommand = { command: 'copy', from: '/a', to: '/b' };
   const processor = strictCopyCommandProcessor ( fromPathTolens, toPathTolens );
-  const expected = [ [ "I.focus?(toA).focus?(b)", { "b": "one", "c": "two" } ] ];
+  const expected = [ { "opt": "I.focus?(toA).focus?(b)", "value": { "b": "one", "c": "two" } } ];
   it ( "should ignore none strict commands", () => {
     expect ( processor ( froma12 ) ( { command: 'something' } ) ).toEqual ( undefined )
     expect ( processor ( froma12 ) ( { command: 'copy' } ) ).toEqual ( undefined )
@@ -113,46 +114,41 @@ describe ( " copy command", () => {
 
   } )
   describe ( 'copy with default from & to - which is a silly combination', () => {
+    const expected = [ { "opt": "default.focus?(x).focus?(z).focus?(a)", "value": { "b": "from", "c": "default" } } ];
     it ( "should copy the from to the to", () => {
-      expect ( displayTransformsInState ( froma12Withz, safeArray ( processor ( froma12Withz ) ( command ( undefined, undefined ) ) ) ) ).toEqual ( [
-        [ "default.focus?(x).focus?(z).focus?(a)", { "b": "from", "c": "default" } ] ] )
+      expect ( displayTransformsInState ( froma12Withz, safeArray ( processor ( froma12Withz ) ( command ( undefined, undefined ) ) ) ) ).toEqual ( expected )
     } )
     it ( "should copy the from to the to - modal", () => {
-      expect ( displayTransformsInState ( froma12Withz, safeArray ( modalProcessor ( froma12Withz ) ( command ( undefined, undefined ) ) ) ) ).toEqual ( [
-        [ "default.focus?(x).focus?(z).focus?(a)", { "b": "from", "c": "default" } ] ] )
+      expect ( displayTransformsInState ( froma12Withz, safeArray ( modalProcessor ( froma12Withz ) ( command ( undefined, undefined ) ) ) ) ).toEqual ( expected )
     } )
   } )
   describe ( 'copy with default from ', () => {
+    const expected = [ { "opt": "I.focus?(toA).focus?(a)", "value": { "b": "from", "c": "default" } } ];
     it ( "should copy the from to the to", () => {
-      expect ( displayTransformsInState ( froma12Withz, safeArray ( processor ( froma12Withz ) ( command ( undefined, '/a' ) ) ) ) ).toEqual ( [
-        [ "I.focus?(toA).focus?(a)", { "b": "from", "c": "default" } ] ] )
+      expect ( displayTransformsInState ( froma12Withz, safeArray ( processor ( froma12Withz ) ( command ( undefined, '/a' ) ) ) ) ).toEqual ( expected )
     } )
     it ( "should copy the from to the to - modal", () => {
-      expect ( displayTransformsInState ( froma12Withz, safeArray ( modalProcessor ( froma12Withz ) ( command ( undefined, '/a' ) ) ) ) ).toEqual ( [
-        [ "I.focus?(toA).focus?(a)", { "b": "from", "c": "default" } ] ] )
+      expect ( displayTransformsInState ( froma12Withz, safeArray ( modalProcessor ( froma12Withz ) ( command ( undefined, '/a' ) ) ) ) ).toEqual ( expected )
     } )
   } )
   describe ( 'copy with default to ', () => {
+    const expected = [ { "opt": "default.focus?(x).focus?(z).focus?(a)", "value": { "b": "one", "c": "two" } } ];
     it ( "should copy the from to the to", () => {
-      expect ( displayTransformsInState ( froma12Withz, safeArray ( processor ( froma12Withz ) ( command ( '/a', undefined ) ) ) ) ).toEqual ( [
-        [ "default.focus?(x).focus?(z).focus?(a)", { "b": "one", "c": "two" } ]
-      ] )
+      expect ( displayTransformsInState ( froma12Withz, safeArray ( processor ( froma12Withz ) ( command ( '/a', undefined ) ) ) ) ).toEqual ( expected )
     } )
     it ( "should copy the from to the to - modal", () => {
-      expect ( displayTransformsInState ( froma12Withz, safeArray ( modalProcessor ( froma12Withz ) ( command ( '/a', undefined ) ) ) ) ).toEqual ( [
-        [ "default.focus?(x).focus?(z).focus?(a)", { "b": "one", "c": "two" } ]
-      ] )
+      expect ( displayTransformsInState ( froma12Withz, safeArray ( modalProcessor ( froma12Withz ) ( command ( '/a', undefined ) ) ) ) ).toEqual ( expected )
     } )
   } )
 } )
 describe ( "messageCommandProcessor", () => {
   const processor = messageCommandProcessor<StateForChangeCommands, SimpleMessage> ( config );
   const command: MessageCommand = { command: 'message', msg: 'someMessage' };
-  const expected = [
-    [
-      "I.focus?(messages)",
-      [ { "level": "info", "msg": "someMessage", "time": "timeForTest" },
-        { "level": "error", "msg": "a", "time": "someTime" } ] ] ];
+  const expected = [ {
+    "opt": "I.focus?(messages)", "value": [
+      { "level": "info", "msg": "someMessage", "time": "timeForTest" },
+      { "level": "error", "msg": "a", "time": "someTime" } ]
+  } ];
   it ( "should ignore none messageCommands", () => {
     expect ( processor ( { command: 'something' } ) ).toEqual ( undefined )
   } )
@@ -172,7 +168,7 @@ describe ( "messageCommandProcessor", () => {
 describe ( "setCommandProcessor", () => {
   const processor = setCommandProcessor ( toPathTolens );
   const command: SetChangeCommand = { command: 'set', path: '/a', value: { b: 'the', c: 'value' } };
-  const expected = [ [ "I.focus?(toA).focus?(a)", { "b": "the", "c": "value" } ] ];
+  const expected = [ { "opt": "I.focus?(toA).focus?(a)", "value": { "b": "the", "c": "value" } } ];
   it ( "should ignore none setCommands", () => {
     expect ( processor ( { command: 'something' } ) ).toEqual ( undefined )
   } )
@@ -190,16 +186,15 @@ describe ( "setCommandProcessor", () => {
 describe ( "copyResultCommandProcessor", () => {
   const processor = copyResultCommandProcessor<StateForChangeCommands, yz> ( resultPathToLens, toPathTolens )
   const command: CopyResultCommand = { command: 'copyResult', from: '/z/a', to: '/a' };
+  const expected = [ { "opt": "I.focus?(toA).focus?(a)", "value": { "b": "from", "c": "res" } } ]
   it ( "should ignore none copyResultCommands", () => {
     expect ( processor ( result ) ( { command: 'something' } ) ).toEqual ( undefined )
   } )
   it ( "should copy the result + path to the to + path", () => {
-    expect ( displayTransformsInState ( froma12WithAMessage, safeArray ( processor ( result ) ( command ) ) ) ).toEqual ( [
-      [ "I.focus?(toA).focus?(a)", { "b": "from", "c": "res" } ] ] )
+    expect ( displayTransformsInState ( froma12WithAMessage, safeArray ( processor ( result ) ( command ) ) ) ).toEqual ( expected)
   } )
   it ( "should copy the result + path to the to + path - rest", () => {
-    expect ( displayTransformsInState ( froma12WithAMessage, safeArray ( restProcessor ( result ) ( command ) ) ) ).toEqual ( [
-      [ "I.focus?(toA).focus?(a)", { "b": "from", "c": "res" } ] ] )
+    expect ( displayTransformsInState ( froma12WithAMessage, safeArray ( restProcessor ( result ) ( command ) ) ) ).toEqual (expected)
   } )
 } )
 
