@@ -228,6 +228,7 @@ export function mutationCodeForSqlMapCalls<G> ( params: JavaWiringParams, errorP
 export function mutationCodeForSqlListCalls<G> ( params: JavaWiringParams, errorPrefix: string, p: RefD<G>, r: RestD<G>, name: string, m: SqlMutationThatIsAList, index: string, includeMockIf: boolean ): string[] {
   const paramsA = toArray ( m.params )
   const messageLine = m.messageOnEmptyData ? [ `if (result.isEmpty()) msgs.error(${JSON.stringify ( m.messageOnEmptyData )});` ] : []
+  const check404 = m.noDataIs404 ? [ `if (result.size() == 0) throw new FocusonNotFound404Exception(msgs);` ] : []
   return [
     ...makeMethodDecl ( errorPrefix, paramsA, 'List<Map<String,Object>>', r, name, m, index ),
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ),
@@ -245,6 +246,7 @@ export function mutationCodeForSqlListCalls<G> ( params: JavaWiringParams, error
           ...getFromResultSetPutInMap ( errorPrefix, 'oneLine', 'rs', paramsA ),
           `result.add(oneLine);` ] ),
         '}',
+        ...check404,
         ...messageLine,
         ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ),
         `return result;`,

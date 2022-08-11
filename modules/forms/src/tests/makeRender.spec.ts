@@ -39,7 +39,7 @@ describe ( " listComponentsIn", () => {
     ] )
   } )
   it ( "should createAllReactComponents ", () => {
-    expect ( createAllReactComponents ( paramsForTest, AllGuardCreator, makeButtons (), EAccountsSummaryPD, EAccountsSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([
+    expect ( createAllReactComponents ( paramsForTest, AllGuardCreator, makeButtons (), EAccountsSummaryPD, EAccountsSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "import { LensProps } from '@focuson/state';",
       "import { FocusOnContext } from '@focuson/focuson';",
       "import {  focusedPage, focusedPageWithExtraState, fullState, pageState, replaceTextUsingPath} from '@focuson/pages';",
@@ -156,7 +156,7 @@ describe ( " listComponentsIn", () => {
   } )
 
   it ( "should createAllReactComponents for a modal page that define a display on the data", () => {
-    expect ( createAllReactComponents ( paramsForTest, AllGuardCreator, makeButtons (), OccupationAndIncomeSummaryPD, listOccupationsModalPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([
+    expect ( createAllReactComponents ( paramsForTest, AllGuardCreator, makeButtons (), OccupationAndIncomeSummaryPD, listOccupationsModalPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "import { LensProps } from '@focuson/state';",
       "import { FocusOnContext } from '@focuson/focuson';",
       "import {  focusedPage, focusedPageWithExtraState, fullState, pageState, replaceTextUsingPath} from '@focuson/pages';",
@@ -185,7 +185,7 @@ describe ( " listComponentsIn", () => {
       "  return focusedPage<FState, ListOccupationsDomain, Context> ( s => 'List Occupations Modal'  ) (//If there is a compilation here have you added this to the 'domain' of the main page",
       "     ( state, d, mode, index ) => {",
       "          const id=`page${index}`;",
-      "          const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state} buttonType='secondary' />,",
+      "          const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state}  buttonType='secondary' />,",
       "              commit:<ModalCommitButton id={`${id}.commit`}  buttonType='primary'  state={state} />,}",
       "          return <>",
       "          <>",
@@ -193,7 +193,7 @@ describe ( " listComponentsIn", () => {
       "          { allButtons.cancel } ",
       "          { allButtons.commit } ",
       "          </></>})}"
-    ])
+    ] )
   } )
   it ( "should create a simple page", () => {
     expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), EAccountsSummaryPD, CreatePlanPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
@@ -201,7 +201,7 @@ describe ( " listComponentsIn", () => {
       "  return focusedPage<FState, CreatePlanDomain, Context> ( s => 'Create Plan'  ) (//If there is a compilation here have you added this to the 'domain' of the main page",
       "     ( state, d, mode, index ) => {",
       "          const id=`page${index}`;",
-      "          const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state} confirm={'It will start on {~/tempCreatePlan/createPlanStart}'} buttonType='secondary' />,",
+      "          const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state}  confirm={'It will start on {~/tempCreatePlan/createPlanStart}'} buttonType='secondary' />,",
       "              commit:<ModalCommitButton id={`${id}.commit`}  buttonType='primary'  state={state} />,}",
       "          return <>",
       "          <>",
@@ -209,10 +209,10 @@ describe ( " listComponentsIn", () => {
       "          { allButtons.cancel } ",
       "          { allButtons.commit } ",
       "          </></>})}"
-    ])
+    ] )
   } )
   it ( "should create a page with a Layout", () => {
-    expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), PostCodeMainPage, PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([
+    expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), PostCodeMainPage, PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function PostCodeMainPagePage(){",
       "   //A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/main",
       "  return focusedPageWithExtraState<FState, PostCodeMainPagePageDomain, PostCodeNameAndAddressDomain, Context> ( s => 'Post Code Main Page' ) ( state => state.focusOn('main')) (",
@@ -241,7 +241,7 @@ describe ( " listComponentsIn", () => {
       "      { allButtons.save } ",
       "      </HideButtonsLayout></>})}",
       ""
-    ])
+    ] )
   } )
 
 } )
@@ -320,6 +320,6 @@ describe ( "makeGuardButtonVariables", () => {
       "const authorisedByUserGuard =  pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('display').chainNthFromPath(pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('selected')).focusOn('authorisedByCustomer').optJson() === \"y\";if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.authorisedByUser', authorisedByUserGuard);",
       "const sendingToUserGuard =  [\"M\",\"J\"].includes( pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('display').chainNthFromPath(pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('selected')).focusOn('requestedBy').optJsonOr(''));if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.sendingToUser', sendingToUserGuard);",
       "const authorisedToSendGuard =  sendingToUserGuard||authorisedByUserGuard;if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.authorisedToSend', authorisedToSendGuard);"
-    ])
+    ] )
   } )
 } )

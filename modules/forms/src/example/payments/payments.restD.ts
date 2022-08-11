@@ -47,6 +47,7 @@ export const newPaymentsRD: ExampleRestD = {
         ], select: [
           {
             guard: [ 'brandRef==3' ], type: 'sql', name: 'brandref3', schema: onlySchema,
+            noDataIs404: true,
             sql: `select nameOfPayee,
                          sterlingAmount,
                          currencyAmount,

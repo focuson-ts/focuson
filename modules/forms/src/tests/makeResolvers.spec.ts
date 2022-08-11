@@ -13,9 +13,10 @@ import { accountAndAddressDetailsRD } from "../example/ListOfPayments/listOfPaye
 import { makeMutations } from "../codegen/makeMutations";
 import { LinkedAccountDetailsPD } from "../example/linkedAccount/linkedAccountDetails.pageD";
 import { collectionSummaryRD } from "../example/linkedAccount/linkedAccountDetails.restD";
+import { AuthoriseChargesPD } from "../example/authoriseCharges/authoriseCharges.pageD";
+import { SummaryOfChargeDatesRD } from "../example/authoriseCharges/authoriseCharges.restD";
 
 describe ( "makeResolvers", () => {
-
 
 
   it ( "should make resolvers", () => {
@@ -125,13 +126,13 @@ describe ( "makeResolvers", () => {
       "",
       "public String dbName() {return IFetcher.db; }",
       "}"
-    ])
+    ] )
   } )
 
   it ( `should make a resolver for a 'get' that is done manually`, () => {
     expect ( makeResolvers ( paramsForTest, EAccountsSummaryPD, 'eAccountsSummary', eAccountsSummaryRestD,
       'getEAccountsSummary', safeObject ( eAccountsSummaryRestD.resolvers ).totalMonthlyCost, findQueryMutationResolver ( eAccountsSummaryRestD, 'get' )
-    ) ).toEqual ([
+    ) ).toEqual ( [
       "package focuson.data.resolvers.EAccountsSummary;",
       "",
       "import focuson.data.fetchers.IFetcher;",
@@ -198,13 +199,13 @@ describe ( "makeResolvers", () => {
       "",
       "public String dbName() {return IFetcher.db; }",
       "}"
-    ]);
+    ] );
   } )
 
   it ( "should make resolvers for non 'get' resolvers", () => {
     expect ( makeResolvers ( paramsForTest, EAccountsSummaryPD, 'eAccountsSummary', eAccountsSummaryRestD,
       'totalMonthlyCost', safeObject ( eAccountsSummaryRestD.resolvers ).balancesAndMonthlyCostResolver, findResolverData ( 'someError', findChildResolvers ( eAccountsSummaryRestD ), 'balancesAndMonthlyCostResolver' )
-    ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([
+    ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "package focuson.data.resolvers.EAccountsSummary;",
       "",
       "import focuson.data.fetchers.IFetcher;",
@@ -291,13 +292,13 @@ describe ( "makeResolvers", () => {
       "",
       "public String dbName() {return IFetcher.db; }",
       "}"
-    ])
+    ] )
   } )
 
   it ( "should make resolvers for a sql list resolvers", () => {
     expect ( makeResolvers ( paramsForTest, PostCodeMainPage, 'postcode', postcodeWithResolversRestD,
       'getPostCodeDataLine', safeObject ( postcodeWithResolversRestD.resolvers ).getPostCodeDataLine, findQueryMutationResolver ( postcodeWithResolversRestD, 'get' )
-    ) ).toEqual ([
+    ) ).toEqual ( [
       "package focuson.data.resolvers.PostCodeMainPage;",
       "",
       "import focuson.data.fetchers.IFetcher;",
@@ -381,7 +382,7 @@ describe ( "makeResolvers", () => {
       "",
       "public String dbName() {return IFetcher.db; }",
       "}"
-    ])
+    ] )
   } )
 
   it ( 'should make a resolver for using fromParent types', () => {
@@ -457,6 +458,234 @@ describe ( "makeResolvers", () => {
       "",
       "public String dbName() {return IFetcher.db; }",
       "}"
-    ])
+    ] )
+  } )
+
+  it ( 'should make a resolver for multiples', () => {
+    expect ( makeResolvers ( paramsForTest, AuthoriseChargesPD, 'summaryOfChargesDates', SummaryOfChargeDatesRD,
+      'getSummaryOfChargesDate', safeObject ( SummaryOfChargeDatesRD.resolvers ).getSummaryOfChargesDate,
+      findQueryMutationResolver ( SummaryOfChargeDatesRD, 'get' ) ) ).toEqual ( [
+      "package focuson.data.resolvers.AuthoriseCharges;",
+      "",
+      "import focuson.data.fetchers.IFetcher;",
+      "import org.springframework.stereotype.Component;",
+      "import org.springframework.beans.factory.annotation.Autowired;",
+      "",
+      "import org.slf4j.Logger;",
+      "import org.slf4j.LoggerFactory;",
+      "import java.text.MessageFormat;",
+      "import java.util.List;",
+      "import java.util.ArrayList;",
+      "import java.util.Map;",
+      "import java.util.HashMap;",
+      "import java.util.Date;",
+      "import java.sql.CallableStatement;",
+      "import java.sql.PreparedStatement;",
+      "import java.sql.ResultSet;",
+      "import java.sql.Connection;",
+      "import java.sql.SQLException;",
+      "import graphql.schema.DataFetcher;",
+      "import focuson.data.fetchers.AuthoriseCharges.SummaryOfChargesDateTable_getSummaryOfChargesDate_FFetcher;",
+      "import focuson.data.utils.LoggedDataSource;",
+      "import focuson.data.utils.Messages;",
+      "import focuson.data.utils.FocusonNotFound404Exception;",
+      "import static focuson.data.utils.GraphQlUtils.getData;",
+      "import focuson.data.utils.DateFormatter;",
+      "import focuson.data.utils.IOGNL;",
+      "import focuson.data.mutator.utils.Tuple2;",
+      "@Component",
+      "public class SummaryOfChargesDateTable_getSummaryOfChargesDateResolver implements SummaryOfChargesDateTable_getSummaryOfChargesDate_FFetcher{",
+      "",
+      "   Logger logger = LoggerFactory.getLogger(getClass());",
+      "",
+      "   @Autowired ",
+      "   IOGNL ognlForBodyAsJson;",
+      "",
+      "   @Autowired",
+      "   private LoggedDataSource dataSource;",
+      "  public DataFetcher<List<Map<String,Object>>> getSummaryOfChargesDate(){",
+      "    return dataFetchingEnvironment -> {",
+      "      String dbName =  getData(dataFetchingEnvironment, \"dbName\");",
+      "      int brandRef =  getData(dataFetchingEnvironment, \"brandRef\");",
+      "      int clientRef =  getData(dataFetchingEnvironment, \"clientRef\");",
+      "      String date =  getData(dataFetchingEnvironment, \"date\");",
+      "       Messages msgs=dataFetchingEnvironment.getLocalContext();",
+      "      Connection connection = dataSource.getConnection(getClass());",
+      "      try  {",
+      "        //from AuthoriseCharges.rest[summaryOfChargesDates].resolvers[\"getSummaryOfChargesDate\"]",
+      "        List<Map<String,Object>> params0 = getTheStuff0(connection,msgs,dbName,brandRef);",
+      "        List<Map<String,Object>> result= params0;",
+      "        return result;",
+      "       } finally {dataSource.close(getClass(),connection);}",
+      "    };}",
+      "",
+      "//If you have a compiler error in the type here, did you match the types of the output params in your manual code with the declared types in the .restD?",
+      "    public List<Map<String,Object>> getTheStuff0(Connection connection, Messages msgs, Object dbName, int brandRef) throws SQLException {",
+      "      if (true){",
+      "        String something = SummaryOfChargesDateTable_getSummaryOfChargesDate_undefined0_0_0(connection,msgs,dbName);",
+      "        //If you get a compilation in the following variables because of a name conflict: check the output params. Each output param can only be defined once.",
+      "        List<Map<String,Object>> params1 = SummaryOfChargesDateTable_getSummaryOfChargesDate_undefined0_0_1(connection,msgs,dbName,brandRef,something);",
+      "        SummaryOfChargesDateTable_getSummaryOfChargesDate_undefined0_0_2(connection,msgs,dbName,brandRef);",
+      "        //If you get a compilation in the following variables because of a name conflict: check the output params. Each output param can only be defined once.",
+      "      return params1;",
+      "      }",
+      "      if (true){",
+      "        List<Map<String,Object>> params1 = SummaryOfChargesDateTable_getSummaryOfChargesDate_undefined0_1(connection,msgs,dbName,brandRef);",
+      "      return params1;",
+      "      }",
+      "      if (true){",
+      "        String something = SummaryOfChargesDateTable_getSummaryOfChargesDate_undefined0_2_0(connection,msgs,dbName);",
+      "        //If you get a compilation in the following variables because of a name conflict: check the output params. Each output param can only be defined once.",
+      "        List<Map<String,Object>> params1 = SummaryOfChargesDateTable_getSummaryOfChargesDate_undefined0_2_1(connection,msgs,dbName,brandRef,something);",
+      "        SummaryOfChargesDateTable_getSummaryOfChargesDate_undefined0_2_2(connection,msgs,dbName,brandRef);",
+      "        //If you get a compilation in the following variables because of a name conflict: check the output params. Each output param can only be defined once.",
+      "      return params1;",
+      "      }",
+      "      if (true){",
+      "        String something = SummaryOfChargesDateTable_getSummaryOfChargesDate_undefined0_3_0(connection,msgs,dbName);",
+      "        //If you get a compilation in the following variables because of a name conflict: check the output params. Each output param can only be defined once.",
+      "        List<Map<String,Object>> params1 = SummaryOfChargesDateTable_getSummaryOfChargesDate_undefined0_3_1(connection,msgs,dbName,brandRef,something);",
+      "        SummaryOfChargesDateTable_getSummaryOfChargesDate_undefined0_3_2(connection,msgs,dbName,brandRef);",
+      "        //If you get a compilation in the following variables because of a name conflict: check the output params. Each output param can only be defined once.",
+      "      return params1;",
+      "      }",
+      "      throw new RuntimeException(\"No guard condition executed\");",
+      "  }",
+      "    public String SummaryOfChargesDateTable_getSummaryOfChargesDate_undefined0_0_0(Connection connection, Messages msgs, Object dbName) throws SQLException {",
+      "    String sql = \"select something from somewhere \";",
+      "    try (PreparedStatement s = connection.prepareStatement(sql)) {",
+      "      logger.debug(MessageFormat.format(\"sql: {0}\", sql));",
+      "      long start = System.nanoTime();",
+      "      ResultSet rs = s.executeQuery();",
+      "      if (!rs.next())throw new SQLException(\"Error in : SummaryOfChargesDateTable_getSummaryOfChargesDate_undefined0_0_0. Cannot get first item. Index was 0_0_0 Sql was select something from somewhere\\nAuthoriseCharges.rest[summaryOfChargesDates].resolvers[getSummaryOfChargesDate] Mutation getSummaryOfChargesDate undefined\");",
+      "      String something = rs.getString(\"something\");",
+      "      logger.debug(MessageFormat.format(\"Duration: {0,number,#.##}, something: {1}\", (System.nanoTime() - start) / 1000000.0, something));",
+      "      return something;",
+      "  }}",
+      "    public List<Map<String,Object>> SummaryOfChargesDateTable_getSummaryOfChargesDate_undefined0_0_1(Connection connection, Messages msgs, Object dbName, int brandRef, Object something) throws SQLException {",
+      "    String sql = \"somesql \";",
+      "    try (PreparedStatement s = connection.prepareStatement(sql)) {",
+      "      logger.debug(MessageFormat.format(\"sql: {0},brandRef: {1},something: {2}\",sql,brandRef,something));",
+      "      s.setObject(1, brandRef);",
+      "      s.setObject(2, something);",
+      "      long start = System.nanoTime();",
+      "      ResultSet rs = s.executeQuery();",
+      "      List<Map<String,Object>> result = new ArrayList();",
+      "      while (rs.next()){",
+      "        Map<String,Object> oneLine = new HashMap();",
+      "        oneLine.put(\"bob\", rs.getString(\"bob\"));",
+      "        result.add(oneLine);",
+      "      }",
+      "      logger.debug(MessageFormat.format(\"Duration: {0,number,#.##}, result: {1}\", (System.nanoTime() - start) / 1000000.0), result);",
+      "      return result;",
+      "  }}",
+      "    public void SummaryOfChargesDateTable_getSummaryOfChargesDate_undefined0_0_2(Connection connection, Messages msgs, Object dbName, int brandRef) throws SQLException {",
+      "    String sql = \"insert something in audit file \";",
+      "    try (PreparedStatement s = connection.prepareStatement(sql)) {",
+      "      logger.debug(MessageFormat.format(\"sql: {0},brandRef: {1}\",sql,brandRef));",
+      "      s.setObject(1, brandRef);",
+      "      long start = System.nanoTime();",
+      "      s.execute();",
+      "      logger.debug(MessageFormat.format(\"Duration: {0,number,#.##}\", (System.nanoTime() - start) / 1000000.0));",
+      "      return;",
+      "  }}",
+      "    public List<Map<String,Object>> SummaryOfChargesDateTable_getSummaryOfChargesDate_undefined0_1(Connection connection, Messages msgs, Object dbName, int brandRef) throws SQLException {",
+      "    String sql = \"someOtherSql \";",
+      "    try (PreparedStatement s = connection.prepareStatement(sql)) {",
+      "      logger.debug(MessageFormat.format(\"sql: {0},brandRef: {1}\",sql,brandRef));",
+      "      s.setObject(1, brandRef);",
+      "      long start = System.nanoTime();",
+      "      ResultSet rs = s.executeQuery();",
+      "      List<Map<String,Object>> result = new ArrayList();",
+      "      while (rs.next()){",
+      "        Map<String,Object> oneLine = new HashMap();",
+      "        oneLine.put(\"bill\", rs.getString(\"bil\"));",
+      "        oneLine.put(\"bob\", rs.getString(\"bob\"));",
+      "        result.add(oneLine);",
+      "      }",
+      "      logger.debug(MessageFormat.format(\"Duration: {0,number,#.##}, result: {1}\", (System.nanoTime() - start) / 1000000.0), result);",
+      "      return result;",
+      "  }}",
+      "    public String SummaryOfChargesDateTable_getSummaryOfChargesDate_undefined0_2_0(Connection connection, Messages msgs, Object dbName) throws SQLException {",
+      "    String sql = \"select something from somewhere \";",
+      "    try (PreparedStatement s = connection.prepareStatement(sql)) {",
+      "      logger.debug(MessageFormat.format(\"sql: {0}\", sql));",
+      "      long start = System.nanoTime();",
+      "      ResultSet rs = s.executeQuery();",
+      "      if (!rs.next())throw new SQLException(\"Error in : SummaryOfChargesDateTable_getSummaryOfChargesDate_undefined0_2_0. Cannot get first item. Index was 0_2_0 Sql was select something from somewhere\\nAuthoriseCharges.rest[summaryOfChargesDates].resolvers[getSummaryOfChargesDate] Mutation getSummaryOfChargesDate undefined\");",
+      "      String something = rs.getString(\"something\");",
+      "      logger.debug(MessageFormat.format(\"Duration: {0,number,#.##}, something: {1}\", (System.nanoTime() - start) / 1000000.0, something));",
+      "      return something;",
+      "  }}",
+      "    public List<Map<String,Object>> SummaryOfChargesDateTable_getSummaryOfChargesDate_undefined0_2_1(Connection connection, Messages msgs, Object dbName, int brandRef, Object something) throws SQLException {",
+      "    String sql = \"somesql \";",
+      "    try (PreparedStatement s = connection.prepareStatement(sql)) {",
+      "      logger.debug(MessageFormat.format(\"sql: {0},brandRef: {1},something: {2}\",sql,brandRef,something));",
+      "      s.setObject(1, brandRef);",
+      "      s.setObject(2, something);",
+      "      long start = System.nanoTime();",
+      "      ResultSet rs = s.executeQuery();",
+      "      List<Map<String,Object>> result = new ArrayList();",
+      "      while (rs.next()){",
+      "        Map<String,Object> oneLine = new HashMap();",
+      "        oneLine.put(\"bob\", rs.getString(\"bob\"));",
+      "        result.add(oneLine);",
+      "      }",
+      "      logger.debug(MessageFormat.format(\"Duration: {0,number,#.##}, result: {1}\", (System.nanoTime() - start) / 1000000.0), result);",
+      "      return result;",
+      "  }}",
+      "    public void SummaryOfChargesDateTable_getSummaryOfChargesDate_undefined0_2_2(Connection connection, Messages msgs, Object dbName, int brandRef) throws SQLException {",
+      "    String sql = \"insert something in audit file \";",
+      "    try (PreparedStatement s = connection.prepareStatement(sql)) {",
+      "      logger.debug(MessageFormat.format(\"sql: {0},brandRef: {1}\",sql,brandRef));",
+      "      s.setObject(1, brandRef);",
+      "      long start = System.nanoTime();",
+      "      s.execute();",
+      "      logger.debug(MessageFormat.format(\"Duration: {0,number,#.##}\", (System.nanoTime() - start) / 1000000.0));",
+      "      return;",
+      "  }}",
+      "    public String SummaryOfChargesDateTable_getSummaryOfChargesDate_undefined0_3_0(Connection connection, Messages msgs, Object dbName) throws SQLException {",
+      "    String sql = \"select something from somewhere \";",
+      "    try (PreparedStatement s = connection.prepareStatement(sql)) {",
+      "      logger.debug(MessageFormat.format(\"sql: {0}\", sql));",
+      "      long start = System.nanoTime();",
+      "      ResultSet rs = s.executeQuery();",
+      "      if (!rs.next())throw new FocusonNotFound404Exception(msgs);",
+      "      String something = rs.getString(\"something\");",
+      "      logger.debug(MessageFormat.format(\"Duration: {0,number,#.##}, something: {1}\", (System.nanoTime() - start) / 1000000.0, something));",
+      "      return something;",
+      "  }}",
+      "    public List<Map<String,Object>> SummaryOfChargesDateTable_getSummaryOfChargesDate_undefined0_3_1(Connection connection, Messages msgs, Object dbName, int brandRef, Object something) throws SQLException {",
+      "    String sql = \"somesql \";",
+      "    try (PreparedStatement s = connection.prepareStatement(sql)) {",
+      "      logger.debug(MessageFormat.format(\"sql: {0},brandRef: {1},something: {2}\",sql,brandRef,something));",
+      "      s.setObject(1, brandRef);",
+      "      s.setObject(2, something);",
+      "      long start = System.nanoTime();",
+      "      ResultSet rs = s.executeQuery();",
+      "      List<Map<String,Object>> result = new ArrayList();",
+      "      while (rs.next()){",
+      "        Map<String,Object> oneLine = new HashMap();",
+      "        oneLine.put(\"bob\", rs.getString(\"bob\"));",
+      "        result.add(oneLine);",
+      "      }",
+      "      if (result.size() == 0) throw new FocusonNotFound404Exception(msgs);",
+      "      logger.debug(MessageFormat.format(\"Duration: {0,number,#.##}, result: {1}\", (System.nanoTime() - start) / 1000000.0), result);",
+      "      return result;",
+      "  }}",
+      "    public void SummaryOfChargesDateTable_getSummaryOfChargesDate_undefined0_3_2(Connection connection, Messages msgs, Object dbName, int brandRef) throws SQLException {",
+      "    String sql = \"insert something in audit file \";",
+      "    try (PreparedStatement s = connection.prepareStatement(sql)) {",
+      "      logger.debug(MessageFormat.format(\"sql: {0},brandRef: {1}\",sql,brandRef));",
+      "      s.setObject(1, brandRef);",
+      "      long start = System.nanoTime();",
+      "      s.execute();",
+      "      logger.debug(MessageFormat.format(\"Duration: {0,number,#.##}\", (System.nanoTime() - start) / 1000000.0));",
+      "      return;",
+      "  }}",
+      "",
+      "public String dbName() {return IFetcher.db; }",
+      "}"
+    ] )
   } )
 } )

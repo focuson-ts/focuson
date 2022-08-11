@@ -14,9 +14,10 @@ export function makeDBFetchers<B, G> ( params: JavaWiringParams, pageD: RefD< G>
   const paramVariables = sortedEntries ( rest.params ).map ( ( [ name, props ] ) =>
     `${props.javaType} ${name} = dataFetchingEnvironment.getArgument("${name}");` )
   if ( rest.tables === undefined ) throw Error ( `Calling makeH2Fetchers when tables not defined for page ${pageD.name}` )
-  const getAllParams = [ 'c',
+  const getAllParams = [ 'c','msgs',
     ...findParamsForTable ( `Error in page ${pageD.name} rest ${restName}`, rest.params, rest.tables )
       .map ( ( { name, param } ) => name ) ].join ( ',' )
+
   const getDataFromRS: string[] = isRepeatingDd ( rdp.rest.dataDD ) ?
     [ `         List<Map<String, Object>> list = ${sqlMapName ( pageD, restName, [] )}.getAll(${getAllParams});`,
       `         return list;`, ] :

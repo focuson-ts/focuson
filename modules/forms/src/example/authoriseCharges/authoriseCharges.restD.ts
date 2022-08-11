@@ -22,6 +22,7 @@ export const AuthorisedChargesRD: ExampleRestD = {
   url: "/api/charges/summary?{query}",
   actions: [ 'get', 'update' ],
   tables: {
+    noDataIs404: true,
     entity: { table: authorisedChargesTableDD, alias: 'A', type: 'Main' },
     where: [ { table: authorisedChargesTableDD, alias: "A", field: 'date', comparator: 'sameday', paramName: 'date', pattern: 'dd/MM/yyyy' } ]
   }
@@ -71,6 +72,20 @@ export const SummaryOfChargeDatesRD: ExampleRestD = {
             },
             {
               type: 'sql', schema: onlySchema, sql: 'somesql', params: [ 'brandRef', 'something',
+                { type: 'output', javaType: 'String', name: 'bob', rsName: 'bob' }
+              ], list: true
+            },
+            { type: 'sql', schema: onlySchema, sql: 'insert something in audit file', params: 'brandRef' } ]
+        },
+        {
+          guard: [], type: 'multiple', mutations: [
+            {
+              type: 'sql', schema: onlySchema, sql: 'select something from somewhere', noDataIs404: true,  params: [
+                { type: 'output', name: 'something', rsName: 'something', javaType: 'String' }
+              ]
+            },
+            {
+              type: 'sql', schema: onlySchema, sql: 'somesql',noDataIs404: true,  params: [ 'brandRef', 'something',
                 { type: 'output', javaType: 'String', name: 'bob', rsName: 'bob' }
               ], list: true
             },

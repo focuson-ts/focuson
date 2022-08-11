@@ -630,6 +630,7 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: RefD<G>, re
     `import java.util.Map;`,
     `import java.util.stream.Collectors;`,
     `import ${params.thePackage}.${params.utilsPackage}.DateFormatter;`,
+    `import ${params.thePackage}.${params.utilsPackage}.Messages;`,
     '',
     `//${JSON.stringify ( restD.params )}`,
     `public class ${className} {`,
@@ -750,7 +751,7 @@ export function makeAllGetsAndAllSqlForRest<B, G> ( params: JavaWiringParams, p:
   const allParams = unique ( getters.flatMap ( g => g.query ), ( { name, param } ) => name + param.javaType )
   const mapString = isRepeatingDd ( rdp.rest.dataDD ) ? '.stream().map(x -> x._root).collect(Collectors.toList())' : '.map(x -> x._root)'
   const mainGet: string[] = [
-    `public static ${isListOrOptional ( rdp )}<Map<String,Object>> getAll(${[ 'Connection connection', ...allParams.map ( ( { name, param } ) =>
+    `public static ${isListOrOptional ( rdp )}<Map<String,Object>> getAll(${[ 'Connection connection','Messages msgs', ...allParams.map ( ( { name, param } ) =>
       `${param.javaType} ${name}` ) ].join ( "," )}) throws SQLException {`,
     `//from ${p.name}.rest[${restName}].dataDD which is of type ${rdp.rest.dataDD.name}`,
     `   return get(${[ 'connection', ...callingParams ( getters[ 0 ].query ), ...ints ( sqlRoot.children.length )

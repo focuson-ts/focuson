@@ -506,6 +506,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
         "import focuson.data.utils.DateFormatter;",
+        "import focuson.data.utils.Messages;",
         "",
         "//{'accountId':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':44444444},'brandRef':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'brandRef','testValue':10},'dbName':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'dbName','testValue':'mock'}}",
         "public class JointAccount_jointAccountMaps {",
@@ -536,7 +537,7 @@ describe ( "makeMapsForRest", () => {
         "  ' where mainCustomer.nameId = mainName.id and j.mainCustomerId = mainCustomer.id and jointCustomer.nameId = jointName.id and j.jointCustomerId = jointCustomer.id and  j.acc_id = ? and  j.brand_id = ? and 3=3 and 1=1 and 123=123 and ACC_TBL <> 'canceled''+",
         "  ' order by mainCustomer.nameId';",
         "  ",
-        "  public static Optional<Map<String,Object>> getAll(Connection connection,int accountId,int brandRef) throws SQLException {",
+        "  public static Optional<Map<String,Object>> getAll(Connection connection,Messages msgs,int accountId,int brandRef) throws SQLException {",
         "  //from JointAccount.rest[jointAccount].dataDD which is of type JointAccount",
         "     return get(connection,accountId,brandRef,get0(connection,accountId,brandRef),get1(connection,accountId,brandRef)).map(x -> x._root);",
         "  }",
@@ -708,6 +709,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
         "import focuson.data.utils.DateFormatter;",
+        "import focuson.data.utils.Messages;",
         "",
         "//{'accountId':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':44444444},'brandRef':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'brandRef','testValue':10},'dbName':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'dbName','testValue':'mock'}}",
         "public class JointAccount_jointAccountMaps0 {",
@@ -730,7 +732,7 @@ describe ( "makeMapsForRest", () => {
         "  ' where  j.acc_id = ? and  j.brand_id = ? and mainCustomer.id = mainAddress.customerId and j.mainCustomerId = mainCustomer.id and 123=123 and 2=2 and 1=1'+",
         "  ' order by mainCustomer.nameId';",
         "  ",
-        "  public static Optional<Map<String,Object>> getAll(Connection connection,int accountId,int brandRef) throws SQLException {",
+        "  public static Optional<Map<String,Object>> getAll(Connection connection,Messages msgs,int accountId,int brandRef) throws SQLException {",
         "  //from JointAccount.rest[jointAccount].dataDD which is of type JointAccount",
         "     return get(connection,accountId,brandRef,get0(connection,accountId,brandRef),get1(connection,accountId,brandRef)).map(x -> x._root);",
         "  }",
@@ -888,6 +890,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
         "import focuson.data.utils.DateFormatter;",
+        "import focuson.data.utils.Messages;",
         "",
         "//{'accountId':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'accountId','testValue':44444444},'brandRef':{'rsSetter':'setInt','javaType':'int','graphQlType':'Int','typeScriptType':'number','javaParser':'Integer.parseInt','commonLens':'brandRef','testValue':10},'dbName':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'dbName','testValue':'mock'}}",
         "public class JointAccount_jointAccountMaps1 {",
@@ -910,7 +913,7 @@ describe ( "makeMapsForRest", () => {
         "  ' where  j.acc_id = ? and  j.brand_id = ? and jointCustomer.id = jointAddress.customerId and j.jointCustomerId = jointCustomer.id and 123=123'+",
         "  ' order by mainCustomer.nameId';",
         "  ",
-        "  public static Optional<Map<String,Object>> getAll(Connection connection,int accountId,int brandRef) throws SQLException {",
+        "  public static Optional<Map<String,Object>> getAll(Connection connection,Messages msgs,int accountId,int brandRef) throws SQLException {",
         "  //from JointAccount.rest[jointAccount].dataDD which is of type JointAccount",
         "     return get(connection,accountId,brandRef,get0(connection,accountId,brandRef),get1(connection,accountId,brandRef)).map(x -> x._root);",
         "  }",
@@ -1051,7 +1054,7 @@ describe ( "makeMapsForRest", () => {
         "  }",
         "}"
       ]
-    ] )
+    ])
   } )
   it ( "should  add 'where' to the sql if there is a where clause", () => {
     expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), ( r, path ) =>
@@ -1091,6 +1094,7 @@ describe ( "makeMapsForRest", () => {
         "import java.util.Map;",
         "import java.util.stream.Collectors;",
         "import focuson.data.utils.DateFormatter;",
+        "import focuson.data.utils.Messages;",
         "",
         "//{'dbName':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','commonLens':'dbName','testValue':'mock'},'postcode':{'rsSetter':'setString','javaType':'String','graphQlType':'String','typeScriptType':'string','javaParser':'','lens':'~/postcode/search','testValue':'LW12 4RG'}}",
         "public class PostCodeMainPage_postcodeMaps {",
@@ -1103,7 +1107,7 @@ describe ( "makeMapsForRest", () => {
         "  '  ADD_TBL ADD_TBL'+",
         "  ' ';",
         "  ",
-        "  public static List<Map<String,Object>> getAll(Connection connection,String postcode) throws SQLException {",
+        "  public static List<Map<String,Object>> getAll(Connection connection,Messages msgs,String postcode) throws SQLException {",
         "  //from PostCodeMainPage.rest[postcode].dataDD which is of type PostCodeSearchResponse",
         "     return get(connection,postcode).stream().map(x -> x._root).collect(Collectors.toList());",
         "  }",
@@ -1147,7 +1151,7 @@ describe ( "makeMapsForRest", () => {
         "  }",
         "}"
       ]
-    ] )
+    ])
   } )
 } )
 
