@@ -15,7 +15,8 @@ const context: Context = {
   combine: ( state: LensState<DataDrivenState, any, Context>, pages: PageDetailsForCombine[] ): JSX.Element => <div>{pages.map ( p => p.element )}</div>,
   pageSelectionL: pageSelectionlens (),
   simpleMessagesL: simpleMessagesL (),
-  pathToLens: () => () => Lenses.identity<DataDrivenState> ().focusQuery ( 'jointData' ), //just something to compile we aren't using it
+// @ts-ignore
+  pathToLens: () => path => Lenses.identity<DataDrivenState> ().focusQuery ( path.slice(1) ), //trims the / off the front
   pages: {},
   // commonIds: {}
 }
@@ -49,7 +50,7 @@ function displayString ( props: FocusedProps ) {
   return <p>Label: {props.label} Id: {props.id} Mode: {props.mode} Data: {props.state.optJson ()}</p>
 }
 const details: NameAnd<OneDropDownDetails<DataDrivenState, Context>> = {
-  M: { valuePath: '/theMainName', dataPath: '/mainData', display: displayString },
+  M: { valuePath: '/mainName', dataPath: '/mainData', display: displayString },
   J: { valuePath: '/jointName', dataPath: '/jointData', display: displayString },
   N: { value: 'New Bank' },
 }
@@ -79,5 +80,15 @@ describe ( 'DataDrivenFixedOptionDropDownAndDetails', () => {
     const comp = display ( { ...empty, mainOrJointOrNew: 'J', jointData: undefined }, s => {}, s => <DataDrivenFixedOptionDropDownAndDetails parentState={s} state={s.focusOn ( 'mainOrJointOrNew' )} id='someId' allButtons={{}} mode='view' label='someLabel' details={details}/> )
     expect ( comp.html () ).toEqual (
       '<div style="display:flex"><div style="flex:50%"><div class="dropdown-container "><label for="someId" class="input-label">someLabel</label><div class=""><select class="select " disabled="" id="someId" required=""><option value="M"></option><option selected="" value="J"></option><option value="N">New Bank</option></select></div></div></div><div style="flex:50%"><p>Label: someLabel Id: someId Mode: view Data: </p></div></div>' )
+  } )
+  it ( 'should display when there is nothing at the data path and dontShowEmpty is true', () => {
+    const comp = display ( { ...empty,  jointName: undefined }, s => {},
+        s => <DataDrivenFixedOptionDropDownAndDetails parentState={s}  state={s.focusOn ( 'mainOrJointOrNew' )} id='someId' dontShowEmpty={true}
+                                                      allButtons={{}} mode='view' label='someLabel' details={details}/> )
+    expect ( comp.html () ).toEqual (
+      '<div style="display:flex"><div style="flex:50%"><div class="dropdown-container "><label for="someId" class="input-label">someLabel</label><div class="">' +
+      '<select class="select " disabled="" id="someId" required="">' +
+      '<option selected="" value="M">theMainName</option>' +
+      '<option value="N">New Bank</option></select></div></div></div><div style="flex:50%"><p>Label: someLabel Id: someId Mode: view Data: theMainData</p></div></div>' )
   } )
 } )

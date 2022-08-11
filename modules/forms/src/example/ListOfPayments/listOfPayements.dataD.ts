@@ -161,6 +161,7 @@ export const printRecordDD: ExampleDataD = {
       dataDD: { ...StringDD, emptyValue: undefined, allowUndefined: true, display: DataDrivenFixedOptionDropDownAndDetailsCD },
       displayParams: {
         pleaseSelect: 'Select...',
+        dontShowEmpty: true,
         details: {
           M: { valuePath: '~/accountDetails/main/fullname', dataPath: '~/accountDetails/main', display: RequestDetailsDD.name },
           J: { valuePath: '~/accountDetails/joint/fullname', dataPath: '~/accountDetails/joint', display: RequestDetailsDD.name },

@@ -1,6 +1,5 @@
 import { LensProps, LensState } from "@focuson/state";
 import { NameAnd } from "@focuson/utils";
-import { FocusOnContext } from "@focuson/focuson";
 import { ContextForDropdown, LabelAndDropdown } from "./labelAndDropdown";
 import { PageMode } from "@focuson/pages";
 
@@ -19,15 +18,17 @@ export interface DataDrivenFixedOptionDropDownAndDetailsProps<S> extends LensPro
   allButtons: NameAnd<JSX.Element>;
   label: string;
   pleaseSelect?: string;
+  dontShowEmpty?: boolean;
   details: NameAnd<OneDropDownDetails<S, ContextForDropdown<S>>>
 }
 
 function DropDownFromData<S> ( props: DataDrivenFixedOptionDropDownAndDetailsProps<S> ) {
-  const { state, id, details, label, mode, allButtons, parentState, pleaseSelect } = props
+  const { state, id, details, label, mode, allButtons, parentState, pleaseSelect, dontShowEmpty } = props
   let s = state.main;
   const pathToLens = state.context.pathToLens ( s, parentState.optional )
-  const values = Object.fromEntries ( Object.entries ( props.details ).map ( ( [ name, detail ] ) =>
-    [ name, detail.value ? detail.value : detail.valuePath ? pathToLens ( detail.valuePath ).getOption ( s ) : '' ] ) )
+  const rawValues = Object.entries ( details ).map ( ( [ name, detail ] ): [ string, string | undefined ] =>
+    [ name, detail.value ? detail.value : detail.valuePath ? pathToLens ( detail.valuePath ).getOption ( s ) : '' ] );
+  const values = Object.fromEntries ( rawValues.filter ( nv => !dontShowEmpty || (nv[ 1 ]?.length && nv[ 1 ].length > 0) ) )
   return <LabelAndDropdown parentState={parentState} label={label} enums={values} mode={mode} allButtons={allButtons} state={state} id={id} pleaseSelect={pleaseSelect} required={true}/>
 }
 

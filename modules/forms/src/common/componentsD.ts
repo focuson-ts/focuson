@@ -172,7 +172,7 @@ export const DataDrivenFixedOptionDropDownAndDetailsCD: DisplayCompD = {
     ...enabledByForInputs,
     details: { paramType: "jsonWithDisplayFn", needed: 'yes' },
     pleaseSelect: { paramType: 'string', needed: 'no' },
-
+    dontShowEmpty: { paramType: 'boolean', needed: 'no' }
   }
 }
 
