@@ -29,7 +29,8 @@ export const makeButtonFrom = <B extends ButtonD, G> ( makeGuard: MakeGuard<G>, 
          if ( isButtonWithControl ( button ) )
            return makeControlButton ( maker ) ( params ) ( mainPage, parent ) ( [ name, button ] )
          if ( isGuardButton<B, G> ( button ) ) {
-           return [ `<GuardButton cond={${guardName ( name )}}>`,
+           const theGuardName = guardName ( typeof button.by === 'string' ? button.by : name )
+           return [ `<GuardButton cond={${theGuardName}}>`,
              ...indentList ( makeButtonFrom ( makeGuard, maker ) ( params ) ( mainPage, parent ) ( [ name, button.guard ] ) ),
              "</GuardButton>" ]
          }
@@ -38,7 +39,7 @@ export const makeButtonFrom = <B extends ButtonD, G> ( makeGuard: MakeGuard<G>, 
 ;
 
 const makeButtonGuardVariableFrom = <B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, maker: MakeGuard<G>, mainP: MainPageD<B, G>, p: PageD<B, G> ) => ( [ name, button ]: [ string, B ] ): string[] => {
-  if ( isGuardButton<B, G> ( button ) ) {
+  if ( isGuardButton<B, G> ( button ) && typeof button.by !== 'string' ) {
     const guardCreator = maker[ button.by.condition ]
     if ( !guardCreator ) throw Error ( `Don't know how to makeButtonGuardVariableFrom(${name},${button.by.condition} in page ${p.name}` )
     return [ guardCreator.makeGuardVariable ( params, mainP, p, name, button.by ) ]

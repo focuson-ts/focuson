@@ -12,7 +12,7 @@ export const EnabledByModalPageD: ExampleModalPage = {
     noButton: { condition: 'equals', path: '~/onChange/dropdown', value: '"N"' }
   },
   buttons: {
-    commit: { control: 'ModalCommitButton', enabledBy: 'yesButton', validate: false ,change: {command: 'message', msg: 'Committed'} },
+    commit: { control: 'ModalCommitButton', enabledBy: 'yesButton', validate: false, change: { command: 'message', msg: 'Committed' } },
     commitWithvalidate: { control: 'ModalCommitButton', enabledBy: 'yesButton', validate: true },
     cancel: { control: 'ModalCancelButton', enabledBy: 'noButton' }
   }
@@ -23,10 +23,19 @@ export const EnabledByPageD: ExampleMainPage = {
   domain: { onChange: { dataDD: enabledByDataD } },
   initialValue: 'empty',
 
-  modals: [{modal: EnabledByModalPageD}], modes: [ 'edit' ],
+  modals: [ { modal: EnabledByModalPageD } ], modes: [ 'edit' ],
   rest: {},
+  guards: { dropdownYes: { condition: 'equals', path: 'dropdown', value: '"Y"' } },
   buttons: {
-    page: { control: 'ModalButton', modal: EnabledByModalPageD, focusOn: '~/onChange', mode: 'edit' }
+    page: { control: 'ModalButton', modal: EnabledByModalPageD, focusOn: '~/onChange', mode: 'edit' },
+    pageGuardDirect: {
+      guard: { control: 'ModalButton', modal: EnabledByModalPageD, focusOn: '~/onChange', mode: 'edit' },
+      by: { condition: 'equals', path: 'dropdown', value: '"Y"' }
+    },
+    pageGuardName: {
+      guard: { control: 'ModalButton', modal: EnabledByModalPageD, focusOn: '~/onChange', mode: 'edit' },
+      by: 'dropdownYes'
+    }
   }
 
 }

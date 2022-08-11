@@ -1,4 +1,4 @@
-import { makeButtonsFrom } from "../codegen/makeButtons";
+import { makeButtonsFrom, makeGuardButtonVariables } from "../codegen/makeButtons";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { makeButtons } from "../buttons/allButtons";
 
@@ -6,11 +6,12 @@ import { AllGuardCreator } from "../buttons/guardButton";
 import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { OccupationAndIncomeSummaryPD } from "../example/occupationAndIncome/occupationAndIncome.pageD";
 import { paramsForTest } from "./paramsForTest";
+import { EnabledByPageD } from "../example/enabledBy/enabledBy.pageD";
 
 
 describe ( "makeButtons", () => {
   it ( "should generate a tsx line using that button", () => {
-    expect ( makeButtonsFrom ( paramsForTest, AllGuardCreator, makeButtons (), EAccountsSummaryPD,EAccountsSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( makeButtonsFrom ( paramsForTest, AllGuardCreator, makeButtons (), EAccountsSummaryPD, EAccountsSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "    {amendExistingPlan:<ModalButton id={`${id}.amendExistingPlan`} text='Amend Existing Plan' dateFn={defaultDateFn} state={state} modal='CreatePlan' ",
       "      pageMode='edit'",
       "      focusOn={'~/tempCreatePlan'}",
@@ -35,10 +36,10 @@ describe ( "makeButtons", () => {
       "      rest='EAccountsSummary_CreatePlanRestDetails'",
       "      confirm={true}",
       "     />,}"
-    ])
+    ] )
   } )
   it ( "should create modal buttons with copy on close", () => {
-    expect ( makeButtonsFrom ( paramsForTest, AllGuardCreator, makeButtons (), OccupationAndIncomeSummaryPD,OccupationAndIncomeSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( makeButtonsFrom ( paramsForTest, AllGuardCreator, makeButtons (), OccupationAndIncomeSummaryPD, OccupationAndIncomeSummaryPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "    {addEntry:<ModalButton id={`${id}.addEntry`} text='Add Entry' dateFn={defaultDateFn} state={state} modal='OccupationIncomeModal' ",
       "      pageMode='create'",
       "      focusOn={'~/temp'}",
@@ -87,11 +88,11 @@ describe ( "makeButtons", () => {
       "      focusOnLensForCompileCheck={pageState(state)<domain.OccupationAndIncomeSummaryPageDomain>().focusOn('otherSourcesOfIncome')}",
       "    />,",
       "    prevOccupation:<ListPrevButton id={`${id}.prevOccupation`} title='Prev' list={state.copyWithLens(OccupationAndIncomeSummaryOptionals.currentOccupation(identityL))} value={state.copyWithLens(OccupationAndIncomeSummaryOptionals.selected(identityL))} />,}"
-    ])
+    ] )
   } )
 
   it ( "should render a postcode button", () => {
-    expect ( makeButtonsFrom ( paramsForTest, AllGuardCreator, makeButtons (), PostCodeMainPage,PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( makeButtonsFrom ( paramsForTest, AllGuardCreator, makeButtons (), PostCodeMainPage, PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "    {save:<RestButton state={state} id={`${id}.save`}  text='Save'",
       "      name='save'",
       "      action={'createWithoutFetch'}",
@@ -107,7 +108,40 @@ describe ( "makeButtons", () => {
       "      copyOnClose={[{'from':'~/postcode/addressResults/line1','to':'~/main/line1'},{'from':'~/postcode/addressResults/line2','to':'~/main/line2'},{'from':'~/postcode/addressResults/line3','to':'~/main/line3'},{'from':'~/postcode/addressResults/line4','to':'~/main/line4'},{'from':'~/postcode/addressResults/postcode','to':'~/main/postcode'}]}",
       "      copyJustString={[{'from':'~/main/postcode','to':'~/postcode/search'}]}",
       "    />,}"
-    ])
+    ] )
+  } )
+  it ( "should render buttons with guards", () => {
+    expect ( makeButtonsFrom ( paramsForTest, AllGuardCreator, makeButtons (), EnabledByPageD, EnabledByPageD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+      "    {page:<ModalButton id={`${id}.page`} text='Page' dateFn={defaultDateFn} state={state} modal='EnableByModalPage' ",
+      "      pageMode='edit'",
+      "      focusOn={'~/onChange'}",
+      "      // If there is a compile error here the focuson path might not exist",
+      "      focusOnLensForCompileCheck={pageState(state)<domain.EnabledByPageDomain>().focusOn('onChange')}",
+      "    />,",
+      "    pageGuardDirect:<GuardButton cond={pageGuardDirectGuard}>",
+      "      <ModalButton id={`${id}.pageGuardDirect`} text='Page Guard Direct' dateFn={defaultDateFn} state={state} modal='EnableByModalPage' ",
+      "        pageMode='edit'",
+      "        focusOn={'~/onChange'}",
+      "        // If there is a compile error here the focuson path might not exist",
+      "        focusOnLensForCompileCheck={pageState(state)<domain.EnabledByPageDomain>().focusOn('onChange')}",
+      "      />",
+      "    </GuardButton>,",
+      "    pageGuardName:<GuardButton cond={dropdownYesGuard}>",
+      "      <ModalButton id={`${id}.pageGuardName`} text='Page Guard Name' dateFn={defaultDateFn} state={state} modal='EnableByModalPage' ",
+      "        pageMode='edit'",
+      "        focusOn={'~/onChange'}",
+      "        // If there is a compile error here the focuson path might not exist",
+      "        focusOnLensForCompileCheck={pageState(state)<domain.EnabledByPageDomain>().focusOn('onChange')}",
+      "      />",
+      "    </GuardButton>,}"
+    ] )
+
+  } )
+  it ( "should make guard variables for buttons with guards", () => {
+    expect ( makeGuardButtonVariables ( paramsForTest, AllGuardCreator, EnabledByPageD, EnabledByPageD ) ).toEqual ( [
+      `const pageGuardDirectGuard =  state.focusOn('dropdown').optJson() === "Y"`
+    ] )
+
   } )
 
 } )

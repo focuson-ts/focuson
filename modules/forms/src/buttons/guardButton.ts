@@ -198,5 +198,6 @@ export function isGuardButton<B, G> ( b: any ): b is GuardButtonInPage<B, G> {
 
 export interface GuardButtonInPage<B, G> {
   guard: B;
-  by: G
+  by: G | string
 }
+
