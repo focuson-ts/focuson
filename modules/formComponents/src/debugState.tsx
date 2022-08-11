@@ -197,7 +197,7 @@ export function DisplayGuards ( { guards }: DisplayGuardsProps ) {
 }
 const findTagLens = <S extends any> ( { cd, fdd }: RestDetails<S, SimpleMessage>[string], id: string ) => fdd[ id ] ? fdd[ id ] : cd[ id ];
 function TagTable<S, FD, D> ( rest: OneRestDetails<S, FD, D, SimpleMessage>, theseTags: (string | undefined)[], desiredTags: [ string, (string | undefined) ][] ) {
-  if ( rest.ids.length === 0 ) return <div>There are no ids</div>
+  if ( rest.ids.length === 0  && rest.resourceId.length===0) return <div>There are no ids</div>
   return <table className="fetcher-debug">
     <thead>
     <tr>
@@ -208,10 +208,9 @@ function TagTable<S, FD, D> ( rest: OneRestDetails<S, FD, D, SimpleMessage>, the
     </tr>
     </thead>
     <tbody>
-    {rest.ids.map ( ( id, tagIndex ) => {
+    {desiredTags.map ( ( [id,thisTag], tagIndex ) => {
       const tagLens: Optional<any, any> = findTagLens ( rest, id )
       let thisRememberedTag = theseTags?.[ tagIndex ];
-      let thisTag = desiredTags[ tagIndex ][ 1 ];
       const classForUndefinedTag = thisTag ? undefined : 'debug-tag-undefined'
       return <tr key={id}>
         <td>{id}</td>
