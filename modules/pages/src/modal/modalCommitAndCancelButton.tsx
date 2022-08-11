@@ -2,7 +2,7 @@ import { currentPageSelectionTail, fromPathGivenState, mainPage, PageSelection, 
 import { LensProps, lensState, LensState, reasonFor } from "@focuson/state";
 import { DateFn, defaultDateFn, safeArray, safeString, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
 import { Optional, Transform } from "@focuson/lens";
-import { HasRestCommandL, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand } from "@focuson/rest";
+import { HasRestCommandL, ModalChangeCommands, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand } from "@focuson/rest";
 import { getRefForValidateLogicToButton, hasValidationErrorAndReport } from "../validity";
 import { HasSimpleMessageL } from "../simpleMessage";
 import { CustomButtonType, getButtonClassName } from "../common";
@@ -25,9 +25,9 @@ interface ModalCommitCancelButtonProps<S, Context> extends LensProps<S, any, Con
   dateFn?: DateFn;
   text?: string
   confirm?: string | boolean;
-
 }
 interface ModalCommitButtonProps<S, C> extends ModalCommitCancelButtonProps<S, C> {
+  change?: ModalChangeCommands | ModalChangeCommands[];
   validate?: boolean
 }
 export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( { id, state, text, buttonType, confirm, enabledBy }: ModalCommitCancelButtonProps<S, Context> ) {
@@ -50,7 +50,7 @@ export function canCommitOrCancel<S, Context extends PageSelectionContext<S>> ( 
   return safeArray ( state.context.pageSelectionL.getOption ( state.main ) ).length > 1
 }
 
-export function ModalCommitButton<S, Context extends PageSelectionContext<S> & HasRestCommandL<S> & HasSimpleMessageL<S> & HasTagHolderL<S>> ( { state, id, dateFn, validate, enabledBy, text, buttonType, confirm }: ModalCommitButtonProps<S, Context> ) {
+export function ModalCommitButton<S, Context extends PageSelectionContext<S> & HasRestCommandL<S> & HasSimpleMessageL<S> & HasTagHolderL<S>> ( { state, id, dateFn, validate, enabledBy, text, buttonType, confirm ,change}: ModalCommitButtonProps<S, Context> ) {
   // @ts-ignore
   const debug = state.main?.debug?.validityDebug
   if ( dateFn === undefined ) dateFn = defaultDateFn
@@ -105,7 +105,8 @@ export function ModalCommitButton<S, Context extends PageSelectionContext<S> & H
     console.log ( 'dateFnInMakeModalProcessor', dateFn )
     console.log ( 'dateFnInMakeModalProcessor ()', dateFn () )
     console.log ( 'message ()', config.stringToMsg ( "somemsg" ) )
-    const changeTxs = processChangeCommandProcessor ( errorPrefix, modalCommandProcessors ( config ) ( state.main ), toArray ( lastPage.changeOnClose ) )
+    const allChangeCommands = [...toArray ( lastPage.changeOnClose ),...toArray(change)];
+    const changeTxs = processChangeCommandProcessor ( errorPrefix, modalCommandProcessors ( config ) ( state.main ), allChangeCommands )
 
     if ( lastPage ) {
       state.massTransform ( reasonFor ( 'ModalCommit', 'onClick', id ) ) ( pageTransformer, ...restTransformers, ...copyOnCloseTxs, ...findSetLengthOnClose (), ...changeTxs )

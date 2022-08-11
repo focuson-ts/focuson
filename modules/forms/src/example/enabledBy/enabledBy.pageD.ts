@@ -12,7 +12,7 @@ export const EnabledByModalPageD: ExampleModalPage = {
     noButton: { condition: 'equals', path: '~/onChange/dropdown', value: '"N"' }
   },
   buttons: {
-    commit: { control: 'ModalCommitButton', enabledBy: 'yesButton', validate: false },
+    commit: { control: 'ModalCommitButton', enabledBy: 'yesButton', validate: false ,change: {command: 'message', msg: 'Committed'} },
     commitWithvalidate: { control: 'ModalCommitButton', enabledBy: 'yesButton', validate: true },
     cancel: { control: 'ModalCancelButton', enabledBy: 'noButton' }
   }
