@@ -6,7 +6,7 @@ import { ExampleMainPage, ExampleModalPage } from "../common";
 
 export const OrderChequeBookOrPayingInModalPD: ExampleModalPage = {
   name: 'OrderChequeBookOrPayingInModal',
-  pageType: 'ModalPage',
+  pageType: 'ModalPopup',
   /** This page can only view data */
   modes: [ 'create' ],
   /** How we display the page.*/

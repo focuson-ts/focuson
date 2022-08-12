@@ -637,7 +637,7 @@ select, textarea.input {
 }
 
 .glassPane {
-    /* min-height: 600px; */
+    min-height: 100vh;
     position: relative;
 }
 
@@ -804,6 +804,12 @@ pre {
     margin: 0 2px 2px 0;
 }
 
+.debug-page-data{
+    min-width: 50vw;
+}
+.debug-page-title{
+     font-weight: bold;
+}
 #debug-pages-container,
 #debug-state-container,
 #debug-context-container,

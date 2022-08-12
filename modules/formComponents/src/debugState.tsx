@@ -77,12 +77,12 @@ function PagesData<S, C extends FocusOnContext<S>> ( { state }: DebugProps<S, C>
         const accordions = Object.keys ( pageData )
 
         return <tr key={index}>
-          <td>
-            <div>{JSON.stringify ( page )}</div>
-            <div>{title} {page.pageName} - {safeString ( page.focusOn )}</div>
+          <td className='debug-page-info'>
+            <div className='debug-page-title'>{title} {page.pageName} - {safeString ( page.focusOn )}</div>
             <div>{lens?.description}</div>
+            <pre>{JSON.stringify ( page, null, 2 )}</pre>
           </td>
-          <td>
+          <td className='debug-page-data'>
             <div>
               <AccordionExpandAll id="expandAllPageButtons" buttonText="Expand All" state={state.focusOn ( 'debug' ).focusOn ( 'accordions' )} list={accordions}/>
               <AccordionCollapseAll id="collapseAllPageButtons" buttonText="Collapse All" state={state.focusOn ( 'debug' ).focusOn ( 'accordions' )} list={accordions}/>
