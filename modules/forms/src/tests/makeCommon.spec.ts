@@ -5,6 +5,7 @@ import { OccupationAndIncomeSummaryPD } from "../example/occupationAndIncome/occ
 import { generatedPages } from "../focuson.config";
 import { paramsForTest } from "./paramsForTest";
 import { devAppConfig } from "../appConfig";
+import { StringParam } from "../common/restD";
 
 
 describe ( "makeFullState", () => {
@@ -162,6 +163,18 @@ describe ( "makeCommonParams", () => {
       "    defaultDateFn ) ( onError ) //updateTagsAndMessagesOnError ( defaultErrorMessage )",
       "}"
     ] )
+  } )
+  it ( "should add an error message if any of the common params have illegal commonLens", () => {
+    const actual = makeCommonParams ( paramsForTest, [
+      {
+        ...OccupationAndIncomeSummaryPD,
+        commonParams: {
+          error1: { ...StringParam, commonLens: 'some/illegal', testValue: 'user' },
+          error2: { ...StringParam, commonLens: 'va&lue', testValue: 'user' }
+        }
+      } ], { main: '.', backup: '.' } );
+    expect ( actual ).toContain ( 'Common Ids must be legal javascript identifiers. [some/illegal]' )
+    expect ( actual ).toContain ( 'Common Ids must be legal javascript identifiers. [va&lue]' )
   } )
 
 } )

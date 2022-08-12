@@ -6,6 +6,7 @@ export type {commonParams} = {
 export const identityL = identityOptics<{stateName}> ();
 export const commonIdsL = identityL.focusQuery('CommonIds');
 
+{errorMessage}
 export const commonIds: NameAndLens<{stateName}> = {
 {commonParamNameAndLens}
 }

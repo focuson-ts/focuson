@@ -124,7 +124,8 @@ export function findAllCommonParamsWithSamples< G> ( pages: RefD< G>[] ): any {
 
 export function makeCommonParams<G> ( params: TSParams, pages: RefD< G>[], directorySpec: DirectorySpec ) {
   let commonParams: CommonParamsDetails[] = unique ( findAllCommonParamsDetails ( pages ), t => t.param.commonLens );
+  const errorMessage = commonParams.filter(d => !d.param.commonLens.match(/^[a-zA-Z_][a-zA-Z0-9_]*$/)).map(d => `Common Ids must be legal javascript identifiers. [${d.param.commonLens}]`).join('\n')
   const commonParamDefns = commonParams.map ( s => '  ' + s.param.commonLens + ` ? : ${s.param.typeScriptType};\n` ).join ( "" )
   const commonParamNameAndLens = commonParams.map ( s => `   ${s.name}  :    commonIdsL.focusQuery ( '${s.param.commonLens}' )` ).join ( ",\n" )
-  return applyToTemplate ( loadFile ( 'templates/commonTemplate.ts', directorySpec ).toString (), { ...params, commonParamDefns, commonParamNameAndLens } )
+  return applyToTemplate ( loadFile ( 'templates/commonTemplate.ts', directorySpec ).toString (), { ...params, commonParamDefns, commonParamNameAndLens ,errorMessage} )
 }
