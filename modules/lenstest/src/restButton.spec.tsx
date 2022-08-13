@@ -4,7 +4,7 @@ import { shallow } from "enzyme";
 import { enzymeSetup } from "./enzymeAdapterSetup";
 import { fromPathFromRaw, HasPageSelection, MultiPageDetails, PageDetailsForCombine, pageSelectionlens, simpleMessagesL } from "@focuson/pages";
 import { HasRestCommands, restL } from "@focuson/rest";
-import { SimpleMessage } from "@focuson/utils";
+import { SimpleMessage, testDateFn } from "@focuson/utils";
 import { FocusOnContext } from "@focuson/focuson";
 import { identityOptics, Lenses } from "@focuson/lens";
 import { RestButton } from "@focuson/form_components";
@@ -38,6 +38,7 @@ const context: Context = {
   pathToLens: fromPathFromRaw ( pageSelectionlens (), pageDetails ),
   pages: pageDetails,
   commonIds: {},
+  dateFn: testDateFn,
   newFetchers: {},
   restDetails: {},
   tagHolderL: Lenses.identity<RestButtonStateForTest> ().focusQuery ( 'tags' ),

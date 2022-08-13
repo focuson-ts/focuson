@@ -1,3 +1,6 @@
+export interface HasDataFn{
+  dateFn: DateFn
+}
 export type DateFn = () => string
 export const testDateFn: DateFn = () => "timeForTest";
 export const defaultDateFn: DateFn = () => new Date ().toISOString ();

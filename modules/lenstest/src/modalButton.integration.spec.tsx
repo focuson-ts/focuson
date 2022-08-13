@@ -67,6 +67,7 @@ const context: Context = {
   pages: pageDetails,
   commonIds: {},
   newFetchers: {},
+  dateFn: testDateFn,
   restDetails: {},
   tagHolderL: Lenses.identity<ModalButtonStateForTest> ().focusQuery ( 'tags' ),
 }

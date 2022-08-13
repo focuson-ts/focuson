@@ -1,5 +1,5 @@
 {
-  "template":    "react",
+  "template":    "noreact",
   "name":        "@focuson/stories",
   "description": "Storybook showing the components' ",
   "details":     {

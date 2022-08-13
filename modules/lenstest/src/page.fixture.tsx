@@ -1,7 +1,7 @@
 import { lensState } from "@focuson/state";
 import { identityOptics } from "@focuson/lens";
 import { focusedPage, HasPageSelection, Loading, MultiPageDetails, PageConfig, PageMode, simpleMessagesPageConfig } from "@focuson/pages";
-import { HasSimpleMessages, SimpleMessage } from "@focuson/utils";
+import { HasSimpleMessages, SimpleMessage, testDateFn } from "@focuson/utils";
 import { defaultPageSelectionAndRestCommandsContext, FocusOnContext } from "@focuson/focuson";
 import { HasTagHolder } from "@focuson/template";
 import { HasRestCommands, RestCommand } from "@focuson/rest";
@@ -70,4 +70,4 @@ export const pageDetails: MultiPageDetails<PageSpecState, ContextForTest> = {
 }
 export type PageDetails = typeof pageDetails
 
-export const context: ContextForTest = defaultPageSelectionAndRestCommandsContext<PageSpecState> ( pageDetails, {}, {}, {} )
+export const context: ContextForTest = defaultPageSelectionAndRestCommandsContext<PageSpecState> ( pageDetails, {}, {}, {} ,testDateFn)

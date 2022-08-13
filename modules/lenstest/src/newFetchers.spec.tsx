@@ -168,7 +168,7 @@ describe ( "restCommandsFromFetchers should create a rest command when needed", 
 describe ( "processRestsAndFetchers", () => {
   it ( "should load if fetcher needs it", async () => {
     const [ actual ] = await processRestsAndFetchers ( config (),
-      defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {}, newFetchers, restDetails ) ) ( [] ) (
+      defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {}, newFetchers, restDetails, testDateFn ) ) ( [] ) (
       () => ({ ...empty, ids: { id1: 111, id2: 222 } })
     )
 
@@ -188,7 +188,8 @@ describe ( "processRestsAndFetchers", () => {
 
   } )
   it ( "should load and record trace if fetcher needs it and recordTrace is on", async () => {
-    const [ actual ] = await processRestsAndFetchers ( config (), defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {}, newFetchers, restDetails ) ) ( [] ) (
+    const [ actual ] = await processRestsAndFetchers ( config (),
+      defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {}, newFetchers, restDetails, testDateFn ) ) ( [] ) (
       () => ({ ...empty, ids: { id1: 111, id2: 222 }, debug: { recordTrace: true } })
     )
 
@@ -214,7 +215,8 @@ describe ( "processRestsAndFetchers", () => {
     ] )
   } )
   it ( "should not load if fetcher doesn't needs it", async () => {
-    const actual = await processRestsAndFetchers ( config (), defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {}, newFetchers, restDetails ) ) ( [] ) (
+    const actual = await processRestsAndFetchers ( config (),
+      defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {}, newFetchers, restDetails, testDateFn ) ) ( [] ) (
       () => empty
     )
     expect ( actual ).toEqual ( [] )

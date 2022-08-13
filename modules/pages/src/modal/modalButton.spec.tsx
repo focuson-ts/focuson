@@ -6,8 +6,8 @@ import { ModalButton } from "./modalButton";
 import { HasPageSelection, PageSelectionContext, pageSelectionlens } from "../pageSelection";
 import { PageDetailsForCombine } from "../selectedPage";
 import { Lenses } from "@focuson/lens";
-import { SimpleMessage, testDateFn } from "@focuson/utils";
-import { ModalCancelButton, ModalCommitButton } from "./modalCommitAndCancelButton";
+import { HasDataFn, SimpleMessage, testDateFn } from "@focuson/utils";
+import { ModalCommitButton } from "./modalCommitAndCancelButton";
 import { HasSimpleMessageL, simpleMessagesL } from "../simpleMessage";
 import { HasRestCommandL, HasRestCommands, RestCommand, restL } from "@focuson/rest";
 import { HasTagHolderL, TagHolder } from "@focuson/template";
@@ -20,7 +20,7 @@ interface StateForModalButtonTest extends HasPageSelection, HasRestCommands {
   b?: number
   tags?: TagHolder
 }
-type Context = PageSelectionContext<StateForModalButtonTest> & HasSimpleMessageL<StateForModalButtonTest> & HasRestCommandL<StateForModalButtonTest> & HasTagHolderL<StateForModalButtonTest>
+type Context = PageSelectionContext<StateForModalButtonTest> & HasSimpleMessageL<StateForModalButtonTest> & HasRestCommandL<StateForModalButtonTest> & HasTagHolderL<StateForModalButtonTest> & HasDataFn
 
 const context: Context = {
   simpleMessagesL: simpleMessagesL<StateForModalButtonTest> (),
@@ -31,8 +31,8 @@ const context: Context = {
     b: { lens: Lenses.identity<StateForModalButtonTest> ().focusQuery ( 'b' ), pageFunction: () => <span/>, config: {}, pageType: 'MainPage', pageMode: "edit" },
   },
   restL: restL (),
+  dateFn: testDateFn,
   tagHolderL: Lenses.identity<StateForModalButtonTest> ().focusQuery ( 'tags' )
-
 }
 
 let startState: StateForModalButtonTest = { pageSelection: [ { pageName: 'a', pageMode: 'view', time: 'now' } ], messages: [], restCommands: [] };

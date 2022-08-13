@@ -3,6 +3,7 @@ import { defaultPageSelectionAndRestCommandsContext, FocusOnContext } from "@foc
 
 import { lensState } from "@focuson/state";
 import { applyPageOps, fromPathFromRaw, fromPathGivenState, MultiPageDetails, PageSelection, pageSelectionlens } from "@focuson/pages";
+import { testDateFn } from "@focuson/utils";
 
 
 let pageSelection: PageSelection = { pageName: 'a', pageMode: 'view', time: 'now' };
@@ -37,7 +38,7 @@ const pageDetails: MultiPageDetails<TextForLabelState, FocusOnContext<TextForLab
   a: { config: {}, pageType: 'MainPage', pageFunction: () => <span/>, lens: aL, pageMode: 'edit' }
 }
 const state = lensState ( textForLabelState, s => {}, '',
-  defaultPageSelectionAndRestCommandsContext<TextForLabelState> ( pageDetails, {}, {}, {} ) )
+  defaultPageSelectionAndRestCommandsContext<TextForLabelState> ( pageDetails, {}, {}, {},testDateFn ) )
 
 // const fromPath: ( path: string[], description?: string ) => Optional<TextForLabelState, any> = fromPathFor ( state )
 let stateabx = state.copyWithLens ( abxL );

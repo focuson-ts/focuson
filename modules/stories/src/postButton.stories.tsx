@@ -1,4 +1,3 @@
-import React from 'react';
 import { Story } from "@storybook/react";
 import { SBookProvider } from "./sbookProvider";
 import { HasPostCommand, PostButton } from "@focuson/poster";

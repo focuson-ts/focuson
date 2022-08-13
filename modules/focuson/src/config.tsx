@@ -3,7 +3,7 @@ import { HasPostCommand, HasPostCommandLens } from "@focuson/poster";
 import { FetcherTree, loadTree } from "@focuson/fetcher";
 import { lensState, LensState } from "@focuson/state";
 import { identityOptics, Lenses, massTransform, NameAndLens, Optional, Transform } from "@focuson/lens";
-import { defaultDateFn, errorMonad, FetchFn, HasSimpleMessages, RestAction, safeArray, safeString, SimpleMessage, stringToSimpleMsg } from "@focuson/utils";
+import { DateFn, defaultDateFn, errorMonad, FetchFn, HasDataFn, HasSimpleMessages, RestAction, safeArray, safeString, SimpleMessage, stringToSimpleMsg } from "@focuson/utils";
 import { HasRestCommandL, HasRestCommands, ModalProcessorsConfig, rest, RestCommand, RestCommandAndTxs, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson/rest";
 import { HasTagHolder, TagHolder } from "@focuson/template";
 import { AllFetcherUsingRestConfig, restCommandsFromFetchers } from "./tagFetcherUsingRest";
@@ -43,14 +43,13 @@ export interface HasFetchersAndRest<S, MSGs> {
   /** The optional that points to where the tags for the fetchers are stored */
   tagHolderL: Optional<S, TagHolder>;
 }
-export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasPathToLens<S>, HasFetchersAndRest<S, SimpleMessage> {
+export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasPathToLens<S>, HasFetchersAndRest<S, SimpleMessage>, HasDataFn {
   commonIds: NameAndLens<S>;
-
 }
 export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSelection & HasRestCommands & HasSimpleMessages & HasTagHolder>
 ( pageDetails: MultiPageDetails<S, FocusOnContext<S>>, commonIds: NameAndLens<S>,
   newFetchers: AllFetcherUsingRestConfig,
-  restDetails: RestDetails<S, SimpleMessage> ): FocusOnContext<S> {
+  restDetails: RestDetails<S, SimpleMessage>, dateFn: DateFn ): FocusOnContext<S> {
   const pathToLens: ( s: S ) => ( path: string ) => Optional<S, any> =
           fromPathFromRaw ( pageSelectionlens<S> (), pageDetails )
   // const{restL, tagHolderL, newFetchers} =
@@ -59,6 +58,7 @@ export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSele
     simpleMessagesL: simpleMessagesL (),
     commonIds,
     pathToLens,
+    dateFn,
     restL: restL<S> (),
     tagHolderL: Lenses.identity<S> ().focusQuery ( 'tags' ),
     newFetchers,

@@ -21,14 +21,14 @@ interface ForModalPage {
 }
 
 
-interface StateForModalButton extends HasPageSelection, HasSimpleMessages, HasRestCommands, HasTagHolder{
+interface StateForModalButton extends HasPageSelection, HasSimpleMessages, HasRestCommands, HasTagHolder {
 
 }
 
 
 const Template: Story<ForModalPage> = ( args: ForModalPage ) =>
-  SBookProvider<StateForModalButton, FocusOnContext<StateForModalButton>> ( { pageSelection: [], messages: [], restCommands: [] , tags: {}},
-    defaultPageSelectionAndRestCommandsContext<StateForModalButton> ( {}, {}, {}, {} ),
+  SBookProvider<StateForModalButton, FocusOnContext<StateForModalButton>> ( { pageSelection: [], messages: [], restCommands: [], tags: {} },
+    defaultPageSelectionAndRestCommandsContext<StateForModalButton> ( {}, {}, {}, {}, testDateFn ),
     s => (
       <ModalButton state={s} focusOn={'some/base'}{...args} dateFn={testDateFn}/>
     ) );

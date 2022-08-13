@@ -12,26 +12,16 @@
     ]
   },
   "dependencies": {
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "typescript": "^4.1.5",
-    "@focuson/focuson": "1.35.9"
+    "@focuson/focuson": "1.35.11"
   },
-  "description": "Storybook showing the components' ",
   "devDependencies": {
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
-    "@testing-library/jest-dom": "^5.11.6",
-    "@testing-library/react": "^11.2.2",
-    "@testing-library/user-event": "^12.2.2",
+    "@types/node": "^14.14.7",
+    "npm-check-updates": "^10.0.0",
+    "typescript": "^4.1.5",
+    "@testing-library/jest-dom": "^5.11.5",
+    "@testing-library/user-event": "^12.2.0",
     "@types/jest": "^26.0.15",
-    "@types/node": "^14.14.9",
-    "enzyme": "^3.11.0",
-    "@types/enzyme": "^3.10.8",
-    "@wojtekmaj/enzyme-adapter-react-17": "^0.3.1",
-    "jest": "26.6.0",
-    "jest-dom": "2.1.1",
-    "react-scripts": "^4.0.1",
+    "jest": "^26.6.0",
     "ts-jest": "^26.4.4",
     "@sambego/storybook-state": "^2.0.1",
     "@storybook/addon-actions": "^6.4.4",
@@ -53,7 +43,6 @@
   "keywords": [
     "functionalprogramming",
     "lens",
-    "react",
     "optics"
   ],
   "license": "MIT",
@@ -61,30 +50,12 @@
   "types": "dist/index",
   "repository": "github:focuson-ts/focuson",
   "scripts": {
-    "start": "react-scripts start",
     "test": "jest --config jest.config.json",
-    "test:watch": "npm run test -- --watch",
-    "storybook": "start-storybook -p 6006 -s public"
+    "test:watch": "npm run test -- --watch"
   },
-  "version": "1.35.9",
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ],
-    "overrides": [
-      {
-        "files": [
-          "**/*.stories.*"
-        ],
-        "rules": {
-          "import/no-anonymous-default-export": "off"
-        }
-      }
-    ]
-  },
-  "template": "react",
-  "name": "@focuson/stories",
+  "version": "1.35.11",
+  "template": "noreact",
+  "description": "Storybook showing the components' ",
   "details": {
     "ideify": true,
     "publish": true,
@@ -105,5 +76,6 @@
     },
     "test": false,
     "tsc": true
-  }
+  },
+  "name": "@focuson/stories"
 }

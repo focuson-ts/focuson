@@ -6,6 +6,7 @@ import { lensState } from "@focuson/state";
 import { defaultPageSelectionAndRestCommandsContext, FocusOnContext } from "@focuson/focuson";
 import { MultiPageDetails, PageSelection } from "@focuson/pages";
 import { enzymeSetup } from "./enzymeAdapterSetup";
+import { testDateFn } from "@focuson/utils";
 
 
 enzymeSetup ()
@@ -43,7 +44,7 @@ const pageDetails: MultiPageDetails<TextForLabelState, FocusOnContext<TextForLab
   a: { config: {}, pageType: 'MainPage', pageFunction: () => <span/>, lens: aL, pageMode: 'edit' }
 }
 const state = lensState ( textForLabelState, s => {}, '',
-  defaultPageSelectionAndRestCommandsContext<TextForLabelState> ( pageDetails, {},{},{} ) )
+  defaultPageSelectionAndRestCommandsContext<TextForLabelState> ( pageDetails, {},{},{},testDateFn ) )
 
 // const fromPath: ( path: string[], description?: string ) => Optional<TextForLabelState, any> = fromPathFor ( state )
 // let stateabx = state.copyWithLens ( abxL );
