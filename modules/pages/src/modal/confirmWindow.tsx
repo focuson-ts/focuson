@@ -3,13 +3,15 @@ import { LensProps, reasonFor } from "@focuson/state";
 import { currentPageSelectionTail, PageSelection, pageSelections, popPage } from "../pageSelection";
 import { Transform } from "@focuson/lens";
 
-export interface ConfirmWindowProps<S, C> extends LensProps<S, any, C> {
+export interface ConfirmWindowProps {
   id: string;
+  text?: string
   confirmText: string;
   cancelText: string;
 }
 
-export function ConfirmCommitWindow<S, C extends ModalContext<S>> ( { id, state, confirmText, cancelText }: ConfirmWindowProps<S, C> ) {
+
+export const ConfirmCommitWindow = ( { id, text, confirmText, cancelText }: ConfirmWindowProps ) => <S, C extends ModalContext<S>> ( { state }: LensProps<S, any, C> ): JSX.Element => {
   const confirmId = id + '.confirm';
   const cancelId = id + '.cancel';
 
@@ -29,8 +31,11 @@ export function ConfirmCommitWindow<S, C extends ModalContext<S>> ( { id, state,
   }
 
   function cancel ( e: any ) { state.massTransform ( reasonFor ( 'ConfirmCommitWindow', 'onClick', cancelId ) ) ( popPage ( state ) );}
+  const realText = text ? text : 'Are you sure?'
   return <div className='confirm-window'>
+    <p>Confirm window</p>
+    {realText}
     <button id={confirmId} onClick={confirm}>{confirmText}</button>
     <button id={cancelId} onClick={cancel}>{cancelText}</button>
   </div>
-}
+};

@@ -9,6 +9,7 @@ export * from './src/replace';
 export * from './src/selectedPage';
 export * from './src/selectedPages'
 export * from './src/simpleMessage';
+export * from './src/modal/confirmWindow';
 export * from './src/modal/modalButton';
 export * from './src/modal/modalCommitAndCancelButton';
 export * from './src/validity';

@@ -18,29 +18,43 @@ type PageFunctionType<S, D, Context> = FocusedPage<S, D, Context> | DisplayFn<S,
 
 export interface CommonPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> {
   config: Config,
-  pageFunction: PageFunctionType<S, D, Context>,
   clearAtStart?: boolean  // if set then the PageState is reset at the beginning,
   initialValue?: NewPageChangeCommands[], //If set then this is injected at the beginning. Clear at start overrides this
   onOpen?: ModalChangeCommands[],
   onlySetInitialIfUndefined?: boolean
 }
 export type OnePageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> =
-  MainPageDetails<S, D, Msgs, Config, Context> | ModalPageDetails<S, D, Msgs, Config, Context>
+  MainPageDetails<S, D, Msgs, Config, Context> | ModalPageDetails<S, D, Msgs, Config, Context> | ArbitraryPageDetails<S, D, Msgs, Config, Context, any>
+
+
+export type  DisplayArbitraryPageFn<S, D, Context, Props> =(props: Props) => ( lensProps: LensProps<S, D, Context> ) => JSX.Element
+
+export interface ArbitraryPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context, Props> extends CommonPageDetails<S, D, Msgs, Config, Context> {
+  pageType: 'Arbitrary';
+  pageFunction: DisplayArbitraryPageFn<S, D, Context, Props>
+}
+export function isArbitraryPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context, Props>(pd: OnePageDetails<S, D, Msgs, Config, Context>): pd is ArbitraryPageDetails<S, D, Msgs, Config, Context, Props>{
+  return pd.pageType ==='Arbitrary'
+}
 
 export interface MainPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> extends CommonPageDetails<S, D, Msgs, Config, Context> {
   lens: Optional<S, D>;
   pageType: 'MainPage' | 'MainPopup';
   pageMode: PageMode;
   namedOptionals?: NameAndLensFn<S>;
+  pageFunction: PageFunctionType<S, D, Context>,
+
 }
 export function isMainPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> ( o: OnePageDetails<S, D, Msgs, Config, Context> ): o is MainPageDetails<S, D, Msgs, Config, Context> {
   return o.pageType === 'MainPage' || o.pageType === 'MainPopup'
 }
-export function isPopup<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> ( o: OnePageDetails<S, D, Msgs, Config, Context> ):boolean {
+export function isPopup<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> ( o: OnePageDetails<S, D, Msgs, Config, Context> ): boolean {
   return o.pageType === 'ModalPopup' || o.pageType === 'MainPopup'
 }
 export interface ModalPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> extends CommonPageDetails<S, D, Msgs, Config, Context> {
   pageType: 'ModalPopup' | 'ModalPage'
+  pageFunction: PageFunctionType<S, D, Context>,
+
 }
 export function isModalPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> ( o: OnePageDetails<S, D, Msgs, Config, Context> ): o is ModalPageDetails<S, D, Msgs, Config, Context> {
   return o.pageType === 'ModalPage' || o.pageType === 'ModalPopup'

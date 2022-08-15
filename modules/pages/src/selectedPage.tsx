@@ -2,7 +2,7 @@ import { LensProps, LensState } from "@focuson/state";
 
 import { currentPageSelection, HasPageSelectionLens, mainPage, mainPageFrom, PageMode, PageParams, PageSelection, PageSelectionContext } from "./pageSelection";
 import { FocusedPage } from "./focusedPage";
-import { isMainPageDetails, MainPageDetails, MultiPageDetails, OnePageDetails, PageConfig } from "./pageConfig";
+import { isArbitraryPageDetails, isMainPageDetails, MainPageDetails, MultiPageDetails, OnePageDetails, PageConfig } from "./pageConfig";
 import { DefaultTemplate, PageTemplateProps } from "./PageTemplate";
 import { Loading } from "./loading";
 import { lensBuilder, Lenses, NameAndLens, Optional, parsePath } from "@focuson/lens";
@@ -87,13 +87,19 @@ export const findOneSelectedPageDetails = <S, T, Context extends PageSelectionCo
     // @ts-ignore
     const debug = state.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
     const pages = state.context.pages
-    const { pageName, pageMode, focusOn } = ps
-    const page = pages[ pageName ]
+    const { pageName, pageMode, focusOn, arbitraryParams } = ps
+    const page: OnePageDetails<S, any, any, any, Context> = pages[ pageName ]
     if ( !page ) throw Error ( `Cannot find page with name ${pageName}, legal Values are [${Object.keys ( pages ).join ( "," )}]\nIs this a modal page and you need to add it to the main page?` )
-    const { config, pageFunction, pageType } = page
 
+
+    const { config, pageType } = page
     const lsForPage = state.copyWithLens ( lensForPageDetails ( page0Details, page, focusOn ) )
-
+    if ( isArbitraryPageDetails ( page ) ) {
+      if ( !arbitraryParams ) throw Error ( `Trying to display arbritrary page but don't have params on the page select\n${JSON.stringify ( ps )}` )
+      const element = page.pageFunction ( arbitraryParams ) ( { state: lsForPage } );
+      return { element, pageType, pageDisplayedTime: ps.time };
+    }
+    const pageFunction = page.pageFunction
     if ( debug ) console.log ( "findOneSelectedPageDetails.pageFunction", pageFunction )
     if ( typeof pageFunction === 'function' ) {// this is for legacy support
       if ( debug ) console.log ( "findOneSelectedPageDetails.legacy display" )
@@ -102,7 +108,8 @@ export const findOneSelectedPageDetails = <S, T, Context extends PageSelectionCo
       if ( debug ) console.log ( "findOneSelectedPageDetails.legacy result - json", JSON.stringify ( element ) )
       return { element, pageType, pageDisplayedTime: ps.time }
     } else return displayOne ( config, pageType, pageFunction, ps.pageParams, ps.time, lsForPage, pageMode, pageCount - index );
-  };
+  }
+;
 
 export function findMainPageDetails<S> ( pageSelections: PageSelection[], pageDetails: MultiPageDetails<S, any> ): MainPageDetails<S, any, any, any, any> {
   const firstPage: PageSelection = mainPageFrom ( pageSelections )

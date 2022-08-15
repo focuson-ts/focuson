@@ -8,7 +8,7 @@ import { pages } from "./{pagesFile}";
 import {MyCombined} from '@focuson/form_components';
 
 export const context: Context = {
-  ...defaultPageSelectionAndRestCommandsContext<FState> ( pages, commonIds, newFetchers, restDetails ),
+  ...defaultPageSelectionAndRestCommandsContext<FState> ( pages, commonIds, newFetchers, restDetails, defaultDateFn ),
   combine: MyCombined
 }
 export const config: FocusOnConfig<{stateName}, Context, SimpleMessage> = {

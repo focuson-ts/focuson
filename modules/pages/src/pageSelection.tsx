@@ -40,6 +40,7 @@ export interface PageSelection {
   focusOn?: string;
   setToLengthOnClose?: SetToLengthOnClose;
   pageParams?: PageParams;
+  arbitraryParams?: any
 }
 export interface HasPageSelection {
   pageSelection: PageSelection[]
