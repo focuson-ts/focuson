@@ -8,8 +8,8 @@ import { DisplayArbitraryPageFn } from "../pageConfig";
 export interface ConfirmWindowProps {
   id: string;
   messageText?: string
-  confirmText: string;
-  cancelText: string;
+  confirmText?: string;
+  cancelText?: string;
 }
 export interface MakeConfirmCommitWindow<S, C> {
   state: LensState<S, any, C>,
@@ -53,8 +53,8 @@ export function ConfirmCommitWindow<S, D, C extends ModalContext<S>> () {
     return <div className='modalPopup-content show-modal confirm-window'>
       <p>Confirm window</p>
       {realText}
-      <button id={confirmId} onClick={confirm}>{confirmText}</button>
-      <button id={cancelId} onClick={cancel}>{cancelText}</button>
+      <button id={confirmId} onClick={confirm}>{confirmText ? confirmText : 'OK'}</button>
+      <button id={cancelId} onClick={cancel}>{cancelText ? cancelText : 'Cancel'}</button>
     </div>;
   } )
 }

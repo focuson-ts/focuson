@@ -22,8 +22,8 @@ export interface ModalCommitWindowButtonInPage extends EnabledBy {
   enabledBy?: string | string[];
   validate?: boolean;
   messageText?: string
-  confirmText: string;
-  cancelText: string;
+  confirmText?: string;
+  cancelText?: string;
   change?: ModalChangeCommands | ModalChangeCommands[];
   text?: string
 }
