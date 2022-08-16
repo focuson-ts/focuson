@@ -1,9 +1,10 @@
-import { makeInitialValue, makePages } from "../codegen/makePages";
+import { ExtraPage, makeInitialValue, makePages } from "../codegen/makePages";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { RepeatingPageD } from "../example/repeating/repeating.pageD";
 import { CreateEAccountPageD } from "../example/createEAccount/createEAccount.pageD";
 import { paramsForTest } from "./paramsForTest";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
+import { NameAnd } from "@focuson/utils";
 
 
 describe ( "makeInitialvalue", () => {
@@ -88,6 +89,30 @@ describe ( "makePages", () => {
       "const identity = identityOptics<FState> ();",
       "export const pages: MultiPageDetails<FState, Context> = {",
       "    confirm:{pageType: 'Arbitrary', config: simpleMessagesConfig, pageFunction: ConfirmCommitWindow()},",
+      "    CreateEAccount: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'CreateEAccount' ), pageFunction: CreateEAccountPage(), initialValue: [{'command':'set','path':'~/editing','value':{'name':'','type':'savings','savingsStyle':'adhoc','initialAmount':0}}], pageMode: 'create',namedOptionals: CreateEAccountOptionals }",
+      "  }"
+    ] )
+  } )
+
+  it ( "should allow the default confirm to be overridden", () => {
+    const override: NameAnd<ExtraPage> = {
+      some: { imports: [ `someImport` ], text: 'someExtraPage' },
+      other: { imports: [ `otherImport` ], text: 'otherExtraPage' },
+    }
+    expect ( makePages ( paramsForTest, [ CreateEAccountPageD ], override ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+      "import { identityOptics } from '@focuson/lens';",
+      "import { Loading, MultiPageDetails, simpleMessagesPageConfig } from '@focuson/pages';",
+      "import {Context,  FState } from './common';",
+      "import { CreateEAccountPage } from './CreateEAccount/CreateEAccount.render';",
+      "import { CreateEAccountOptionals } from './CreateEAccount/CreateEAccount.optionals'; ",
+      "someImport",
+      "otherImport",
+      "",
+      "const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Context> (  Loading )",
+      "const identity = identityOptics<FState> ();",
+      "export const pages: MultiPageDetails<FState, Context> = {",
+      "    some:{someExtraPage},",
+      "    other:{otherExtraPage},",
       "    CreateEAccount: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'CreateEAccount' ), pageFunction: CreateEAccountPage(), initialValue: [{'command':'set','path':'~/editing','value':{'name':'','type':'savings','savingsStyle':'adhoc','initialAmount':0}}], pageMode: 'create',namedOptionals: CreateEAccountOptionals }",
       "  }"
     ] )
