@@ -1,6 +1,6 @@
-import { currentPageSelectionTail, fromPathGivenState, mainPage, PageSelection, PageSelectionContext, popPage } from "../pageSelection";
+import { applyPageOps, currentPageSelectionTail, fromPathGivenState, mainPage, PageSelection, PageSelectionContext, popPage } from "../pageSelection";
 import { LensProps, lensState, LensState, reasonFor } from "@focuson/state";
-import { DateFn, defaultDateFn, HasDataFn, safeArray, safeString, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
+import { HasDataFn, safeArray, safeString, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
 import { Optional, Transform } from "@focuson/lens";
 import { HasRestCommandL, ModalChangeCommands, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand } from "@focuson/rest";
 import { getRefForValidateLogicToButton, hasValidationErrorAndReport } from "../validity";
@@ -110,7 +110,6 @@ export function ModalCommitButton<S, Context extends ModalContext<S>> ( c: Modal
     const pageToClose = currentPageSelectionTail ( state )
     const txs = findClosePageTxs ( `ModalCommit ${id}`, state, pageToClose, -1, toArray ( change ) )
     const pageCloseTx: Transform<S, any> = [ pageSelectionL, ( ps: PageSelection[] ) => ps.slice ( 0, -1 ) ]
-
     if ( txs )
       state.massTransform ( reasonFor ( 'ModalCommit', 'onClick', id ) ) ( pageCloseTx, ...txs )
     else
@@ -121,12 +120,23 @@ export function ModalCommitButton<S, Context extends ModalContext<S>> ( c: Modal
   const ref = getRefForValidateLogicToButton ( id, debug, validate, enabledBy, canCommitOrCancel ( state ) )
   return <button ref={ref} className={getButtonClassName ( buttonType )} id={id} onClick={onClick}>{text ? text : 'Commit'}</button>
 }
-export function ModalCommitWindowButton<S, C extends ModalContext<S>> ( { state, id, validate, enabledBy, text, buttonType, confirm, change }: ModalCommitButtonProps<S, C> ) {
+
+export interface ModalCommitWindowProps<S, C> extends ModalCommitButtonProps<S, C> {
+  pageName?: string;
+  confirmText?: string;
+  cancelText?: string;
+  messageText?: string
+}
+export function ModalCommitWindowButton<S, C extends ModalContext<S>> ( { state, id, validate, enabledBy, text, buttonType, confirmText, cancelText, pageName, messageText }: ModalCommitWindowProps<S, C> ) {
   // @ts-ignore
   const debug = state.main?.debug?.validityDebug
   const ref = getRefForValidateLogicToButton ( id, debug, validate, enabledBy, canCommitOrCancel ( state ) )
   function onClick ( e: any ) {
-    //need to push something here...
+    const realPageName = pageName ? pageName : 'confirm'
+    const ps: PageSelection = { pageName: realPageName, focusOn: '~', arbitraryParams: { confirmText, cancelText, messageText }, time: state.context.dateFn (), pageMode: 'view' }
+    const openTx: Transform<S, any> = [ state.context.pageSelectionL, applyPageOps ( 'popup', ps ) ]
+    state.massTransform ( reasonFor ( 'ModalCommitWindow', 'onClick', id ) ) ( openTx )
+
   }
   return <button ref={ref} className={getButtonClassName ( buttonType )} id={id} onClick={onClick}>{text ? text : 'Commit'}</button>
 

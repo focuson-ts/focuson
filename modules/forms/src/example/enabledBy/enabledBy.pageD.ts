@@ -14,6 +14,7 @@ export const EnabledByModalPageD: ExampleModalPage = {
   buttons: {
     commit: { control: 'ModalCommitButton', enabledBy: 'yesButton', validate: false, change: { command: 'message', msg: 'Committed' } },
     commitWithvalidate: { control: 'ModalCommitButton', enabledBy: 'yesButton', validate: true },
+    commitWithConfirm: { control: 'ModalCommitWindowButton', enabledBy: 'yesButton', validate: true, confirmText: 'Confirm', cancelText: 'Cancel', messageText: "some message" },
     cancel: { control: 'ModalCancelButton', enabledBy: 'noButton' }
   }
 }

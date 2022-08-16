@@ -1,20 +1,29 @@
 import { findClosePageTxs, ModalContext } from "./modalCommitAndCancelButton";
-import { LensProps, reasonFor } from "@focuson/state";
-import { currentPageSelectionTail, PageSelection, pageSelections, popPage } from "../pageSelection";
+import { LensState, reasonFor } from "@focuson/state";
+import { PageSelection, pageSelections, popPage } from "../pageSelection";
 import { Transform } from "@focuson/lens";
+import { DisplayArbitraryPageFn } from "../pageConfig";
+
 
 export interface ConfirmWindowProps {
   id: string;
-  text?: string
+  messageText?: string
   confirmText: string;
   cancelText: string;
 }
+export interface MakeConfirmCommitWindow<S, C> {
+  state: LensState<S, any, C>,
 
-
-export const ConfirmCommitWindow = ( { id, text, confirmText, cancelText }: ConfirmWindowProps ) => <S, C extends ModalContext<S>> ( { state }: LensProps<S, any, C> ): JSX.Element => {
+  props: ConfirmWindowProps,
+  confirmId: string;
+  confirm: ( e: any ) => void;
+  cancelId: string;
+  cancel: ( e: any ) => void
+}
+export const makeConfirmCommitWindow = <S, D, C extends ModalContext<S>> ( makeFn: ( makerProps: MakeConfirmCommitWindow<S, C> ) => JSX.Element ): DisplayArbitraryPageFn<S, D, C, ConfirmWindowProps> => ( state: LensState<S, D, C>, props: ConfirmWindowProps ) => {
+  const id = props.id
   const confirmId = id + '.confirm';
   const cancelId = id + '.cancel';
-
   function confirm ( e: any ) {
     const ps = pageSelections ( state );
     if ( ps.length < 2 ) throw Error ( `Software error in ConfirmCommitWindow,ps ${JSON.stringify ( ps )}\n\n${JSON.stringify ( state.main, null, 2 )}` )
@@ -31,11 +40,21 @@ export const ConfirmCommitWindow = ( { id, text, confirmText, cancelText }: Conf
   }
 
   function cancel ( e: any ) { state.massTransform ( reasonFor ( 'ConfirmCommitWindow', 'onClick', cancelId ) ) ( popPage ( state ) );}
-  const realText = text ? text : 'Are you sure?'
-  return <div className='confirm-window'>
-    <p>Confirm window</p>
-    {realText}
-    <button id={confirmId} onClick={confirm}>{confirmText}</button>
-    <button id={cancelId} onClick={cancel}>{cancelText}</button>
-  </div>
+  const e: JSX.Element = makeFn ( { state, props, confirm, confirmId, cancel, cancelId } )
+  return e
 };
+
+//This needs to be a function so that it can be 'customised' to the relevant S,D and C. Without that it's always 'unknown'
+export function ConfirmCommitWindow<S, D, C extends ModalContext<S>> () {
+  return makeConfirmCommitWindow<S, D, C> ( makerProps => {
+    const { confirm, confirmId, cancel, cancelId, props } = makerProps
+    const { id, messageText, confirmText, cancelText } = props
+    const realText = messageText ? messageText : 'Are you sure?'
+    return <div className='modalPopup-content show-modal confirm-window'>
+      <p>Confirm window</p>
+      {realText}
+      <button id={confirmId} onClick={confirm}>{confirmText}</button>
+      <button id={cancelId} onClick={cancel}>{cancelText}</button>
+    </div>;
+  } )
+}

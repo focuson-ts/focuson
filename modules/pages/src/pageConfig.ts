@@ -27,14 +27,14 @@ export type OnePageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Con
   MainPageDetails<S, D, Msgs, Config, Context> | ModalPageDetails<S, D, Msgs, Config, Context> | ArbitraryPageDetails<S, D, Msgs, Config, Context, any>
 
 
-export type  DisplayArbitraryPageFn<S, D, Context, Props> =(props: Props) => ( lensProps: LensProps<S, D, Context> ) => JSX.Element
+export type  DisplayArbitraryPageFn<S, D, Context, Props> = ( lensState: LensState<S, D, Context>, props: Props ) => JSX.Element
 
 export interface ArbitraryPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context, Props> extends CommonPageDetails<S, D, Msgs, Config, Context> {
   pageType: 'Arbitrary';
   pageFunction: DisplayArbitraryPageFn<S, D, Context, Props>
 }
-export function isArbitraryPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context, Props>(pd: OnePageDetails<S, D, Msgs, Config, Context>): pd is ArbitraryPageDetails<S, D, Msgs, Config, Context, Props>{
-  return pd.pageType ==='Arbitrary'
+export function isArbitraryPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context, Props> ( pd: OnePageDetails<S, D, Msgs, Config, Context> ): pd is ArbitraryPageDetails<S, D, Msgs, Config, Context, Props> {
+  return pd.pageType === 'Arbitrary'
 }
 
 export interface MainPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> extends CommonPageDetails<S, D, Msgs, Config, Context> {

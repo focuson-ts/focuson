@@ -1,7 +1,7 @@
 import { copyFile, copyFiles, CopyFilesRecursively, DirectorySpec, GetFilelistRecursively2, templateFile, writeToFile } from "@focuson/files";
 import { TSParams } from "../codegen/config";
 import fs from "fs";
-import { detailsLog, GenerateLogLevel, safeArray, sortedEntries, unique } from "@focuson/utils";
+import { detailsLog, GenerateLogLevel, NameAnd, safeArray, sortedEntries, unique } from "@focuson/utils";
 import { allMainPages, flatMapToModal, isMainPage, MainPageD, PageD, RefD, RestDefnInPageProperties } from "../common/pageD";
 import { createRenderPage } from "../codegen/makeRender";
 import { ButtonD } from "../buttons/allButtons";
@@ -10,7 +10,7 @@ import { makeCommon } from "../codegen/makeCommon";
 import { makeFetcherDataStructureImport, makeNewFetchersDataStructure } from "../codegen/makeTSFetchers";
 import { makeRestDetailsPage, makeRests } from "../codegen/makeRests";
 import { makeAllEmptyData, makeAllSampleVariables } from "../codegen/makeSample";
-import { makePages } from "../codegen/makePages";
+import { ExtraPage, makePages } from "../codegen/makePages";
 import { domainsFileName, emptyFileName, guardReportFileName, optionalsFileName, pactFileName, renderFileName, restFileName, samplesFileName, storybookFileName } from "../codegen/names";
 import { makeOneStory } from "../codegen/makeStories";
 import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
@@ -22,8 +22,9 @@ import { AppConfig } from "../appConfig";
 
 const themes = [ 'theme-dark', 'theme-light' ]
 export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLogLevel, appConfig: AppConfig, tsRoot: string, params: TSParams, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G>, directorySpec: DirectorySpec ) =>
-  <B extends ButtonD> ( mainPs: MainPageD<B, G>[], allPages: PageD<B, G>[], refs: RefD<G>[] ) => {
+  <B extends ButtonD> ( mainPs: MainPageD<B, G>[], allPages: PageD<B, G>[], refs: RefD<G>[] , extraPages:  NameAnd<ExtraPage>|undefined ) => {
     const allRefs: RefD<G>[] = [ ...refs, ...mainPs ]
+
     //to help the readability of the writeFile/template files
     const details = logLevel === 'detailed' ? 2 : -1
     const minimal = logLevel === 'minimal' ? 2 : -1
@@ -105,7 +106,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
     const rests = unique ( allPages.flatMap ( pd => isMainPage ( pd ) ? sortedEntries ( pd.rest ).map ( ( x: [ string, RestDefnInPageProperties<G> ] ) => x[ 1 ].rest ) : [] ), r => r.dataDD.name )
 
     writeToFile ( `${tsCode}/${params.commonFile}.ts`, () => makeCommon ( appConfig, params, allRefs, directorySpec ), details )
-    writeToFile ( `${tsCode}/${params.pagesFile}.ts`, () => makePages ( params, mainPs ), details )
+    writeToFile ( `${tsCode}/${params.pagesFile}.ts`, () => makePages ( params, mainPs, extraPages ), details )
 
 
     templateFile ( `${tsCode}/index.tsx`, 'templates/index.template.ts', { ...params, pageMode: JSON.stringify ( allMainPages ( allPages )[ 0 ].modes[ 0 ] ), firstPage: allPages[ 0 ].name, fetch: appConfig.fetch, debug: JSON.stringify ( appConfig.debug ) }, directorySpec, details )

@@ -1,11 +1,10 @@
 import { allMainPages, flatMapToModal, InitialValue, isMainPage, MainPageD, PageD, PageDisplay } from "../common/pageD";
 import { TSParams } from "./config";
 import { modalName, optionalsFileName, optionalsName, pageComponentName, pageInState, renderFileName } from "./names";
-import { addStringToEndOfAllButLast } from "./codegen";
+import { addStringToEndOfAllButLast, indentList } from "./codegen";
 import { makeEmptyData } from "./makeSample";
-import { safeArray, toArray } from "@focuson/utils";
-import { Lenses, parsePath } from "@focuson/lens";
-import { pathBuilderForLensIncPage } from "./lens";
+import { NameAnd, safeArray, toArray } from "@focuson/utils";
+import { Lenses } from "@focuson/lens";
 
 
 export function makeInitialValue<B, G> ( display: PageDisplay<G>, name: string, initialValue: undefined | InitialValue ) {
@@ -40,7 +39,17 @@ export const makeModal = <G> ( params: TSParams ) => <B> ( { name, modal }: Moda
   return [ `    ${name}: {pageType: '${modal.pageType}',  config: simpleMessagesConfig,  pageFunction: ${pageComponentName ( modal )}()}` ]
 };
 
-export function makePages<B, G> ( params: TSParams, ps: MainPageD<B, G>[] ): string[] {
+export interface ExtraPage {
+  text: string;
+  imports: string[]
+}
+export function makePages<B, G> ( params: TSParams, ps: MainPageD<B, G>[], extraPages: NameAnd<ExtraPage> | undefined ): string[] {
+  const realExtraPages: NameAnd<ExtraPage> = extraPages ? extraPages : {
+    confirm: {
+      imports: [ 'import { ConfirmCommitWindow } from "@focuson/pages";' ],
+      text: `pageType: 'Arbitrary', config: simpleMessagesConfig, pageFunction: ConfirmCommitWindow()`
+    }
+  }
   const modals = walkModals ( ps );
   const renderImports = ps.flatMap ( mainPage => [
     `import { ${pageComponentName ( mainPage )} } from '${renderFileName ( '.', params, mainPage, mainPage )}';`,
@@ -53,11 +62,14 @@ export function makePages<B, G> ( params: TSParams, ps: MainPageD<B, G>[] ): str
     `import {Context,  ${params.stateName} } from "./${params.commonFile}";`,
     ...renderImports,
     ...optionalImports,
+    ...Object.values ( realExtraPages ).flatMap ( v => v.imports ),
     '',
 
     `const simpleMessagesConfig = simpleMessagesPageConfig<${params.stateName}, string, Context> (  Loading )`,
     `const identity = identityOptics<FState> ();`,
     `export const pages: MultiPageDetails<${params.stateName}, Context> = {`,
-    ...addStringToEndOfAllButLast ( "," ) ( [ ...ps.flatMap ( makeMainPage ( params ) ), ...modals.flatMap ( makeModal ( params ) ) ] ),
+    ...addStringToEndOfAllButLast ( "," ) ( [
+      ...Object.entries ( realExtraPages ).map ( ( [ n, v ] ) => `    ${n}:{${v.text}}` ),
+      ...ps.flatMap ( makeMainPage ( params ) ), ...modals.flatMap ( makeModal ( params ) ) ] ),
     `  }` ]
 }

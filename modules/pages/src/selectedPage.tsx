@@ -96,7 +96,7 @@ export const findOneSelectedPageDetails = <S, T, Context extends PageSelectionCo
     const lsForPage = state.copyWithLens ( lensForPageDetails ( page0Details, page, focusOn ) )
     if ( isArbitraryPageDetails ( page ) ) {
       if ( !arbitraryParams ) throw Error ( `Trying to display arbritrary page but don't have params on the page select\n${JSON.stringify ( ps )}` )
-      const element = page.pageFunction ( arbitraryParams ) ( { state: lsForPage } );
+      const element = page.pageFunction ( lsForPage, arbitraryParams );
       return { element, pageType, pageDisplayedTime: ps.time };
     }
     const pageFunction = page.pageFunction

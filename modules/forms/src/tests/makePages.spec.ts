@@ -52,7 +52,7 @@ describe ( "makeInitialvalue", () => {
 describe ( "makePages", () => {
 
   it ( "should make the 'pages' description for the generated app", () => {
-    expect ( makePages ( paramsForTest, [ EAccountsSummaryPD, RepeatingPageD ] ).map(s => s.replace(/"/g, "'")) ).toEqual ([
+    expect ( makePages ( paramsForTest, [ EAccountsSummaryPD, RepeatingPageD ], undefined ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "import { identityOptics } from '@focuson/lens';",
       "import { Loading, MultiPageDetails, simpleMessagesPageConfig } from '@focuson/pages';",
       "import {Context,  FState } from './common';",
@@ -62,10 +62,12 @@ describe ( "makePages", () => {
       "import { RepeatingLinePage } from './Repeating/RepeatingLine.render';",
       "import { EAccountsSummaryOptionals } from './EAccountsSummary/EAccountsSummary.optionals'; ",
       "import { RepeatingOptionals } from './Repeating/Repeating.optionals'; ",
+      "import { ConfirmCommitWindow } from '@focuson/pages';",
       "",
       "const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Context> (  Loading )",
       "const identity = identityOptics<FState> ();",
       "export const pages: MultiPageDetails<FState, Context> = {",
+      "    confirm:{pageType: 'Arbitrary', config: simpleMessagesConfig, pageFunction: ConfirmCommitWindow()},",
       "    EAccountsSummary: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'EAccountsSummary' ), pageFunction: EAccountsSummaryPage(), initialValue: [{'command':'set','path':'~/fromApi','value':{}}], pageMode: 'view',namedOptionals: EAccountsSummaryOptionals },",
       "    Repeating: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'Repeating' ), pageFunction: RepeatingPage(), initialValue: [{'command':'set','path':'~/selectedItem','value':0}], pageMode: 'view',namedOptionals: RepeatingOptionals },",
       "    CreatePlan: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: CreatePlanPage()},",
@@ -74,18 +76,20 @@ describe ( "makePages", () => {
     ] )
   } )
   it ( "should create an initial from 'empty'", () => {
-    expect ( makePages ( paramsForTest, [ CreateEAccountPageD ] ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([
+    expect ( makePages ( paramsForTest, [ CreateEAccountPageD ], undefined ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "import { identityOptics } from '@focuson/lens';",
       "import { Loading, MultiPageDetails, simpleMessagesPageConfig } from '@focuson/pages';",
       "import {Context,  FState } from './common';",
       "import { CreateEAccountPage } from './CreateEAccount/CreateEAccount.render';",
       "import { CreateEAccountOptionals } from './CreateEAccount/CreateEAccount.optionals'; ",
+      "import { ConfirmCommitWindow } from '@focuson/pages';",
       "",
       "const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Context> (  Loading )",
       "const identity = identityOptics<FState> ();",
       "export const pages: MultiPageDetails<FState, Context> = {",
+      "    confirm:{pageType: 'Arbitrary', config: simpleMessagesConfig, pageFunction: ConfirmCommitWindow()},",
       "    CreateEAccount: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'CreateEAccount' ), pageFunction: CreateEAccountPage(), initialValue: [{'command':'set','path':'~/editing','value':{'name':'','type':'savings','savingsStyle':'adhoc','initialAmount':0}}], pageMode: 'create',namedOptionals: CreateEAccountOptionals }",
       "  }"
-    ])
+    ] )
   } )
 } )
