@@ -99,4 +99,5 @@ export const samplesFileName = <G> ( root: string, params: TSParams, pd: RefD<G>
 export const restFileName = <G> ( root: string, params: TSParams, pd: RefD<G> ): string => someFileName ( root, pd, params.restsFile );
 export const fetcherFileName = <G> ( root: string, params: TSParams, pd: RefD<G> ): string => someFileName ( root, pd, params.fetchersFile );
 export const optionalsFileName = <G> ( root: string, params: TSParams, pd: RefD<G> ): string => someFileName ( root, pd, params.optionalsFile );
+export const loadRefsFileName = <G> ( root: string, params: TSParams, pd: RefD<G> ): string => someFileName ( root, pd, params.loadRefsFile );
 

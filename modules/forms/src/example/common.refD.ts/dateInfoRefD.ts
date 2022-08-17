@@ -9,6 +9,7 @@ export const dateinfoRestD: ExampleRestD = {
 }
 export const dateInfoRefD: ExampleRefD = {
   name: "DateInfo",
+  refGroups: 'once',
   domain: {
     holidayData: { dataDD: holidayDataD }
   },

@@ -15,6 +15,7 @@ export const paramsForTest: CombinedParams = {
   dbFetcherPackage: 'dbfetchers',
   controllerPackage: "controllers",
   restsFile: "rests",
+  loadRefsFile: 'loadRests',
   pactsFile: "pact.spec",
   samplesFile: "samples",
   emptyFile: "empty",

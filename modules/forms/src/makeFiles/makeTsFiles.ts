@@ -1,6 +1,6 @@
 import { copyFile, copyFiles, CopyFilesRecursively, DirectorySpec, GetFilelistRecursively2, templateFile, writeToFile } from "@focuson/files";
 import { TSParams } from "../codegen/config";
-import fs from "fs";
+import fs, { write } from "fs";
 import { detailsLog, GenerateLogLevel, NameAnd, safeArray, sortedEntries, unique } from "@focuson/utils";
 import { allMainPages, flatMapToModal, isMainPage, MainPageD, PageD, RefD, RestDefnInPageProperties } from "../common/pageD";
 import { createRenderPage } from "../codegen/makeRender";
@@ -19,10 +19,11 @@ import { makeAllPactsForPage } from "../codegen/makePacts2";
 import { makeVariables } from "../codegen/makeVariables";
 import { makeGuardsReportForPage } from "../reporting/report";
 import { AppConfig } from "../appConfig";
+import { makeRefs } from "../codegen/makeRefs";
 
 const themes = [ 'theme-dark', 'theme-light' ]
 export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLogLevel, appConfig: AppConfig, tsRoot: string, params: TSParams, makeGuards: MakeGuard<G>, makeButtons: MakeButton<G>, directorySpec: DirectorySpec ) =>
-  <B extends ButtonD> ( mainPs: MainPageD<B, G>[], allPages: PageD<B, G>[], refs: RefD<G>[] , extraPages:  NameAnd<ExtraPage>|undefined ) => {
+  <B extends ButtonD> ( mainPs: MainPageD<B, G>[], allPages: PageD<B, G>[], refs: RefD<G>[], extraPages: NameAnd<ExtraPage> | undefined ) => {
     const allRefs: RefD<G>[] = [ ...refs, ...mainPs ]
 
     //to help the readability of the writeFile/template files
@@ -97,6 +98,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
         writeToFile ( guardReportFileName ( tsCode, params, mainP ) + ".md", () => report )
     } )
 
+    writeToFile ( `${tsCode}/${params.loadRefsFile}.ts`, () => makeRefs ( params, allRefs ), details )
     writeToFile ( `${tsCode}/${params.fetchersFile}.ts`, () => [
       ...makeFetcherDataStructureImport ( params, mainPs ),
       // ...makeFetchersDataStructure ( params, { variableName: 'fetchers', stateName: params.stateName }, mainPs ),

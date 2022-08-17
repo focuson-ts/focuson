@@ -28,6 +28,7 @@ export const params: Omit<CombinedParams, 'focusOnVersion'> = {
   dbFetcherPackage: 'dbFetchers',
   controllerPackage: "request.controllers",
   restsFile: "rests",
+  loadRefsFile: 'loadRests',
   pactsFile: "pact.spec",
   samplesFile: "samples",
   emptyFile: "empty",

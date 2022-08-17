@@ -41,6 +41,7 @@ export interface TSParams {
   urlparams: string;
   pagesFile: string;
   optionalsFile: string;
+  loadRefsFile: string;
   theme: string;
   extractData: string;
   teamName: string;

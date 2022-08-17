@@ -74,7 +74,7 @@ export function ConfirmCommitWindow<S, D, C extends ModalContext<S>> () {
     const realText = messageText ? replaceTextUsingPath ( state, messageText ) : 'Are you sure?'
     return <div id={id} className={className ? className : 'modalPopup-content show-modal confirm-window'}>
       {title && <h1>{replaceTextUsingPath ( state, title )}</h1>}
-      {realText}
+      <p>{realText}</p>
       <button id={confirmId} onClick={confirm}>{confirmText ? replaceTextUsingPath ( state, confirmText ) : 'OK'}</button>
       <button id={cancelId} onClick={cancel}>{cancelText ? replaceTextUsingPath ( state, cancelText ) : 'Cancel'}</button>
     </div>;

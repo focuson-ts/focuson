@@ -329,7 +329,7 @@ export const AccountIdDD: NumberPrimitiveDD = {
   name: 'AccountId',
   description: "An account id",
   display: LabelAndNumberInputCD,
-  validate: { min: 10000000, max: 99999999 },
+  validate: { min: 100000, max: 9999999999 },
   sample: [ 1233450, 3233450, 4333450 ]
 }
 export const StringDD: StringPrimitiveDD = {

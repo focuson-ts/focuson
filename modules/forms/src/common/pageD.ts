@@ -101,6 +101,7 @@ type NewPageCommandOrEmpty = 'empty' | NewPageChangeCommands
 export type InitialValue = NewPageCommandOrEmpty | NewPageCommandOrEmpty[]
 export interface RefD<G> extends HasName {
   rest: RestDefnInPage<G>,
+  refGroups?: string|string[]
   domain: DomainDefnInPage<G>,
   commonParams?: NameAnd<CommonLensRestParam<any>>,
 }
