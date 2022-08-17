@@ -2,6 +2,7 @@ import { LensProps, LensState } from "@focuson/state";
 import { NameAnd } from "@focuson/utils";
 import { ContextForDropdown, LabelAndDropdown } from "./labelAndDropdown";
 import { PageMode } from "@focuson/pages";
+import { EnabledBy } from "@focuson/forms/dist/src/buttons/enabledBy";
 
 
 export interface OneDropDownDetails<S, C> {
@@ -13,6 +14,7 @@ export interface OneDropDownDetails<S, C> {
 
 export interface DataDrivenFixedOptionDropDownAndDetailsProps<S> extends LensProps<S, string, ContextForDropdown<S>> {
   id: string;
+  enabledBy?: boolean;
   parentState: LensState<S, any, ContextForDropdown<S>>;
   mode: PageMode;
   allButtons: NameAnd<JSX.Element>;
@@ -23,13 +25,13 @@ export interface DataDrivenFixedOptionDropDownAndDetailsProps<S> extends LensPro
 }
 
 function DropDownFromData<S> ( props: DataDrivenFixedOptionDropDownAndDetailsProps<S> ) {
-  const { state, id, details, label, mode, allButtons, parentState, pleaseSelect, dontShowEmpty } = props
+  const { state, id, details, label, mode, allButtons, parentState, pleaseSelect, dontShowEmpty, enabledBy } = props
   let s = state.main;
   const pathToLens = state.context.pathToLens ( s, parentState.optional )
   const rawValues = Object.entries ( details ).map ( ( [ name, detail ] ): [ string, string | undefined ] =>
     [ name, detail.value ? detail.value : detail.valuePath ? pathToLens ( detail.valuePath ).getOption ( s ) : '' ] );
   const values = Object.fromEntries ( rawValues.filter ( nv => !dontShowEmpty || (nv[ 1 ]?.length && nv[ 1 ].length > 0) ) )
-  return <LabelAndDropdown parentState={parentState} label={label} enums={values} mode={mode} allButtons={allButtons} state={state} id={id} pleaseSelect={pleaseSelect} required={true}/>
+  return <LabelAndDropdown parentState={parentState} label={label} enabledBy={enabledBy !== false} enums={values} mode={mode} allButtons={allButtons} state={state} id={id} pleaseSelect={pleaseSelect} required={true}/>
 }
 
 interface TwoElements {

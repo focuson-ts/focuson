@@ -87,8 +87,8 @@ export const ListOfPaymentsDD: ExampleDataD = {
   description: 'The information about the person who requested the payments',
   layout: { component: LayoutCd, displayParams: { details: '[[5,1]]' } },
   table: accountT,
-  guards:{
-    pageModeView: {condition: 'pageModeEquals', mode: 'view'}
+  guards: {
+    pageModeView: { condition: 'pageModeEquals', mode: 'view' }
   },
   structure: {
     standingOrders: { dataDD: CheckboxAndNumberFromDatabaseDD, displayParams: { number: '~/currentPayments/standingOrders' }, sampleOffset: 0 },
@@ -154,6 +154,7 @@ export const printRecordDD: ExampleDataD = {
   description: 'A single request for the list of payments that happened at a point at time, or will happen when we click print',
   layout: { component: LayoutCd, displayParams: { details: '[[1],[1,4]]' } },
   guards: {
+    requestedByEnabled: { condition: 'pageModeEquals', mode: [ 'edit', 'create' ] },
     requestedBy: { condition: 'in', path: 'requestedBy', values: { j: 'joint', m: 'main', n: 'new bank' } },
     alreadyPrinted: { condition: 'equals', path: 'alreadyPrinted', value: true },
   },
@@ -164,6 +165,7 @@ export const printRecordDD: ExampleDataD = {
       dataDD: { ...StringDD, emptyValue: undefined, allowUndefined: true, display: DataDrivenFixedOptionDropDownAndDetailsCD },
       displayParams: {
         pleaseSelect: 'Select...',
+        enabledBy: 'requestedByEnabled',
         dontShowEmpty: true,
         details: {
           M: { valuePath: '~/accountDetails/main/fullname', dataPath: '~/accountDetails/main', display: RequestDetailsDD.name },
@@ -177,7 +179,7 @@ export const printRecordDD: ExampleDataD = {
     // requesterDetails: { dataDD: RequestDetailsDD, guard: { requestedBy: [ 'M', 'J' ] } },
     listOfPayments: { dataDD: ListOfPaymentsDD },
     includeSingleAndInitialDirectDebits: { dataDD: BooleanDD },
-    alreadyPrinted: { dataDD: {...BooleanDD, resolver: 'alreadyPrinted'}, sample: [ false, true, false ] }, //will be hidden but leaving visible for now.
+    alreadyPrinted: { dataDD: { ...BooleanDD, resolver: 'alreadyPrinted' }, sample: [ false, true, false ] }, //will be hidden but leaving visible for now.
     authorisedByCustomer: { dataDD: authorisedByCustomerDD, guard: { requestedBy: [ 'N' ] } },
     datePrinted: { dataDD: StringDD, guard: { alreadyPrinted: [ 'true' ] } }
   }

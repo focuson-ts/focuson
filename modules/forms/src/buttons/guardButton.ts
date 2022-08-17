@@ -101,9 +101,9 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
 
   },
   pageModeEquals: {
-    imports:[],
-    makeGuardVariable:(params, mainPage, page, name, guard: PageModeCondition) =>
-      `const ${guardName ( name )} = mode == '${guard.mode}' `
+    imports: [],
+    makeGuardVariable: ( params, mainPage, page, name, guard: PageModeCondition ) =>
+      `const ${guardName ( name )} = ${JSON.stringify ( toArray ( guard.mode ) )}.includes(mode) `
 
   }
 }
@@ -188,7 +188,7 @@ export interface RegexCondition {
 }
 export interface PageModeCondition {
   condition: 'pageModeEquals',
-  mode: PageMode
+  mode: PageMode | PageMode[]
 }
 
 export function isGuardButton<B, G> ( b: any ): b is GuardButtonInPage<B, G> {
