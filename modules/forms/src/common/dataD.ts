@@ -425,35 +425,35 @@ export const YesNoRadioDD: PrimitiveDD = {
   enum: { N: 'No', Y: 'Yes' }
 }
 export const DateDD: DatePrimitiveDD = {
-  format: { type: 'Date', pattern: "yyyy/MM/dd" },
+  format: { type: 'Date', pattern: "yyyy-MM-dd" },
   ...datePrimDD,
   name: 'Date',
-  emptyValue: '2022/1/1',
+  emptyValue: '2022-1-1',
   description: "The primitive representing a date (w/o time)",
   display: LabelAndDateInputCD,
-  displayParams: { dateFormat: "yyyy/MM/dd" },
-  sample: [ "2020/10/01", '2021/09/01', '2022/11/01' ],
+  displayParams: { dateFormat: "yyyy-MM-dd" },
+  sample: [ "2020-10-01", '2021-09-01', '2022-11-01' ],
 }
 export const DateWithDatePickerDD: DatePrimitiveDD = {
-  format: { type: 'Date', pattern: "dd/MM/yyy" },
+  format: { type: 'Date', pattern: "dd-MM-yyyy" },
   ...datePrimDD,
   name: 'Date',
   emptyValue: undefined,
   allowUndefined: true,
   description: "The primitive representing a date (w/o time)",
   display: DatePicker2CD,
-  displayParams: { dateFormat: "dd/MM/yyyy" },
-  sample: [ "1/10/2022", '01/11/2022', '01/12/2022' ],
+  displayParams: { dateFormat: "dd-MM-yyyy" },
+  sample: [ "1-10-2022", '01-11-2022', '01-12-2022' ],
 }
 export const DateDDMMYYY_DD: DatePrimitiveDD = {
-  format: { type: 'Date', pattern: "dd/MM/yyyy" },
+  format: { type: 'Date', pattern: "dd-MM-yyyy" },
   ...datePrimDD,
   name: 'Date',
   emptyValue: '1/1/2022',
   description: "The primitive representing a date (w/o time)",
   display: LabelAndDateInputCD,
-  displayParams: { dateFormat: "dd/MM/yyyy" },
-  sample: [ "21/1/2020", '23/2/2021', '10/3/2/2022' ],
+  displayParams: { dateFormat: "dd-MM-yyyy" },
+  sample: [ "21-1-2020", '23-2-2021', '10-3-2022' ],
 }
 
 export const DateTimeDD: PrimitiveDD = {

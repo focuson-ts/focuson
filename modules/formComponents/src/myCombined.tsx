@@ -1,4 +1,4 @@
-import { focusPageClassName, PageDetailsForCombine } from "@focuson/pages";
+import { findThisPageElement, firstTimeHappened, focusPageClassName, PageDetailsForCombine, resetFirstTimeHappened } from "@focuson/pages";
 import { LensState } from "@focuson/state";
 import { Messages } from "./messages";
 import { HasTagHolder } from "@focuson/template";
@@ -6,6 +6,7 @@ import { HasSimpleMessages, SimpleMessage } from "@focuson/utils";
 import { FocusOnContext } from "@focuson/focuson";
 import { DebugState } from "./debugState";
 import { lastIndexOf } from "./common";
+import { useEffect } from "react";
 
 
 const popupJSX = ( p: PageDetailsForCombine, i: number, messagesJSX: JSX.Element ) => {
@@ -31,7 +32,7 @@ const modalPageJSX = ( p: PageDetailsForCombine, i: number, messagesJSX: JSX.Ele
 }
 const mainPageJSX = ( p: PageDetailsForCombine, i: number, messagesJSX: JSX.Element ) => {
   return (
-    <div id={`page${i}`}  className={focusPageClassName} key={i}>
+    <div id={`page${i}`} className={focusPageClassName} key={i}>
       <div id='contentWrapper'>
         {messagesJSX}
         {p.element}
@@ -42,7 +43,21 @@ const mainPageJSX = ( p: PageDetailsForCombine, i: number, messagesJSX: JSX.Elem
 
 export function MyCombined<S extends HasTagHolder & HasSimpleMessages, Context extends FocusOnContext<S>> ( state: LensState<S, any, Context>, pages: PageDetailsForCombine[] ): JSX.Element {
 
-  const debug = state.optJson ()?.debug;
+  if ( firstTimeHappened ) {
+    useEffect ( () => {
+      console.log ( 'First time happened' )
+      resetFirstTimeHappened ()
+      const thisPage = findThisPageElement ( focusPageClassName );
+      const inputs = thisPage.getElementsByTagName ( 'input' )
+      if ( inputs.length > 0 ) {
+        const item = inputs.item ( 0 );
+        if ( item ) {
+          item.focus ( { preventScroll: false } )
+          item.select()
+        }
+      }
+    } )
+  }
   const lastIndexOfMainOrModalPage = lastIndexOf ( pages, p => p.pageType === 'MainPage' || p.pageType === 'ModalPage' )
   const clippedPages = pages.slice ( lastIndexOfMainOrModalPage )
   const pagesToShow = clippedPages.length === 0 ? pages : clippedPages // this occurs when we have a mainpop at the beginning

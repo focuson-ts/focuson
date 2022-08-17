@@ -25,7 +25,7 @@ export interface LabelAndInputProps<S, T, Context> extends CommonStateProps<S, T
 export interface TransformerProps<T> {
   transformer: ( s: string ) => T,
   type: string;
-  default: T;
+  default: T | undefined;
 }
 export function makeInputChangeTxs<S, C extends HasSimpleMessageL<S> & HasPathToLens<S>> ( id: string, parentState: LensState<S, any, C> | undefined, change?: InputChangeCommands | InputChangeCommands[] ): Transform<S, any>[] {
   if ( parentState === undefined ) return []

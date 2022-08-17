@@ -17,14 +17,14 @@ export const AuthorisedChargesRD: ExampleRestD = {
   dataDD: ListOfChargesDD,
   params: {
     ...fromCommonIds ( 'brandRef', 'clientRef' ),
-    date: { ...StringParam, lens: '~/authorisedCharges/date', testValue: '2022/12/1' }
+    date: { ...StringParam, lens: '~/authorisedCharges/date', testValue: '2022-12-1' }
   },
   url: "/api/charges/summary?{query}",
   actions: [ 'get', 'update' ],
   tables: {
     noDataIs404: true,
     entity: { table: authorisedChargesTableDD, alias: 'A', type: 'Main' },
-    where: [ { table: authorisedChargesTableDD, alias: "A", field: 'date', comparator: 'sameday', paramName: 'date', pattern: 'dd/MM/yyyy' } ]
+    where: [ { table: authorisedChargesTableDD, alias: "A", field: 'date', comparator: 'sameday', paramName: 'date', pattern: 'dd-MM-yyyy' } ]
   }
 }
 
@@ -32,7 +32,7 @@ export const SummaryOfChargeDatesRD: ExampleRestD = {
   dataDD: summaryOfChargesDateTableDD,
   params: {
     ...fromCommonIds ( 'brandRef', 'clientRef' ),
-    date: { ...StringParam, lens: '~/summaryOfChargesDates/date', testValue: '2022/12/1' }
+    date: { ...StringParam, lens: '~/summaryOfChargesDates/date', testValue: '2022-12-1' }
   },
   url: "/api/charges/dates?{query}",
   actions: [ 'get' ],
@@ -99,7 +99,7 @@ export const SummaryOfChargeDatesRD: ExampleRestD = {
 
 export const SummaryOfChargesRD: ExampleRestD = {
   dataDD: chargesSummaryDetailDD,
-  params: { date: { ...StringParam, lens: '~/summaryOfChargesDates/date', testValue: '1/6/2016' } },
+  params: { date: { ...StringParam, lens: '~/summaryOfChargesDates/date', testValue: '1-6-2016' } },
   url: "/api/charges/details?{query}",
   actions: [ 'get' ],
   tables: {
@@ -110,7 +110,7 @@ export const SummaryOfChargesRD: ExampleRestD = {
 
 export const SummaryOfChargesqRD: ExampleRestD = {
   dataDD: chargesSummaryDetailDD, //<--- has original data and editing data
-  params: { date: { ...StringParam, lens: '~/summaryOfChargesDates/date', testValue: '1/6/2016' } },
+  params: { date: { ...StringParam, lens: '~/summaryOfChargesDates/date', testValue: '1-6-2016' } },
   url: "/api/charges/details?{query}",
   actions: [ 'updateWithoutFetch' ],
   mutations: [

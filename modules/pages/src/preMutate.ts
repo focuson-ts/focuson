@@ -6,6 +6,11 @@ import { findMainPageDetails, lensForPageDetails } from "./selectedPage";
 import { MultiPageDetails } from "./pageConfig";
 import { ModalProcessorsConfig, newPageCommandProcessors, processChangeCommandProcessor } from "@focuson/rest";
 
+export var firstTimeHappened: boolean = false
+export function resetFirstTimeHappened(){
+  firstTimeHappened = false
+}
+
 /** if 'first time' is true for a page, this returns a new state mutated with the firstTime false, and the initial state for the domain adjusted if requested by the config.ts
  * This is intended to be use used a 'preMutate' in a 'setJson' structure.
  * It should normally be called before fetchers are checked
@@ -21,6 +26,7 @@ function premutateOnePage<S, Context extends PageSelectionContext<S>> ( c: Conte
   if ( !pageSelection ) throw Error ( `software error: Somehow failing to get a page Selection ${i} ${JSON.stringify ( s )}` )
   const { firstTime, pageName, focusOn } = pageSelection
   if ( firstTime ) {
+    firstTimeHappened = true
     const pageDetails: MultiPageDetails<S, any> = c.pages;
     const details = pageDetails[ pageName ]
     if ( !details ) throw new Error ( `Could not find details for ${pageName}. LegalValues are ${Object.keys ( pageDetails ).join ( "," )}\nIs this a modal page that you need to add to the main page\n` )

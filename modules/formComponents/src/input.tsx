@@ -35,14 +35,14 @@ export const Input = <S, T extends any, P> ( tProps: TransformerProps<T> ) => {
     const { state, mode, id, parentState, onChange, readonly, enabledBy } = props
     const onChangeEventHandler = ( transformer: ( s: string ) => T, e: React.ChangeEvent<HTMLInputElement> ) => {
       if ( type === 'checkbox' ) throw Error ( 'Input processing checkbox' )
-      console.log('in onChangeEventHandler. target is', e.target)
-      console.log('in onChangeEventHandler. value is', e.target?.value)
-      state.massTransform ( reasonFor ( 'Input', 'onChange', id ) ) ( [ state.optional, () => transformer(e.target.value) ], ...makeInputChangeTxs ( id, parentState, onChange ) );
+      console.log ( 'in onChangeEventHandler. target is', e.target )
+      console.log ( 'in onChangeEventHandler. value is', e.target?.value )
+      state.massTransform ( reasonFor ( 'Input', 'onChange', id ) ) ( [ state.optional, () => transformer ( e.target.value ) ], ...makeInputChangeTxs ( id, parentState, onChange ) );
     };
 
     return <input className="input" type={type} {...cleanInputProps ( props )}
                   disabled={enabledBy === false}
-                  value={`${state.optJsonOr ( tProps.default )}`}
+                  value={`${tProps.default ? state.optJsonOr ( tProps.default ) : state.optJson ()}`}
                   readOnly={mode === 'view' || readonly} onChange={( e ) => onChangeEventHandler ( transformer, e )}/>
   }
 }

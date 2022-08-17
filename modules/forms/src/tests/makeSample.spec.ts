@@ -13,9 +13,9 @@ describe ( "makeEmptyTs", () => {
         "totalMonthlyCost": 0
       },
       "createPlan": {
-        "createPlanDate": "2022/1/1",
-        "createPlanEnd": "2022/1/1",
-        "createPlanStart": "2022/1/1"
+        "createPlanDate": "2022-1-1",
+        "createPlanEnd": "2022-1-1",
+        "createPlanStart": "2022-1-1"
       },
       "eAccountsTable": [
         {

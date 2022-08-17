@@ -8,7 +8,7 @@ import { makeButtons } from "./makeButtons";
 import ReactDatePicker from "react-datepicker";
 
 
-type DateFormat = 'dd/MM/yyyy' | 'yyyy/MM/dd'
+type DateFormat = string//'dd-MM/yyyy' | 'yyyy/MM/dd'
 export interface DatePickerDetails {
   dateFilter: ( d: Date ) => boolean
 }

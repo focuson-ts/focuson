@@ -2,7 +2,6 @@ import { LensProps, LensState } from "@focuson/state";
 import { NameAnd } from "@focuson/utils";
 import { ContextForDropdown, LabelAndDropdown } from "./labelAndDropdown";
 import { PageMode } from "@focuson/pages";
-import { EnabledBy } from "@focuson/forms/dist/src/buttons/enabledBy";
 
 
 export interface OneDropDownDetails<S, C> {
