@@ -10,8 +10,8 @@ export const PostCodeModalPage: ExampleModalPage = {
   display: { dataDD: postCodeSearchDataD, target: '~/' },
   modes: [ 'edit' ],
   buttons: {
-    cancel: { control: 'ModalCancelButton' },
-    commit: { control: 'ModalCommitButton' }
+    cancel: { control: 'ModalCancelButton' , confirm: { type: 'window', title: 'The title for the cancel' }},
+    commit: { control: 'ModalCommitButton', confirm: { type: 'window' } }
   },
 
 }

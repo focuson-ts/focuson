@@ -7,6 +7,7 @@ import { DefaultTemplate, PageTemplateProps } from "./PageTemplate";
 import { Loading } from "./loading";
 import { lensBuilder, Lenses, NameAndLens, Optional, parsePath } from "@focuson/lens";
 import { safeArray, safeObject, safeString } from "@focuson/utils";
+import { ModalContext } from "./modal/modalCommitAndCancelButton";
 
 export interface HasSelectedPageDebug {
   debug?: SelectedPageDebug
@@ -82,7 +83,7 @@ export const fromPathFromRaw = <S, D, Msgs, Config extends PageConfig<S, D, Msgs
 };
 
 
-export const findOneSelectedPageDetails = <S, T, Context extends PageSelectionContext<S>> ( state: LensState<S, T, Context>, page0Details: MainPageDetails<S, any, any, any, Context>, pageCount: number ) =>
+export const findOneSelectedPageDetails = <S, T, Context extends ModalContext<S>> ( state: LensState<S, T, Context>, page0Details: MainPageDetails<S, any, any, any, Context>, pageCount: number ) =>
   ( ps: PageSelection, index: number ): PageDetailsForCombine => {
     // @ts-ignore
     const debug = state.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
@@ -119,7 +120,7 @@ export function findMainPageDetails<S> ( pageSelections: PageSelection[], pageDe
 }
 
 /** Given a config.ts, a focused page data structure and a lens state (focused on anything...doesn't matter) this will display a page */
-export function displayOne<S extends any, D extends any, Msgs, Context extends PageSelectionContext<S>> (
+export function displayOne<S extends any, D extends any, Msgs, Context extends ModalContext<S>> (
   config: PageConfig<S, D, Msgs, Context>,
   pageType: string | undefined,
   focusedPage: FocusedPage<S, D, Context>,

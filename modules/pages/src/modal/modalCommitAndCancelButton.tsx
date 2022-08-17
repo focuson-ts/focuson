@@ -10,6 +10,7 @@ import React from "react";
 import { isMainPageDetails } from "../pageConfig";
 import { replaceTextUsingPath } from "../replace";
 import { HasTagHolderL } from "@focuson/template";
+import { ConfirmWindow, isConfirmWindow } from "./confirmWindow";
 
 
 export const confirmIt = <S, C extends PageSelectionContext<S>> ( state: LensState<S, any, C>, c: boolean | string | undefined ) => {
@@ -23,14 +24,24 @@ interface ModalCommitCancelButtonProps<S, Context> extends LensProps<S, any, Con
   id: string;
   enabledBy?: boolean;
   text?: string
-  confirm?: string | boolean;
+  confirm?: string | boolean | ConfirmWindow;
 }
 interface ModalCommitButtonProps<S, C> extends ModalCommitCancelButtonProps<S, C> {
   change?: ModalChangeCommands | ModalChangeCommands[];
   validate?: boolean
 }
-export function ModalCancelButton<S, Context extends PageSelectionContext<S>> ( { id, state, text, buttonType, confirm, enabledBy }: ModalCommitCancelButtonProps<S, Context> ) {
-  let onClick = () => { if ( confirmIt ( state, confirm ) ) state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popPage ( state ) );}
+export function ModalCancelButton<S, Context extends ModalContext<S>> ( { id, state, text, buttonType, confirm, enabledBy }: ModalCommitCancelButtonProps<S, Context> ) {
+  let onClick = () => {
+    if ( isConfirmWindow ( confirm ) ) {
+      const { pageName } = confirm
+      const realPageName = pageName ? pageName : 'confirm'
+      const ps: PageSelection = { pageName: realPageName, focusOn: '~', arbitraryParams: { ...confirm, action: 'cancel' }, time: state.context.dateFn (), pageMode: 'view' }
+      const openTx: Transform<S, any> = [ state.context.pageSelectionL, applyPageOps ( 'popup', ps ) ]
+      state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( openTx )
+      return
+    }
+    if ( confirmIt ( state, confirm ) ) state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popPage ( state ) );
+  }
   return <button className={getButtonClassName ( buttonType )} id={id} disabled={enabledBy === false || !canCommitOrCancel ( state )} onClick={onClick}>{text ? text : 'Cancel'} </button>
 }
 
@@ -104,9 +115,17 @@ export function ModalCommitButton<S, Context extends ModalContext<S>> ( c: Modal
   const { id, state, validate, confirm, enabledBy, buttonType, change, text } = c
   const { dateFn, pageSelectionL } = state.context
   function onClick () {
-    if ( !confirmIt ( state, confirm ) ) return
     const realvalidate = validate === undefined ? true : validate
     if ( realvalidate && hasValidationErrorAndReport ( id, state, dateFn ) ) return
+    if ( isConfirmWindow ( confirm ) ) {
+      const { pageName } = confirm
+      const realPageName = pageName ? pageName : 'confirm'
+      const ps: PageSelection = { pageName: realPageName, focusOn: '~', arbitraryParams: { ...confirm, action: 'commit' }, time: state.context.dateFn (), pageMode: 'view' }
+      const openTx: Transform<S, any> = [ state.context.pageSelectionL, applyPageOps ( 'popup', ps ) ]
+      state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( openTx )
+      return
+    }
+    if ( !confirmIt ( state, confirm ) ) return
     const pageToClose = currentPageSelectionTail ( state )
     const txs = findClosePageTxs ( `ModalCommit ${id}`, state, pageToClose, -1, toArray ( change ) )
     const pageCloseTx: Transform<S, any> = [ pageSelectionL, ( ps: PageSelection[] ) => ps.slice ( 0, -1 ) ]
@@ -120,24 +139,24 @@ export function ModalCommitButton<S, Context extends ModalContext<S>> ( c: Modal
   const ref = getRefForValidateLogicToButton ( id, debug, validate, enabledBy, canCommitOrCancel ( state ) )
   return <button ref={ref} className={getButtonClassName ( buttonType )} id={id} onClick={onClick}>{text ? text : 'Commit'}</button>
 }
-
-export interface ModalCommitWindowProps<S, C> extends ModalCommitButtonProps<S, C> {
-  pageName?: string;
-  confirmText?: string;
-  cancelText?: string;
-  messageText?: string
-}
-export function ModalCommitWindowButton<S, C extends ModalContext<S>> ( { state, id, validate, enabledBy, text, buttonType, confirmText, cancelText, pageName, messageText }: ModalCommitWindowProps<S, C> ) {
-  // @ts-ignore
-  const debug = state.main?.debug?.validityDebug
-  const ref = getRefForValidateLogicToButton ( id, debug, validate, enabledBy, canCommitOrCancel ( state ) )
-  function onClick ( e: any ) {
-    const realPageName = pageName ? pageName : 'confirm'
-    const ps: PageSelection = { pageName: realPageName, focusOn: '~', arbitraryParams: { confirmText, cancelText, messageText }, time: state.context.dateFn (), pageMode: 'view' }
-    const openTx: Transform<S, any> = [ state.context.pageSelectionL, applyPageOps ( 'popup', ps ) ]
-    state.massTransform ( reasonFor ( 'ModalCommitWindow', 'onClick', id ) ) ( openTx )
-
-  }
-  return <button ref={ref} className={getButtonClassName ( buttonType )} id={id} onClick={onClick}>{text ? text : 'Commit'}</button>
-
-}
+//
+// export interface ModalCommitWindowProps<S, C> extends ModalCommitButtonProps<S, C> {
+//   pageName?: string;
+//   confirmText?: string;
+//   cancelText?: string;
+//   messageText?: string
+// }
+// export function ModalCommitWindowButton<S, C extends ModalContext<S>> ( { state, id, validate, enabledBy, text, buttonType, confirmText, cancelText, pageName, messageText }: ModalCommitWindowProps<S, C> ) {
+//   // @ts-ignore
+//   const debug = state.main?.debug?.validityDebug
+//   const ref = getRefForValidateLogicToButton ( id, debug, validate, enabledBy, canCommitOrCancel ( state ) )
+//   function onClick ( e: any ) {
+//     const realPageName = pageName ? pageName : 'confirm'
+//     const ps: PageSelection = { pageName: realPageName, focusOn: '~', arbitraryParams: { confirmText, cancelText, messageText }, time: state.context.dateFn (), pageMode: 'view' }
+//     const openTx: Transform<S, any> = [ state.context.pageSelectionL, applyPageOps ( 'popup', ps ) ]
+//     state.massTransform ( reasonFor ( 'ModalCommitWindow', 'onClick', id ) ) ( openTx )
+//
+//   }
+//   return <button ref={ref} className={getButtonClassName ( buttonType )} id={id} onClick={onClick}>{text ? text : 'Commit'}</button>
+//
+// }

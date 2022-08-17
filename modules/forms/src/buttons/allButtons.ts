@@ -2,7 +2,7 @@ import { makeModalButtons, ModalOrMainButtonInPage } from "./modalButtons";
 import { ResetStateButton } from "./stateButtons";
 import { ListNextButtonInPage, ListPrevButtonInPage, makeListMarkerButtons } from "./listButtons";
 import { MakeButton } from "../codegen/makeButtons";
-import { makeModalCloseButtons, ModalCancelButtonInPage, ModalCommitButtonInPage, ModalCommitWindowButtonInPage } from "./modalCloseButtons";
+import { makeModalCloseButtons, ModalCancelButtonInPage, ModalCommitButtonInPage } from "./modalCloseButtons";
 import { makeRestButtons, RestButtonInPage } from "./restButton";
 import { makeValidationButtons, ValidationButtonInPage } from "./ValidationDebugButton";
 import { GuardButtonInPage } from "./guardButton";
@@ -22,7 +22,7 @@ export function isButtonWithControl ( b: any ): b is ButtonWithControl {
 export type ButtonD = ButtonWithControl | GuardButtonInPage<any, any>
 
 
-export type RawButtons<G> = ModalOrMainButtonInPage<G> | ModalCancelButtonInPage | ModalCommitButtonInPage | ModalCommitWindowButtonInPage |
+export type RawButtons<G> = ModalOrMainButtonInPage<G> | ModalCancelButtonInPage | ModalCommitButtonInPage |
   ResetStateButton | RestButtonInPage<G> | ListNextButtonInPage | ListPrevButtonInPage | ValidationButtonInPage | DeleteStateButtonInPage |
   ToggleButtonInPage<G> | SelectButtonInPage<G> | ActionButtonInPage | CommandButtonInPage
 
