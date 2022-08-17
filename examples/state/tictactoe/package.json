@@ -15,8 +15,8 @@
     "react": "16.14.0",
     "react-dom": "16.14.0",
     "typescript": "^4.1.5",
-    "@focuson/lens": "1.35.17",
-    "@focuson/state": "1.35.17"
+    "@focuson/lens": "1.35.18",
+    "@focuson/state": "1.35.18"
   },
   "description": "Demonstrating how lens can simplify state management in React",
   "devDependencies": {
@@ -57,7 +57,7 @@
     "test:watch": "npm run test -- --watch",
     "storybook": "start-storybook -p 6006 -s public"
   },
-  "version": "1.35.17",
+  "version": "1.35.18",
   "eslintConfig": {
     "extends": [
       "react-app",
