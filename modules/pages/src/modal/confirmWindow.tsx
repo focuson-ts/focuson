@@ -18,7 +18,7 @@ export interface ConfirmWindow extends ConfirmProps {
   type: 'window'
 }
 export function isConfirmWindow ( a: any ): a is ConfirmWindow {
-  return a.type === 'window'
+  return a?.type === 'window'
 }
 
 export interface ConfirmWindowProps extends ConfirmProps {
