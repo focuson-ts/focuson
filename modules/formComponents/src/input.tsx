@@ -9,6 +9,7 @@ import { FocusOnContext } from "@focuson/focuson";
 
 export interface InputProps<S, T, Context> extends CommonStateProps<S, T, Context>, InputOnChangeProps<S, Context>, InputEnabledProps {
   defaultValue?: string | number;
+  placeholder?: string;
   readonly?: boolean;
   enums?: NameAnd<string>;
 }

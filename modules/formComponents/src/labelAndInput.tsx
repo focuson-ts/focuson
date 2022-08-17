@@ -19,6 +19,7 @@ export interface LabelAndInputProps<S, T, Context> extends CommonStateProps<S, T
   buttons?: string[];
   noLabel?: boolean;
   enabledBy?: boolean;
+  placeholder?: string;
 }
 
 export interface TransformerProps<T> {

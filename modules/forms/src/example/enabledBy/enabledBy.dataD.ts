@@ -45,9 +45,9 @@ export const enabledByDataD: ExampleDataD = {
         }
       }
     },
-    string: { dataDD: StringDD, displayParams: { enabledBy: 'yes' } },
-    number: { dataDD: NatNumDd, displayParams: { enabledBy: 'no' } },
-    textArea: { dataDD: ManyLineStringDD, displayParams: { enabledBy: [ 'yes' ], maxlength: 200 } },
+    string: { dataDD: StringDD, displayParams: { enabledBy: 'yes', placeholder: 'String goes here...' } },
+    number: { dataDD: {...NatNumDd,emptyValue: undefined,allowUndefined: true}, displayParams: { enabledBy: 'no', placeholder: 'Number goes here...' } },
+    textArea: { dataDD: ManyLineStringDD, displayParams: { enabledBy: [ 'yes' ], maxlength: 200, placeholder: 'Text goes here' } },
     date: { dataDD: DateWithDatePickerDD }
 
   }
