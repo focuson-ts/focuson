@@ -40,9 +40,11 @@ export const Input = <S, T extends any, P> ( tProps: TransformerProps<T> ) => {
       state.massTransform ( reasonFor ( 'Input', 'onChange', id ) ) ( [ state.optional, () => transformer ( e.target.value ) ], ...makeInputChangeTxs ( id, parentState, onChange ) );
     };
 
+    //@ts-ignore
+    const value: any = state.optJsonOr ( tProps.default );
     return <input className="input" type={type} {...cleanInputProps ( props )}
                   disabled={enabledBy === false}
-                  value={`${tProps.default ? state.optJsonOr ( tProps.default ) : state.optJson ()}`}
+                  value={`${value}`}
                   readOnly={mode === 'view' || readonly} onChange={( e ) => onChangeEventHandler ( transformer, e )}/>
   }
 }
