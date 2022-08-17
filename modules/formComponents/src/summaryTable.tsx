@@ -36,6 +36,7 @@ export function SummaryTable<S, D extends SummaryTableData, C extends FocusOnCon
   const accountId = state.main.walk.the.path.to.the.account
   const dataForMyAccountIdThatIsntHeldAndIsACredit = data.filter ( d => d.accNo === accountId && d.hold !== true && d.type === 'CR' )
 
+  const initialValue :NameAnd<number>= {};
   const groups: NameAnd<number> = dataForMyAccountIdThatIsntHeldAndIsACredit.reduce ( ( groups, d ) => { // reducing or folding
     const chargeType = d.chargeType
     const status = d.status
@@ -44,7 +45,7 @@ export function SummaryTable<S, D extends SummaryTableData, C extends FocusOnCon
     const newAmount = Number.parseFloat ( d.amount ) + (existingAmount ? existingAmount : 0)
     groups[ key ] = newAmount
     return groups;
-  }, {} )
+  }, initialValue )
   console.log ( groups )
   //   status_chargeType : 3948754897, status_chargeType: 23094
   const tableLines = Object.entries ( groups ).map ( ( [ key, accAmount ] ) => {
