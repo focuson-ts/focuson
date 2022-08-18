@@ -14,8 +14,12 @@ export const EnabledByModalPageD: ExampleModalPage = {
   buttons: {
     commit: { control: 'ModalCommitButton', enabledBy: 'yesButton', validate: false, change: { command: 'message', msg: 'Committed' } },
     commitWithvalidate: { control: 'ModalCommitButton', enabledBy: 'yesButton', validate: true },
-    commitWithConfirm: { control: 'ModalCommitButton', enabledBy: 'yesButton', validate: true, confirm: { type: 'window', confirmText: 'Confirm', cancelText: 'Cancel', messageText: "some message" } },
-    cancel: { control: 'ModalCancelButton', confirm: {type: 'window'} }
+    commitWithConfirm: {
+      control: 'ModalCommitButton', enabledBy: 'yesButton', validate: true,
+      confirm: { type: 'window', confirmText: 'Confirm', cancelText: 'Cancel', messageText: "some message" },
+      change: { command: 'message', msg: 'from confirm button' }
+    },
+    cancel: { control: 'ModalCancelButton', confirm: { type: 'window' } }
   }
 }
 export const EnabledByPageD: ExampleMainPage = {
@@ -28,7 +32,10 @@ export const EnabledByPageD: ExampleMainPage = {
   rest: {},
   guards: { dropdownYes: { condition: 'equals', path: 'dropdown', value: '"Y"' } },
   buttons: {
-    page: { control: 'ModalButton', modal: EnabledByModalPageD, focusOn: '~/onChange', mode: 'edit' },
+    page: {
+      control: 'ModalButton', modal: EnabledByModalPageD, focusOn: '~/onChange', mode: 'edit',
+      changeOnClose: { command: 'message', msg: 'from modal button' }
+    },
     pageGuardDirect: {
       guard: { control: 'ModalButton', modal: EnabledByModalPageD, focusOn: '~/onChange', mode: 'edit' },
       by: { condition: 'equals', path: 'dropdown', value: '"Y"' }

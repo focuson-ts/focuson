@@ -58,7 +58,7 @@ export const makeConfirmCommitWindow = <S, D, C extends ModalContext<S>> ( makeF
     if ( modalPageTxs === undefined ) throw Error ( `Software error in ConfirmCommitWindow - last page\n${JSON.stringify ( state.main, null, 2 )}` )
 
     const pageCloseTx: Transform<S, any> = [ state.context.pageSelectionL, ( ps: PageSelection[] ) => ps.slice ( 0, -2 ) ]
-    state.massTransform ( reasonFor ( 'ConfirmCommitWindow', 'onClick', cancelId ) ) ( pageCloseTx, ...modalPageTxs, ...thisPagetxs )
+    state.massTransform ( reasonFor ( 'ConfirmCommitWindow', 'onClick', cancelId ) ) ( pageCloseTx, ...thisPagetxs, ...modalPageTxs )
   }
 
   function cancel ( e: any ) { state.massTransform ( reasonFor ( 'ConfirmCommitWindow', 'onClick', cancelId ) ) ( popPage ( state ) );}
