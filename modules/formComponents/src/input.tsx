@@ -70,6 +70,6 @@ export const NumberInput = <S, Context extends FocusOnContext<S>> ( props: Input
 export const BooleanInput = <S, Context extends FocusOnContext<S>> ( props: InputProps<S, boolean, Context> & BooleanValidations ): JSX.Element =>
   Input<S, boolean, BooleanValidations> ( BooleanTransformer ) ( props );
 
-export const BooleanYNInput = <S, Context extends FocusOnContext<S>> ( props: InputProps<S, string, Context> & StringValidations ): JSX.Element =>
+export const BooleanYNInput = <S, Context extends FocusOnContext<S>> ( props: InputProps<S, string, Context> & BooleanValidations ): JSX.Element =>
   Input<S, string, BooleanValidations> ( BooleanYNTransformer ) ( props );
 

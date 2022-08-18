@@ -72,5 +72,5 @@ const LabelAndTInput = <T extends any, P> ( tProps: TransformerProps<T> ) =>
 export const LabelAndStringInput = LabelAndTInput<string, StringValidations> ( StringTransformer )
 export const LabelAndNumberInput = LabelAndTInput<number, NumberValidations> ( NumberTransformer )
 export const LabelAndBooleanInput = LabelAndTInput<boolean, BooleanValidations> ( BooleanTransformer )
-export const LabelAndYNBooleanInput = LabelAndTInput<string, StringValidations> ( BooleanYNTransformer )
+export const LabelAndYNBooleanInput = LabelAndTInput<string, BooleanValidations> ( BooleanYNTransformer )
 
