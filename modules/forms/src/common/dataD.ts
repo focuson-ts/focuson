@@ -1,5 +1,5 @@
 //Common Data Definitions
-import { DatePicker2CD, DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndDropDownCD, LabelAndNumberInputCD, LabelAndRadioCD, LabelAndStringInputCD, LabelAndTextAreaCD, NumberInputCD } from "./componentsD";
+import { DatePicker2CD, DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndDropDownCD, LabelAndNumberInputCD, LabelAndRadioCD, LabelAndStringInputCD, LabelAndTextAreaCD, LabelAndYNCheckboxInputCD, NumberInputCD } from "./componentsD";
 import { ComponentDisplayParams } from "../codegen/makeRender";
 import { BooleanValidations, NameAnd, NumberValidations, safeArray, StringValidations } from "@focuson/utils";
 import { Guards } from "../buttons/guardButton";
@@ -106,7 +106,7 @@ export interface NormalPattern {
   type: 'Date' | 'String' | 'Integer' | 'Double';
   pattern: string
 }
-export type  Pattern   = BooleanPattern | NormalPattern
+export type  Pattern = BooleanPattern | NormalPattern
 
 export interface DatePrimitiveDD extends CommonPrimitiveDD<string> {
   // datePattern: string;
@@ -413,6 +413,12 @@ export const BooleanDD: BooleanPrimitiveDD = {
   sample: [ true, false ]
 }
 
+export const YesNoCheckboxDD: PrimitiveDD = {
+  ...StringDD,
+  emptyValue: undefined, allowUndefined: true,
+  display: LabelAndYNCheckboxInputCD,
+  enum: { N: 'No', Y: 'Yes' }
+}
 export const YesNoDD: PrimitiveDD = {
   ...StringDD,
   display: LabelAndDropDownCD,

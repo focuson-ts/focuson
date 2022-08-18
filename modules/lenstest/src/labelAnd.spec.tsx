@@ -7,13 +7,15 @@ import { lensState } from "@focuson/state";
 import { context } from "./context.fixture";
 import { FocusOnContext } from "@focuson/focuson";
 import { mount } from "enzyme";
-import { LabelAndNumberInput, LabelAndStringInput } from "@focuson/form_components";
+import { LabelAndBooleanInput, LabelAndNumberInput, LabelAndStringInput, LabelAndYNBooleanInput } from "@focuson/form_components";
 
 enzymeSetup ()
 
 interface LabelAndState extends HasRestCommands, HasPageSelection, HasSimpleMessages, HasTagHolder {
   string?: string
   number?: number
+  boolean?: boolean
+  yn?: string
 }
 const empty: LabelAndState = {
   messages: [], pageSelection: [], restCommands: [], tags: {}
@@ -29,6 +31,18 @@ function labelAndNumber ( label: string | undefined, number: number ) {
   // @ts-ignore
   const focusedState: LensState<LabelAndState, string, FocusOnContext<LabelAndState>> = state.focusOn ( 'number' );
   return mount ( <LabelAndNumberInput id='someId' state={focusedState} label={label} allButtons={{}}/> )
+}
+function labelAndBoolean ( label: string | undefined, boolean: boolean ) {
+  const state = lensState ( { ...empty, boolean }, () => {}, '', context () )
+  // @ts-ignore
+  const focusedState: LensState<LabelAndState, boolean, FocusOnContext<LabelAndState>> = state.focusOn ( 'boolean' );
+  return mount ( <LabelAndBooleanInput id='someId' state={focusedState} label={label} allButtons={{}}/> )
+}
+function labelAndYNBoolean ( label: string | undefined, yn: string ) {
+  const state = lensState ( { ...empty, yn }, () => {}, '', context () )
+  // @ts-ignore
+  const focusedState: LensState<LabelAndState, boolean, FocusOnContext<LabelAndState>> = state.focusOn ( 'yn' );
+  return mount ( <LabelAndYNBooleanInput id='someId' state={focusedState} label={label} allButtons={{}}/> )
 }
 
 describe ( 'LabelAndString', () => {
@@ -81,7 +95,7 @@ describe ( 'LabelAndNumber', () => {
     expect ( labelAndNumber ( 'someLabel', number ).html () ).toEqual (
       '<div class="labelValueButton "> ' +
       '<label for="someId" class="input-label">someLabel</label>' +
-      '<div class=""><input class="input" type="number" id="someId" value="0"></div></div>' )
+      '<div class=""><input class="input" type="number" id="someId" value=""></div></div>' )
 
   } )
   it ( 'should render with null', () => {
@@ -90,6 +104,39 @@ describe ( 'LabelAndNumber', () => {
     expect ( labelAndNumber ( 'someLabel', number ).html () ).toEqual (
       '<div class="labelValueButton "> ' +
       '<label for="someId" class="input-label">someLabel</label>' +
-      '<div class=""><input class="input" type="number" id="someId" value="0"></div></div>' )
+      '<div class=""><input class="input" type="number" id="someId" value=""></div></div>' )
+  } )
+} );
+
+describe ( 'LabelAndBoolean', () => {
+  it ( 'should render with data - true', () => {
+    expect ( labelAndBoolean ( 'someLabel', true ).html () ).toEqual (
+      '<div class="labelValueButton "> ' +
+      '<label for="someId" class="input-label">someLabel</label>' +
+      '<div class="checkbox-container"><input type="checkbox" id="someId" checked="">' +
+      '<span class="checkmark"></span></div></div>' )
+  } )
+  it ( 'should render with data - false', () => {
+    expect ( labelAndBoolean ( 'someLabel', false ).html () ).toEqual (
+      '<div class="labelValueButton "> ' +
+      '<label for="someId" class="input-label">someLabel</label>' +
+      '<div class="checkbox-container"><input type="checkbox" id="someId"><span class="checkmark"></span></div></div>' )
+  } )
+  it ( 'should render with undefined', () => {
+    // @ts-ignore
+    const number: boolean = undefined;
+    expect ( labelAndBoolean ( 'someLabel', number ).html () ).toEqual (
+      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label>' +
+      '<div class="checkbox-container"><input type="checkbox" id="someId">' +
+      '<span class="checkmark"></span></div></div>' )
+
+  } )
+  it ( 'should render with null', () => {
+    // @ts-ignore
+    const number: boolean = null;
+    expect ( labelAndBoolean ( 'someLabel', number ).html () ).toEqual (
+      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label>' +
+      '<div class="checkbox-container"><input type="checkbox" id="someId">' +
+      '<span class="checkmark"></span></div></div>' )
   } )
 } );

@@ -110,7 +110,7 @@ export const LabelAndStringInputCD: DisplayCompD = {
   params: {
     ...commonParamsWithLabel, ...stringValidationParams, ...enabledByForInputs,
     ...onChangeAndParentState,
-    placeholder: {paramType: 'string', needed: 'no'}
+    placeholder: { paramType: 'string', needed: 'no' }
   }
 }
 
@@ -119,13 +119,17 @@ export const LabelAndNumberInputCD: DisplayCompD = {
   params: {
     ...commonParamsWithLabel, ...intValidationParams, ...enabledByForInputs,
     ...onChangeAndParentState,
-    placeholder: {paramType: 'string', needed: 'no'}
+    placeholder: { paramType: 'string', needed: 'no' }
   }
 }
 
 export const LabelAndCheckboxInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "LabelAndBooleanInput",
   params: { ...commonParamsWithLabel, ...onChangeAndParentState, ...enabledByForInputs, }
+}
+export const LabelAndYNCheckboxInputCD: DisplayCompD = {
+  import: "@focuson/form_components", name: "LabelAndYNBooleanInput",
+  params: { ...commonParamsWithLabel, ...stringValidationParams, ...onChangeAndParentState, ...enabledByForInputs, }
 }
 export const LabelAndDateInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "LabelAndDateInput",
@@ -136,7 +140,7 @@ export const LabelAndDateInputCD: DisplayCompD = {
     includeWeekends: { paramType: 'boolean', needed: 'no' },
     fieldNameInHolidays: { paramType: 'string', needed: 'no' },
     dateFormat: { paramType: 'string', needed: 'no' },
-    placeholder: {paramType: 'string', needed: 'no'}
+    placeholder: { paramType: 'string', needed: 'no' }
   }
 }
 export const DatePicker2CD: DisplayCompD = {
@@ -148,7 +152,7 @@ export const DatePicker2CD: DisplayCompD = {
     dateRange: { paramType: 'json', needed: 'no' },
     jurisdiction: { paramType: 'path', needed: 'no' },
     dateInfo: { paramType: 'path', needed: 'no' },
-    placeholder: {paramType: 'string', needed: 'no'}
+    placeholder: { paramType: 'string', needed: 'no' }
   }
 }
 export const LabelAndDropDownFromDataCD: DisplayCompD = {
@@ -327,7 +331,7 @@ export const LabelAndTextAreaCD: DisplayCompD = {
     ...enabledByForInputs,
     required: { paramType: 'boolean', needed: 'no', default: true },
     maxlength: { paramType: 'object', needed: 'no' },
-    placeholder: {paramType: 'string', needed: 'no'}
+    placeholder: { paramType: 'string', needed: 'no' }
   }
 }
 

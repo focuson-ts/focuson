@@ -1,6 +1,6 @@
 import { ExampleDataD } from "../common";
 import { yesNoDD } from "../SingleOccupation/singleOccupation.dataD";
-import { DateDD, DateWithDatePickerDD, ManyLineStringDD, NatNumDd, StringDD } from "../../common/dataD";
+import { BooleanDD, DateDD, DateWithDatePickerDD, ManyLineStringDD, NatNumDd, StringDD, YesNoCheckboxDD } from "../../common/dataD";
 import { actionEnums, nextActionDD, reasonDD } from "../onChange/onChange.dataD";
 import { DisplayStringWithLookupCD, WithTextLayoutCD } from "../../common/componentsD";
 
@@ -46,7 +46,9 @@ export const enabledByDataD: ExampleDataD = {
       }
     },
     string: { dataDD: StringDD, displayParams: { enabledBy: 'yes', placeholder: 'String goes here...' } },
-    number: { dataDD: {...NatNumDd,emptyValue: undefined,allowUndefined: true}, displayParams: { enabledBy: 'no', placeholder: 'Number goes here...' } },
+    checkbox: { dataDD: BooleanDD, displayParams: { enabledBy: 'yes' } },
+    ynCheckbox: { dataDD: YesNoCheckboxDD, displayParams: { enabledBy: 'yes' } },
+    number: { dataDD: { ...NatNumDd, emptyValue: undefined, allowUndefined: true }, displayParams: { enabledBy: 'no', placeholder: 'Number goes here...' } },
     textArea: { dataDD: ManyLineStringDD, displayParams: { enabledBy: [ 'yes' ], maxlength: 200, placeholder: 'Text goes here' } },
     date: { dataDD: DateWithDatePickerDD }
 
