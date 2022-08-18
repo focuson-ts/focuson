@@ -153,7 +153,7 @@ export class LensState<Main, T, Context> implements HasOptional<Main, T> {
         try {
           return tx[ 0 ].setOption ( acc, tx[ 1 ] ( tx[ 0 ].getOption ( acc ) ) )
         } catch ( e: any ) {
-          console.error ( `had error in mass transform with ${tx[ 0 ]?.description}`, tx )
+          console.error ( `had error in mass transform with ${tx[ 0 ]?.description}`, tx, 'acc', acc )
         }
       }, this.main )
       this.dangerouslySetMain ( newMain, r );
