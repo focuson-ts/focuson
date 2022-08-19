@@ -20,10 +20,11 @@ import { EnabledByPageD } from "./example/enabledBy/enabledBy.pageD";
 import { ReadOnlyPageD } from "./example/readonly/readOnly.pageD";
 import { DatesPageD } from "./example/dates/dates.pageD";
 import { wizardPD } from "./example/wizard/wizard.pageD";
-import { commonDataRefD } from "./example/common.refD.ts/commonDataRefD";
-import { ButtonsPageD } from "./example/buttons/buttonsPageD";
 
-export const generatedRefs: ExampleRefD[] = [ commonDataRefD ]
+import { ButtonsPageD } from "./example/buttons/buttonsPageD";
+import { dateInfoRefD } from "./common/dateInfoRefD";
+
+export const generatedRefs: ExampleRefD[] = [ dateInfoRefD() ]
 
 export const generatedPages: ExampleMainPage[] = [
   ButtonsPageD,
