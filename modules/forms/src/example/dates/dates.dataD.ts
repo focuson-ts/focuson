@@ -1,49 +1,17 @@
-import { ExampleDataD, ExampleRepeatingD } from "../common";
-import { DateWithDatePickerDD, StringDD } from "../../common/dataD";
-import {} from "../eTransfers/eTransfers.dataD";
-import { LayoutCd, TableCD } from "../../common/componentsD";
+import { ExampleDataD } from "../common";
+import { DateWithDatePickerDD } from "../../common/dataD";
+import { LayoutCd } from "../../common/componentsD";
 
-export const HolidayDataD: ExampleDataD = {
-  name: 'HolidayLine',
-  description: 'A single holiday in a jurisdiction',
-  structure: {
-    jurisdiction: { dataDD: StringDD, sample: [ 'GB', 'E' ] },
-    date: {
-      dataDD: StringDD, sample: [
-        '5/7/2022', '6/7/2022', '7/7/2022', '8/7/2022', '9/7/2022', '10/7/2022',
-        '11/7/2022', '12/7/2022', '13/7/2022', '14/7/2022', '15/7/2022', '16/7/2022' ]
-    },
-  }
-}
-export const HolidaysDataD: ExampleRepeatingD = {
-  name: 'Holidays',
-  dataDD: HolidayDataD,
-  description: 'The list of holidays',
-  display: TableCD,
-  sampleCount: 10,
-  displayParams: { order: [ 'date', 'jurisdiction' ] },
-  paged: false
-}
-
-export const DateInfoDataD: ExampleDataD = {
-  name: "DateInfo",
-  description: "All the date info needed by the date picker",
-  structure: {
-    today: { dataDD: StringDD, sample: [ '1/7/2022' ] },
-    dateFormat: { dataDD: StringDD, sample: [ 'dd/MM/yyyy' ] },
-    holidays: { dataDD: HolidaysDataD }
-  }
-}
 export const datesDataD: ExampleDataD = {
   name: 'Dates',
   description: "",
-  layout: { component: LayoutCd, displayParams: { details: '[[1]]', title: 'Some Title {empty}', rightHandTitle: 'Some Right Hand Title {empty}' } },
+  layout: { component: LayoutCd, displayParams: { details: '[[5,5]]', title: 'Some Title {empty}', rightHandTitle: 'Some Right Hand Title {empty}' } },
   structure: {
     empty: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified' } },
     emptyAndReadonly: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified - readonly', readonly: true } },
     emptyAndNotRequired: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified - required false', required: false } },
-    value: { dataDD: { ...DateWithDatePickerDD, emptyValue: '1/7/2022' }, displayParams: { label: 'Specified 1/7/2022' } },
-    valueDateFormat: { dataDD: { ...DateWithDatePickerDD, emptyValue: '2022/7/1' }, displayParams: { label: 'Specified 1/7/2022 ', dateFormat: 'yyyy/MM/dd' } },
+    value: { dataDD: { ...DateWithDatePickerDD, emptyValue: '6/7/2022' }, displayParams: { label: 'Specified 6/7/2022' } },
+    valueDateFormat: { dataDD: { ...DateWithDatePickerDD, emptyValue: '2022/7/5' }, displayParams: { label: 'Specified 2022/7/5 (different date format) ', dateFormat: 'yyyy/MM/dd' } },
     future: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Future', dateRange: { type: 'future' } } },
     past: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Past', dateRange: { type: 'past' } } },
     fiveWorkingDaysHolidaysNotSpecified: {
@@ -51,13 +19,15 @@ export const datesDataD: ExampleDataD = {
         dateRange: { type: 'future', allowWeekends: false, allowHolidays: false, minWorkingDaysBefore: 5 }
       }
     },
-    holidays: {
+    fiveWorkingDaysWeekendsAllowed: {
       dataDD: { ...DateWithDatePickerDD, emptyValue: undefined, allowUndefined: true }, displayParams: {
-        dateInfo: '~/dateInfo',
-        jurisdiction: '/CommonIds/jurisdiction',
-        dateRange: { type: 'future', allowWeekends: false, allowHolidays: false, minWorkingDaysBefore: 5 }
+        dateRange: { type: 'future', allowWeekends: true, allowHolidays: false, minWorkingDaysBefore: 5 }
+      }
+    },
+    fiveWorkingDaysHolidaysAllowed: {
+      dataDD: { ...DateWithDatePickerDD, emptyValue: undefined, allowUndefined: true }, displayParams: {
+        dateRange: { type: 'future', allowWeekends: false, allowHolidays: true, minWorkingDaysBefore: 5 }
       }
     }
-
   }
 }

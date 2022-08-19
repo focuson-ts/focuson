@@ -1,10 +1,10 @@
+import { ExampleMainPage, ExampleRefD } from "./example/common";
 import { EAccountsSummaryPD } from "./example/eAccounts/eAccountsSummary.pageD";
 import { ETransferPageD } from "./example/eTransfers/eTransfers.pageD";
 import { CreateEAccountPageD } from "./example/createEAccount/createEAccount.pageD";
 import { ChequeCreditbooksPD } from "./example/chequeCreditBooks/chequeCreditBooks.pageD";
 import { RepeatingPageD } from "./example/repeating/repeating.pageD";
 import { PostCodeMainPage } from "./example/postCodeDemo/addressSearch.pageD";
-import { ExampleMainPage, ExampleRefD } from "./example/common";
 import { OccupationAndIncomeSummaryPD } from "./example/occupationAndIncome/occupationAndIncome.pageD";
 import { AccountOverviewMainPage } from "./example/accountOverview/accountOverview.pageD";
 import { JointAccountPageD } from "./example/jointAccount/jointAccount.pageD";
@@ -19,18 +19,16 @@ import { FourOhFourPageD } from "./example/FourOhFour/FourOhFour.pageD";
 import { EnabledByPageD } from "./example/enabledBy/enabledBy.pageD";
 import { ReadOnlyPageD } from "./example/readonly/readOnly.pageD";
 import { DatesPageD } from "./example/dates/dates.pageD";
-import { initialPageD } from "./example/initiial/initial.pageD";
 import { wizardPD } from "./example/wizard/wizard.pageD";
-import { dateInfoRefD } from "./example/common.refD.ts/dateInfoRefD";
+import { commonDataRefD } from "./example/common.refD.ts/commonDataRefD";
 import { ButtonsPageD } from "./example/buttons/buttonsPageD";
 
-export const generatedRefs: ExampleRefD[] = [ dateInfoRefD ]
+export const generatedRefs: ExampleRefD[] = [ commonDataRefD ]
 
 export const generatedPages: ExampleMainPage[] = [
   ButtonsPageD,
   DatesPageD,
   wizardPD,
-  initialPageD,
   EnabledByPageD,
   ReadOnlyPageD,
   FourOhFourPageD,

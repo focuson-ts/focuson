@@ -448,7 +448,7 @@ export const DateWithDatePickerDD: DatePrimitiveDD = {
   allowUndefined: true,
   description: "The primitive representing a date (w/o time)",
   display: DatePicker2CD,
-  displayParams: { dateFormat: "dd-MM-yyyy" },
+  displayParams: { dateFormat: "dd-MM-yyyy", dateInfo: '/CommonData/dates', jurisdiction: '/CommonIds/jurisdiction' },
   sample: [ "1-10-2022", '01-11-2022', '01-12-2022' ],
 }
 export const DateDDMMYYY_DD: DatePrimitiveDD = {
