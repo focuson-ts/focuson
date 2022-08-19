@@ -127,7 +127,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
     writeToFile ( fetcherFile, () => makeJavaFetcherInterfaceForResolver ( params, p, rest, resolver, javaType ), details )
   } )
 
-  writeToFile ( `${javaUtilsRoot}/${params.wiringClass}.java`, () => makeAllJavaWiring ( params, pages, directorySpec ), details )
+  writeToFile ( `${javaUtilsRoot}/${params.wiringClass}.java`, () => makeAllJavaWiring ( params, allRefs, directorySpec ), details )
   templateFile ( `${javaUtilsRoot}/LoggedDataSource.java`, 'templates/raw/java/utils/LoggedDataSource.java', params, directorySpec, details )
   templateFile ( `${javaUtilsRoot}/Messages.java`, 'templates/raw/java/utils/Messages.java', params, directorySpec, details )
   templateFile ( `${javaUtilsRoot}/FocusonNotFound404Exception.java`, 'templates/raw/java/utils/FocusonNotFound404Exception.java', params, directorySpec, details )

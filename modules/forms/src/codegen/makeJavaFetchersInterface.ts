@@ -7,6 +7,7 @@ import { DirectorySpec, loadFile } from "@focuson/files";
 import { RestAction, unique } from "@focuson/utils";
 import { PageD, RefD } from "../common/pageD";
 import { getRestTypeDetails } from "@focuson/rest";
+import { Ref } from "react";
 
 
 // export function makeJavaFetchersInterface<G> ( params: JavaWiringParams, page: MainPageD<any, G>, restD: RestD<G>, restAction: RestAction ): string[] {
@@ -45,7 +46,7 @@ function makeWiring ( interfaceName: string, varName: string, parentName: string
 }
 
 
-export function makeAllJavaWiring<B, G> ( params: JavaWiringParams, ps: PageD<B, G>[], directorySpec: DirectorySpec ): string[] {
+export function makeAllJavaWiring<G> ( params: JavaWiringParams, ps: RefD<G>[], directorySpec: DirectorySpec ): string[] {
   let imports = unique ( [
     ...mapRestAndActions ( ps, p => r => a => `import ${fetcherPackageName ( params, p )}.${fetcherInterfaceName ( params, r, a )};` ),
     ...mapRestAndResolver ( ps, p => r => ( { resolver } ) => `import ${fetcherPackageName ( params, p )}.${fetcherInterfaceForResolverName ( params, r, resolver )};` )

@@ -1,7 +1,7 @@
 import { AllLensRestParams, findIds, isRestLens, LensRestParam, RestStateDetails } from "../common/restD";
 import { domainName, domainsFileName, pageDomainName, restDetailsName, restFileName } from "./names";
 import { TSParams } from "./config";
-import { allRestAndActions, isMainPage, RefD, RestDefnInPageProperties } from "../common/pageD";
+import { allRestAndActions, RefD, RestDefnInPageProperties } from "../common/pageD";
 import { NameAnd, safeObject, SimpleMessage, sortedEntries, unique } from "@focuson/utils";
 import { addStringToEndOfAllButLast, indentList, lensFocusQueryFor } from "./codegen";
 import { lensFocusQueryWithSlashAndTildaFromIdentity, lensFocusQueryWithTildaFromPage } from "./lens";
@@ -80,8 +80,8 @@ export function makeRestDetails<G> ( params: TSParams, ps: RefD<G>[] ): string[]
     // "export function restUrlMutator ( r: RestAction, url: string ): string { return insertBefore ( '?', r === 'list' ? '/list' : '', url )}", '',
     "export function restUrlMutator ( r: RestAction, url: string ): string { return url }", '',
     `export const restDetails: RestDetails<${params.stateName}, SimpleMessage> = {`,
-    ...addStringToEndOfAllButLast ( "," ) ( ps.flatMap ( pd => (isMainPage ( pd ) ? sortedEntries ( pd.rest ) : []).flatMap ( ( [ name, rd ] ) =>
-      `   ${restDetailsName ( pd, name, rd.rest )}: ${restDetailsName ( pd, name, rd.rest )}(commonIds, defaultDateFn)` ) ) ),
+    ...addStringToEndOfAllButLast ( "," ) ( ps.flatMap ( ref => sortedEntries ( ref.rest ).flatMap ( ( [ name, rd ] ) =>
+      `   ${restDetailsName ( ref, name, rd.rest )}: ${restDetailsName ( ref, name, rd.rest )}(commonIds, defaultDateFn)` ) ) ),
     ``,
     `}`, '' ]
 }

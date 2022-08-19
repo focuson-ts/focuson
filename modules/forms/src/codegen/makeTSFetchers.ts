@@ -96,7 +96,7 @@ export function makeFetchersDataStructure<G> ( params: TSParams, { stateName, va
 }
 
 
-export function makeNewFetchersDataStructure<B, G> ( params: TSParams, ps: MainPageD<B, G>[] ) {
+export function makeNewFetchersDataStructure<G> ( params: TSParams, ps: RefD<G>[] ) {
   const obj = Object.fromEntries ( ps.map ( p =>
     [ p.name, sortedEntries ( p.rest ).filter ( t => t[ 1 ].fetcher ).map ( ( [ restName, rdp ] ) =>
       ({ tagName: rdp.targetFromPath, restName: restDetailsName ( p, restName, rdp.rest ), postFetchCommands: toArray ( rdp.postFetchCommands ) }) ) ] )

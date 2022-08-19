@@ -1,10 +1,12 @@
-import { Optional } from '@focuson/lens';
+import { Optional, Transform } from '@focuson/lens';
 
 // import { createSimpleMessage, HasPageSelection, HasSimpleMessages, PageSelection, SimpleMessage } from "@focuson/pages";
-import { areAllDefined, arraysEqual, NameAnd } from "@focuson/utils";
+import { areAllDefined, arraysEqual, NameAnd, safeArray } from "@focuson/utils";
 import { TagHolder, tagOps } from "@focuson/template";
 import { OneRestDetails, RestChangeCommands, RestCommand, RestDetails } from "@focuson/rest";
 import { makeTagLens } from "./tagFetcher";
+import { FocusOnContext } from "./config";
+import { LensState } from "@focuson/state";
 
 
 export interface FetcherUsingRestConfig {
@@ -67,5 +69,12 @@ export function restCommandsFromFetchers<S, MSGs> ( tagHolderL: Optional<S, TagH
     return rc ? [ rc ] : []
   } )
 }
+
+
+export const transformersForRestForRef = <S, C extends FocusOnContext<S>> ( state: LensState<S, any, C>) =>( refName: string ): Transform<S, RestCommand[]> => {
+  const { tagHolderL, newFetchers, restDetails, restL } = state.context
+  const restCommands = restCommandsFromFetchers ( tagHolderL, newFetchers, restDetails, refName, state.main );
+  return [ restL, rcs => [ ...safeArray ( rcs ), ...restCommands ] ]
+};
 
 

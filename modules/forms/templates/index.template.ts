@@ -9,7 +9,7 @@ import { config, start } from "./config";
 import { focusOnMiddlewareFor{teamName}, {teamName}Reducer, makeLsFor{teamName} } from "./store";
 import { applyMiddleware, combineReducers, legacy_createStore } from "@reduxjs/toolkit";
 import { Lenses } from '@focuson/lens'
-
+import { loadAtStart } from "./{loadRefsFile}";
 export const combineAll = combineReducers ( {
    {teamName}: {teamName}Reducer ( identityL )
 } )
@@ -18,9 +18,11 @@ export const store: any = legacy_createStore ( combineAll, undefined, applyMiddl
 let rootElement = getElement ( "root" );
 console.log ( "set json" )
 store.subscribe ( () => {
+  const state = makeLsFor{teamName}<{stateName}> ( store, '{teamName}' );
+  loadAtStart ( state)
   ReactDOM.render (
-    <IndexPage state={makeLsFor{teamName}<{stateName}> ( store, '{teamName}' )} dateFn={defaultDateFn}>
-  <SelectedPage state={makeLsFor{teamName}<{stateName}> ( store, '{teamName}' )}/>
+    <IndexPage state={state} dateFn={defaultDateFn}>
+  <SelectedPage state={state}/>
   </IndexPage>, rootElement )
 } )
 

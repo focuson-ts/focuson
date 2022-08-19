@@ -52,60 +52,60 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
       tsPort: appConfig.tsPort
     }, directorySpec )
 
-    allRefs.forEach ( mainP => {
-      detailsLog ( logLevel, 1, `typescript page ${mainP.name}` )
-      const tsPage = `${tsCode}/${mainP.name}`
+    allRefs.forEach ( mainRef => {
+      detailsLog ( logLevel, 1, `typescript page ${mainRef.name}` )
+      const tsPage = `${tsCode}/${mainRef.name}`
       fs.mkdirSync ( tsPage, { recursive: true } )
-      // fs.mkdirSync ( tsPage + "/" + mainP.name, { recursive: true } )
+      // fs.mkdirSync ( tsPage + "/" + mainRef.name, { recursive: true } )
 
-      if ( isMainPage<B, G> ( mainP ) ) {
-        writeToFile ( renderFileName ( tsCode, params, mainP, mainP ) + ".tsx",
-          () => createRenderPage ( params, makeGuards, makeButtons, mainP, mainP ), details )
-        safeArray ( mainP.modals ).flatMap ( flatMapToModal ).forEach ( ( { modal } ) => {
+      if ( isMainPage<B, G> ( mainRef ) ) {
+        writeToFile ( renderFileName ( tsCode, params, mainRef, mainRef ) + ".tsx",
+          () => createRenderPage ( params, makeGuards, makeButtons, mainRef, mainRef ), details )
+        safeArray ( mainRef.modals ).flatMap ( flatMapToModal ).forEach ( ( { modal } ) => {
             // fs.mkdirSync ( tsPage + "/" + modal.name, { recursive: true } )
-            writeToFile ( renderFileName ( tsCode, params, mainP, modal ) + ".tsx",
-              () => createRenderPage ( params, makeGuards, makeButtons, mainP, modal ), details );
+            writeToFile ( renderFileName ( tsCode, params, mainRef, modal ) + ".tsx",
+              () => createRenderPage ( params, makeGuards, makeButtons, mainRef, modal ), details );
           }
         )
-        writeToFile ( storybookFileName ( tsCode, params, mainP ) + '.ts', () => makeOneStory ( params, mainP ), details )
+        writeToFile ( storybookFileName ( tsCode, params, mainRef ) + '.ts', () => makeOneStory ( params, mainRef ), details )
 
-        writeToFile ( optionalsFileName ( tsCode, params, mainP ) + '.ts', () => makeVariables ( params, mainP ) )
+        writeToFile ( optionalsFileName ( tsCode, params, mainRef ) + '.ts', () => makeVariables ( params, mainRef ) )
 
       }
-      writeToFile ( domainsFileName ( tsCode, params, mainP ) + ".ts", () => [
-        ...makePageDomainsFor ( params, [ mainP ] ),
-        ...makeAllDomainsFor ( [ mainP ] ) ], details )
+      writeToFile ( domainsFileName ( tsCode, params, mainRef ) + ".ts", () => [
+        ...makePageDomainsFor ( params, [ mainRef ] ),
+        ...makeAllDomainsFor ( [ mainRef ] ) ], details )
 
-      writeToFile ( samplesFileName ( tsCode, params, mainP ) + ".ts", () => [
-        `import * as domains from '${domainsFileName ( '..', params, mainP )}'`, '',
-        ...([ 0, 1, 2 ].flatMap ( i => makeAllSampleVariables ( params, [ mainP ], i ) )) ], details )
+      writeToFile ( samplesFileName ( tsCode, params, mainRef ) + ".ts", () => [
+        `import * as domains from '${domainsFileName ( '..', params, mainRef )}'`, '',
+        ...([ 0, 1, 2 ].flatMap ( i => makeAllSampleVariables ( params, [ mainRef ], i ) )) ], details )
 
-      writeToFile ( emptyFileName ( tsCode, params, mainP ) + ".ts", () => [
-        `import * as domains from '${domainsFileName ( '..', params, mainP )}'`, '',
-        ...makeAllEmptyData ( params, [ mainP ] ) ], details )
+      writeToFile ( emptyFileName ( tsCode, params, mainRef ) + ".ts", () => [
+        `import * as domains from '${domainsFileName ( '..', params, mainRef )}'`, '',
+        ...makeAllEmptyData ( params, [ mainRef ] ) ], details )
 
-      // writeToFile ( fetcherFileName ( tsCode, params, mainP ) + ".ts", () => [
-      //   ...makeFetchersImport ( params, mainP ),
-      //   ...(makeAllFetchers ( params, [ mainP ] )) ], details )
+      // writeToFile ( fetcherFileName ( tsCode, params, mainRef ) + ".ts", () => [
+      //   ...makeFetchersImport ( params, mainRef ),
+      //   ...(makeAllFetchers ( params, [ mainRef ] )) ], details )
 
-      writeToFile ( restFileName ( tsCode, params, mainP ) + ".ts", () => makeRests ( params, mainP ) )
+      writeToFile ( restFileName ( tsCode, params, mainRef ) + ".ts", () => makeRests ( params, mainRef ) )
 
-      if ( Object.keys ( mainP.rest ).length > 0 )
-        writeToFile ( pactFileName ( tsCode, params, mainP ) + ".ts", () => makeAllPactsForPage ( params, mainP ) )
+      if ( Object.keys ( mainRef.rest ).length > 0 )
+        writeToFile ( pactFileName ( tsCode, params, mainRef ) + ".ts", () => makeAllPactsForPage ( params, mainRef ) )
 
-      let report = isMainPage<B, G> ( mainP ) ? makeGuardsReportForPage ( mainP ).general : [];
+      let report = isMainPage<B, G> ( mainRef ) ? makeGuardsReportForPage ( mainRef ).general : [];
       if ( report.length > 0 )
-        writeToFile ( guardReportFileName ( tsCode, params, mainP ) + ".md", () => report )
+        writeToFile ( guardReportFileName ( tsCode, params, mainRef ) + ".md", () => report )
     } )
 
     writeToFile ( `${tsCode}/${params.loadRefsFile}.ts`, () => makeRefs ( params, allRefs ), details )
     writeToFile ( `${tsCode}/${params.fetchersFile}.ts`, () => [
-      ...makeFetcherDataStructureImport ( params, mainPs ),
+      ...makeFetcherDataStructureImport ( params, allRefs ),
       // ...makeFetchersDataStructure ( params, { variableName: 'fetchers', stateName: params.stateName }, mainPs ),
-      ...makeNewFetchersDataStructure ( params, mainPs ) ], details )
+      ...makeNewFetchersDataStructure ( params, allRefs ) ], details )
 
     writeToFile ( `${tsCode}/${params.restsFile}.ts`, () => makeRestDetailsPage ( params, allRefs ), details )
-    const rests = unique ( allPages.flatMap ( pd => isMainPage ( pd ) ? sortedEntries ( pd.rest ).map ( ( x: [ string, RestDefnInPageProperties<G> ] ) => x[ 1 ].rest ) : [] ), r => r.dataDD.name )
+    // const rests = unique ( allPages.flatMap ( pd => isMainPage ( pd ) ? sortedEntries ( pd.rest ).map ( ( x: [ string, RestDefnInPageProperties<G> ] ) => x[ 1 ].rest ) : [] ), r => r.dataDD.name )
 
     writeToFile ( `${tsCode}/${params.commonFile}.ts`, () => makeCommon ( appConfig, params, allRefs, directorySpec ), details )
     writeToFile ( `${tsCode}/${params.pagesFile}.ts`, () => makePages ( params, mainPs, extraPages ), details )

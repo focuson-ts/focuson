@@ -117,6 +117,7 @@ describe ( "makeButtons", () => {
       "      focusOn={'~/onChange'}",
       "      // If there is a compile error here the focuson path might not exist",
       "      focusOnLensForCompileCheck={pageState(state)<domain.EnabledByPageDomain>().focusOn('onChange')}",
+      "      changeOnClose={{'command':'message','msg':'from modal button'}}",
       "    />,",
       "    pageGuardDirect:<GuardButton cond={pageGuardDirectGuard}>",
       "      <ModalButton id={`${id}.pageGuardDirect`} text='Page Guard Direct' dateFn={defaultDateFn} state={state} modal='EnableByModalPage' ",
@@ -134,7 +135,7 @@ describe ( "makeButtons", () => {
       "        focusOnLensForCompileCheck={pageState(state)<domain.EnabledByPageDomain>().focusOn('onChange')}",
       "      />",
       "    </GuardButton>,}"
-    ] )
+    ])
 
   } )
   it ( "should make guard variables for buttons with guards", () => {

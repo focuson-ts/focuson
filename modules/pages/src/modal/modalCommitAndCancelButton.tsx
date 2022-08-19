@@ -86,7 +86,7 @@ export function findClosePageTxs<S, C extends PageSelectionContext<S> & HasRestC
   const toPathTolens = fromPathGivenState ( state, ps => ps.slice ( 0, -1 ) );
   const fromPathTolens = fromPathGivenState ( state );
 
-  const focusLensForFrom = findFocusL ( errorPrefix, state, fromPathTolens, ps => pageOffset === 0 ? ps : ps.slice ( 0, pageOffset + 1 ) )
+  const focusLensForFrom = findFocusL ( errorPrefix, state, fromPathTolens, ps => pageOffset >-1 ? ps : ps.slice ( 0, pageOffset + 1 ) )
   const focusLensForTo = findFocusL ( errorPrefix, state, toPathTolens, ps => ps.slice ( 0, pageOffset ) )
   const restTransformers: Transform<S, any>[] = rest ? [ [ restL, ( ps: RestCommand[] ) => [ ...safeArray ( ps ), rest ] ] ] : []
   const copyOnCloseTxs: Transform<S, any>[] = safeArray ( copyOnClose ).map ( ( { from, to } ) =>
