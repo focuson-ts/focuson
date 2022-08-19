@@ -72,7 +72,7 @@ export function MyCombined<S extends HasTagHolder & HasSimpleMessages, Context e
               if ( p.pageType === 'ModalPopup' ) return popupJSX ( p, i, messagesJSX )
               if ( p.pageType === 'ModalPage' ) return modalPageJSX ( p, i, messagesJSX )
               if ( p.pageType === 'MainPage' ) return mainPageJSX ( p, i, messagesJSX )
-              if ( p.pageType === 'Arbitrary' ) return modalPageJSX ( p, i, messagesJSX )
+              if ( p.pageType === 'Arbitrary' ) return popupJSX ( p, i, messagesJSX )
               throw new Error ( `Don't know how to process page type ${p.pageType}\n${JSON.stringify ( p )}` )
             }
           )}

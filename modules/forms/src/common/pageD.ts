@@ -1,4 +1,4 @@
-import { AllDataDD, CompDataD, DataD, findAllDataDs, HasGuards, HasLayout, isDataDd, NamesAndDataDs } from "./dataD";
+import { AllDataDD, CompDataD, DataD, findAllDataDs, HasGuards, HasLayout, isCompDD, isDataDd, NamesAndDataDs } from "./dataD";
 import { CommonLensRestParam, RestD } from "./restD";
 import { HasName, NameAnd, RestAction, safeString, sortedEntries, unique } from "@focuson/utils";
 import { PageMode } from "@focuson/pages";
@@ -139,8 +139,8 @@ export function dataDsIn<G> ( pds: (RefD<G> | PageD<any, G>)[], stopAtDisplay?: 
   const pageDataDs: CompDataD<G>[] = refs.flatMap ( pd => sortedEntries ( pd.rest )
     .map ( ( [ na, restPD ]: [ string, RestDefnInPageProperties<G> ] ) => restPD.rest.dataDD ) )
   // pageDataDs.forEach ( d => console.log ( 'pageDataD - rest', d.name ) )
-  const domainDataDs: DataD<G>[] = refs.flatMap ( pd => sortedEntries ( pd.domain ) )
-    .flatMap ( ( [ name, domain ] ) => isDataDd ( domain.dataDD ) ? [ domain.dataDD ] : [] )
+  const domainDataDs: CompDataD<G>[] = refs.flatMap ( pd => sortedEntries ( pd.domain ) )
+    .flatMap ( ( [ name, domain ] ) => isCompDD ( domain.dataDD ) ? [ domain.dataDD ] : [] )
   // pageDataDs.forEach ( d => console.log ( 'domainDataDs ', d.name ) )
   let result = findAllDataDs ( [ ...pageDataDs, ...domainDataDs ], stopAtDisplay );
   // sortedEntries ( result ).forEach ( ( [ n, d ] ) => console.log ( "result", n, d.name ) )

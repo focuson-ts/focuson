@@ -11,3 +11,13 @@ export const AuthoriseTableCD: DisplayCompD = {
     copySelectedIndexTo: { paramType: 'path', needed: 'no' },
   }
 }
+export const SummaryDetailsCD: DisplayCompD = {
+  import: "@focuson/form_components",   //so that I can write the import statement for the react component
+  name: "AllSummaryDetails",                        //The name of the react component
+  params: {                             //configuration parameter for the react component
+    id: { paramType: 'string', needed: 'id' },
+    state: { paramType: 'state', needed: 'defaultToPath' },
+    selectedItem: { paramType: 'path', needed: 'yes' },
+    accountId: { paramType: 'path', needed: 'yes' },
+  }
+}

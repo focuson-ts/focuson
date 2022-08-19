@@ -1,7 +1,7 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
 import { AccountIdDD, BooleanDD, DateDD, MoneyDD, NatNumDd, StringDD } from "../../common/dataD";
 import { TableCD } from "../../common/componentsD";
-import { AuthoriseTableCD } from "./custom";
+import { AuthoriseTableCD, SummaryDetailsCD } from "./custom";
 import { authorisedChargesTableDD } from "../database/tableNames";
 
 
@@ -50,14 +50,14 @@ export const OneChargeDataDD: ExampleDataD = {
   description: 'All the data we see on the main authoriseCharges page',
   table: authorisedChargesTableDD,
   structure: {
-    chargeType: { dataDD: StringDD, db:  'chargeType', sample: [ 'Unpaid DD', 'Unpaid DD fee' ] },
-    status: { dataDD: StringDD, db: 'status' ,sample: [ 'PENDING', 'APPROVED', 'AUTHORISED' ] },
-    type: { dataDD: StringDD,db: 'type', sample: [ 'DR', 'CR' ] },
-    sortCode: { dataDD: StringDD,db: 'sortCode', sample: [ '166051', '166052' ] },
-    accountNo: { dataDD: StringDD,db:  'accountNo', sample: [ '10009126' ] },
-    amount: { dataDD: StringDD, db: 'amount',sample: [ '1.00', '1.00' ] },
-    narrative: { dataDD: StringDD,db: 'narrative', sample: [ 'unpaid DD' ] },
-    approvedBy: { dataDD: StringDD, db: 'approvedBy',sample: [ '', 'The Boss', 'The Boss' ] },
+    chargeType: { dataDD: StringDD, db: 'chargeType', sample: [ 'Unpaid DD', 'Unpaid DD fee' ] },
+    status: { dataDD: StringDD, db: 'status', sample: [ 'PENDING', 'APPROVED', 'AUTHORISED' ] },
+    type: { dataDD: StringDD, db: 'type', sample: [ 'DR', 'CR' ] },
+    sortCode: { dataDD: StringDD, db: 'sortCode', sample: [ '166051', '166052' ] },
+    accountNo: { dataDD: StringDD, db: 'accountNo', sample: [ '10009126' ] },
+    amount: { dataDD: StringDD, db: 'amount', sample: [ '1.00', '1.00' ] },
+    narrative: { dataDD: StringDD, db: 'narrative', sample: [ 'unpaid DD' ] },
+    approvedBy: { dataDD: StringDD, db: 'approvedBy', sample: [ '', 'The Boss', 'The Boss' ] },
     authorisedBy: { dataDD: StringDD, db: 'authorisedBy', sample: [ '', '', 'The Super Boss' ] },
     hold: { dataDD: BooleanDD, sample: [ false, false, false ] }
   }
@@ -67,11 +67,33 @@ export const ListOfChargesDD: ExampleRepeatingD = {
   description: 'All the charges',
   dataDD: OneChargeDataDD,
   display: AuthoriseTableCD,
-  displayParams: { order: [ 'chargeType', 'status', 'type', 'sortCode', 'accountNo', 'amount', 'narrative', 'hold' ],
-    copySelectedItemTo: '~/selectedCharge' ,
-    copySelectedIndexTo: '~/selectedChargeIndex' },
+  sampleCount: 10,
+  displayParams: {
+    order: [ 'chargeType', 'status', 'type', 'sortCode', 'accountNo', 'amount', 'narrative', 'hold' ],
+    copySelectedItemTo: '~/selectedCharge',
+    copySelectedIndexTo: '~/selectedChargeIndex'
+  },
   paged: false
 }
+export const SummaryData: ExampleRepeatingD = {
+  name: 'SummaryData',
+  description: 'This is actually the same data as ListOfChargesDD, however it has a different display',
+  dataDD: OneChargeDataDD,
+  display: SummaryDetailsCD,
+  displayParams: { accountId: '~/selectedCharge/accountNo', selectedItem: '~/selectedChargeItem' },
+  paged: false
+}
+export const RememberedData: ExampleDataD = {
+  name: 'Remembered',
+  description: `the type to remember 'what was clicked on' in the summary table`,
+  structure: {
+    chargeType: { dataDD: StringDD },
+    status: { dataDD: StringDD },
+    accAmount: { dataDD: NatNumDd },
+    accountId: { dataDD: { ...StringDD, allowUndefined: true } }
+  }
+}
+
 
 export const AuthoriseChargesSummaryDataDD: ExampleDataD = {
   name: 'AuthoriseChargesSummaryData',
@@ -131,11 +153,11 @@ export const CustomerTransactionsDD: ExampleRepeatingD = {
   paged: false
 }
 
-export const chargesSummaryDetailDD: ExampleDataD = {
-  name: 'ChargesSummaryDetail',
-  description: 'A summary of charges',
-  structure: {
-    suspenseAccount: { dataDD: SuspenseAccountDetailsDD },
-    customerTransactions: { dataDD: CustomerTransactionsDD },
-  }
-}
+// export const chargesSummaryDetailDD: ExampleDataD = {
+//   name: 'ChargesSummaryDetail',
+//   description: 'A summary of charges',
+//   structure: {
+//     suspenseAccount: { dataDD: SuspenseAccountDetailsDD },
+//     customerTransactions: { dataDD: CustomerTransactionsDD },
+//   }
+// }

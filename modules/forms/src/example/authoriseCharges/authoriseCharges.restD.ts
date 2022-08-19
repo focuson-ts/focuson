@@ -1,5 +1,5 @@
 import { ExampleRestD } from "../common";
-import { AuthoriseChargesSummaryDataDD, chargesSummaryDetailDD, ListOfChargesDD, SelectOneBrandDD, summaryOfChargesDateTableDD } from "./authoriseCharges.dataD";
+import { ListOfChargesDD, SelectOneBrandDD, summaryOfChargesDateTableDD } from "./authoriseCharges.dataD";
 import { fromCommonIds } from "../commonIds";
 import { StringParam } from "../../common/restD";
 import { authorisedChargesTableDD, onlySchema } from "../database/tableNames";
@@ -97,27 +97,27 @@ export const SummaryOfChargeDatesRD: ExampleRestD = {
   }
 }
 
-export const SummaryOfChargesRD: ExampleRestD = {
-  dataDD: chargesSummaryDetailDD,
-  params: { date: { ...StringParam, lens: '~/summaryOfChargesDates/date', testValue: '1-6-2016' } },
-  url: "/api/charges/details?{query}",
-  actions: [ 'get' ],
-  tables: {
-    entity: { type: "Main", table: authorisedChargesTableDD, alias: 'A' },
-    where: [ { table: authorisedChargesTableDD, alias: "A", field: 'date', comparator: 'sameday', pattern: 'dd/MM/yyyy', paramName: 'date' } ]
-  }
-}
-
-export const SummaryOfChargesqRD: ExampleRestD = {
-  dataDD: chargesSummaryDetailDD, //<--- has original data and editing data
-  params: { date: { ...StringParam, lens: '~/summaryOfChargesDates/date', testValue: '1-6-2016' } },
-  url: "/api/charges/details?{query}",
-  actions: [ 'updateWithoutFetch' ],
-  mutations: [
-    {restAction: 'updateWithoutFetch', mutateBy: [
-        {type: 'manual', code: `threeWayMerge.doit(connection, whoAmi, bodyAsJson)`, params:[
-          'bodyAsJson', 'whoAmI'
-          ]}
-      ], autowired: {variableName: 'threeWayMerge', class: 'com.something.ThreeWayMerge', imports: true}
-}]
-}
+// export const SummaryOfChargesRD: ExampleRestD = {
+//   dataDD: chargesSummaryDetailDD,
+//   params: { date: { ...StringParam, lens: '~/summaryOfChargesDates/date', testValue: '1-6-2016' } },
+//   url: "/api/charges/details?{query}",
+//   actions: [ 'get' ],
+//   tables: {
+//     entity: { type: "Main", table: authorisedChargesTableDD, alias: 'A' },
+//     where: [ { table: authorisedChargesTableDD, alias: "A", field: 'date', comparator: 'sameday', pattern: 'dd/MM/yyyy', paramName: 'date' } ]
+//   }
+// }
+//
+// export const SummaryOfChargesqRD: ExampleRestD = {
+//   dataDD: chargesSummaryDetailDD, //<--- has original data and editing data
+//   params: { date: { ...StringParam, lens: '~/summaryOfChargesDates/date', testValue: '1-6-2016' } },
+//   url: "/api/charges/details?{query}",
+//   actions: [ 'updateWithoutFetch' ],
+//   mutations: [
+//     {restAction: 'updateWithoutFetch', mutateBy: [
+//         {type: 'manual', code: `threeWayMerge.doit(connection, whoAmi, bodyAsJson)`, params:[
+//           'bodyAsJson', 'whoAmI'
+//           ]}
+//       ], autowired: {variableName: 'threeWayMerge', class: 'com.something.ThreeWayMerge', imports: true}
+// }]
+// }

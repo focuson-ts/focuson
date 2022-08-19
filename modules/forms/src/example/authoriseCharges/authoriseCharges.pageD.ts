@@ -1,7 +1,7 @@
 import { ExampleMainPage, ExampleModalPage } from "../common";
 import { NatNumDd } from "../../common/dataD";
-import { AuthoriseChargesSummaryDD, chargesSummaryDetailDD, OneBrandDD, OneChargeDataDD, SelectOneBrandDD, summaryOfChargesDateDD, summaryOfChargesSearchDD } from "./authoriseCharges.dataD";
-import { AuthorisedChargesRD, SelectOneBrandPageRD, SummaryOfChargeDatesRD, SummaryOfChargesRD } from "./authoriseCharges.restD";
+import { AuthoriseChargesSummaryDD, OneBrandDD, OneChargeDataDD, RememberedData, SelectOneBrandDD, SummaryData, summaryOfChargesDateDD, summaryOfChargesSearchDD } from "./authoriseCharges.dataD";
+import { AuthorisedChargesRD, SelectOneBrandPageRD, SummaryOfChargeDatesRD } from "./authoriseCharges.restD";
 import { HideButtonsCD } from "../../buttons/hideButtonsCD";
 import { StringParam } from "../../common/restD";
 
@@ -9,7 +9,7 @@ export const SummaryOfChargesPage: ExampleModalPage = {
   name: 'SummaryOfCharges',
   pageType: 'ModalPopup',
   modes: [ 'view' ],
-  display: { dataDD: chargesSummaryDetailDD, target: '~/summaryOfCharges' },
+  display: { dataDD: SummaryData, target: '~/summaryOfCharges' },
   buttons: {
     close: { control: "ModalCancelButton" },
   }
@@ -31,6 +31,9 @@ export const ViewChargesPage: ExampleModalPage = {
   modes: [ 'view', 'edit' ],
   layout: { component: HideButtonsCD, displayParams: { hide: [ 'selectDate' ] } },
   display: { dataDD: AuthoriseChargesSummaryDD, target: '~/authorisedCharges' },
+  guards: {
+    somethingSelected: {condition: 'isDefined', path: '~/selectedCharge'}
+  },
   buttons: {
     selectDate: {
       control: 'ModalButton', text: 'list', modal: SelectChargesDatePage, mode: 'view', focusOn: '~/summaryOfChargesDates',
@@ -43,7 +46,12 @@ export const ViewChargesPage: ExampleModalPage = {
       text: 'Approve Pending Fees', action: 'approvePendingFees'
     },
     authoriseApprovedFees: { control: "ActionButton", path: '#editingData', text: 'Authorise Approved Fees', action: 'authoriseApprovedFees' },
-    summary: { control: 'ModalButton', modal: SummaryOfChargesPage, mode: 'view', focusOn: '~/summaryOfCharges' },
+    summary: {
+      enabledBy: 'somethingSelected',
+      control: 'ModalButton', modal: SummaryOfChargesPage,
+      copy: { from: '~/authorisedCharges/fromApi/editingData' },
+      mode: 'view', focusOn: '~/summaryOfCharges'
+    },
     save: { control: 'RestButton', restName: 'authorisedCharges', action: 'update', deleteOnSuccess: '#fromApi' },
   }
 }
@@ -64,7 +72,8 @@ export const AuthoriseChargesPD: ExampleMainPage = {
     authorisedCharges: { dataDD: AuthoriseChargesSummaryDD },
     selectedCharge: { dataDD: OneChargeDataDD },
     selectedChargeIndex: { dataDD: NatNumDd },
-    summaryOfCharges: { dataDD: chargesSummaryDetailDD },
+    summaryOfCharges: { dataDD: SummaryData },
+    selectedChargeItem: { dataDD: RememberedData },
 
     summaryOfChargesDates: { dataDD: summaryOfChargesSearchDD },
     selectedDateIndex: { dataDD: NatNumDd },
@@ -91,7 +100,7 @@ export const AuthoriseChargesPD: ExampleMainPage = {
       ]
     },
     summaryOfChargeDates: { rest: SummaryOfChargeDatesRD, targetFromPath: '~/summaryOfChargesDates/searchResults', fetcher: true },
-    summaryOfCharges: { rest: SummaryOfChargesRD, targetFromPath: '~/summaryOfCharges', fetcher: true }
+    // summaryOfCharges: { rest: SummaryOfChargesRD, targetFromPath: '~/summaryOfCharges', fetcher: true }
   },
   modes: [ 'view' ],
   buttons: {

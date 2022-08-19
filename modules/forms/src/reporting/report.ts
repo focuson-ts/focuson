@@ -4,7 +4,7 @@ import { NameAnd, RestAction, safeArray, sortedEntries, toArray, unique } from "
 import { isModal, isModalButtonInPage, ModalOrMainButtonInPage } from "../buttons/modalButtons";
 import { ButtonD, ButtonWithControl, isButtonWithControl } from "../buttons/allButtons";
 import { GuardWithCondition, isGuardButton } from "../buttons/guardButton";
-import { CompDataD, emptyDataFlatMap, flatMapDD, HasGuards, isComdDD, isRepeatingDd, OneDataDD } from "../common/dataD";
+import { CompDataD, emptyDataFlatMap, flatMapDD, HasGuards, isCompDD, isRepeatingDd, OneDataDD } from "../common/dataD";
 import { isCommonLens, RestD, RestParams } from "../common/restD";
 import { printRestAction } from "@focuson/rest";
 import { findAllTableAndFieldDatasIn } from "../codegen/makeSqlFromEntities";
@@ -197,7 +197,7 @@ function findDuplicates<T> ( ts: T[], fn: ( t: T ) => string ): T[] {
 }
 export function makeDomainReport<B, G> ( page: MainPageD<B, G>, { generatedDomainNames }: ReportInfo ): ReportDetails {
   const rootObjects: Set<CompDataD<G>> = new Set ()
-  sortedEntries ( page.domain ).forEach ( ( [ name, obj ] ) => {if ( isComdDD ( obj.dataDD ) ) rootObjects.add ( obj.dataDD ) } )
+  sortedEntries ( page.domain ).forEach ( ( [ name, obj ] ) => {if ( isCompDD ( obj.dataDD ) ) rootObjects.add ( obj.dataDD ) } )
   rootObjects.add ( page.display.dataDD )
   sortedEntries ( page.rest ).forEach ( ( [ name, obj ] ) => rootObjects.add ( obj.rest.dataDD ) );
   const objects: Set<CompDataD<G>> = new Set ()

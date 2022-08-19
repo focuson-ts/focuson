@@ -147,7 +147,7 @@ export function allRepeatindDs<G> ( d: AllDataDD<G>[] ): RepeatingDataD<G>[] {
 }
 
 export type CompDataDD<G> = DataD<G> | RepeatingDataD<G>
-export function isComdDD<G> ( d: any ): d is CompDataD<G> {
+export function isCompDD<G> ( d: any ): d is CompDataD<G> {
   return isDataDd ( d ) || isRepeatingDd ( d )
 }
 export function compDataDIn<G> ( c: CompDataD<G> ): DataD<G> {
