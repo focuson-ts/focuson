@@ -4,7 +4,7 @@ import { otherSourcesOfIncomeDataDD } from "./otherSourcesOfIncome/otherSourcesO
 import { occupationAndIncomeSample } from "./occupationAndIncome.sample";
 import { CustomerStatus, EmploymentType, YesNo } from "@focuson/form_components";
 import { ExampleDataD, ExampleRepeatingD } from "../common";
-import { DateDD, IntegerDD, OneLineStringDD, StringDD, StringPrimitiveDD } from "../../common/dataD";
+import { DateDD, DateWithDatePickerDD, IntegerDD, MonthYearWithDatePickerDD, OneLineStringDD, StringDD, StringPrimitiveDD } from "../../common/dataD";
 import { commonParams, DisplayCompD, LabelAndDropDownCD, LayoutCd, SelectedItemCD, TableCD } from "../../common/componentsD";
 
 const labelAndDropdownContainerStyle = {
@@ -65,8 +65,8 @@ export const oneOccupationIncomeDetailsDD: ExampleDataD = {
 
     workFor: { dataDD: StringDD, displayParams: { label: "Who do {~/mainOrJoint|you|they} work for? " }, guard: { areYou: [ 'E' ], owningSharesPct: [ 'N' ] }, sample: [ occupationAndIncomeSample.customerOccupationIncomeDetails[ 0 ].workFor ] },
     employmentType: { dataDD: employmentTypeDD, displayParams: { label: "Is this employment... " }, guard: { areYou: [ 'E' ], owningSharesPct: [ 'N' ] }, sample: [ occupationAndIncomeSample.customerOccupationIncomeDetails[ 0 ].employmentType ] },
-    empStartDate: { dataDD: DateDD, displayParams: { label: "When did this employment start? (mm/yyyy) " }, guard: { areYou: [ 'E' ], employmentType: [ '1' ] }, sample: [ occupationAndIncomeSample.customerOccupationIncomeDetails[ 0 ].empStartDate ] },
-    empEndDate: { dataDD: DateDD, displayParams: { label: "When will it finish? (mm/yyyy) " }, guard: { areYou: [ 'E' ], employmentType: [ '2', '3' ] }, sample: [ occupationAndIncomeSample.customerOccupationIncomeDetails[ 0 ].empEndDate ] },
+    empStartDate: { dataDD: MonthYearWithDatePickerDD, displayParams: { label: "When did this employment start? (mm/yyyy) " }, guard: { areYou: [ 'E' ], employmentType: [ '1' ] }, sample: [ occupationAndIncomeSample.customerOccupationIncomeDetails[ 0 ].empStartDate ] },
+    empEndDate: { dataDD: MonthYearWithDatePickerDD, displayParams: { label: "When will it finish? (mm/yyyy) " }, guard: { areYou: [ 'E' ], employmentType: [ '2', '3' ] }, sample: [ occupationAndIncomeSample.customerOccupationIncomeDetails[ 0 ].empEndDate ] },
     // @ts-ignore
     annualSalaryBeforeDeduction: { dataDD: IntegerDD, displayParams: { label: "What is {~/mainOrJoint|your|their} annual salary? (before deductions) " }, guard: { areYou: [ 'E' ], owningSharesPct: [ 'N' ] }, sample: [ occupationAndIncomeSample.customerOccupationIncomeDetails[ 0 ].annualSalaryBeforeDeduction ] },
     // @ts-ignore
@@ -83,7 +83,7 @@ export const oneOccupationIncomeDetailsDD: ExampleDataD = {
     otherSourceOfIncome: { dataDD: yesNoDD, displayParams: { label: "Do {~/mainOrJoint|you|they} have another sources of income (e.g. rental income) ? ", buttons: [ 'otherSourcesOfIncome' ] }, },
 
     createdBy: { dataDD: StringDD, displayParams: { label: "Entry created by: " }, sample: [ occupationAndIncomeSample.customerOccupationIncomeDetails[ 0 ].createdBy ] },
-    createdDate: { dataDD: DateDD, displayParams: { label: "on " }, sample: [ occupationAndIncomeSample.customerOccupationIncomeDetails[ 0 ].createdDate ] },
+    createdDate: { dataDD: DateWithDatePickerDD, displayParams: { label: "on " }, sample: [ occupationAndIncomeSample.customerOccupationIncomeDetails[ 0 ].createdDate ] },
 
     employerName: { dataDD: StringDD, hidden: true, sample: [ occupationAndIncomeSample.customerOccupationIncomeDetails[ 0 ].employerName ] },
     sePositionHeld: { dataDD: StringDD, hidden: true, sample: [ occupationAndIncomeSample.customerOccupationIncomeDetails[ 0 ].sePositionHeld ] },

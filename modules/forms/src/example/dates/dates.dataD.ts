@@ -1,11 +1,11 @@
 import { ExampleDataD } from "../common";
-import { DateWithDatePickerDD } from "../../common/dataD";
+import { DateWithDatePickerDD, MonthYearWithDatePickerDD } from "../../common/dataD";
 import { LayoutCd } from "../../common/componentsD";
 
 export const datesDataD: ExampleDataD = {
   name: 'Dates',
   description: "",
-  layout: { component: LayoutCd, displayParams: { details: '[[5,5]]', title: 'Some Title {empty}', rightHandTitle: 'Some Right Hand Title {empty}' } },
+  layout: { component: LayoutCd, displayParams: { details: '[[6,5]]', title: 'Some Title {empty}', rightHandTitle: 'Some Right Hand Title {empty}' } },
   structure: {
     empty: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified' } },
     emptyAndReadonly: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified - readonly', readonly: true } },
@@ -14,6 +14,9 @@ export const datesDataD: ExampleDataD = {
     valueDateFormat: { dataDD: { ...DateWithDatePickerDD, emptyValue: '2022/7/5' }, displayParams: { label: 'Specified 2022/7/5 (different date format) ', dateFormat: 'yyyy/MM/dd' } },
     future: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Future', dateRange: { type: 'future' } } },
     past: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Past', dateRange: { type: 'past' } } },
+    monthYear: { dataDD: { ...MonthYearWithDatePickerDD, emptyValue: '8/2022' } },
+    // monthYearPast: { dataDD: { ...MonthYearWithDatePickerDD, emptyValue: '8/2022', dateRange: { type: 'past' } } },
+    // monthYearFuture: { dataDD: { ...MonthYearWithDatePickerDD, emptyValue: '8/2022', dateRange: { type: 'future' } } },
     fiveWorkingDaysHolidaysNotSpecified: {
       dataDD: DateWithDatePickerDD, displayParams: {
         dateRange: { type: 'future', allowWeekends: false, allowHolidays: false, minWorkingDaysBefore: 5 }

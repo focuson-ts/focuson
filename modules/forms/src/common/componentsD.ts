@@ -152,6 +152,7 @@ export const DatePicker2CD: DisplayCompD = {
     dateRange: { paramType: 'json', needed: 'no' },
     jurisdiction: { paramType: 'path', needed: 'no' },
     dateInfo: { paramType: 'path', needed: 'no' },
+    showMonthYearPicker: { paramType: 'boolean', needed: 'no' },
     placeholder: { paramType: 'string', needed: 'no' }
   }
 }

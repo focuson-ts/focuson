@@ -197,13 +197,14 @@ export interface DatePickerProps<S, C> extends CommonStateProps<S, string, C>, L
   allButtons: NameAnd<JSX.Element>;
   buttons?: string[];
   dateFormat: DateFormat;
+  showMonthYearPicker?: boolean;
   dateRange?: DateRange<S, C>;
   jurisdiction?: LensState<S, string, C>;
   dateInfo?: LensState<S, DateInfo, C>;
 }
 
 export function DatePicker<S, C extends PageSelectionContext<S>> ( props: DatePickerProps<S, C> ) {
-  const { state, jurisdiction, dateInfo, dateRange, name, label, id, mode, readonly, dateFormat } = props
+  const { state, jurisdiction, dateInfo, dateRange, name, label, id, mode, readonly, dateFormat,showMonthYearPicker } = props
   const main: any = state.main
   const debug = main?.debug?.dateDebug
 
@@ -240,6 +241,7 @@ export function DatePicker<S, C extends PageSelectionContext<S>> ( props: DatePi
                        selected={error ? undefined : date}
                        onChange={( date ) => onChange ( date )}
                        filterDate={dateFilter}
+                       showMonthYearPicker={showMonthYearPicker}
                        highlightDates={holidays}
                        readOnly={mode === 'view' || readonly}
                        className={error ? "red-border" : ""}
