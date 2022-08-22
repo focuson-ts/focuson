@@ -77,8 +77,8 @@ export const queryClassName = <G> ( params: JavaWiringParams, r: RestD<G> ): str
 export const javaDbFileName = <B, G> ( params: JavaWiringParams, p: PageD<B, G> ): string => `${p.name}Db`;
 export const sqlDataSuffixFor = ( suffix: string, i: number ): string => suffix + "_" + i
 
-export function sqlMapName<B, G> ( p: RefD<G>, restName: string, path: number[] ) {return `${p.name}_${restName}Maps${path.join ( "_" )}`}
-export function sqlListName<B, G> ( p: RefD<G>, restName: string, path: number[], i: number ) {return sqlMapName ( p, restName, [ ...path, i ] )}
+export function sqlMapName<B, G> ( p: RefD<G>, restOrResolverName: string, path: number[] ) {return `${p.name}_${restOrResolverName}Maps${path.join ( "_" )}`}
+export function sqlListName<B, G> ( p: RefD<G>, restOrResolverName: string, path: number[], i: number ) {return sqlMapName ( p, restOrResolverName, [ ...path, i ] )}
 export function sqlMapFileName<B, G> ( root: string, p: RefD<G>, restName: string, path: number[] ) {return `${root}/${p.name}/${sqlMapName ( p, restName, path )}`}
 export function sqlTafFieldName<G> ( taf: TableAndFieldAndAliasData<G> ) {return taf.fieldData.dbFieldAlias ? taf.fieldData.dbFieldAlias : `${taf.alias}_${taf.fieldData.dbFieldName}`}
 export function sqlMapPackageName<G> ( params: JavaWiringParams, p: RefD<G> ) {return `${params.thePackage}.${params.dbPackage}.${p.name}`}

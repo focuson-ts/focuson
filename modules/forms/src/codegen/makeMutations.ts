@@ -1,14 +1,17 @@
 import { RefD } from "../common/pageD";
 import { NameAnd, safeObject, toArray, unique } from "@focuson/utils";
 import { JavaWiringParams } from "./config";
-import { mutationClassName, mutationDetailsName, mutationMethodName } from "./names";
+import { mutationClassName, mutationDetailsName, mutationMethodName, sqlMapFileName } from "./names";
 import { AllLensRestParams, RestD } from "../common/restD";
-import { addStringToStartOfFirst, indentList } from "./codegen";
-import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutowiredMutationParam, displayParam, getMakeMock, importForTubles, InputMutationParam, isBodyMutationParam, isInputParam, isMessageMutation, isMultipleMutation, isMutationThatIsaList, isOutputParam, isSelectMutationThatIsAList, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, paramNamePathOrValue, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlFunctionMutation, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
+import { indentList } from "./codegen";
+import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutoSqlResolver, AutowiredMutationParam, displayParam, getMakeMock, importForTubles, InputMutationParam, isAutoSqlResolver, isBodyMutationParam, isInputParam, isMessageMutation, isMultipleMutation, isMutationThatIsaList, isOutputParam, isSelectMutationThatIsAList, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, paramNamePathOrValue, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlFunctionMutation, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
 import { applyToTemplate } from "@focuson/template";
 import { restActionForName } from "@focuson/rest";
 import { outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint";
-import { Pattern } from "../common/dataD";
+import { isRepeatingDd, Pattern } from "../common/dataD";
+import { getAllParamsForDbFetcher, getDataFromRS } from "./makeDBFetchers";
+import { findSqlLinkDataFromRootAndDataD, findSqlRoot, makeMapsForRest, walkSqlRoots } from "./makeSqlFromEntities";
+import { writeToFile } from "@focuson/files";
 
 
 export const setObjectFor = ( errorPrefix: string ) => ( m: MutationParam, i: number ): string => {
@@ -359,23 +362,25 @@ export function mutationCodeForCaseThatIsAList<G> ( errorPrefix: string, p: RefD
   ];
 }
 
-export function makeMutationMethod<G> ( params: JavaWiringParams, errorPrefix: string, mutations: MutationDetail[], name: string, p: RefD<G>, r: RestD<G>, includeMockIf: boolean, indexPrefix: string ): string[] {
+export function makeMutationMethod<G> ( params: JavaWiringParams, errorPrefix: string, mutations: MutationDetail[], restName: string, p: RefD<G>, r: RestD<G>, includeMockIf: boolean, indexPrefix: string ): string[] {
   const methods = mutations.flatMap ( ( mutateBy, index ) => toArray ( mutateBy ).flatMap ( ( m: MutationDetail ) => {
-    const newErrorPrefix = `${errorPrefix} Mutation ${name} ${mutationDetailsName ( m, index.toString () )}`
-    if ( isSqlMutationThatIsAList ( m ) ) return mutationCodeForSqlListCalls ( params, newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf )
-    if ( m.type === 'sql' ) return mutationCodeForSqlMapCalls ( params, newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf )
-    if ( m.type === 'storedProc' ) return mutationCodeForStoredProcedureCalls ( params, newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf )
-    if ( m.type === 'sqlFunction' ) return mutationCodeForFunctionCalls ( params, newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf )
-    if ( m.type === 'manual' ) return mutationCodeForManual ( newErrorPrefix, p, r, name, m, indexPrefix + index, includeMockIf );
+    const newErrorPrefix = `${errorPrefix} Mutation ${restName} ${mutationDetailsName ( m, index.toString () )}`
+    if ( isSqlMutationThatIsAList ( m ) ) return mutationCodeForSqlListCalls ( params, newErrorPrefix, p, r, restName, m, indexPrefix + index, includeMockIf )
+    if ( m.type === 'sql' ) return mutationCodeForSqlMapCalls ( params, newErrorPrefix, p, r, restName, m, indexPrefix + index, includeMockIf )
+    if ( m.type === 'storedProc' ) return mutationCodeForStoredProcedureCalls ( params, newErrorPrefix, p, r, restName, m, indexPrefix + index, includeMockIf )
+    if ( m.type === 'sqlFunction' ) return mutationCodeForFunctionCalls ( params, newErrorPrefix, p, r, restName, m, indexPrefix + index, includeMockIf )
+    if ( m.type === 'manual' ) return mutationCodeForManual ( newErrorPrefix, p, r, restName, m, indexPrefix + index, includeMockIf );
+    const nextIndex = indexPrefix + index + '_';
     if ( m.type === 'case' ) {
       const caseCode = m.list ?
-        mutationCodeForCaseThatIsAList ( newErrorPrefix, p, r, name, m, index, includeMockIf, indexPrefix ) :
-        mutationCodeForCase ( newErrorPrefix, p, r, name, m, index, includeMockIf, indexPrefix );
-      const clausesCode = makeMutationMethod ( params, errorPrefix, m.select, name, p, r, includeMockIf, indexPrefix + index + '_' );
+        mutationCodeForCaseThatIsAList ( newErrorPrefix, p, r, restName, m, index, includeMockIf, indexPrefix ) :
+        mutationCodeForCase ( newErrorPrefix, p, r, restName, m, index, includeMockIf, indexPrefix );
+      const clausesCode = makeMutationMethod ( params, errorPrefix, m.select, restName, p, r, includeMockIf, nextIndex );
       return [ ...caseCode, ...clausesCode ];
     }
     if ( m.type === 'message' ) return mutationCodeForMessage ()
-    if ( m.type === 'multiple' ) return makeMutationMethod ( params, errorPrefix, m.mutations, name, p, r, includeMockIf, indexPrefix + index + '_' )
+    if ( isAutoSqlResolver ( m ) ) return makeAutoMutationMethod ( params, errorPrefix, p, restName, r, m, includeMockIf, indexPrefix + index )
+    if ( m.type === 'multiple' ) return makeMutationMethod ( params, errorPrefix, m.mutations, restName, p, r, includeMockIf, nextIndex )
     throw Error ( `Don't know how to makeMutationMethod (Page ${p.name}) for ${JSON.stringify ( m )}` )
   } ) )
   return methods;
@@ -401,12 +406,12 @@ export const classLevelAutowiring = ( params: JavaWiringParams ) => ( mutation: 
   `@Autowired`,
   `public ${applyToTemplate ( m.class, params )} ${m.variableName};` ] ) ) : [];
 
-export function makeMutations<G> ( params: JavaWiringParams, p: RefD<G>, restName: string, r: RestD<G>, mutation: MutationsForRestAction ): string[] {
-  const errorPrefix = `${p.name}.rest[${restName}]. Making mutations for ${restActionForName ( mutation.restAction )}.`
-  const { importsFromParams, autowiringVariables } = makeCodeFragmentsForMutation ( toArray ( mutation.mutateBy ), p, r, params );
-  const methods = makeMutationMethod ( params, errorPrefix, toArray ( mutation.mutateBy ), restActionForName ( mutation.restAction ), p, r, true, '' )
+export function makeMutations<G> ( params: JavaWiringParams, ref: RefD<G>, restName: string, r: RestD<G>, mutation: MutationsForRestAction ): string[] {
+  const errorPrefix = `${ref.name}.rest[${restName}]. Making mutations for ${restActionForName ( mutation.restAction )}.`
+  const { importsFromParams, autowiringVariables } = makeCodeFragmentsForMutation ( toArray ( mutation.mutateBy ), ref, r, params );
+  const methods = makeMutationMethod ( params, errorPrefix, toArray ( mutation.mutateBy ), restActionForName ( mutation.restAction ), ref, r, true, '' )
   return [
-    `package ${params.thePackage}.${params.mutatorPackage}.${p.name};`,
+    `package ${params.thePackage}.${params.mutatorPackage}.${ref.name};`,
     ``,
     `import ${params.thePackage}.${params.fetcherPackage}.IFetcher;`,
     `import org.springframework.stereotype.Component;`,
@@ -430,6 +435,7 @@ export function makeMutations<G> ( params: JavaWiringParams, p: RefD<G>, restNam
     `import ${params.thePackage}.${params.utilsPackage}.IOGNL;`,
     `import ${params.thePackage}.${params.utilsPackage}.DateFormatter;`,
     `import ${params.thePackage}.${params.utilsPackage}.Messages;`,
+    `import ${params.thePackage}.${params.fetcherPackage}.${ref.name}.*;`,
     ...importsFromParams,
     ...importForTubles ( params ),
     ...importsFromManual ( mutation ),
@@ -446,4 +452,16 @@ export function makeMutations<G> ( params: JavaWiringParams, p: RefD<G>, restNam
     ``,
     `}`
   ]
+}
+
+function makeAutoMutationMethod<G> ( params: JavaWiringParams, errorPrefix: string, p: RefD<G>, restName: string, r: RestD<G>, m: AutoSqlResolver, includeMockIf: boolean, nextIndex: string ): any {
+  const returnType = isRepeatingDd ( r.dataDD ) ? 'List<Map<String,Object>>' : 'Map<String,Object>'
+  const name = mutationMethodName ( r, restName, m, nextIndex )
+  const paramsDecl = [ `Connection c`, 'Messages msgs', ...Object.entries ( r.params ).map ( ( [ k, v ] ) => `${v.javaType} ${k}` ) ].join ( ', ' )
+
+
+  return [ `${returnType} ${name}(${paramsDecl}) throws Exception{`,
+    `         //from the data type in ${p.name}.rest[${restName}].dataDD which is a ${r.dataDD.name} `,
+    ...getDataFromRS ( r.dataDD, p, restName + nextIndex, r, m ),
+    `}` ]
 }

@@ -2,10 +2,14 @@ import { JointAccountPageD } from "../example/jointAccount/jointAccount.pageD";
 import { makeDBFetchers } from "../codegen/makeDBFetchers";
 import { paramsForTest } from "./paramsForTest";
 import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
+import { jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
+import { postcodeRestD } from "../example/postCodeDemo/addressSearch.restD";
 
 describe ( "makeDbFetchers", () => {
   it ( "should make the java code for the fetcher - single item", () => {
-    expect ( makeDBFetchers ( paramsForTest, JointAccountPageD, 'jointAccount', JointAccountPageD.rest.jointAccount ) ).toEqual ( [
+    const tables = jointAccountRestD.tables
+    if ( !tables ) throw Error ( `jointAccountRestD.tables is undefined` )
+    expect ( makeDBFetchers ( paramsForTest, JointAccountPageD, 'jointAccount', JointAccountPageD.rest.jointAccount, tables ) ).toEqual ( [
       " package focuson.data.dbfetchers.JointAccount;",
       "",
       "import  focuson.data.db.JointAccount.JointAccount_jointAccountMaps;",
@@ -59,7 +63,9 @@ describe ( "makeDbFetchers", () => {
     ] )
   } )
   it ( "should make the java code for the fetcher - repeating item", () => {
-    expect ( makeDBFetchers ( paramsForTest, PostCodeMainPage, 'postcode', PostCodeMainPage.rest.postcode ) ).toEqual ( [
+    const tables = postcodeRestD.tables
+    if ( !tables ) throw new Error ( `postcodeRestD.tables is undefined` )
+    expect ( makeDBFetchers ( paramsForTest, PostCodeMainPage, 'postcode', PostCodeMainPage.rest.postcode, tables ) ).toEqual ( [
       " package focuson.data.dbfetchers.PostCodeMainPage;",
       "",
       "import  focuson.data.db.PostCodeMainPage.PostCodeMainPage_postcodeMaps;",
@@ -76,8 +82,8 @@ describe ( "makeDbFetchers", () => {
       "import java.util.Map;",
       "import java.util.List;",
       "import java.util.Optional;",
-         "import java.util.Date;",
-         "import java.text.SimpleDateFormat;",
+      "import java.util.Date;",
+      "import java.text.SimpleDateFormat;",
       "",
       "  @Component",
       "public class PostCodeSearchResponse_get_FFetcherDB implements PostCodeSearchResponse_getPostCodeDataLine_FFetcher {",

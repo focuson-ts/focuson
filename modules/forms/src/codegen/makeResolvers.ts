@@ -2,7 +2,7 @@ import { JavaWiringParams } from "./config";
 import { RefD } from "../common/pageD";
 import { RestD } from "../common/restD";
 import { toArray, unique } from "@focuson/utils";
-import { allInputParamNames, allOutputParams, allParentMutationParams, importForTubles, isMessageMutation, isSelectMutationThatIsAList, isSqlMutationThatIsAList, ManualMutation, MutationDetail, Mutations, parametersFor } from "../common/resolverD";
+import { allInputParamNames, allOutputParams, allParentMutationParams, importForTubles, isAutoSqlResolver, isMessageMutation, isSelectMutationThatIsAList, isSqlMutationThatIsAList, ManualMutation, MutationDetail, Mutations, parametersFor } from "../common/resolverD";
 import { fetcherInterfaceForResolverName, fetcherPackageName, mutationMethodName, resolverClassName } from "./names";
 import { makeCodeFragmentsForMutation, makeMutationMethod } from "./makeMutations";
 import { ResolverData } from "./makeJavaFetchersInterface";
@@ -22,7 +22,13 @@ export function callResolvers<G> ( p: RefD<G>, restName: string, r: RestD<G>, na
       return [ `//from ${p.name}.rest[${restName}].resolvers[${JSON.stringify ( name )}]`,
         `List<Map<String,Object>> params${i} = ${mutationMethodName ( r, name, md, indexPrefix + i )}(connection,msgs,${[ dbNameString, ...allInputParamNames ( md.params ) ].join ( ',' )});`,
       ];
-    else
+    if ( isAutoSqlResolver ( md ) ) {
+      const returnType = isRepeatingDd ( r.dataDD ) ? 'List<Map<String,Object>>' : 'Map<String,Object>'
+
+      return [ `//Auto Sql Resolver from ${p.name}.rest[${restName}].resolvers[${JSON.stringify ( name )}]`,
+        `${returnType} result=  ${mutationMethodName ( r, name, md, indexPrefix + i )}(connection,msgs,${Object.keys ( r.params ).join ( ',' )});`,
+      ];
+    } else
       return [ `//from ${p.name}.rest[${restName}].resolvers[${JSON.stringify ( name )}]`,
         `${paramsDeclaration ( md, i )} ${mutationMethodName ( r, name, md, indexPrefix + i )}(connection,msgs,${[ dbNameString, ...allInputParamNames ( parametersFor ( md ) ) ].join ( ',' )});`,
         ...outputParamsDeclaration ( md, i )
@@ -30,7 +36,10 @@ export function callResolvers<G> ( p: RefD<G>, restName: string, r: RestD<G>, na
   } );
 }
 function addParams<G> ( resolvers: MutationDetail[] ) {
-  return resolvers.flatMap ( r => toArray ( parametersFor ( r ) ) ).flatMap ( p => typeof p !== 'string' && p.type === 'output' ? [ `result.put("${p.name}", ${p.name});` ] : [] )
+  return resolvers.flatMap ( r =>
+    isAutoSqlResolver ( r ) ?
+      [ 'result.putAll(something)' ] :
+      toArray ( parametersFor ( r ) ) ).flatMap ( p => typeof p !== 'string' && p.type === 'output' ? [ `result.put("${p.name}", ${p.name});` ] : [] )
 }
 
 
@@ -52,6 +61,8 @@ function makeCreateResultForManualList ( errorPrefix: string, resolver: ManualMu
 
 }
 export function makeCreateResult ( errorPrefix: string, resolvers: MutationDetail[], resolverData: ResolverData ): string[] {
+  const auto = resolvers.find ( isAutoSqlResolver )
+  if ( auto !== undefined ) return [ `return result;` ]
   if ( resolverData.javaType === 'Map<String,Object>' ) return [
     `${resolverData.javaType} result=new HashMap<>();`,
     ...addParams ( resolvers ),
@@ -98,7 +109,7 @@ export function makeFetcherMethodForMap<G> ( params: JavaWiringParams, p: RefD<G
 export function findResolverData ( errorPrefix: string, childResolverData: ResolverData[], resolverName: string ) {
   const result = childResolverData.find ( rd => rd.resolver == resolverName )
   if ( result ) return result
-  throw Error ( ` ${errorPrefix} is defined, but there are no dataD elements that use it. Legal values are [${childResolverData.map ( r => r.resolver ).sort ()}` )
+  throw Error ( ` ${errorPrefix} is defined, but there are no dataD elements that use it. Legal values are [${childResolverData.map ( r => r.resolver ).sort ()}]` )
 }
 export function importsFromManual ( resolver: Mutations ) {
 
@@ -134,19 +145,19 @@ export function makeFetcherMethodForList<G> ( params: JavaWiringParams, p: RefD<
 }
 
 
-export function makeResolvers<G> ( params: JavaWiringParams, p: RefD<G>, restName: string, r: RestD<G>, resolverName: string, resolver: Mutations, resolverData: ResolverData ): string[] {
+export function makeResolvers<G> ( params: JavaWiringParams, ref: RefD<G>, restName: string, r: RestD<G>, resolverName: string, resolver: Mutations, resolverData: ResolverData ): string[] {
   // let resolvers = Object.values ( safeObject ( r.resolvers ) ).flatMap ( toArray );
   // if ( resolvers.length == 0 ) return []
   let resolvers = toArray ( resolver );
-  const { importsFromParams, autowiringVariables } = makeCodeFragmentsForMutation ( resolvers, p, r, params );
-  const methods = makeMutationMethod ( params, `${p.name}.rest[${restName}].resolvers[${resolverName}]`, resolvers, resolverName, p, r, false, '' )
+  const { importsFromParams, autowiringVariables } = makeCodeFragmentsForMutation ( resolvers, ref, r, params );
+  const methods = makeMutationMethod ( params, `${ref.name}.rest[${restName}].resolvers[${resolverName}]`, resolvers, resolverName, ref, r, false, '' )
   let interfaceName = fetcherInterfaceForResolverName ( params, r, resolverData.resolver );
   const fetcherMethod = indentList (
     isRepeatingDd ( r.dataDD ) ?
-      makeFetcherMethodForList ( params, p, restName, r, resolvers, resolverData ) :
-      makeFetcherMethodForMap ( params, p, restName, r, resolvers, resolverData ) )
+      makeFetcherMethodForList ( params, ref, restName, r, resolvers, resolverData ) :
+      makeFetcherMethodForMap ( params, ref, restName, r, resolvers, resolverData ) )
   return [
-    `package ${params.thePackage}.${params.resolversPackage}.${p.name};`,
+    `package ${params.thePackage}.${params.resolversPackage}.${ref.name};`,
     ``,
     `import ${params.thePackage}.${params.fetcherPackage}.IFetcher;`,
     `import org.springframework.stereotype.Component;`,
@@ -160,13 +171,14 @@ export function makeResolvers<G> ( params: JavaWiringParams, p: RefD<G>, restNam
     'import java.util.Map;',
     'import java.util.HashMap;',
     `import java.util.Date;`,
+    `import java.util.Optional;`,
     `import java.sql.CallableStatement;`,
     `import java.sql.PreparedStatement;`,
     `import java.sql.ResultSet;`,
     `import java.sql.Connection;`,
     `import java.sql.SQLException;`,
     'import graphql.schema.DataFetcher;',
-    `import ${fetcherPackageName ( params, p )}.${interfaceName};`,
+    `import ${fetcherPackageName ( params, ref )}.${interfaceName};`,
     `import ${params.thePackage}.${params.utilsPackage}.LoggedDataSource;`,
     `import ${params.thePackage}.${params.utilsPackage}.Messages;`,
     `import ${params.thePackage}.${params.utilsPackage}.FocusonNotFound404Exception;`,

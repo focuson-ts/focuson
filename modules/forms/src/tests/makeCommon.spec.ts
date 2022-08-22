@@ -2,7 +2,7 @@ import { findAllCommonParams, findAllCommonParamsDetails, findAllCommonParamsWit
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 import { OccupationAndIncomeSummaryPD } from "../example/occupationAndIncome/occupationAndIncome.pageD";
-import { generatedPages } from "../focuson.config";
+import { generatedPages, generatedRefs } from "../focuson.config";
 import { paramsForTest } from "./paramsForTest";
 import { devAppConfig } from "../appConfig";
 import { StringParam } from "../common/restD";
@@ -95,7 +95,7 @@ describe ( "makeCommon", () => {
 
 describe ( "findAllCommonParamsWithSamples", () => {
   it ( "should do what it says on the tin", () => {
-    expect ( findAllCommonParamsWithSamples ( generatedPages ) ).toEqual ( {
+    expect ( findAllCommonParamsWithSamples ( [ ...generatedPages, ...generatedRefs ] ) ).toEqual ( {
       "accountId": 44444444,
       "applRef": 22,
       "brandRef": 10,

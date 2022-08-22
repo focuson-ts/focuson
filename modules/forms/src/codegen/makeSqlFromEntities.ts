@@ -550,7 +550,7 @@ export function createTableSql<G> ( rdps: RestDefnInPageProperties<G>[] ): NameA
   return Object.fromEntries ( findAllTableAndFieldDatasIn ( rdps ).map ( taf => [ taf.table.name, createSql ( taf ) ] ) )
 }
 
-export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, ld: SqlLinkData, path: number[], childCount: number ): string[] {
+export function makeMapsForRest<G> ( params: JavaWiringParams, p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, tables: EntityAndWhere, ld: SqlLinkData, path: number[], childCount: number ): string[] {
   const restD = rdp.rest;
   function mapName ( path: string[] ) {return path.length === 0 ? '_root' : safeArray ( path ).join ( "_" )}
 
@@ -642,7 +642,7 @@ export function makeMapsForRest<B, G> ( params: JavaWiringParams, p: RefD<G>, re
       `@SuppressWarnings("SqlResolve")`,
       ...addBrackets ( 'public static String sql = ', ';' ) ( addStringToEndOfAllButLast ( '+' ) ( sql.map ( s => '"' + s.replace ( /""/g, '\"' ) + '"' ) ) ),
       '',
-      ...makeAllGetsAndAllSqlForRest ( params, p, restName, rdp ),
+      ...makeAllGetsAndAllSqlForRest ( params, p, restName, rdp, tables ),
       '',
       ...ids,
       '',
@@ -739,15 +739,14 @@ interface QueryAndGetters {
 function isListOrOptional<G> ( rdp: RestDefnInPageProperties<G> ) {
   return isRepeatingDd ( rdp.rest.dataDD ) ? 'List' : 'Optional';
 }
-export function makeAllGetsAndAllSqlForRest<B, G> ( params: JavaWiringParams, p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G> ): string[] {
+export function makeAllGetsAndAllSqlForRest<B, G> ( params: JavaWiringParams, p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, tables: EntityAndWhere ): string[] {
   const restD = rdp.rest
-  if ( restD.tables === undefined ) throw Error ( `somehow have a sql root without a tables in ${p.name} ${restName}` )
-  let sqlRoot = findSqlRoot ( restD.tables );
+  if ( tables === undefined ) throw Error ( `somehow have a sql root without a tables in ${p.name} ${restName}` )
+  let sqlRoot = findSqlRoot ( tables );
   const getters: QueryAndGetters[] = walkSqlRoots ( sqlRoot, ( r, path ) => {
     const ld = findSqlLinkDataFromRootAndDataD ( r, restD.dataDD, rdp.rest.params )
-    if ( restD.tables === undefined ) throw Error ( `somehow have a sql root without a tables in ${p.name} ${restName}` )
-    const query = findParamsForTable ( `Page ${p.name} rest ${restName}`, restD.params, restD.tables )
-    return { query, getter: makeGetForRestFromLinkData ( params, p, restName, rdp, query, path, r.children.length, restD.tables?.noDataIs404 ), sql: [ ...generateGetSql ( ld ), '' ] }
+    const query = findParamsForTable ( `Page ${p.name} rest ${restName}`, restD.params, tables )
+    return { query, getter: makeGetForRestFromLinkData ( params, p, restName, rdp, query, path, r.children.length, tables?.noDataIs404 === true ), sql: [ ...generateGetSql ( ld ), '' ] }
   } )
   const paramsForMainGet = getters.slice ( 1 ).map ( g => g.query )
   function callingParams ( qs: JavaQueryParamDetails[] ) {return qs.map ( q => q.name )}

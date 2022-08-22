@@ -1,7 +1,7 @@
 import { copyFile, copyFiles, DirectorySpec, templateFile, writeToFile } from "@focuson/files";
 import { JavaWiringParams } from "../codegen/config";
 import fs from "fs";
-import { forEachRest, forEachRestAndActionsUsingRefs, mapRestAndResolverincRefs } from "../common/restD";
+import { foldPagesToRestToMutationsAndResolvers, forEachRest, forEachRestAndActionsUsingRefs, mapRestAndResolverincRefs, RestD } from "../common/restD";
 import { detailsLog, GenerateLogLevel, NameAnd, safeArray, safeObject, safeString, sortedEntries, toArray, unique } from "@focuson/utils";
 import { allMainPages, PageD, RefD, RestDefnInPageProperties } from "../common/pageD";
 import { addStringToEndOfList, indentList } from "../codegen/codegen";
@@ -12,7 +12,6 @@ import { makeGraphQlSchema } from "../codegen/makeGraphQlTypes";
 import { makeMockFetcherFor, makeMockFetchersForRest } from "../codegen/makeMockFetchers";
 import { makeJavaVariablesForGraphQlQuery } from "../codegen/makeGraphQlQuery";
 import { makeSpringEndpointsFor } from "../codegen/makeSpringEndpoint";
-// import { findSqlRoot, makeCreateTableSql, makeGetSqlFor, makeSqlDataFor, walkRoots } from "../codegen/makeJavaSql.tsxxx";
 import { createTableSql, findSqlLinkDataFromRootAndDataD, findSqlRoot, generateGetSql, getStrategy, makeInsertSqlForIds, makeInsertSqlForNoIds, makeMapsForRest, walkSqlRoots } from "../codegen/makeSqlFromEntities";
 import { makeDBFetchers } from "../codegen/makeDBFetchers";
 import { makePactValidation } from "../codegen/makePactValidation";
@@ -20,7 +19,7 @@ import { AppConfig } from "../appConfig";
 
 import { makeMutations } from "../codegen/makeMutations";
 import { findChildResolvers, findJavaType, findQueryMutationResolver, makeAllJavaWiring, makeJavaFetcherInterfaceForResolver } from "../codegen/makeJavaFetchersInterface";
-import { makeTuples, tupleIndexes } from "../common/resolverD";
+import { GuardedMutation, isAutoSqlResolver, makeTuples, MutationDetail, SelectMutation, tupleIndexes } from "../common/resolverD";
 import { findResolverData, makeResolvers } from "../codegen/makeResolvers";
 
 
@@ -160,7 +159,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   forEachRestAndActionsUsingRefs ( pages, refs, p => ( r, restName, rdp ) => a => {
     if ( a !== 'get' ) return;
     if ( rdp.rest.tables === undefined ) return;
-    writeToFile ( `${javaH2FetcherRoot}/${p.name}/${dbFetcherClassName ( params, rdp.rest, a )}.java`, () => makeDBFetchers ( params, p, restName, rdp ) )
+    writeToFile ( `${javaH2FetcherRoot}/${p.name}/${dbFetcherClassName ( params, rdp.rest, a )}.java`, () => makeDBFetchers ( params, p, restName, rdp, rdp.rest.tables ) )
   } )
 
   fs.rmSync ( `${javaResourcesRoot}/data.sql`, { force: true } )
@@ -202,10 +201,26 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
       walkSqlRoots ( findSqlRoot ( tables ), ( root, path ) => {
         const ld = findSqlLinkDataFromRootAndDataD ( root, rdp.rest.dataDD, rdp.rest.params )
         let fileName = sqlMapFileName ( javaDbPackages, p, name, path ) + ".java";
-        console.log ( 'name:', fileName )
-        writeToFile ( fileName, () => makeMapsForRest ( params, p, name, rdp, ld, path, root.children.length ), details )
+        writeToFile ( fileName, () => makeMapsForRest ( params, p, name, rdp, tables, ld, path, root.children.length ), details )
       } )
+
+      Object.entries ( safeObject ( rdp.rest.resolvers ) )
     } )
+
+  } )
+  foldPagesToRestToMutationsAndResolvers<G, string[]> ( allRefs, [], {
+    guarded: <G> ( mut: SelectMutation, guarded: GuardedMutation, index: string, p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, r: RestD<G> ) => acc => acc,
+    simple: <G> ( mut: MutationDetail, index: string, p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, r: RestD<G>, resolverName: string ) => acc => {
+      if ( isAutoSqlResolver ( mut ) ) {
+        walkSqlRoots ( findSqlRoot ( mut ), ( root, path ) => {
+          const ld = findSqlLinkDataFromRootAndDataD ( root, r.dataDD, r.params )
+          let fileName = sqlMapFileName ( javaDbPackages, p, resolverName + index, path ) + ".java";
+          writeToFile ( fileName, () => makeMapsForRest ( params, p, resolverName + index, rdp, mut, ld, path, root.children.length ), details )
+        } )
+        return [ ...acc, ]
+      }
+      return acc;
+    }
   } )
 
   forEachRest ( allRefs, p => ( r, restName ) => {
@@ -226,20 +241,5 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
 
   tupleIndexes ( params.maxTuples ).map ( i => writeToFile ( `${javaMutatorPackage}/utils/Tuple${i}.java`, () => makeTuples ( params, i ) ), details )
 
-  // rests.forEach ( rest => {
-  //   if ( isSqlResolverD ( rest.resolver ) ) {
-  //     let sqlG = rest.resolver.get;
-  //     if ( sqlG ) {
-  //       console.log ( 'sqlG', rest.dataDD.name )
-  //
-  //       writeToFile ( `${javaSql}/${javaSqlCreateTableSqlName ( rest )}`, () => makeCreateTableSql ( rest.dataDD, sqlG ), details )
-  //       const sqlRoots = findSqlRoot ( JointAccountDd, sqlG );
-  //       const sqlData = walkRoots ( sqlRoots, r => makeSqlDataFor ( r, sqlG ) )
-  //       const makeSql = sqlData.flatMap ( makeGetSqlFor )
-  //       writeToFile ( `${javaSql}/${javaSqlReadSqlName ( rest )}`, () => makeSql, details )
-  //
-  //     }
-  //   }
-  // } )
 
 };

@@ -1,7 +1,7 @@
 import { CompDataD, findAllDataDs, findDataDDIn } from "./dataD";
 import { NameAnd, RestAction, safeObject, safeString, sortedEntries, toArray, unique } from "@focuson/utils";
 import { paramsForRestAction } from "../codegen/codegen";
-import { AccessDetails, GuardedMutation, MutationDetail, MutationsForRestAction, PrimaryMutations, SelectMutation } from "./resolverD";
+import { AccessDetails, GuardedMutation, MutationDetail, MutationsForRestAction, PrimaryMutationDetail, PrimaryMutations, SelectMutation } from "./resolverD";
 import { MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
 import { allMainPages, MainPageD, PageD, RefD, RestDefnInPageProperties } from "./pageD";
 import { getRestTypeDetails, RestActionDetail, restActionForName, UrlAndParamsForState } from "@focuson/rest";
@@ -218,7 +218,7 @@ export function findIds<G> ( rest: RestD<G> ) {
 export function flatMapRestAndActions<B, G, T> ( ps: PageD<B, G>[], fn: ( p: MainPageD<B, G> ) => ( r: RestD<G> ) => ( action: RestAction ) => T[] ): T[] {
   return allMainPages ( ps ).flatMap ( p => sortedEntries ( p.rest ).flatMap ( ( [ name, rdp ] ) => rdp.rest.actions.flatMap ( a => fn ( p ) ( rdp.rest ) ( a ) ) ) )
 }
-export function mapRestAndActions<G, T> ( refs: RefD< G>[], fn: ( p: RefD< G> ) => ( r: RestD<G> ) => ( action: RestAction ) => T ): T[] {
+export function mapRestAndActions<G, T> ( refs: RefD<G>[], fn: ( p: RefD<G> ) => ( r: RestD<G> ) => ( action: RestAction ) => T ): T[] {
   return refs.flatMap ( p => sortedEntries ( p.rest ).flatMap ( ( [ name, rdp ] ) => rdp.rest.actions.map ( a => fn ( p ) ( rdp.rest ) ( a ) ) ) )
 }
 export function mapRest<B, G, T> ( pages: PageD<B, G>[], fn: ( p: MainPageD<B, G> ) => ( r: RestD<G>, restName: string, rdp: RestDefnInPageProperties<G> ) => T ): T[] {
@@ -236,7 +236,7 @@ export function mapRestAndResolver<B, G, T> ( refs: RefD<G>[], fn: ( p: RefD<G> 
 export function mapRestAndResolverincRefs<B, G, T> ( pages: PageD<B, G>[], refs: RefD<G>[], fn: ( p: RefD<G> ) => ( r: RestD<G>, restName: string, rdp: RestDefnInPageProperties<G> ) => ( resolver: ResolverData, ) => T ): T[] {
   return flatMapRestAndRefs ( pages, refs, p => ( r, restName, rdp ) => findChildResolvers ( r ).map ( ( resolverData ) => fn ( p ) ( r, restName, rdp ) ( resolverData ) ) )
 }
-export function flatMapRestAndResolver< G, T> ( pages: RefD<G>[], fn: ( p: RefD< G> ) => ( r: RestD<G>, restName: string, rdp: RestDefnInPageProperties<G> ) => ( resolver: ResolverData, ) => T[] ): T[] {
+export function flatMapRestAndResolver<G, T> ( pages: RefD<G>[], fn: ( p: RefD<G> ) => ( r: RestD<G>, restName: string, rdp: RestDefnInPageProperties<G> ) => ( resolver: ResolverData, ) => T[] ): T[] {
   return flatMapRest ( pages, p => ( r, restName, rdp ) => findChildResolvers ( r ).flatMap ( resolverData => fn ( p ) ( r, restName, rdp ) ( resolverData ) ) )
 }
 
@@ -268,18 +268,21 @@ export function forEachRestAndActionsUsingRefs<B, G> ( ps: PageD<B, G>[], refs: 
 }
 
 export interface MutuationAndResolverFolder<G, Acc> {
-  simple: ( mut: MutationDetail, p: RefD<G>, r: RestD<any> ) => ( acc: Acc ) => Acc;
-  guarded: ( mut: SelectMutation, guarded: GuardedMutation, p: RefD<G>, r: RestD<any> ) => ( acc: Acc ) => Acc;
+  simple: ( mut: MutationDetail, index: string, p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, r: RestD<any>, resolverName: string | undefined ) => ( acc: Acc ) => Acc;
+  guarded: ( mut: SelectMutation, guarded: GuardedMutation, index: string, p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, r: RestD<any>, resolverName: string | undefined ) => ( acc: Acc ) => Acc;
 }
 export function foldPagesToRestToMutationsAndResolvers<G, Acc> ( ps: RefD<G>[], acc: Acc, folder: MutuationAndResolverFolder<G, Acc> ): Acc {
-  return ps.reduce ( ( acc, p ) => Object.entries ( p.rest ).reduce ( ( acc, [ name, rdp ] ) => {
+  return ps.reduce ( ( acc, p ) => Object.entries ( p.rest ).reduce ( ( acc, [ name, rdp ], i ) => {
     if ( rdp.rest === undefined ) throw Error ( `Error in page ${p.name}.rest[${name}]. The rest is undefined.\n    ${JSON.stringify ( rdp )}` )
-    const mutationsAcc = toArray ( rdp.rest.mutations ).flatMap ( mr => toArray ( mr.mutateBy ) ).reduce ( ( acc, m ) => {
-      let simple = folder.simple ( m, p, rdp.rest ) ( acc );
+    const mutationsAcc = toArray ( rdp.rest.mutations ).flatMap ( mr => toArray ( mr.mutateBy ) ).reduce ( ( acc, m, j ) => {
+      let simple = folder.simple ( m, i + "", p, name, rdp, rdp.rest, undefined ) ( acc );
       if ( m.type !== 'case' ) return simple;
-      return m.select.reduce ( ( acc, g ) => folder.guarded ( m, g, p, rdp.rest ) ( acc ), simple )
+      return m.select.reduce ( ( acc, g ) => folder.guarded ( m, g, i + '_' + j, p, name, rdp, rdp.rest, undefined ) ( acc ), simple )
     }, acc )
-    const resolvers = Object.values ( safeObject ( rdp.rest.resolvers ) ).flatMap ( res => toArray ( res ) ).reduce ( ( acc, md ) => folder.simple ( md, p, rdp.rest ) ( acc ), mutationsAcc )
+    const resolvers = Object.entries ( safeObject ( rdp.rest.resolvers ) ).flatMap ( ( [ resName, res ] ): [ string, PrimaryMutationDetail ][] => toArray ( res ).map ( r => [ resName, r ] ) ).reduce ( ( acc, tuple, i ) => {
+      const [ resName, md ] = tuple
+      return folder.simple ( md, i + "", p, name, rdp, rdp.rest, resName ) ( acc );
+    }, mutationsAcc )
     return resolvers
   }, acc ), acc )
 }

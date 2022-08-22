@@ -2,12 +2,12 @@ import { addPrefixPostFix, ChildEntity, createTableSql, EntityFolder, findAliasA
 import { AllLensRestParams, EntityAndWhere, IntParam, StringParam } from "../common/restD";
 import { JointAccountCustomerDD, JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 import { nameAndAddressDataD, postCodeSearchResponseDD } from "../example/postCodeDemo/addressSearch.dataD";
-import { addressRestD } from "../example/postCodeDemo/addressSearch.restD";
+import { addressRestD, postcodeRestD } from "../example/postCodeDemo/addressSearch.restD";
 import { JointAccountPageD } from "../example/jointAccount/jointAccount.pageD";
 import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
 import { paramsForTest } from "./paramsForTest";
-import { allCommonIds, commonIds, fromCommonIds } from "../example/commonIds";
+import { allCommonIds, fromCommonIds } from "../example/commonIds";
 import { accountT, addT } from "../example/database/tableNames";
 import { safeArray, unique } from "@focuson/utils";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
@@ -485,9 +485,11 @@ describe ( "addPrefixPostFix", () => {
 
 describe ( "makeMapsForRest", () => {
   it ( "should make maps for each sql root, from the link data, for a 'single item'", () => {
+    const tables = jointAccountRestD.tables
+    if ( !tables ) throw Error ( `jointAccountRestD.tables is undefined` )
     expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), ( r, path ) => {
       const ld = findSqlLinkDataFromRootAndDataD ( r, JointAccountDd, jointAccountRestParams )
-      return makeMapsForRest ( paramsForTest, JointAccountPageD, 'jointAccount', JointAccountPageD.rest.jointAccount, ld, path, r.children.length )
+      return makeMapsForRest ( paramsForTest, JointAccountPageD, 'jointAccount', JointAccountPageD.rest.jointAccount, tables, ld, path, r.children.length )
     } ).map ( s => s.map ( s => s.replace ( /"/g, "'" ) ) ) ).toEqual ( [
       [
         "package focuson.data.db.JointAccount;",
@@ -1066,7 +1068,7 @@ describe ( "makeMapsForRest", () => {
         "  }",
         "}"
       ]
-    ])
+    ] )
   } )
   it ( "should  add 'where' to the sql if there is a where clause", () => {
     expect ( walkSqlRoots ( findSqlRoot ( jointAccountRestDTables ), ( r, path ) =>
@@ -1086,8 +1088,11 @@ describe ( "makeMapsForRest", () => {
 
   it ( "should make maps for a repeating item", () => {
     expect ( walkSqlRoots ( findSqlRoot ( addressRestDTables ), ( r, path ) => {
+      const tables = postcodeRestD.tables
+      if ( !tables ) throw new Error ( `postcodeRestD.tables is undefined` )
+
       const ld = findSqlLinkDataFromRootAndDataD ( r, postCodeSearchResponseDD, addressRestDParams )
-      return makeMapsForRest ( paramsForTest, PostCodeMainPage, 'postcode', PostCodeMainPage.rest.postcode, ld, path, r.children.length )
+      return makeMapsForRest ( paramsForTest, PostCodeMainPage, 'postcode', PostCodeMainPage.rest.postcode, tables, ld, path, r.children.length )
     } ).map ( s => s.map ( s => s.replace ( /"/g, "'" ) ) ) ).toEqual ( [
       [
         "package focuson.data.db.PostCodeMainPage;",
@@ -1164,7 +1169,7 @@ describe ( "makeMapsForRest", () => {
         "  }",
         "}"
       ]
-    ])
+    ] )
   } )
 } )
 

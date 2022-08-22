@@ -2,6 +2,7 @@ import { NameAnd, RestAction, SimpleMessageLevel, toArray, unique } from "@focus
 import { JavaWiringParams } from "../codegen/config";
 import { indentList } from "../codegen/codegen";
 import { Pattern } from "./dataD";
+import { EntityAndWhere } from "./restD";
 
 
 export interface Schema {
@@ -49,15 +50,15 @@ export interface MutationsForRestAction {
 // export type MutationResolverGuard= MutationResolverValueGuard
 
 export function parametersFor ( m: MutationDetail ): MutationParam[] {
-  if ( isMessageMutation ( m ) || isMultipleMutation ( m ) ) return []
+  if ( isMessageMutation ( m ) || isMultipleMutation ( m ) || isAutoSqlResolver ( m ) ) return []
   return toArray ( m.params )
 }
 
 export function getMakeMock ( m: MutationDetail ): boolean {
-  if ( isMessageMutation ( m ) || isMultipleMutation ( m ) ) return false
+  if ( isMessageMutation ( m ) || isMultipleMutation ( m ) || isAutoSqlResolver ( m ) ) return false
   return m.makeMock === undefined ? true : m.makeMock
 }
-export type PrimaryMutationDetail = StoredProcedureMutation | SqlFunctionMutation |
+export type PrimaryMutationDetail = StoredProcedureMutation | SqlFunctionMutation | AutoSqlResolver |
   SqlMutation | SqlMutationThatIsAList |
   ManualMutation | SelectMutation | MessageMutation
 export type MutationDetail = PrimaryMutationDetail | MultipleMutation
@@ -123,6 +124,14 @@ export interface SqlFunctionMutation {
   name: string,
   makeMock?: boolean,
   params: MutationParamForSqlFunction | MutationParamForSqlFunction[]
+}
+export interface AutoSqlResolver extends EntityAndWhere {
+  type: 'autosql',
+  name?: string
+}
+export function isAutoSqlResolver ( m: MutationDetail ): m is AutoSqlResolver {
+  const a: any = m
+  return m.type === 'autosql'
 }
 
 export interface ManualMutation {

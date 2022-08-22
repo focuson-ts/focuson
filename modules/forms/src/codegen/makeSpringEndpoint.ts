@@ -58,6 +58,7 @@ export function auditDetails ( params: JavaWiringParams, r: RestD<any>, restActi
 }
 
 export function paramsDeclaration ( md: MutationDetail, i: number ) {
+
   if ( isSqlMutationThatIsAList ( md ) || isSelectMutationThatIsAList ( md ) ) return `List<Map<String,Object>> params${i} = `
   const outputs = allOutputParams ( parametersFor ( md ) )
   if ( outputs.length === 1 ) return `${outputs[ 0 ].javaType} ${outputs[ 0 ].name} = `
