@@ -23,8 +23,12 @@ import { wizardPD } from "./example/wizard/wizard.pageD";
 
 import { ButtonsPageD } from "./example/buttons/buttonsPageD";
 import { dateInfoRefD } from "./common/dateInfoRefD";
+import { CreditAC, DirectDebitAC } from "./example/authoriseCharges/authoriseCharges.customise";
 
 export const generatedRefs: ExampleRefD[] = [ dateInfoRefD() ]
+
+
+
 
 export const generatedPages: ExampleMainPage[] = [
   ButtonsPageD,
@@ -35,7 +39,8 @@ export const generatedPages: ExampleMainPage[] = [
   FourOhFourPageD,
   OnChangePageD,
   HelloWorldPage,
-  AuthoriseChargesPD,
+  AuthoriseChargesPD(DirectDebitAC),
+  AuthoriseChargesPD(CreditAC),
   PaymentsPageD,
   ListOfPaymentsPagePD,
   LinkedAccountDetailsPD,

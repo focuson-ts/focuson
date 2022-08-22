@@ -4,39 +4,40 @@ import { AuthoriseChargesSummaryDD, OneBrandDD, OneChargeDataDD, RememberedData,
 import { AuthorisedChargesRD, SelectOneBrandPageRD, SummaryOfChargeDatesRD } from "./authoriseCharges.restD";
 import { HideButtonsCD } from "../../buttons/hideButtonsCD";
 import { StringParam } from "../../common/restD";
+import { AuthoriseCustomisation } from "./authoriseCharges.customise";
 
-export const SummaryOfChargesPage: ExampleModalPage = {
+export function SummaryOfChargesPage(c: AuthoriseCustomisation): ExampleModalPage {return {
   name: 'SummaryOfCharges',
   pageType: 'ModalPopup',
   modes: [ 'view' ],
-  display: { dataDD: SummaryData, target: '~/summaryOfCharges' },
+  display: { dataDD: SummaryData(c), target: '~/summaryOfCharges' },
   buttons: {
     close: { control: "ModalCancelButton" },
   }
-}
+}}
 
-export const SelectChargesDatePage: ExampleModalPage = {
+export function SelectChargesDatePage(c: AuthoriseCustomisation): ExampleModalPage {return  {
   name: 'SelectChargesDate',
   pageType: 'ModalPage',
   modes: [ 'view', 'edit' ],
-  display: { dataDD: summaryOfChargesSearchDD, target: '~/summaryOfChargesDates' },
+  display: { dataDD: summaryOfChargesSearchDD(c), target: '~/summaryOfChargesDates' },
   buttons: {
     cancel: { control: 'ModalCancelButton' },
     commit: { control: 'ModalCommitButton' }
   }
-}
-export const ViewChargesPage: ExampleModalPage = {
+}}
+export function ViewChargesPage(c: AuthoriseCustomisation): ExampleModalPage {return {
   name: 'ViewCharges',
   pageType: 'ModalPage',
   modes: [ 'view', 'edit' ],
   layout: { component: HideButtonsCD, displayParams: { hide: [ 'selectDate' ] } },
-  display: { dataDD: AuthoriseChargesSummaryDD, target: '~/authorisedCharges' },
+  display: { dataDD: AuthoriseChargesSummaryDD(c), target: '~/authorisedCharges' },
   guards: {
     somethingSelected: {condition: 'isDefined', path: '~/selectedCharge'}
   },
   buttons: {
     selectDate: {
-      control: 'ModalButton', text: 'list', modal: SelectChargesDatePage, mode: 'view', focusOn: '~/summaryOfChargesDates',
+      control: 'ModalButton', text: 'list', modal: SelectChargesDatePage(c), mode: 'view', focusOn: '~/summaryOfChargesDates',
       copy: { from: '#authorisedDate', to: '~/summaryOfChargesDates/date' },
       copyOnClose: { from: '~/selectedDateItem/dateCreated', to: '#authorisedDate' },
     },
@@ -48,36 +49,36 @@ export const ViewChargesPage: ExampleModalPage = {
     authoriseApprovedFees: { control: "ActionButton", path: '#editingData', text: 'Authorise Approved Fees', action: 'authoriseApprovedFees' },
     summary: {
       enabledBy: 'somethingSelected',
-      control: 'ModalButton', modal: SummaryOfChargesPage,
+      control: 'ModalButton', modal: SummaryOfChargesPage(c),
       copy: { from: '~/authorisedCharges/fromApi/editingData' },
       mode: 'view', focusOn: '~/summaryOfCharges'
     },
     save: { control: 'RestButton', restName: 'authorisedCharges', action: 'update', deleteOnSuccess: '#fromApi' },
   }
-}
-export const AuthoriseChargesPD: ExampleMainPage = {
-  name: 'AuthoriseCharges',
+}}
+export function AuthoriseChargesPD(c: AuthoriseCustomisation): ExampleMainPage {return  {
+  name: c.pageName,
   pageType: "MainPage",
   commonParams: {
     today: { ...StringParam, commonLens: 'today', testValue: '29/07/2022' },
     operatorName: { ...StringParam, commonLens: 'operatorName', testValue: 'Phil' }
   },
   initialValue: [ { command: 'copy', from: '/CommonIds/today', to: '~/authorisedCharges/date' } ],
-  modals: [ { modal: ViewChargesPage }, { modal: SummaryOfChargesPage }, { modal: SelectChargesDatePage } ],
-  display: { target: '~/brand', dataDD: SelectOneBrandDD },
+  modals: [ { modal: ViewChargesPage(c) }, { modal: SummaryOfChargesPage(c) }, { modal: SelectChargesDatePage(c) } ],
+  display: { target: '~/brand', dataDD: SelectOneBrandDD(c) },
   domain: {
-    brand: { dataDD: SelectOneBrandDD },
+    brand: { dataDD: SelectOneBrandDD(c) },
     selectedIndex: { dataDD: NatNumDd },
-    selectedItem: { dataDD: OneBrandDD },
-    authorisedCharges: { dataDD: AuthoriseChargesSummaryDD },
-    selectedCharge: { dataDD: OneChargeDataDD },
+    selectedItem: { dataDD: OneBrandDD (c)},
+    authorisedCharges: { dataDD: AuthoriseChargesSummaryDD(c) },
+    selectedCharge: { dataDD: OneChargeDataDD(c) },
     selectedChargeIndex: { dataDD: NatNumDd },
-    summaryOfCharges: { dataDD: SummaryData },
-    selectedChargeItem: { dataDD: RememberedData },
+    summaryOfCharges: { dataDD: SummaryData(c) },
+    selectedChargeItem: { dataDD: RememberedData(c) },
 
-    summaryOfChargesDates: { dataDD: summaryOfChargesSearchDD },
+    summaryOfChargesDates: { dataDD: summaryOfChargesSearchDD (c)},
     selectedDateIndex: { dataDD: NatNumDd },
-    selectedDateItem: { dataDD: summaryOfChargesDateDD },
+    selectedDateItem: { dataDD: summaryOfChargesDateDD(c) },
   },
   guards: {
     brandSelected: { condition: 'isDefined', path: '~/selectedIndex' }
@@ -91,20 +92,20 @@ export const AuthoriseChargesPD: ExampleMainPage = {
     originalData: { constructedBy: 'path', path: '~/authorisedCharges/fromApi/originalData' },
   },
   rest: {
-    loadBrand: { rest: SelectOneBrandPageRD, targetFromPath: '~/brand', fetcher: true },
+    loadBrand: { rest: SelectOneBrandPageRD(c), targetFromPath: '~/brand', fetcher: true },
     authorisedCharges: {
-      rest: AuthorisedChargesRD, targetFromPath: '~/authorisedCharges/fromApi/editingData', fetcher: true,
+      rest: AuthorisedChargesRD(c), targetFromPath: '~/authorisedCharges/fromApi/editingData', fetcher: true,
       postFetchCommands: [
         { command: 'message', msg: 'loading the authorised charges' },
         { command: 'copyResult', from: '', to: '~/authorisedCharges/fromApi/originalData' }
       ]
     },
-    summaryOfChargeDates: { rest: SummaryOfChargeDatesRD, targetFromPath: '~/summaryOfChargesDates/searchResults', fetcher: true },
+    summaryOfChargeDates: { rest: SummaryOfChargeDatesRD(c), targetFromPath: '~/summaryOfChargesDates/searchResults', fetcher: true },
     // summaryOfCharges: { rest: SummaryOfChargesRD, targetFromPath: '~/summaryOfCharges', fetcher: true }
   },
   modes: [ 'view' ],
   buttons: {
-    select: { control: 'ModalButton', modal: ViewChargesPage, mode: 'edit', focusOn: '#authorisedCharges', enabledBy: 'brandSelected' }
+    select: { control: 'ModalButton',  modal: ViewChargesPage(c), mode: 'edit', focusOn: '#authorisedCharges', enabledBy: 'brandSelected' }
   }
-}
+}}
 
