@@ -28,13 +28,14 @@ export interface MakeConfirmCommitWindow<S, C> {
   state: LensState<S, any, C>,
 
   props: ConfirmWindowProps,
+  id: string
   confirmId: string;
   confirm: ( e: any ) => void;
   cancelId: string;
   cancel: ( e: any ) => void
 }
 export const makeConfirmCommitWindow = <S, D, C extends ModalContext<S>> ( makeFn: ( makerProps: MakeConfirmCommitWindow<S, C> ) => JSX.Element ): DisplayArbitraryPageFn<S, D, C, ConfirmWindowProps> => ( state: LensState<S, D, C>, props: ConfirmWindowProps ) => {
-  const id = props.id
+  const id = 'confirm'
   const confirmId = id + '.confirm';
   const cancelId = id + '.cancel';
   function confirm ( e: any ) {
@@ -62,7 +63,7 @@ export const makeConfirmCommitWindow = <S, D, C extends ModalContext<S>> ( makeF
   }
 
   function cancel ( e: any ) { state.massTransform ( reasonFor ( 'ConfirmCommitWindow', 'onClick', cancelId ) ) ( popPage ( state ) );}
-  const e: JSX.Element = makeFn ( { state, props, confirm, confirmId, cancel, cancelId } )
+  const e: JSX.Element = makeFn ( { state, id,props, confirm, confirmId, cancel, cancelId } )
   return e
 };
 
@@ -70,7 +71,7 @@ export const makeConfirmCommitWindow = <S, D, C extends ModalContext<S>> ( makeF
 export function ConfirmCommitWindow<S, D, C extends ModalContext<S>> () {
   return makeConfirmCommitWindow<S, D, C> ( makerProps => {
     const { confirm, confirmId, cancel, cancelId, props, state } = makerProps
-    const { id, messageText, confirmText, cancelText, title, className } = props
+    const { id,messageText, confirmText, cancelText, title, className } = props
     const realText = messageText ? replaceTextUsingPath ( state, messageText ) : 'Are you sure?'
     return <div id={id} className={className ? className : 'modalPopup-content show-modal confirm-window'}>
       {title && <h1>{replaceTextUsingPath ( state, title )}</h1>}
