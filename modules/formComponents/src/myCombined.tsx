@@ -13,8 +13,8 @@ const popupJSX = ( p: PageDetailsForCombine, i: number, messagesJSX: JSX.Element
   return (
     <div id={`page${i}`} className="modalPopup show-modal focus-page" key={i}>
       <div className="modalPopup-content">
-        {messagesJSX}
         {p.element}
+        {messagesJSX}
       </div>
     </div>
   )
@@ -24,8 +24,8 @@ const modalPageJSX = ( p: PageDetailsForCombine, i: number, messagesJSX: JSX.Ele
   return (
     <div id={`page${i}`} className={focusPageClassName} key={i}>
       <div id='contentWrapper'>
-        {messagesJSX}
         {p.element}
+        {messagesJSX}
       </div>
     </div>
   )
@@ -34,8 +34,8 @@ const mainPageJSX = ( p: PageDetailsForCombine, i: number, messagesJSX: JSX.Elem
   return (
     <div id={`page${i}`} className={focusPageClassName} key={i}>
       <div id='contentWrapper'>
-        {messagesJSX}
         {p.element}
+        {messagesJSX}
       </div>
     </div>
   )
