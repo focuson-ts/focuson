@@ -81,7 +81,7 @@ function makeModalButtonInPage<G> (): ButtonCreator<ModalOrMainButtonInPage<G>, 
 
         const copyOnCloseArray: CopyDetails[] | undefined = copyOnClose ? toArray ( copyOnClose ) : undefined
         const copyFromArray: CopyDetails[] | undefined = copy ? toArray ( copy ) : undefined
-        const pageLink = isModal ( button ) ? `modal='${modalName ( parent, button.modal )}'` : `main='${button.main.name}'`
+        const pageLink = isModal ( button ) ? `modal='${modalName ( mainPage, button.modal )}'` : `main='${button.main.name}'`
         const focusOn = isModal ( button ) ? button.focusOn : undefined
         const focusOnLensForCompileCheck = focusOn ? stateQueryForParams ( `Modal button Page ${parent.name} / ${name}`, params, mainPage, parent, focusOn ) : undefined
         const restsOnOpen = restOnOpen ? toArray ( restOnOpen ).map ( r => restCommandForButton ( mainPage, r ) ) : undefined

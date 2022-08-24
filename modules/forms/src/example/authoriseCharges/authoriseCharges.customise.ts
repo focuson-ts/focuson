@@ -8,7 +8,7 @@ export interface AuthoriseCustomisation{
 }
 
 export const DirectDebitAC: AuthoriseCustomisation ={
-  pageName: 'DirectDebits',
+  pageName: 'AuthoriseCharges',
   authoriseTable: authorisedChargesTableDD,
   urlPrefix: '/api/dd'
 }
