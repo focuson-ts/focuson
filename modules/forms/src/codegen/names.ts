@@ -1,5 +1,5 @@
 import { AllDataDD, CompDataD, compDataDIn } from "../common/dataD";
-import { ModalPageD, PageD, RefD, RestDefnInPageProperties } from "../common/pageD";
+import { MainPageD, ModalPageD, PageD, RefD, RestDefnInPageProperties } from "../common/pageD";
 import { RestD } from "../common/restD";
 import { rawTypeName } from "./makeGraphQlTypes";
 import { HasName, isRestStateChange, RestAction, safeString } from "@focuson/utils";
@@ -13,6 +13,7 @@ export const domainName = <G> ( d: CompDataD<G> ): string => d.name + "Domain";
 export const componentName = <G> ( d: CompDataD<G> ): string => d.display ? d.display.name : d.name;
 export const pageInState = <B, G> ( p: PageD<B, G> ): string => p.name
 export const pageComponentName = <B, G> ( d: PageD<B, G> ): string => d.name + "Page";
+export const modalPageComponentName = <B, G> ( p: MainPageD<B, G> ) => ( d: PageD<B, G> ): string => p.name + "_" + d.name + "Page";
 // export const pageComponent = ( p: PageD ): string => p.name;
 export const hasDomainForPage = <G> ( pd: RefD<G> ): string => "Has" + pageDomainName ( pd );
 export const pageDomainName = ( pd: HasName ): string => pd.name + "PageDomain"
@@ -36,7 +37,7 @@ export const createTableSqlName = (): string => { return "schema"}
 export const getSqlName = (): string => { return "get"}
 export const endPointName = <G> ( restD: RestD<G>, action: RestAction ): string => restActionForName ( action ) + restD.dataDD.name
 
-export const modalName = <B, G> ( p: PageD<B, G>, modal: PageD<B, G> ) => modal.name
+export const modalName = <B, G> ( p: PageD<B, G>, modal: PageD<B, G> ) => p.name + "_" + modal.name
 export const restNameWithPrefix = <G> ( r: RestD<G> ) => r.namePrefix ? r.namePrefix + "_" + r.dataDD.name : r.dataDD.name
 export const restDetailsName = <G> ( p: RefD<G>, restName: string, r: RestD<G> ) => p.name + "_" + restNameWithPrefix ( r ) + "RestDetails"
 

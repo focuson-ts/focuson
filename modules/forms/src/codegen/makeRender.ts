@@ -3,13 +3,14 @@ import { commonParamsWithLabel, DisplayCompD, OneDisplayCompParamD, SimpleDispla
 import { dataDsIn, isMainPage, isModalPage, MainPageD, PageD } from "../common/pageD";
 
 import { decamelize, NameAnd, sortedEntries, toArray, unique, unsortedEntries, Validations } from "@focuson/utils";
-import { componentName, domainName, domainsFileName, emptyFileName, guardName, modalImportFromFileName, optionalsFileName, optionalsName, pageComponentName, pageDomainName } from "./names";
+import { componentName, domainName, domainsFileName, emptyFileName, guardName, modalImportFromFileName, modalPageComponentName, optionalsFileName, optionalsName, pageComponentName, pageDomainName } from "./names";
 import { addButtonsFromVariables, MakeButton, makeButtonsVariable, makeGuardButtonVariables } from "./makeButtons";
 import { focusOnFor, indentList, noExtension } from "./codegen";
 import { TSParams } from "./config";
 import { ButtonD } from "../buttons/allButtons";
 import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 import { stateFocusQueryWithTildaFromPage, stateQueryForParams, stateQueryForPathsFnParams } from "./lens";
+import { mainPage } from "@focuson/pages";
 
 
 export type AllComponentData<G> = ComponentData<G> | ErrorComponentData
@@ -263,7 +264,7 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
 
   const guards = makeGuardVariables ( pageD, makeGuard, params, mainP, pageD )
   return [
-    `export function ${pageComponentName ( pageD )}(){`,
+    `export function ${modalPageComponentName (mainP)( pageD )}(){`,
     `  return focusedPage<${params.stateName}, ${domName}, Context> ( s => ${(makeTitle ( pageD ))} ) (//If there is a compilation here have you added this to the 'domain' of the main page`,
     `     ( state, d, mode, index ) => {`,
     ...(indentList ( indentList ( indentList ( indentList ( indentList ( [

@@ -1,6 +1,6 @@
 import { allMainPages, flatMapToModal, InitialValue, isMainPage, MainPageD, PageD, PageDisplay } from "../common/pageD";
 import { TSParams } from "./config";
-import { modalName, optionalsFileName, optionalsName, pageComponentName, pageInState, renderFileName } from "./names";
+import { modalName, modalPageComponentName, optionalsFileName, optionalsName, pageComponentName, pageInState, renderFileName } from "./names";
 import { addStringToEndOfAllButLast, indentList } from "./codegen";
 import { makeEmptyData } from "./makeSample";
 import { NameAnd, safeArray, toArray } from "@focuson/utils";
@@ -25,7 +25,7 @@ export const makeMainPage = <G> ( params: TSParams ) => <B> ( p: MainPageD<B, G>
 
 export interface ModalCreationData<B, G> {
   name: string,
-  main: PageD<B, G>
+  main: MainPageD<B, G>
   modal: PageD<B, G>
 }
 export function walkModals<B, G> ( ps: PageD<B, G>[] ): ModalCreationData<B, G>[] {
@@ -35,8 +35,8 @@ export function walkModals<B, G> ( ps: PageD<B, G>[] ): ModalCreationData<B, G>[
   } )
 }
 
-export const makeModal = <G> ( params: TSParams ) => <B> ( { name, modal }: ModalCreationData<B, G> ): string[] => {
-  return [ `    ${name}: {pageType: '${modal.pageType}',  config: simpleMessagesConfig,  pageFunction: ${pageComponentName ( modal )}()}` ]
+export const makeModal = <G, B> ( params: TSParams, ) => ( { name, main, modal }: ModalCreationData<B, G> ): string[] => {
+  return [ `    ${name}: {pageType: '${modal.pageType}',  config: simpleMessagesConfig,  pageFunction: ${modalPageComponentName ( main ) ( modal )}()}` ]
 };
 
 export interface ExtraPage {
@@ -53,7 +53,7 @@ export function makePages<B, G> ( params: TSParams, ps: MainPageD<B, G>[], extra
   const modals = walkModals ( ps );
   const renderImports = ps.flatMap ( mainPage => [
     `import { ${pageComponentName ( mainPage )} } from '${renderFileName ( '.', params, mainPage, mainPage )}';`,
-    ...safeArray ( mainPage.modals ).flatMap ( flatMapToModal ).map ( ( { modal } ) => `import { ${pageComponentName ( modal )} } from '${renderFileName ( '.', params, mainPage, modal )}';` )
+    ...safeArray ( mainPage.modals ).flatMap ( flatMapToModal ).map ( ( { modal } ) => `import { ${modalPageComponentName ( mainPage ) ( modal )} } from '${renderFileName ( '.', params, mainPage, modal )}';` )
   ] )
   const optionalImports = ps.map ( p => `import { ${optionalsName ( p )} } from "${optionalsFileName ( '.', params, p )}"; ` )
   return [
@@ -70,6 +70,6 @@ export function makePages<B, G> ( params: TSParams, ps: MainPageD<B, G>[], extra
     `export const pages: MultiPageDetails<${params.stateName}, Context> = {`,
     ...addStringToEndOfAllButLast ( "," ) ( [
       ...Object.entries ( realExtraPages ).map ( ( [ n, v ] ) => `    ${n}:{${v.text}}` ),
-      ...ps.flatMap ( makeMainPage ( params ) ), ...modals.flatMap ( makeModal ( params ) ) ] ),
+      ...ps.flatMap ( makeMainPage ( params ) ), ...modals.flatMap ( makeModal ( params, ) ) ] ),
     `  }` ]
 }
