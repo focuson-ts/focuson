@@ -247,6 +247,7 @@ export const LayoutCd: DisplayCompD = {
     rightHandClassName: { paramType: 'string', needed: 'no' },
     defaultProps: { paramType: 'string', needed: 'no' },
     displayAsCards: { paramType: 'boolean', needed: 'no' },
+    scrollAfter: { paramType: 'string', needed: 'no' }
   },
   import: "@focuson/form_components",
   name: "Layout"

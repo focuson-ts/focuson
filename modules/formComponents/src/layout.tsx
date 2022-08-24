@@ -1,4 +1,4 @@
-import { Children } from "react";
+import { Children, CSSProperties } from "react";
 import { FocusOnContext, makeProcessorsConfig } from "@focuson/focuson";
 import { LensProps } from "@focuson/state";
 import { inputCommandProcessors, processChangeCommandProcessor } from "@focuson/rest";
@@ -14,6 +14,7 @@ export interface LayoutProps<S, C> extends LensProps<S, any, C> {
   rightHandClassName?: string
   defaultProps?: string;
   displayAsCards?: boolean;
+  scrollAfter?: string;
 }
 
 function getLayoutAsArray ( details: string ) {
@@ -23,8 +24,9 @@ function getLayoutAsArray ( details: string ) {
     return undefined
   }
 }
-export function Layout<S, C extends FocusOnContext<S>> ( { state, details, children, title, titleClassName, rightHandTitle, rightHandClassName, defaultProps, displayAsCards }: LayoutProps<S, C> ) {
+export function Layout<S, C extends FocusOnContext<S>> ( { state, details, children, title, titleClassName, rightHandTitle, rightHandClassName, defaultProps, displayAsCards, scrollAfter }: LayoutProps<S, C> ) {
   let elemIndex = 0
+  const maxHeightString: CSSProperties | undefined = scrollAfter ? { maxHeight: scrollAfter, overflowY: 'scroll', scrollbarWidth: 'thin',overflowX:'hidden' } : undefined
   const parsedDetails = getLayoutAsArray ( details )
   if ( parsedDetails === undefined ) return <span><span className='validity-false'>Cannot parse layout {details}</span><br/><span>It should be an array of arrays.Most often like this [[1,1],[3],[5]] </span></span>
   const defaultPropsL = defaultProps && JSON.parse ( defaultProps )
@@ -35,7 +37,7 @@ export function Layout<S, C extends FocusOnContext<S>> ( { state, details, child
   const hrBetweenRows = true
 
 
-  return <>
+  return <div style={maxHeightString}>
     {(title || rightHandTitle) && <div className="layout-title-holder">{title && <div className={titleClassName ? titleClassName : 'layout-title'} dangerouslySetInnerHTML={{ __html: replaceTextUsingPath ( state, safeString ( title ) ) }}/>}
       {rightHandTitle && <div className={rightHandClassName ? rightHandClassName : 'layout-right-title'}>{replaceTextUsingPath ( state, safeString ( rightHandTitle ) )}</div>}</div>}
     {parsedDetails.map ( ( row: any, rowIndex: number ) =>
@@ -63,5 +65,5 @@ export function Layout<S, C extends FocusOnContext<S>> ( { state, details, child
     Array.isArray ( children ) && children.slice ( elementsRenderedCount, totalElementsToRenderCount ).map ( ( child, childIndex ) =>
       defaultPropsL ? <div key={childIndex} className={`${defaultPropsL.labelWidth ? `labelWidth${defaultPropsL.labelWidth}` : ''} ${defaultPropsL.valueWidth ? `inputWidth${defaultPropsL.valueWidth}` : ''}`}>{child}</div> : <div key={childIndex} className="labelWidth100 inputWidth49">{child}</div> )
     }
-  </>
+  </div>
 }

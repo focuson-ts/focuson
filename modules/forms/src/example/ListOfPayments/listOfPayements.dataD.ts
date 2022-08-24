@@ -19,7 +19,7 @@ export const authorisedByCustomerDD: StringPrimitiveDD = {
 export const RequestDetailsDD: ExampleDataD = {
   name: 'RequesterDetails',
   description: 'The information about the person who requested the paymets',
-  layout: { component: LayoutCd, displayParams: { details: '[[1,1,1], [1], [1], [1], [1,1], [1,1]]' } },
+  layout: { component: LayoutCd, displayParams: { details: '[[1,1,1], [1], [1], [1], [1,1], [1,1]]', scrollAfter: '200px' } },
 
   structure: {
     title: { dataDD: ReadOnlyStringDD, db: { table: clientNames_C10T, field: 'ttl' }, sample: [ 'Mr', 'Mrs' ] },
