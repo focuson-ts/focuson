@@ -15,6 +15,7 @@ import { LinkedAccountDetailsPD } from "../example/linkedAccount/linkedAccountDe
 import { collectionSummaryRD } from "../example/linkedAccount/linkedAccountDetails.restD";
 import { AuthoriseChargesPD } from "../example/authoriseCharges/authoriseCharges.pageD";
 import { SummaryOfChargeDatesRD } from "../example/authoriseCharges/authoriseCharges.restD";
+import { DirectDebitAC } from "../example/authoriseCharges/authoriseCharges.customise";
 
 describe ( "makeResolvers", () => {
 
@@ -467,9 +468,10 @@ describe ( "makeResolvers", () => {
   } )
 
   it ( 'should make a resolver for multiples', () => {
-    expect ( makeResolvers ( paramsForTest, AuthoriseChargesPD, 'summaryOfChargesDates', SummaryOfChargeDatesRD,
-      'getSummaryOfChargesDate', safeObject ( SummaryOfChargeDatesRD.resolvers ).getSummaryOfChargesDate,
-      findQueryMutationResolver ( SummaryOfChargeDatesRD, 'get' ) ) ).toEqual ( [
+    const sum = SummaryOfChargeDatesRD ( DirectDebitAC );
+    expect ( makeResolvers ( paramsForTest, AuthoriseChargesPD ( DirectDebitAC ), 'summaryOfChargesDates', sum,
+      'getSummaryOfChargesDate', safeObject ( sum.resolvers ).getSummaryOfChargesDate,
+      findQueryMutationResolver ( sum, 'get' ) ) ).toEqual ( [
       "package focuson.data.resolvers.AuthoriseCharges;",
       "",
       "import focuson.data.fetchers.IFetcher;",

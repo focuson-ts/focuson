@@ -11,6 +11,7 @@ const logLevel: GenerateLogLevel = 'detailed';
 
 generate ( logLevel, directorySpec, devAppConfig, {
     ...params,
+    guardFnsFile: '../guardFns',
     controllerAnnotations: [ "@CrossOrigin()" ],
     endpointAnnotations: [],// ['@SomeSecurityAnnotation("{description} + {url}")'],
     endpointImports: [],
@@ -23,6 +24,7 @@ generate ( logLevel, directorySpec, devAppConfig, {
 
 
 fse.copySync ( '../formComponents/src', tsRoot + "/src/formComponents" )
+fse.copySync ( './src/guardFns.ts', tsRoot + "/src/guardFns.ts" )
 
 
 

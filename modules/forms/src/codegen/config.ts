@@ -37,6 +37,7 @@ export interface TSParams {
   emptyFile: string;
   renderFile: string;
   guardReportFile: string;
+  guardFnsFile?: string;
   commonFile: string;
   urlparams: string;
   pagesFile: string;

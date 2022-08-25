@@ -8,7 +8,7 @@ import { PageMode } from "@focuson/pages";
 
 export type AllGuards = LocalVariableGuard | LocalVariableMoreThanZero | LocalVariableLessThanLengthMinusOne |
   LocalVariableValueEquals<any> | LocalVariableDefined | ALessThanB | BinaryCondition |
-  AndOrCondition | NotCondition | PageModeIs | ContainsGuard | NumberAndBooleanCondition | RegexCondition | PageModeCondition
+  AndOrCondition | NotCondition | PageModeIs | ContainsGuard | NumberAndBooleanCondition | RegexCondition | PageModeCondition | FunctionCondition
 
 function errorPrefix ( mainP: PageD<any, any>, p: PageD<any, any>, name: string, guard: any ) {
   if ( mainP.name === p.name ) return `MakeGuardVariable for ${p.name} ${name} ${JSON.stringify ( guard )}`
@@ -51,6 +51,11 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableValueEquals<any> ) =>
       `const ${guardName ( name )} =  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJson() !== ${JSON.stringify ( guard.value )}`
+  },
+  fn: {
+    imports: [],
+    makeGuardVariable: ( params, mainP, page, name, guard: FunctionCondition ) =>
+      `const ${guardName ( name )} =  guardFns.${guard.name}(state)`
   },
   or: {
     imports: [],
@@ -153,6 +158,10 @@ export interface AndOrCondition {
 export interface NotCondition {
   condition: 'not';
   cond: string
+}
+export interface FunctionCondition {
+  condition: 'fn';
+  name: string
 }
 export interface ALessThanB {
   condition: 'a<b'

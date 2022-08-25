@@ -264,7 +264,7 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
 
   const guards = makeGuardVariables ( pageD, makeGuard, params, mainP, pageD )
   return [
-    `export function ${modalPageComponentName (mainP)( pageD )}(){`,
+    `export function ${modalPageComponentName ( mainP ) ( pageD )}(){`,
     `  return focusedPage<${params.stateName}, ${domName}, Context> ( s => ${(makeTitle ( pageD ))} ) (//If there is a compilation here have you added this to the 'domain' of the main page`,
     `     ( state, d, mode, index ) => {`,
     ...(indentList ( indentList ( indentList ( indentList ( indentList ( [
@@ -343,7 +343,11 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
   const modalRenderImports = pages.flatMap ( p => (isModalPage ( p ) && !p.display.dataDD.display) ? [
     `import {${componentName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..', mainP, p, params.renderFile )}'` ] : [] )
   const pageLayoutImports = pages.flatMap ( p => p.layout ? [ `import { ${p.layout.component.name} } from '${p.layout.component.import}';` ] : [] )
-  const allImports = unique ( [ ...imports, ...modalDomainImports, ...modalRenderImports, ...makeComponentImports ( pages ), ...makeButtonImports ( makeButton ), ...pageDomainsImports, ...pageLayoutImports, ...domainImports ], s => s )
+  const allImports = unique ( [ ...imports,
+    ...modalDomainImports, ...modalRenderImports,
+    ...makeComponentImports ( pages ),
+    ...params.guardFnsFile ? [ `import * as guardFns from '${params.guardFnsFile}';` ] : [],
+    ...makeButtonImports ( makeButton ), ...pageDomainsImports, ...pageLayoutImports, ...domainImports ], s => s )
   return [ ...allImports, ...pageComponents, ...dataComponents ]
 }
 

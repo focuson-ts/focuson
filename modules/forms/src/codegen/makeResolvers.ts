@@ -146,8 +146,6 @@ export function makeFetcherMethodForList<G> ( params: JavaWiringParams, p: RefD<
 
 
 export function makeResolvers<G> ( params: JavaWiringParams, ref: RefD<G>, restName: string, r: RestD<G>, resolverName: string, resolver: Mutations, resolverData: ResolverData ): string[] {
-  // let resolvers = Object.values ( safeObject ( r.resolvers ) ).flatMap ( toArray );
-  // if ( resolvers.length == 0 ) return []
   let resolvers = toArray ( resolver );
   const { importsFromParams, autowiringVariables } = makeCodeFragmentsForMutation ( resolvers, ref, r, params );
   const methods = makeMutationMethod ( params, `${ref.name}.rest[${restName}].resolvers[${resolverName}]`, resolvers, resolverName, ref, r, false, '' )
