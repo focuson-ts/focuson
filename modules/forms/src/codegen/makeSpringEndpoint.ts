@@ -1,5 +1,5 @@
 import { isHeaderLens, postFixForEndpoint, RestD, RestParams, stateToNameAndUrlAndParamsForState } from "../common/restD";
-import { endPointName, mutationClassName, mutationMethodName, mutationVariableName, queryClassName, queryName, queryPackage, restControllerName, sampleName, sqlMapName, sqlMapPackageName } from "./names";
+import { endPointName, mutationClassName, mutationMethodName, mutationVariableName, queryClassName, queryName, queryPackage, restControllerName, restControllerPackage, sampleName, sqlMapName, sqlMapPackageName } from "./names";
 import { JavaWiringParams } from "./config";
 import { actionsEqual, beforeSeparator, isRestStateChange, RestAction, safeArray, safeObject, toArray, unique } from "@focuson/utils";
 import { indentList, paramsForRestAction } from "./codegen";
@@ -158,7 +158,7 @@ function makeQueryEndpoint<G> ( params: JavaWiringParams, p: RefD<G>, restName: 
 function makeSampleEndpoint<G> ( params: JavaWiringParams, p: RefD<G>, restName: string, r: RestD<G>, restAction: RestAction ): string[] {
   return [
     ...indentList ( endpointAnnotation ( params, p, restName, r, restAction, 'query' ) ),
-    `  @${getRestTypeDetails ( 'get' ).annotation}(value = "${beforeSeparator ( "?", r.url )}/sample", produces = "application/json")`,
+    `    @${getRestTypeDetails ( 'get' ).annotation}(value = "${beforeSeparator ( "?", r.url )}/sample", produces = "application/json")`,
     `    public static String sample${r.dataDD.name}() throws Exception {`,
     `      return new ObjectMapper().writeValueAsString( ${params.sampleClass}.${sampleName ( r.dataDD )}0);`,
     `    }` ];
@@ -183,7 +183,7 @@ export function makeSpringEndpointsFor<G> ( params: JavaWiringParams, p: RefD<G>
 
 
   return [
-    `package ${params.thePackage}.${params.controllerPackage};`,
+    `package ${restControllerPackage ( params, p )};`,
     '',
     'import com.fasterxml.jackson.databind.ObjectMapper;',
     `import org.springframework.http.ResponseEntity;`,
@@ -200,6 +200,7 @@ export function makeSpringEndpointsFor<G> ( params: JavaWiringParams, p: RefD<G>
     `import javax.sql.DataSource;`,
     `import ${params.thePackage}.${params.utilsPackage}.LoggedDataSource;`,
     `import ${params.thePackage}.${params.utilsPackage}.Messages;`,
+    `import ${params.thePackage}.${params.controllerPackage}.Transform;`,
     `import java.util.List;`,
     `import java.util.Map;`,
     `import java.util.HashMap;`,
@@ -208,9 +209,9 @@ export function makeSpringEndpointsFor<G> ( params: JavaWiringParams, p: RefD<G>
     ...importForSql,
     ...safeArray ( params.endpointImports ).map ( n => `import ${n};` ),
     '',
-    `  @RestController`,
-    ...indentList ( params.controllerAnnotations ),
-    `  public class ${restControllerName ( p, r )} {`,
+    `@RestController`,
+    ...params.controllerAnnotations,
+    `public class ${restControllerName ( p, r )} {`,
     ``,
     ...indentList ( [ `@Autowired`, `public IManyGraphQl graphQL;`, `@Autowired`, `public LoggedDataSource dataSource;` ] ),
     ...mutationVariables,

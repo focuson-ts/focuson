@@ -27,7 +27,10 @@ export function resolverName<G> ( rest: RestD<G>, action: RestAction ) {
 export const sampleName = <G> ( dataD: AllDataDD<G> ) => "sample" + dataD.name;
 export const emptyName = <G> ( dataD: AllDataDD<G> ) => "empty" + dataD.name;
 
-export const restControllerName = <B, G> ( p: RefD<G>, restD: RestD<G> ) => p.name + "_" + (restD.namePrefix ? `${restD.namePrefix}_` : '') + `${restD.dataDD.name}Controller`
+export const restControllerName = <B, G> ( p: RefD<G>, restD: RestD<G> ) => (restD.namePrefix ? `${restD.namePrefix}_` : '') + `${restD.dataDD.name}Controller`
+export const restControllerFileName = <B, G> ( p: RefD<G>, restD: RestD<G> ) => `${p.name}/${restControllerName ( p, restD )}.java`
+export const restControllerPackage = <B, G> ( params: JavaWiringParams, p: RefD<G> ) => `${params.thePackage}.${params.controllerPackage}.${p.name}`
+
 export const javaSqlCreateTableSqlName = <G> ( restD: RestD<G> ) => `${restD.dataDD.name}.createTableSql.sql`
 export const javaSqlReadSqlName = <G> ( restD: RestD<G> ) => `${restD.dataDD.name}.readTableSql.sql`
 

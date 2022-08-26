@@ -6,7 +6,7 @@ import { detailsLog, GenerateLogLevel, NameAnd, safeArray, safeObject, safeStrin
 import { allMainPages, PageD, RefD, RestDefnInPageProperties } from "../common/pageD";
 import { addStringToEndOfList, indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";
-import { createTableSqlName, dbFetcherClassName, fetcherInterfaceForResolverName, fetcherInterfaceName, fetcherPackageName, getSqlName, mockFetcherClassName, mockFetcherClassNameForResolver, mockFetcherPackage, mutationClassName, providerPactClassName, queryClassName, queryPackage, resolverClassName, resolverName, restControllerName, sqlMapFileName } from "../codegen/names";
+import { createTableSqlName, dbFetcherClassName, fetcherInterfaceForResolverName, fetcherInterfaceName, fetcherPackageName, getSqlName, mockFetcherClassName, mockFetcherClassNameForResolver, mockFetcherPackage, mutationClassName, providerPactClassName, queryClassName, queryPackage, resolverClassName, resolverName, restControllerFileName, restControllerName, sqlMapFileName } from "../codegen/names";
 import { makeGraphQlSchema } from "../codegen/makeGraphQlTypes";
 
 import { makeMockFetcherFor, makeMockFetchersForRest } from "../codegen/makeMockFetchers";
@@ -67,6 +67,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
     fs.mkdirSync ( `${javaMutatorPackage}/${p.name}`, { recursive: true } )
     fs.mkdirSync ( `${javaResolverPackage}/${p.name}`, { recursive: true } )
     fs.mkdirSync ( `${javaDbPackages}/${p.name}`, { recursive: true } )
+    fs.mkdirSync ( `${javaControllerRoot}/${p.name}`, { recursive: true } )
   } )
   fs.mkdirSync ( `${javaCodeRoot}/utils`, { recursive: true } )
   fs.mkdirSync ( `${javaMutatorPackage}/utils`, { recursive: true } )
@@ -194,7 +195,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
 
   allRefs.map ( p => {
     Object.entries ( p.rest ).map ( ( [ name, rdp ] ) => {
-      writeToFile ( `${javaControllerRoot}/${restControllerName ( p, rdp.rest )}.java`, () => makeSpringEndpointsFor ( params, p, name, rdp.rest ), details )
+      writeToFile ( javaControllerRoot + "/" + restControllerFileName (  p, rdp.rest ), () => makeSpringEndpointsFor ( params, p, name, rdp.rest ), details )
       let tables = rdp.rest.tables;
       if ( !tables ) return
       detailsLog ( logLevel, 2, `Creating rest files for ${p.name} ${name}` )
