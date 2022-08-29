@@ -209,7 +209,6 @@ export function makeDomainReport<B, G> ( page: MainPageD<B, G>, { generatedDomai
   const existingNames = new Set<String> ()
   let dups = findDuplicates ( [ ...objects ], o => o.name );
   const duplicates = dups.map ( d => `CRITICAL duplicate name in dataD ${d.name}` )
-
   return { part: 'domains', headers: [], general: generatedDomainNames, critical: duplicates };
 }
 export function makeModalsReport<B, G> ( page: MainPageD<B, G>, info: ReportInfo ): ReportDetails {

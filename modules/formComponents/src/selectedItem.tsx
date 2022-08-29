@@ -30,7 +30,7 @@ const realIndex = index? index:0
     const nm = showNofM && (headerIfEmpty === undefined || array.length > 0) ?
       <span id={`${id}.nOfM`}> {realIndex + 1} / {array.length}</span> :
       <></>
-    const emptyHeader = headerIfEmpty && array.length === 0 ? <span id={`${id}.emptyHeader`}>headerIfEmpty</span> : <></>
+    const emptyHeader = headerIfEmpty && array.length === 0 ? <span id={`${id}.emptyHeader`}>{headerIfEmpty}</span> : <></>
     return <div><h2>{header}{nm}{emptyHeader}</h2>{display ( newProps )}</div>
   } else
     return display ( newProps )

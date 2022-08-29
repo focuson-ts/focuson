@@ -58,9 +58,9 @@ describe ( "makePages", () => {
       "import { Loading, MultiPageDetails, simpleMessagesPageConfig } from '@focuson/pages';",
       "import {Context,  FState } from './common';",
       "import { EAccountsSummaryPage } from './EAccountsSummary/EAccountsSummary.render';",
-      "import { CreatePlanPage } from './EAccountsSummary/CreatePlan.render';",
+      "import { EAccountsSummary_CreatePlanPage } from './EAccountsSummary/CreatePlan.render';",
       "import { RepeatingPage } from './Repeating/Repeating.render';",
-      "import { RepeatingLinePage } from './Repeating/RepeatingLine.render';",
+      "import { Repeating_RepeatingLinePage } from './Repeating/RepeatingLine.render';",
       "import { EAccountsSummaryOptionals } from './EAccountsSummary/EAccountsSummary.optionals'; ",
       "import { RepeatingOptionals } from './Repeating/Repeating.optionals'; ",
       "import { ConfirmCommitWindow } from '@focuson/pages';",
@@ -71,8 +71,8 @@ describe ( "makePages", () => {
       "    confirm:{pageType: 'Arbitrary', config: simpleMessagesConfig, pageFunction: ConfirmCommitWindow()},",
       "    EAccountsSummary: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'EAccountsSummary' ), pageFunction: EAccountsSummaryPage(), initialValue: [{'command':'set','path':'~/fromApi','value':{}}], pageMode: 'view',namedOptionals: EAccountsSummaryOptionals },",
       "    Repeating: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'Repeating' ), pageFunction: RepeatingPage(), initialValue: [{'command':'set','path':'~/selectedItem','value':0}], pageMode: 'view',namedOptionals: RepeatingOptionals },",
-      "    CreatePlan: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: CreatePlanPage()},",
-      "    RepeatingLine: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: RepeatingLinePage()}",
+      "    EAccountsSummary_CreatePlan: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: EAccountsSummary_CreatePlanPage()},",
+      "    Repeating_RepeatingLine: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: Repeating_RepeatingLinePage()}",
       "  }"
     ] )
   } )

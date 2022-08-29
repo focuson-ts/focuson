@@ -7,6 +7,7 @@ import { JavaWiringParams, TSParams } from "./config";
 import { TableAndFieldAndAliasData } from "./makeSqlFromEntities";
 import { restActionForName, restActionToDetails } from "@focuson/rest";
 import { isMessageMutation, MutationDetail } from "../common/resolverD";
+import { Ref } from "react";
 
 export const guardName = ( s: string ) => s + "Guard"
 export const domainName = <G> ( d: CompDataD<G> ): string => d.name + "Domain";
@@ -92,6 +93,9 @@ export const someFileName = ( root: string, pd: HasName, postfix: string ): stri
 export const someFileNameFromMainPage = <G> ( root: string, mainPage: RefD<G>, pd: HasName, postfix: string ): string => `${root}/${mainPage.name}/${pd.name}.${postfix}`;
 export const modalImportFromFileName = <B, G> ( root: string, mainP: RefD<G>, p: ModalPageD<B, G>, suffix: string ): string => `${root}/${mainP.name}/${mainP.name}.${suffix}`
 
+export function wiringName<G> ( ref: RefD<G> ) {return ref.name+ "Wiring" }
+export function wiringFileName<G> ( params: JavaWiringParams, ref: RefD<G> ) {return wiringName ( ref ) + ".java"}
+export function wiringPackage<G> ( params: JavaWiringParams, ref: RefD<G> ) {return params.thePackage + "." + params.wiringPackage }
 
 export const storybookFileName = <G> ( root: string, params: TSParams, pd: RefD<G> ): string => someFileName ( root, pd, `stories` );
 export const renderFileName = <B, G> ( root: string, params: TSParams, mainPage: RefD<G>, pd: PageD<B, G> ): string => someFileNameFromMainPage ( root, mainPage, pd, params.renderFile );

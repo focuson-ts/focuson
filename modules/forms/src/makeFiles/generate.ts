@@ -16,6 +16,7 @@ import { allOutputParams, parametersFor } from "../common/resolverD";
 import { ExtraPage } from "../codegen/makePages";
 
 export const params: Omit<CombinedParams, 'focusOnVersion'> = {
+  wiringPackage: 'wiring',
   defaultDbName: "mock",
   pagesFile: 'pages',
   commonParams: "CommonIds",

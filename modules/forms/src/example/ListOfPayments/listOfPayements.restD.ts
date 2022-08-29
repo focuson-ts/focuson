@@ -1,6 +1,6 @@
 import { ExampleDataD, ExampleRestD } from "../common";
 
-import { AccountDetailsDD, CurrentPaymentCountsDD, postCodeSearchResponseDD, PrintRecordHistoryDD } from "./listOfPayements.dataD";
+import { AccountDetailsDD, CurrentPaymentCountsDD, postCodeSearchResponseDD, printRecordDD, PrintRecordHistoryDD } from "./listOfPayements.dataD";
 import { IntParam, RestD, RestParams, StringParam } from "../../common/restD";
 import { clientAddress_C60T, clientNames_C10T, loanAppTable, onlySchema } from "../database/tableNames";
 import { AllGuards } from "../../buttons/guardButton";
@@ -69,7 +69,7 @@ export const PrintRecordRD: ExampleRestD = {
     ...PrintRecordHistoryParams,
     paymentId: { ...IntParam, lens: '~/display[~/selected]id', testValue: 888, main: true }
   },
-  dataDD: PrintRecordHistoryDD,
+  dataDD: printRecordDD,
   url: '/api/printrecord?{query}',
   actions: [ 'createWithoutFetch', 'updateWithoutFetch', { state: 'print' } ],
   states: {

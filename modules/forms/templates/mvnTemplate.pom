@@ -36,11 +36,11 @@
             <version>${graphql-java.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.graphql-java/graphql-java-spring-boot-starter-webmvc -->
-        <dependency>
-            <groupId>com.graphql-java</groupId>
-            <artifactId>graphql-java-spring-boot-starter-webmvc</artifactId>
-            <version>${graphql-springboot.starter.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.graphql-java</groupId>-->
+<!--            <artifactId>graphql-java-spring-boot-starter-webmvc</artifactId>-->
+<!--            <version>${graphql-springboot.starter.version}</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>au.com.dius.pact.provider</groupId>
             <artifactId>junit</artifactId>

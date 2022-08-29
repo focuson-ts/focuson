@@ -1,6 +1,6 @@
 import { mapRestAndActions, mapRestAndResolver, RestD } from "../common/restD";
 import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, isPrimDd, isRepeatingDd, OneDataDD, PrimitiveDD, RepeatingDataD, sampleFromDataD } from "../common/dataD";
-import { fetcherInterfaceForResolverName, fetcherInterfaceName, fetcherPackageName, fetcherVariableName, fetcherVariableNameForResolver, resolverName, sampleName } from "./names";
+import { fetcherInterfaceForResolverName, fetcherInterfaceName, fetcherPackageName, fetcherVariableName, fetcherVariableNameForResolver, resolverName, sampleName, wiringName, wiringPackage } from "./names";
 import { JavaWiringParams } from "./config";
 import { applyToTemplate } from "@focuson/template";
 import { DirectorySpec, loadFile } from "@focuson/files";
@@ -46,22 +46,23 @@ function makeWiring ( interfaceName: string, varName: string, parentName: string
 }
 
 
-export function makeAllJavaWiring<G> ( params: JavaWiringParams, ps: RefD<G>[], directorySpec: DirectorySpec ): string[] {
+export function makeAllJavaWiring<G> ( params: JavaWiringParams, ref: RefD<G>, directorySpec: DirectorySpec ): string[] {
+  const refs = [ ref ];
   let imports = unique ( [
-    ...mapRestAndActions ( ps, p => r => a => `import ${fetcherPackageName ( params, p )}.${fetcherInterfaceName ( params, r, a )};` ),
-    ...mapRestAndResolver ( ps, p => r => ( { resolver } ) => `import ${fetcherPackageName ( params, p )}.${fetcherInterfaceForResolverName ( params, r, resolver )};` )
+    ...mapRestAndActions ( refs, p => r => a => `import ${fetcherPackageName ( params, p )}.${fetcherInterfaceName ( params, r, a )};` ),
+    ...mapRestAndResolver ( refs, p => r => ( { resolver } ) => `import ${fetcherPackageName ( params, p )}.${fetcherInterfaceForResolverName ( params, r, resolver )};` )
   ], t => t )
-  let wiringForRest: string[] = mapRestAndActions ( ps, p => r => a => {
+  let wiringForRest: string[] = mapRestAndActions ( refs, p => r => a => {
     const { parent, resolver, name, sample } = findQueryMutationResolver ( r, a )
     return makeWiring ( fetcherInterfaceName ( params, r, a ), fetcherVariableName ( params, r, a ), parent, resolver, name )
   } )
-  let wiringForResolvers: string[] = mapRestAndResolver ( ps, p => r => ( { resolver, parent, name } ) =>
+  let wiringForResolvers: string[] = mapRestAndResolver ( refs, p => r => ( { resolver, parent, name } ) =>
     makeWiring ( fetcherInterfaceForResolverName ( params, r, resolver ), fetcherVariableNameForResolver ( params, r, resolver ), parent, resolver, name ) )
   let wiring = unique ( [ ...wiringForRest, ...wiringForResolvers ], t => t )//we need this because of places where we return the same object from multiple end points.
 
 
-  let fetchersFromActions: [ string, string ][] = mapRestAndActions ( ps, p => r => a => [ `@Autowired`, `List<${fetcherInterfaceName ( params, r, a )}> ${fetcherVariableName ( params, r, a )};` ] );
-  let fetchersFromResolvers: [ string, string ][] = mapRestAndResolver ( ps, p => r => ( { resolver } ) => [
+  let fetchersFromActions: [ string, string ][] = mapRestAndActions ( refs, p => r => a => [ `@Autowired`, `List<${fetcherInterfaceName ( params, r, a )}> ${fetcherVariableName ( params, r, a )};` ] );
+  let fetchersFromResolvers: [ string, string ][] = mapRestAndResolver ( refs, p => r => ( { resolver } ) => [
     `@Autowired`,
     `List<${fetcherInterfaceForResolverName ( params, r, resolver )}> ${fetcherVariableNameForResolver ( params, r, resolver )};` ] );
   let fetchers: string[] = unique ( [ ...fetchersFromActions, ...fetchersFromResolvers ], t => t[ 1 ] ).flat ()
@@ -71,7 +72,9 @@ export function makeAllJavaWiring<G> ( params: JavaWiringParams, ps: RefD<G>[], 
     ...params,
     imports: imports.join ( '\n' ),
     fetchers: fetchers.map ( s => '      ' + s ).join ( '\n' ),
-    wiring: wiring.map ( s => '          ' + s ).join ( '\n' )
+    wiring: wiring.map ( s => '          ' + s ).join ( '\n' ),
+    wiringPackage: wiringPackage ( params, ref ),
+    wiringClass: wiringName ( ref )
   } )
 }
 

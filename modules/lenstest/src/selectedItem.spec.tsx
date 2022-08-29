@@ -51,9 +51,9 @@ describe ( "selectedItem", () => {
     expect ( displaySelectedItem ( { data: [] }, { index: 999, mode: 'view', header: 'someTitle', showNofM: true }, () => {} ).html () ).toEqual ( '<div><h2>someTitle<span id="someId.nOfM"> 1000 / 0</span></h2><span id="someId">view/</span></div>' )
   } )
   it ( "should display the selected item  headerIfEmpty and data empty", () => {
-    expect ( displaySelectedItem ( { data: [] }, { index: 1, mode: 'view', headerIfEmpty: 'emptyHeader' }, () => {} ).html () ).toEqual ( '<div><h2><span id="someId.emptyHeader">headerIfEmpty</span></h2><span id="someId">view/</span></div>' )
-    expect ( displaySelectedItem ( { data: [] }, { index: 1, mode: 'view', header: 'theHeader', headerIfEmpty: 'emptyHeader' }, () => {} ).html () ).toEqual ( '<div><h2>theHeader<span id="someId.emptyHeader">headerIfEmpty</span></h2><span id="someId">view/</span></div>' )
-    expect ( displaySelectedItem ( { data: [] }, { index: 1, mode: 'view', header: 'theHeader', headerIfEmpty: 'emptyHeader', showNofM: true }, () => {} ).html () ).toEqual ( '<div><h2>theHeader<span id="someId.emptyHeader">headerIfEmpty</span></h2><span id="someId">view/</span></div>' )
+    expect ( displaySelectedItem ( { data: [] }, { index: 1, mode: 'view', headerIfEmpty: 'emptyHeader' }, () => {} ).html () ).toEqual ( '<div><h2><span id="someId.emptyHeader">emptyHeader</span></h2><span id="someId">view/</span></div>' )
+    expect ( displaySelectedItem ( { data: [] }, { index: 1, mode: 'view', header: 'theHeader', headerIfEmpty: 'emptyHeader' }, () => {} ).html () ).toEqual ( '<div><h2>theHeader<span id="someId.emptyHeader">emptyHeader</span></h2><span id="someId">view/</span></div>' )
+    expect ( displaySelectedItem ( { data: [] }, { index: 1, mode: 'view', header: 'theHeader', headerIfEmpty: 'emptyHeader', showNofM: true }, () => {} ).html () ).toEqual ( '<div><h2>theHeader<span id="someId.emptyHeader">emptyHeader</span></h2><span id="someId">view/</span></div>' )
   } )
   it ( "should display the selected item  headerIfEmpty and data not empty", () => {
     expect ( displaySelectedItem ( { data: [ 'a', 'b' ] }, { index: 1, mode: 'view', headerIfEmpty: 'emptyHeader' }, () => {} ).html () ).toEqual ( '<div><h2></h2><span id="someId">view/b</span></div>' )

@@ -1,6 +1,7 @@
 import { CombinedParams } from "../codegen/config";
 
 export const paramsForTest: CombinedParams = {
+  wiringPackage: 'wiring',
   extractData: `( status: number | undefined, body: any ) => body.data`,
   optionalsFile: "optionals",
   pagesFile: 'pages',

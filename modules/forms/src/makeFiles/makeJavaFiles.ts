@@ -6,7 +6,7 @@ import { detailsLog, GenerateLogLevel, NameAnd, safeArray, safeObject, safeStrin
 import { allMainPages, PageD, RefD, RestDefnInPageProperties } from "../common/pageD";
 import { addStringToEndOfList, indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";
-import { createTableSqlName, dbFetcherClassName, fetcherInterfaceForResolverName, fetcherInterfaceName, fetcherPackageName, getSqlName, mockFetcherClassName, mockFetcherClassNameForResolver, mockFetcherPackage, mutationClassName, providerPactClassName, queryClassName, queryPackage, resolverClassName, resolverName, restControllerFileName, restControllerName, sqlMapFileName } from "../codegen/names";
+import { createTableSqlName, dbFetcherClassName, fetcherInterfaceForResolverName, fetcherInterfaceName, fetcherPackageName, getSqlName, mockFetcherClassName, mockFetcherClassNameForResolver, mockFetcherPackage, mutationClassName, providerPactClassName, queryClassName, queryPackage, resolverClassName, resolverName, restControllerFileName, restControllerName, sqlMapFileName, wiringFileName } from "../codegen/names";
 import { makeGraphQlSchema } from "../codegen/makeGraphQlTypes";
 
 import { makeMockFetcherFor, makeMockFetchersForRest } from "../codegen/makeMockFetchers";
@@ -35,7 +35,8 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   const javaTestRoot = javaAppRoot + `/src/test/java/${params.thePackage.replace ( /\./g, '/' )}`
   const javaResourcesRoot = javaAppRoot + "/src/main/resources"
   const javaFetcherRoot = javaCodeRoot + "/" + params.fetcherPackage
-  const javaControllerRoot = javaCodeRoot + "/" + params.controllerPackage
+  const javaControllerRoot = javaCodeRoot + "/" + params.controllerPackage.replace ( /\./g, '/' )
+  const javaWiringRoot = javaCodeRoot + "/" + params.wiringPackage.replace ( /\./g, '/' )
   const javaMockFetcherRoot = javaCodeRoot + "/" + params.mockFetcherPackage
   const javaH2FetcherRoot = javaCodeRoot + "/" + params.dbFetcherPackage
   const javaQueriesPackages = javaCodeRoot + "/" + params.queriesPackage
@@ -52,6 +53,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   fs.mkdirSync ( `${javaResourcesRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaScriptRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaFetcherRoot}`, { recursive: true } )
+  fs.mkdirSync ( `${javaWiringRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaMockFetcherRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaH2FetcherRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaControllerRoot}`, { recursive: true } )
@@ -127,7 +129,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
     writeToFile ( fetcherFile, () => makeJavaFetcherInterfaceForResolver ( params, p, rest, resolver, javaType ), details )
   } )
 
-  writeToFile ( `${javaUtilsRoot}/${params.wiringClass}.java`, () => makeAllJavaWiring ( params, allRefs, directorySpec ), details )
+  // writeToFile ( `${javaUtilsRoot}/${params.wiringClass}.java`, () => makeAllJavaWiring ( params, allRefs, directorySpec ), details )
   templateFile ( `${javaUtilsRoot}/LoggedDataSource.java`, 'templates/raw/java/utils/LoggedDataSource.java', params, directorySpec, details )
   templateFile ( `${javaUtilsRoot}/Messages.java`, 'templates/raw/java/utils/Messages.java', params, directorySpec, details )
   templateFile ( `${javaUtilsRoot}/FocusonNotFound404Exception.java`, 'templates/raw/java/utils/FocusonNotFound404Exception.java', params, directorySpec, details )
@@ -195,7 +197,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
 
   allRefs.map ( p => {
     Object.entries ( p.rest ).map ( ( [ name, rdp ] ) => {
-      writeToFile ( javaControllerRoot + "/" + restControllerFileName (  p, rdp.rest ), () => makeSpringEndpointsFor ( params, p, name, rdp.rest ), details )
+      writeToFile ( javaControllerRoot + "/" + restControllerFileName ( p, rdp.rest ), () => makeSpringEndpointsFor ( params, p, name, rdp.rest ), details )
       let tables = rdp.rest.tables;
       if ( !tables ) return
       detailsLog ( logLevel, 2, `Creating rest files for ${p.name} ${name}` )
@@ -207,6 +209,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
 
       Object.entries ( safeObject ( rdp.rest.resolvers ) )
     } )
+    writeToFile ( `${javaWiringRoot}/${wiringFileName ( params, p )}`, () => makeAllJavaWiring ( params, p, directorySpec ), details )
 
   } )
   foldPagesToRestToMutationsAndResolvers<G, string[]> ( allRefs, [], {

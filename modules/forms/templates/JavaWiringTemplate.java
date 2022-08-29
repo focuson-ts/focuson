@@ -1,4 +1,4 @@
-package {thePackage}.{utilsPackage};
+package {wiringPackage};
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
@@ -23,9 +23,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import {thePackage}.{fetcherPackage}.IFetcher;
+import {thePackage}.{utilsPackage}.IManyGraphQl;
 import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
 
 {imports}
 
@@ -80,9 +82,7 @@ public class {wiringClass}  implements IManyGraphQl{
        .build();
     }
 
-    @Bean
     public GraphQL graphQL() {
         return get(IFetcher.mock);
     }
-
 }

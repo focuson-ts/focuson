@@ -44,8 +44,8 @@ describe ( "makeJavaResolversInterface", () => {
       "import java.util.List;",
       "import focuson.data.fetchers.IFetcher;",
       "",
-      "public interface CreatePlan_updateWithoutFetchCreatePlan_FFetcher extends IFetcher{",
-      "   public DataFetcher<update> updateWithoutFetchCreatePlan();",
+      "public interface CreatePlan_updateCreatePlan_FFetcher extends IFetcher{",
+      "   public DataFetcher<update> updateCreatePlan();",
       "}"
     ] )
   } )
@@ -54,8 +54,8 @@ describe ( "makeJavaResolversInterface", () => {
 
 describe ( "makeAllJavaWiring", () => {
   it ( "should make a java file which will power a graphql spring boot app", () => {
-    expect ( makeAllJavaWiring ( paramsForTest, [ EAccountsSummaryPD, RepeatingPageD ], { main: '.', backup: '.' } ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "package focuson.data.utils;",
+    expect ( makeAllJavaWiring ( paramsForTest, EAccountsSummaryPD, { main: '.', backup: '.' } ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+      "package focuson.data.wiring;",
       "import com.google.common.base.Charsets;",
       "import com.google.common.io.Resources;",
       "import graphql.GraphQL;",
@@ -78,38 +78,33 @@ describe ( "makeAllJavaWiring", () => {
       "import java.util.Map;",
       "import java.util.Optional;",
       "import focuson.data.fetchers.IFetcher;",
+      "import focuson.data.utils.IManyGraphQl;",
       "import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;",
       "import java.util.function.Function;",
       "import java.util.stream.Collectors;",
       "import focuson.data.fetchers.EAccountsSummary.CreatePlan_getCreatePlan_FFetcher;",
       "import focuson.data.fetchers.EAccountsSummary.CreatePlan_createCreatePlan_FFetcher;",
-      "import focuson.data.fetchers.EAccountsSummary.CreatePlan_updateWithoutFetchCreatePlan_FFetcher;",
+      "import focuson.data.fetchers.EAccountsSummary.CreatePlan_updateCreatePlan_FFetcher;",
       "import focuson.data.fetchers.EAccountsSummary.CreatePlan_deleteCreatePlan_FFetcher;",
       "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_getEAccountsSummary_FFetcher;",
       "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_stateinvalidateEAccountsSummary_FFetcher;",
-      "import focuson.data.fetchers.Repeating.RepeatingWholeData_createRepeatingLine_FFetcher;",
-      "import focuson.data.fetchers.Repeating.RepeatingWholeData_getRepeatingLine_FFetcher;",
       "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_getAccountSummaryDescription_FFetcher;",
       "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_balancesAndMonthlyCostResolver_FFetcher;",
       "import focuson.data.fetchers.EAccountsSummary.EAccountsSummary_totalMonthlyCost_FFetcher;",
       "@Component",
-      "public class Wiring  implements IManyGraphQl{",
+      "public class EAccountsSummaryWiring  implements IManyGraphQl{",
       "      @Autowired",
       "      List<CreatePlan_getCreatePlan_FFetcher> CreatePlan_get_FFetcher;",
       "      @Autowired",
       "      List<CreatePlan_createCreatePlan_FFetcher> CreatePlan_create_FFetcher;",
       "      @Autowired",
-      "      List<CreatePlan_updateWithoutFetchCreatePlan_FFetcher> CreatePlan_update_FFetcher;",
+      "      List<CreatePlan_updateCreatePlan_FFetcher> CreatePlan_update_FFetcher;",
       "      @Autowired",
       "      List<CreatePlan_deleteCreatePlan_FFetcher> CreatePlan_delete_FFetcher;",
       "      @Autowired",
       "      List<EAccountsSummary_getEAccountsSummary_FFetcher> EAccountsSummary_get_FFetcher;",
       "      @Autowired",
       "      List<EAccountsSummary_stateinvalidateEAccountsSummary_FFetcher> EAccountsSummary_state_invalidate_FFetcher;",
-      "      @Autowired",
-      "      List<RepeatingWholeData_createRepeatingLine_FFetcher> RepeatingWholeData_create_FFetcher;",
-      "      @Autowired",
-      "      List<RepeatingWholeData_getRepeatingLine_FFetcher> RepeatingWholeData_get_FFetcher;",
       "      @Autowired",
       "      List<EAccountsSummary_getAccountSummaryDescription_FFetcher> EAccountsSummary_getAccountSummaryDescription_FFetcher;",
       "      @Autowired",
@@ -156,18 +151,15 @@ describe ( "makeAllJavaWiring", () => {
       "       return RuntimeWiring.newRuntimeWiring()",
       "          .type(newTypeWiring('Query').dataFetcher('getCreatePlan', find(CreatePlan_getCreatePlan_FFetcher.class, CreatePlan_get_FFetcher, dbName, f ->f.getCreatePlan())))",
       "          .type(newTypeWiring('Mutation').dataFetcher('createCreatePlan', find(CreatePlan_createCreatePlan_FFetcher.class, CreatePlan_create_FFetcher, dbName, f ->f.createCreatePlan())))",
-      "          .type(newTypeWiring('Mutation').dataFetcher('updateWithoutFetchCreatePlan', find(CreatePlan_updateWithoutFetchCreatePlan_FFetcher.class, CreatePlan_update_FFetcher, dbName, f ->f.updateWithoutFetchCreatePlan())))",
+      "          .type(newTypeWiring('Mutation').dataFetcher('updateCreatePlan', find(CreatePlan_updateCreatePlan_FFetcher.class, CreatePlan_update_FFetcher, dbName, f ->f.updateCreatePlan())))",
       "          .type(newTypeWiring('Mutation').dataFetcher('deleteCreatePlan', find(CreatePlan_deleteCreatePlan_FFetcher.class, CreatePlan_delete_FFetcher, dbName, f ->f.deleteCreatePlan())))",
       "          .type(newTypeWiring('Query').dataFetcher('getEAccountsSummary', find(EAccountsSummary_getEAccountsSummary_FFetcher.class, EAccountsSummary_get_FFetcher, dbName, f ->f.getEAccountsSummary())))",
       "          .type(newTypeWiring('Mutation').dataFetcher('stateinvalidateEAccountsSummary', find(EAccountsSummary_stateinvalidateEAccountsSummary_FFetcher.class, EAccountsSummary_state_invalidate_FFetcher, dbName, f ->f.stateinvalidateEAccountsSummary())))",
-      "          .type(newTypeWiring('Mutation').dataFetcher('createRepeatingLine', find(RepeatingWholeData_createRepeatingLine_FFetcher.class, RepeatingWholeData_create_FFetcher, dbName, f ->f.createRepeatingLine())))",
-      "          .type(newTypeWiring('Query').dataFetcher('getRepeatingLine', find(RepeatingWholeData_getRepeatingLine_FFetcher.class, RepeatingWholeData_get_FFetcher, dbName, f ->f.getRepeatingLine())))",
       "          .type(newTypeWiring('EAccountSummary').dataFetcher('description', find(EAccountsSummary_getAccountSummaryDescription_FFetcher.class, EAccountsSummary_getAccountSummaryDescription_FFetcher, dbName, f ->f.getAccountSummaryDescription())))",
       "          .type(newTypeWiring('EAccountsSummary').dataFetcher('balancesAndMonthlyCost', find(EAccountsSummary_balancesAndMonthlyCostResolver_FFetcher.class, EAccountsSummary_balancesAndMonthlyCostResolver_FFetcher, dbName, f ->f.balancesAndMonthlyCostResolver())))",
       "          .type(newTypeWiring('BalancesAndMonthlyCost').dataFetcher('totalMonthlyCost', find(EAccountsSummary_totalMonthlyCost_FFetcher.class, EAccountsSummary_totalMonthlyCost_FFetcher, dbName, f ->f.totalMonthlyCost())))",
       "       .build();",
       "    }",
-      "    @Bean",
       "    public GraphQL graphQL() {",
       "        return get(IFetcher.mock);",
       "    }",
@@ -229,7 +221,7 @@ describe ( "findAllResolvers2", () => {
       { "isRoot": true, "javaType": "Map<String,Object>", needsObjectInOutput: true, "name": "createCreatePlan", "parent": "Mutation", "resolver": "createCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
     )
     expect ( findQueryMutationResolver ( createPlanRestD, "update" ) ).toEqual (
-      { "isRoot": true, "javaType": "Map<String,Object>", "name": "updateWithoutFetchCreatePlan", "needsObjectInOutput": true, "parent": "Mutation", "resolver": "updateWithoutFetchCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" }, )
+      { "isRoot": true, "javaType": "Map<String,Object>", "name": "updateCreatePlan", "needsObjectInOutput": true, "parent": "Mutation", "resolver": "updateCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" } )
     expect ( findQueryMutationResolver ( createPlanRestD, "delete" ) ).toEqual (
       { "isRoot": true, "javaType": "Map<String,Object>", needsObjectInOutput: false, "name": "deleteCreatePlan", "parent": "Mutation", "resolver": "deleteCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" },
     )
@@ -285,20 +277,11 @@ describe ( "findAllResolvers2", () => {
   } )
   it ( "findAllResolversFor with children - with mutations", () => {
     expect ( findAllResolversFor ( createPlanRestD, 'update' ) ).toEqual ( [
-      { "isRoot": true, "javaType": "Map<String,Object>", "name": "updateWithoutFetchCreatePlan", "needsObjectInOutput": true, "parent": "Mutation", "resolver": "updateWithoutFetchCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" } ] )
+      { "isRoot": true, "javaType": "Map<String,Object>", "name": "updateCreatePlan", "needsObjectInOutput": true, "parent": "Mutation", "resolver": "updateCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" } ] )
   } )
   it ( "findAllResolversFor simple", () => {
     expect ( findAllResolversFor ( createPlanRestD, 'get' ) ).toEqual ( [
-      {
-        "isRoot": true,
-        "javaType": "Map<String,Object>",
-        "name": "getCreatePlan",
-        "needsObjectInOutput": true,
-        "parent": "Query",
-        "resolver": "getCreatePlan",
-        "sample": [],
-        "samplerName": "sampleCreatePlan"
-      }
+      { "isRoot": true, "javaType": "Map<String,Object>", "name": "getCreatePlan", "needsObjectInOutput": true, "parent": "Query", "resolver": "getCreatePlan", "sample": [], "samplerName": "sampleCreatePlan" }
     ] )
   } )
 

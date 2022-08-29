@@ -1,9 +1,9 @@
 import { isHeaderLens, postFixForEndpoint, RestD, RestParams, stateToNameAndUrlAndParamsForState } from "../common/restD";
-import { endPointName, mutationClassName, mutationMethodName, mutationVariableName, queryClassName, queryName, queryPackage, restControllerName, restControllerPackage, sampleName, sqlMapName, sqlMapPackageName } from "./names";
+import { endPointName, mutationClassName, mutationMethodName, mutationVariableName, queryClassName, queryName, queryPackage, restControllerName, restControllerPackage, sampleName, sqlMapName, sqlMapPackageName, wiringName } from "./names";
 import { JavaWiringParams } from "./config";
 import { actionsEqual, beforeSeparator, isRestStateChange, RestAction, safeArray, safeObject, toArray, unique } from "@focuson/utils";
 import { indentList, paramsForRestAction } from "./codegen";
-import { isRepeatingDd } from "../common/dataD";
+import { CompDataD, isRepeatingDd } from "../common/dataD";
 import { RefD } from "../common/pageD";
 import { getRestTypeDetails, getUrlForRestAction, RestActionDetail, restActionForName, restActionToDetails } from "@focuson/rest";
 import { AccessCondition, allInputParamNames, allOutputParams, displayParam, importForTubles, isMessageMutation, isSelectMutationThatIsAList, isSqlMutationThatIsAList, javaTypeForOutput, MutationDetail, parametersFor } from "../common/resolverD";
@@ -110,6 +110,15 @@ function makeReturnStatement<G> ( params: JavaWiringParams, errorPrefix: string,
     [ `          return Transform.result(graphQL.get(${dbNameString}),${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( errorPrefix, r, restAction )}), ${selectionFromData}, msgs);` ] :
     [ `         return  ResponseEntity.ok(msgs.emptyResult());` ];
 }
+function getMakeJsonString<G> ( hasBody: boolean | undefined, dataD: CompDataD<G> ) {
+  if ( hasBody ) {
+    if ( isRepeatingDd ( dataD ) )
+      return [ `         List<Map<String,Object>> bodyAsJson = new ObjectMapper().readValue(body, List.class);` ]
+    else
+      return [ `         Map<String,Object> bodyAsJson = new ObjectMapper().readValue(body, Map.class);` ]
+  }
+  return []
+}
 function makeEndpoint<G> ( params: JavaWiringParams, p: RefD<G>, restName: string, r: RestD<G>, restAction: RestAction ): string[] {
   let safeParams: RestParams = safeObject ( r.params );
   const hasDbName = safeParams[ 'dbName' ] !== undefined
@@ -120,7 +129,7 @@ function makeEndpoint<G> ( params: JavaWiringParams, p: RefD<G>, restName: strin
   const callMutations = callMutationsCode ( p, restName, r, restAction, dbNameString );
   const errorPrefix = `${p.name}.rest[${restName}] ${JSON.stringify ( restName )}`
   const hasBody = restTypeDetails.params.needsObj
-  const makeJsonString = hasBody ? [ `         Map<String,Object> bodyAsJson = new ObjectMapper().readValue(body, Map.class);` ] : []
+  const makeJsonString = getMakeJsonString ( hasBody, r.dataDD )
   const openConnection = callMutations.length > 1 ? [ `        Connection connection = dataSource.getConnection(getClass());`,
     `        try  {`, ] : []
   const closeConnection = callMutations.length > 1 ? [ `        } finally {dataSource.close(getClass(),connection);}`, ] : []
@@ -172,18 +181,18 @@ function makeSqlEndpoint<B, G> ( params: JavaWiringParams, p: RefD<G>, restName:
     `      return ${sqlMapName ( p, restName, [] )}.allSql;`,
     `    }` ];
 }
-export function makeSpringEndpointsFor<G> ( params: JavaWiringParams, p: RefD<G>, restName: string, r: RestD<G> ): string[] {
-  const errorPrefix = `${p.name}.rest[${restName}] ${JSON.stringify ( restName )}`
-  const endpoints: string[] = r.actions.flatMap ( action => makeEndpoint ( params, p, restName, r, action ) )
-  const queries: string[] = r.actions.flatMap ( action => makeQueryEndpoint ( params, p, restName, errorPrefix, r, action ) )
-  const importForSql = r.tables === undefined ? [] : [ `import ${sqlMapPackageName ( params, p )}.${sqlMapName ( p, restName, [] )} ; ` ]
-  const auditImports = safeArray ( r.mutations ).map ( m => `import ${params.thePackage}.${params.mutatorPackage}.${p.name}.${mutationClassName ( r, m.restAction )};` )
+export function makeSpringEndpointsFor<G> ( params: JavaWiringParams, ref: RefD<G>, restName: string, r: RestD<G> ): string[] {
+  const errorPrefix = `${ref.name}.rest[${restName}] ${JSON.stringify ( restName )}`
+  const endpoints: string[] = r.actions.flatMap ( action => makeEndpoint ( params, ref, restName, r, action ) )
+  const queries: string[] = r.actions.flatMap ( action => makeQueryEndpoint ( params, ref, restName, errorPrefix, r, action ) )
+  const importForSql = r.tables === undefined ? [] : [ `import ${sqlMapPackageName ( params, ref )}.${sqlMapName ( ref, restName, [] )} ; ` ]
+  const auditImports = safeArray ( r.mutations ).map ( m => `import ${params.thePackage}.${params.mutatorPackage}.${ref.name}.${mutationClassName ( r, m.restAction )};` )
   const mutationVariables = indentList ( unique ( safeArray ( r.mutations ).flatMap ( m =>
     [ [ `@Autowired`, `${mutationClassName ( r, m.restAction )} ${mutationVariableName ( r, m.restAction )};` ] ] ), ( [ autowired, string ] ) => string ).flat () )
 
 
   return [
-    `package ${restControllerPackage ( params, p )};`,
+    `package ${restControllerPackage ( params, ref )};`,
     '',
     'import com.fasterxml.jackson.databind.ObjectMapper;',
     `import org.springframework.http.ResponseEntity;`,
@@ -191,8 +200,7 @@ export function makeSpringEndpointsFor<G> ( params: JavaWiringParams, p: RefD<G>
     `import org.springframework.http.HttpHeaders;`,
     `import org.springframework.http.HttpStatus;`,
     `import ${params.thePackage}.Sample;`,
-    `import ${queryPackage ( params, p )}.${queryClassName ( params, r )};`,
-    `import ${params.thePackage}.${params.utilsPackage}.IManyGraphQl;`,
+    `import ${queryPackage ( params, ref )}.${queryClassName ( params, r )};`,
     `import ${params.thePackage}.${params.fetcherPackage}.IFetcher;`,
     ...auditImports,
     `import org.springframework.beans.factory.annotation.Autowired;`,
@@ -201,6 +209,7 @@ export function makeSpringEndpointsFor<G> ( params: JavaWiringParams, p: RefD<G>
     `import ${params.thePackage}.${params.utilsPackage}.LoggedDataSource;`,
     `import ${params.thePackage}.${params.utilsPackage}.Messages;`,
     `import ${params.thePackage}.${params.controllerPackage}.Transform;`,
+    `import ${params.thePackage}.${params.wiringPackage}.${wiringName ( ref )};`,
     `import java.util.List;`,
     `import java.util.Map;`,
     `import java.util.HashMap;`,
@@ -211,14 +220,14 @@ export function makeSpringEndpointsFor<G> ( params: JavaWiringParams, p: RefD<G>
     '',
     `@RestController`,
     ...params.controllerAnnotations,
-    `public class ${restControllerName ( p, r )} {`,
+    `public class ${restControllerName ( ref, r )} {`,
     ``,
-    ...indentList ( [ `@Autowired`, `public IManyGraphQl graphQL;`, `@Autowired`, `public LoggedDataSource dataSource;` ] ),
+    ...indentList ( [ `@Autowired`, `public ${wiringName ( ref )} graphQL;`, `@Autowired`, `public LoggedDataSource dataSource;` ] ),
     ...mutationVariables,
     ...endpoints,
     ...queries,
-    ...makeSampleEndpoint ( params, p, restName, r, 'get' ),
-    ...makeSqlEndpoint ( params, p, restName, r ),
+    ...makeSampleEndpoint ( params, ref, restName, r, 'get' ),
+    ...makeSqlEndpoint ( params, ref, restName, r ),
     `  }` ]
   // ...makeCreateTableEndpoints ( params, r ),
 }

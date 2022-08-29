@@ -58,7 +58,7 @@ export function filterObject<T> ( t: NameAnd<T>, filter: ( [ name, t ]: [ string
 }
 
 export function safeArray<T> ( ts: T[] | undefined ) {
-  if ( ts !== undefined && !Array.isArray ( ts ) ) throw new Error ( `Should have an array. Instead have ${JSON.stringify ( ts )}` )
+  if ( ts  && !Array.isArray ( ts ) ) throw new Error ( `Should have an array. Instead have ${JSON.stringify ( ts )}` )
   return ts ? ts : []
 }
 

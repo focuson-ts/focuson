@@ -5,11 +5,12 @@ import { AllGuardCreator } from "./buttons/guardButton";
 import { makeButtons } from "./buttons/allButtons";
 import { GenerateLogLevel } from "@focuson/utils";
 import { generatedPages, generatedRefs } from "./focuson.config";
+import { CombinedParams } from "./codegen/config";
 
 
 const logLevel: GenerateLogLevel = 'detailed';
 
-generate ( logLevel, directorySpec, devAppConfig, {
+const params2: CombinedParams = {
     ...params,
     guardFnsFile: '../guardFns',
     controllerAnnotations: [ "@CrossOrigin()" ],
@@ -19,7 +20,8 @@ generate ( logLevel, directorySpec, devAppConfig, {
     thePackage: 'somepackage.somepostfix.another',
     theme: 'theme-dark',
     debugLevel: 'debug',
-  },
+};
+generate ( logLevel, directorySpec, devAppConfig, params2,
   javaOutputRoot, tsRoot, AllGuardCreator, makeButtons () ) ( generatedPages, generatedRefs )
 
 

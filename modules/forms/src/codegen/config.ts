@@ -1,4 +1,5 @@
 export interface JavaWiringParams {
+  wiringPackage: string;
   thePackage: string;
   applicationName: string,
   fetcherPackage: string;
