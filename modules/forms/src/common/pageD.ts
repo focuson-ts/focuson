@@ -101,7 +101,7 @@ type NewPageCommandOrEmpty = 'empty' | NewPageChangeCommands
 export type InitialValue = NewPageCommandOrEmpty | NewPageCommandOrEmpty[]
 export interface RefD<G> extends HasName {
   rest: RestDefnInPage<G>,
-  refGroups?: string|string[]
+  refGroups?: string | string[]
   domain: DomainDefnInPage<G>,
   commonParams?: NameAnd<CommonLensRestParam<any>>,
 }
@@ -147,8 +147,11 @@ export function dataDsIn<G> ( pds: (RefD<G> | PageD<any, G>)[], stopAtDisplay?: 
   return result
 }
 
-export function allRestAndActions<G> ( pds: RefD<G>[] ): [ RefD<G>, string, RestDefnInPageProperties<G>, RestActionDetail ][] {
-  return unique ( pds.flatMap ( pd => {
+export function allRests<G> ( refs: RefD<G>[] ): RestD<G>[] {
+  return refs.flatMap ( ref => Object.values ( ref.rest ).map ( rdp => rdp.rest ) )
+}
+export function allRestAndActions<G> ( refs: RefD<G>[] ): [ RefD<G>, string, RestDefnInPageProperties<G>, RestActionDetail ][] {
+  return unique ( refs.flatMap ( pd => {
     return sortedEntries ( pd.rest ).flatMap ( ( [ name, rdp ] ) => {
       const y: [ RefD<G>, string, RestDefnInPageProperties<G>, RestActionDetail ][] = rdp.rest.actions.map ( a => [ pd, name, rdp, getRestTypeDetails ( a ) ] )
       return y

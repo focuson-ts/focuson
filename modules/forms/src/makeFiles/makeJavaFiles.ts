@@ -3,7 +3,7 @@ import { JavaWiringParams } from "../codegen/config";
 import fs from "fs";
 import { foldPagesToRestToMutationsAndResolvers, forEachRest, forEachRestAndActionsUsingRefs, mapRestAndResolverincRefs, RestD } from "../common/restD";
 import { detailsLog, GenerateLogLevel, NameAnd, safeArray, safeObject, safeString, sortedEntries, toArray, unique } from "@focuson/utils";
-import { allMainPages, PageD, RefD, RestDefnInPageProperties } from "../common/pageD";
+import { allMainPages, allRestAndActions, allRests, PageD, RefD, RestDefnInPageProperties } from "../common/pageD";
 import { addStringToEndOfList, indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";
 import { createTableSqlName, dbFetcherClassName, fetcherInterfaceForResolverName, fetcherInterfaceName, fetcherPackageName, getSqlName, mockFetcherClassName, mockFetcherClassNameForResolver, mockFetcherPackage, mutationClassName, providerPactClassName, queryClassName, queryPackage, resolverClassName, resolverName, restControllerFileName, restControllerName, sqlMapFileName, wiringFileName } from "../codegen/names";
@@ -34,6 +34,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   const javaCodeRoot = javaAppRoot + `/src/main/java/${params.thePackage.replace ( /\./g, '/' )}`
   const javaTestRoot = javaAppRoot + `/src/test/java/${params.thePackage.replace ( /\./g, '/' )}`
   const javaResourcesRoot = javaAppRoot + "/src/main/resources"
+  const javaGraphQlSchemaRoot = javaResourcesRoot + "/graphql"
   const javaFetcherRoot = javaCodeRoot + "/" + params.fetcherPackage
   const javaControllerRoot = javaCodeRoot + "/" + params.controllerPackage.replace ( /\./g, '/' )
   const javaWiringRoot = javaCodeRoot + "/" + params.wiringPackage.replace ( /\./g, '/' )
@@ -51,6 +52,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   fs.mkdirSync ( `${javaCodeRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaTestRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaResourcesRoot}`, { recursive: true } )
+  fs.mkdirSync ( `${javaGraphQlSchemaRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaScriptRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaFetcherRoot}`, { recursive: true } )
   fs.mkdirSync ( `${javaWiringRoot}`, { recursive: true } )
@@ -76,7 +78,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
 // process.exit(2)
 // This isn't the correct aggregation... need to think about this. Multiple pages can ask for more. I think... we''ll have to refactor the structure
   const raw = allRefs.flatMap ( x => sortedEntries ( x.rest ) ).map ( ( x: [ string, RestDefnInPageProperties<G> ] ) => x[ 1 ].rest );
-  const rests = unique ( raw, r => r.dataDD.name + ":" + r.namePrefix )
+  const rests: RestD<G>[] = unique ( raw, r => r.dataDD.name + ":" + r.namePrefix )
   detailsLog ( logLevel, 1, 'java file copies' )
   copyFiles ( javaScriptRoot, 'templates/scripts', directorySpec ) ( 'makeJava.sh', 'makeJvmPact.sh', 'template.java' )
 
@@ -118,7 +120,8 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
         ...walkSqlRoots ( findSqlRoot ( rest.tables ), r =>
           generateGetSql ( findSqlLinkDataFromRootAndDataD ( r, rest.dataDD, rest.params ) ) ).map ( addStringToEndOfList ( ';\n' ) ).flat () ] ), details )
 
-  writeToFile ( `${javaResourcesRoot}/${params.schema}`, () => makeGraphQlSchema ( rests ), details )
+  // writeToFile ( `${javaResourcesRoot}/${params.schema}`, () => makeGraphQlSchema ( rests ), details )
+  allRefs.forEach ( ref => writeToFile ( `${javaGraphQlSchemaRoot}/${ref.name}.graphql`, () => makeGraphQlSchema ( allRests ( [ ref ] ) ), details ) )
   forEachRestAndActionsUsingRefs ( pages, refs, p => rest => action => {
     let name = resolverName ( rest, action );
     let fetcherFile = `${javaCodeRoot}/${params.fetcherPackage}/${p.name}/${fetcherInterfaceForResolverName ( params, rest, name )}.java`;

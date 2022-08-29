@@ -70,6 +70,7 @@ export function makeAllJavaWiring<G> ( params: JavaWiringParams, ref: RefD<G>, d
   const str: string = loadFile ( 'templates/JavaWiringTemplate.java', directorySpec ).toString ()
   return applyToTemplate ( str, {
     ...params,
+    reference: ref.name,
     imports: imports.join ( '\n' ),
     fetchers: fetchers.map ( s => '      ' + s ).join ( '\n' ),
     wiring: wiring.map ( s => '          ' + s ).join ( '\n' ),

@@ -40,7 +40,7 @@ public class {wiringClass}  implements IManyGraphQl{
    private Map<String, GraphQL> cache = Collections.synchronizedMap(new HashMap<>()); //sucks and need to improve
    @PostConstruct
     public void init() throws IOException {
-       URL url = Resources.getResource("someSchema.graphql");
+       URL url = Resources.getResource("graphql/{reference}.graphql");
        sdl = Resources.toString(url, Charsets.UTF_8);
     }
 
