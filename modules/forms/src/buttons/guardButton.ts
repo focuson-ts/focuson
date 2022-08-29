@@ -55,7 +55,7 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
   fn: {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: FunctionCondition ) =>
-      `const ${guardName ( name )} =  guardFns.${guard.name}(state)`
+      `const ${guardName ( name )} =  guardFns.${guard.name}(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )})`
   },
   or: {
     imports: [],
@@ -162,6 +162,7 @@ export interface NotCondition {
 export interface FunctionCondition {
   condition: 'fn';
   name: string
+  path: string
 }
 export interface ALessThanB {
   condition: 'a<b'

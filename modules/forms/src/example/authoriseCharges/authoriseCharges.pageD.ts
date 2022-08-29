@@ -89,7 +89,7 @@ export function AuthoriseChargesPD ( c: AuthoriseCustomisation ): ExampleMainPag
     },
     guards: {
       brandSelected: { condition: 'isDefined', path: '~/selectedIndex' },
-      balanceZero: { condition: 'fn', name: 'balanceZero' }
+      balanceZero: { condition: 'fn', name: 'balanceZero', path: '~' }
     },
     variables: {
       fromApi: { constructedBy: 'path', path: '~/authorisedCharges/fromApi' },
