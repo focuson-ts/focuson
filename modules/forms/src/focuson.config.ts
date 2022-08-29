@@ -40,7 +40,7 @@ export const generatedPages: ExampleMainPage[] = [
   OnChangePageD,
   HelloWorldPage,
   AuthoriseChargesPD(DirectDebitAC),
-  // AuthoriseChargesPD(CreditAC),
+  AuthoriseChargesPD(CreditAC),
   PaymentsPageD,
   ListOfPaymentsPagePD,
   LinkedAccountDetailsPD,
