@@ -1,6 +1,6 @@
 import { applyPageOps, currentPageSelectionTail, fromPathGivenState, mainPage, PageSelection, PageSelectionContext, popPage } from "../pageSelection";
 import { LensProps, lensState, LensState, reasonFor } from "@focuson/state";
-import { HasDataFn, safeArray, safeString, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
+import { disabledFrom, HasDataFn, safeArray, safeFlatten, safeString, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
 import { Optional, Transform } from "@focuson/lens";
 import { HasRestCommandL, ModalChangeCommands, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand } from "@focuson/rest";
 import { getRefForValidateLogicToButton, hasValidationErrorAndReport } from "../validity";
@@ -22,7 +22,7 @@ export const confirmIt = <S, C extends PageSelectionContext<S>> ( state: LensSta
 
 interface ModalCommitCancelButtonProps<S, Context> extends LensProps<S, any, Context>, CustomButtonType {
   id: string;
-  enabledBy?: boolean;
+  enabledBy?: string[][];
   text?: string
   confirm?: string | boolean | ConfirmWindow;
 }
@@ -42,7 +42,7 @@ export function ModalCancelButton<S, Context extends ModalContext<S>> ( { id, st
     }
     if ( confirmIt ( state, confirm ) ) state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popPage ( state ) );
   }
-  return <button className={getButtonClassName ( buttonType )} id={id} disabled={enabledBy === false || !canCommitOrCancel ( state )} onClick={onClick}>{text ? text : 'Cancel'} </button>
+  return <button className={getButtonClassName ( buttonType )} id={id} disabled={disabledFrom(enabledBy) || !canCommitOrCancel ( state )} onClick={onClick}>{text ? text : 'Cancel'} </button>
 }
 
 
@@ -86,7 +86,7 @@ export function findClosePageTxs<S, C extends PageSelectionContext<S> & HasRestC
   const toPathTolens = fromPathGivenState ( state, ps => ps.slice ( 0, -1 ) );
   const fromPathTolens = fromPathGivenState ( state );
 
-  const focusLensForFrom = findFocusL ( errorPrefix, state, fromPathTolens, ps => pageOffset >=-1 ? ps : ps.slice ( 0, pageOffset + 1 ) )
+  const focusLensForFrom = findFocusL ( errorPrefix, state, fromPathTolens, ps => pageOffset >= -1 ? ps : ps.slice ( 0, pageOffset + 1 ) )
   const focusLensForTo = findFocusL ( errorPrefix, state, toPathTolens, ps => ps.slice ( 0, pageOffset ) )
   const restTransformers: Transform<S, any>[] = rest ? [ [ restL, ( ps: RestCommand[] ) => [ ...safeArray ( ps ), rest ] ] ] : []
   const copyOnCloseTxs: Transform<S, any>[] = safeArray ( copyOnClose ).map ( ( { from, to } ) =>
@@ -120,9 +120,11 @@ export function ModalCommitButton<S, Context extends ModalContext<S>> ( c: Modal
     if ( isConfirmWindow ( confirm ) ) {
       const { pageName } = confirm
       const realPageName = pageName ? pageName : 'confirm'
-      const ps: PageSelection = { pageName: realPageName, focusOn: '~',
-        changeOnClose: toArray(c.change),
-        arbitraryParams: { ...confirm, action: 'commit' }, time: state.context.dateFn (), pageMode: 'view' }
+      const ps: PageSelection = {
+        pageName: realPageName, focusOn: '~',
+        changeOnClose: toArray ( c.change ),
+        arbitraryParams: { ...confirm, action: 'commit' }, time: state.context.dateFn (), pageMode: 'view'
+      }
       const openTx: Transform<S, any> = [ state.context.pageSelectionL, applyPageOps ( 'popup', ps ) ]
       state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( openTx )
       return
@@ -138,6 +140,6 @@ export function ModalCommitButton<S, Context extends ModalContext<S>> ( c: Modal
   }
   // @ts-ignore
   const debug = state.main?.debug?.validityDebug
-  const ref = getRefForValidateLogicToButton ( id, debug, validate, enabledBy, canCommitOrCancel ( state ) )
+  const ref = getRefForValidateLogicToButton ( id, debug, validate,  enabledBy , canCommitOrCancel ( state ) )
   return <button ref={ref} className={getButtonClassName ( buttonType )} id={id} onClick={onClick}>{text ? text : 'Commit'}</button>
 }

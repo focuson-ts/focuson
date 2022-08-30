@@ -9,5 +9,5 @@ export interface EnabledBy extends CustomButtonType{
 }
 
 export function enabledByString ( e: EnabledBy ) {
-  return e.enabledBy ? `enabledBy={${e.enabledBy && toArray ( e.enabledBy ).map ( e => e + 'Guard' ).join ( '&&' )}} ` : ''
+  return e.enabledBy ? `enabledBy={[${e.enabledBy && toArray ( e.enabledBy ).map ( e => e + 'Guard' ).join ( ',' )}]} ` : ''
 }

@@ -1,6 +1,6 @@
 import { HasRestCommandL, RestChangeCommands } from "@focuson/rest";
 import { reasonFor } from "@focuson/state";
-import { DateFn, RestAction, RestResult, SimpleMessage } from "@focuson/utils";
+import { DateFn, disabledFrom, RestAction, RestResult, SimpleMessage } from "@focuson/utils";
 import { CommonStateProps, CustomButtonType, getButtonClassName } from "./common";
 import { confirmIt, getRefForValidateLogicToButton, HasPageSelectionLens, HasSimpleMessageL, hasValidationErrorAndReport, PageSelectionContext } from "@focuson/pages";
 import { useRef } from "react";
@@ -10,7 +10,7 @@ export interface RestButtonProps<S, C, MSGs> extends CommonStateProps<S, any, C>
   action: RestAction;
   confirm?: boolean | string;
   result?: RestResult;
-  enabledBy?: boolean;
+  enabledBy?: string[][];
   validate?: boolean;
   text?: string;
   onSuccess?: RestChangeCommands[];
@@ -44,5 +44,5 @@ export function RestButton<S, C extends PageSelectionContext<S> &HasRestCommandL
       state.copyWithLens ( state.context.restL ).transform ( old => [ ...old, { restAction: action, name: rest, changeOnSuccess: onSuccess, on404 } ], reasonFor ( 'RestButton', 'onClick', id ) )
   }
 
-  return <button ref={ref} onClick={onClick} className={getButtonClassName ( buttonType )}>{text ? text : name}</button>
+  return <button ref={ref} onClick={onClick} className={getButtonClassName ( buttonType )}>{text ? text : name} disabled={ disabledFrom(enabledBy)}</button>
 }

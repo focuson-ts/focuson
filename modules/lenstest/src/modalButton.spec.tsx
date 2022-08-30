@@ -33,6 +33,7 @@ const context: Context = {
 }
 
 let startState: StateForModalButtonTest = { pageSelection: [ { pageName: 'a', pageMode: 'view', time: 'now' } ], messages: [], restCommands: [] };
+
 describe ( "modal button", () => {
   it ( "should render with an id and title", () => {
     const state: LensState<StateForModalButtonTest, StateForModalButtonTest, Context> =

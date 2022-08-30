@@ -17,7 +17,7 @@ export interface CommonStateProps<S, T, Context> extends CommonComponentProps {
 }
 
 export interface InputEnabledProps {
-  enabledBy?: boolean
+  enabledBy?: string[][]
 }
 
 

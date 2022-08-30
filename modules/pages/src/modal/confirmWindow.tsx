@@ -12,7 +12,6 @@ interface ConfirmProps {
   messageText?: string
   confirmText?: string;
   cancelText?: string;
-
 }
 export interface ConfirmWindow extends ConfirmProps {
   type: 'window'

@@ -1,5 +1,5 @@
 import { focusPageClassName } from "./PageTemplate";
-import { createSimpleMessage, DateFn, safeArray } from "@focuson/utils";
+import { createSimpleMessage, DateFn, safeArray, safeFlatten } from "@focuson/utils";
 import { LensState, reasonFor } from "@focuson/state";
 import { HasSimpleMessageL } from "./simpleMessage";
 import React, { useEffect, useRef } from "react";
@@ -8,18 +8,19 @@ import React, { useEffect, useRef } from "react";
 export function getRefForDebounceLogic ( id: string, debounce: number | undefined ) {
   const ref = useRef<HTMLButtonElement> ( null );
 }
-export function getRefForValidateLogicToButton ( id: string, debug: boolean, validate: boolean | undefined, enabledBy: boolean | undefined, extraCondition?: boolean ): React.RefObject<HTMLButtonElement> {
+export function getRefForValidateLogicToButton ( id: string, debug: boolean, validate: boolean | undefined, enabledBy: string[][] | undefined, extraCondition?: boolean ): React.RefObject<HTMLButtonElement> {
+  const errors = safeFlatten ( enabledBy )
   const ref = useRef<HTMLButtonElement> ( null );
   useEffect ( () => {
     if ( ref.current === null ) throw Error ( `Id ${id} has a ref which is null` )
     if ( validate === false ) {
-      ref.current.disabled = enabledBy === false || extraCondition == false
+      ref.current.disabled = errors.length > 0 || extraCondition == false
       return
     }
     // console.log ( 'getRefForValidateLogicToButton', id, 'validate', validate)
     const valid = isValidToCommit ( focusPageClassName, debug )
     // console.log ( 'getRefForValidateLogicToButton - valid', id, valid )
-    let disabled = enabledBy === false || !valid || extraCondition == false;
+    let disabled = errors.length > 0 || !valid || extraCondition == false;
     // console.log ( 'getRefForValidateLogicToButton - disabled', id, disabled )
     ref.current.disabled = disabled
   } );

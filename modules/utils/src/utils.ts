@@ -1,11 +1,11 @@
-export interface HasDataFn{
+export interface HasDataFn {
   dateFn: DateFn
 }
 export type DateFn = () => string
 export const testDateFn: DateFn = () => "timeForTest";
 export const defaultDateFn: DateFn = () => new Date ().toISOString ();
 
-export interface HasName{
+export interface HasName {
   name: string
 }
 export interface CopyDetails {
@@ -58,7 +58,7 @@ export function filterObject<T> ( t: NameAnd<T>, filter: ( [ name, t ]: [ string
 }
 
 export function safeArray<T> ( ts: T[] | undefined ) {
-  if ( ts  && !Array.isArray ( ts ) ) throw new Error ( `Should have an array. Instead have ${JSON.stringify ( ts )}` )
+  if ( ts && !Array.isArray ( ts ) ) throw new Error ( `Should have an array. Instead have ${JSON.stringify ( ts )}` )
   return ts ? ts : []
 }
 
@@ -198,3 +198,15 @@ export const errorPromiseMonad = <S extends any> ( onError: ( s: S, e: any ) => 
   }, Promise.resolve ( s ) )
 
 }
+
+export function safeFlatten ( s: string[][] ): string[] {
+  return safeArray ( s ).flat ()
+}
+export function disabledFrom ( s?: string[][] ): boolean {
+  const flattened = safeFlatten ( s );
+  const length = flattened.length;
+  const result = length > 0;
+  console.log ( 'displayedFrom', s, 'flattened', flattened, length, result )
+  return result
+}
+

@@ -16,10 +16,10 @@ export interface SelectedPageDebug {
   selectedPageDebug?: boolean
 }
 
-export function SelectedPage<S, Context extends PageSelectionContext<S>> ( { state }: LensProps<S, any, Context> ) {
-  let combine = state.context.combine;
+export function SelectedPage<S, Context extends PageSelectionContext<S>> ( { state }: LensProps<S, any, Context> ): JSX.Element {
+  let combine: ( state: LensState<S, any, any>, pages: PageDetailsForCombine[] ) => JSX.Element = state.context.combine;
   let pages: PageDetailsForCombine[] = findSelectedPageDetails ( state );
-  return combine ? combine ( state, pages ) : <div key={0}>{pages}</div>
+  return combine ? combine ( state, pages ) : <div key={0}>Need to define combine<br />{JSON.stringify(pages)}</div>
 }
 
 export interface PageDetailsForCombine {

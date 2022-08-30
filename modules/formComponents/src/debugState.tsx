@@ -192,7 +192,7 @@ export interface DisplayGuardsProps {
 }
 export function DisplayGuards ( { guards }: DisplayGuardsProps ) {
   return <div className='display-guards'>
-    {guards.map ( ( [ name, value ], i ) => <span key={name} className={`guard-${value}`}>{i === 0 ? '' : ',  '}{name}:{`${value}`}</span> )}
+    {guards.map ( ( [ name, value ], i ) => <span key={name} className={`guard-${value}`}>{i === 0 ? '' : ',  '}{name}:{`${JSON.stringify(value)}`}</span> )}
   </div>
 }
 const findTagLens = <S extends any> ( { cd, fdd }: RestDetails<S, SimpleMessage>[string], id: string ) => fdd[ id ] ? fdd[ id ] : cd[ id ];

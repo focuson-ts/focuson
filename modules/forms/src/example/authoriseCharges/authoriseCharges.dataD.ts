@@ -7,14 +7,14 @@ import { memoise } from "@focuson/utils";
 
 
 export function summaryOfChargesDateDD ( c: AuthoriseCustomisation ): ExampleDataD {
-  return memoise('dataD', 'summaryOfChargesDateDD')(() =>({
+  return memoise('summaryOfChargesDateDD', c.pageName)(() =>({
     name: 'SummaryOfChargesDate',
     description: 'The information about a date that has charges on it',
     structure: { dateCreated: { dataDD: DateDD } }
   }))
 }
 export function summaryOfChargesDateTableDD ( c: AuthoriseCustomisation ): ExampleRepeatingD {
-  return memoise('dataD', 'summaryOfChargesDateTableDD')(() =>({
+  return memoise('summaryOfChargesDateTableDD', c.pageName)(() =>({
     name: 'SummaryOfChargesDateTable',
     description: 'The list of OneBrands',
     dataDD: summaryOfChargesDateDD ( c ),
@@ -24,7 +24,7 @@ export function summaryOfChargesDateTableDD ( c: AuthoriseCustomisation ): Examp
   }))
 }
 export function summaryOfChargesSearchDD ( c: AuthoriseCustomisation ): ExampleDataD {
-  return memoise('dataD', 'summaryOfChargesSearchDD')(() =>({
+  return memoise('summaryOfChargesSearchDD', c.pageName)(() =>({
     name: 'SummaryOfChargesSearch',
     description: 'search and result',
     structure: {
@@ -35,7 +35,7 @@ export function summaryOfChargesSearchDD ( c: AuthoriseCustomisation ): ExampleD
 }
 
 export function OneBrandDD ( c: AuthoriseCustomisation ): ExampleDataD {
-  return memoise('dataD', 'OneBrandDD')(() =>({
+  return memoise('OneBrandDD', c.pageName)(() =>({
     name: 'OneBrand',
     description: 'the information in a drop down allowing us to select a brand',
     structure: {
@@ -47,7 +47,7 @@ export function OneBrandDD ( c: AuthoriseCustomisation ): ExampleDataD {
 
 
 export function SelectOneBrandDD ( c: AuthoriseCustomisation ): ExampleRepeatingD {
-  return memoise('dataD', 'SelectOneBrandDD')(() =>({
+  return memoise('SelectOneBrandDD', c.pageName)(() =>({
     name: 'AuthorisePayments',
     description: 'The list of OneBrands',
     dataDD: OneBrandDD ( c ),
@@ -57,7 +57,7 @@ export function SelectOneBrandDD ( c: AuthoriseCustomisation ): ExampleRepeating
   }))
 }
 export function OneChargeDataDD ( c: AuthoriseCustomisation ): ExampleDataD {
-  return memoise ( 'dataD', 'OneChargeDataDD' ) ( () => ({
+  return memoise ( 'OneChargeDataDD', c.pageName ) ( () => ({
     name: 'OneChargeData',
     description: 'All the data we see on the main authoriseCharges page',
     table: c.authoriseTable,
@@ -76,7 +76,7 @@ export function OneChargeDataDD ( c: AuthoriseCustomisation ): ExampleDataD {
   }) )
 }
 export function ListOfChargesDD ( c: AuthoriseCustomisation ): ExampleRepeatingD {
-  return memoise ( 'dataD', 'ListOfChargesDD' ) ( () => ({
+  return memoise ( 'ListOfChargesDD', c.pageName ) ( () => ({
     name: 'ListOfCharges',
     description: 'All the charges',
     dataDD: OneChargeDataDD ( c ),
@@ -91,7 +91,7 @@ export function ListOfChargesDD ( c: AuthoriseCustomisation ): ExampleRepeatingD
   }) )
 }
 export function SummaryData ( c: AuthoriseCustomisation ): ExampleRepeatingD {
-  return  memoise ( 'dataD', 'SummaryData' ) ( () => ({
+  return  memoise ( 'SummaryData', c.pageName) ( () => ({
     name: 'SummaryData',
     description: 'This is actually the same data as ListOfChargesDD, however it has a different display',
     dataDD: OneChargeDataDD ( c ),
@@ -101,7 +101,7 @@ export function SummaryData ( c: AuthoriseCustomisation ): ExampleRepeatingD {
   }))
 }
 export function RememberedData ( c: AuthoriseCustomisation ): ExampleDataD {
-  return  memoise ( 'dataD', 'RememberedData' ) ( () => ({
+  return  memoise ( 'RememberedData', c.pageName ) ( () => ({
     name: 'Remembered',
     description: `the type to remember 'what was clicked on' in the summary table`,
     structure: {
@@ -115,7 +115,7 @@ export function RememberedData ( c: AuthoriseCustomisation ): ExampleDataD {
 
 
 export function AuthoriseChargesSummaryDataDD ( c: AuthoriseCustomisation ): ExampleDataD {
-  return  memoise ( 'dataD', 'AuthoriseChargesSummaryDataDD' ) ( () => ({
+  return  memoise ( 'AuthoriseChargesSummaryDataDD', c.pageName ) ( () => ({
     name: 'AuthoriseChargesSummaryData',
     description: 'All the data we see on the main authoriseCharges page',
     structure: {
@@ -125,7 +125,7 @@ export function AuthoriseChargesSummaryDataDD ( c: AuthoriseCustomisation ): Exa
   }))
 }
 export function AuthoriseChargesSummaryDD ( c: AuthoriseCustomisation ): ExampleDataD {
-  return  memoise ( 'dataD', 'AuthoriseChargesSummaryDD' ) ( () => ({
+  return  memoise ( 'AuthoriseChargesSummaryDD', c.pageName) ( () => ({
     name: 'AuthoriseChargesSummary',
     description: 'All the data we see on the main authoriseCharges page',
     structure: {
@@ -135,7 +135,7 @@ export function AuthoriseChargesSummaryDD ( c: AuthoriseCustomisation ): Example
   }))
 }
 export function SuspenseAccountLinesDD ( c: AuthoriseCustomisation ): ExampleDataD {
-  return  memoise ( 'dataD', 'SuspenseAccountLinesDD' ) ( () => ({
+  return  memoise ( 'SuspenseAccountLinesDD', c.pageName) ( () => ({
     name: 'SuspenseAccountLines',
     description: 'A single line in the suspense accountdetails',
     structure: {
@@ -147,7 +147,7 @@ export function SuspenseAccountLinesDD ( c: AuthoriseCustomisation ): ExampleDat
 }
 
 export function SuspenseAccountDetailsDD ( c: AuthoriseCustomisation ): ExampleRepeatingD {
-  return  memoise ( 'dataD', 'SuspenseAccountDetailsDD' ) ( () => ({
+  return  memoise ( 'SuspenseAccountDetailsDD', c.pageName ) ( () => ({
     name: 'SuspenseAccountDetails',
     description: 'the table of the account details',
     dataDD: SuspenseAccountLinesDD ( c ),
@@ -159,7 +159,7 @@ export function SuspenseAccountDetailsDD ( c: AuthoriseCustomisation ): ExampleR
 
 
 export function customerTransactionLineDD ( c: AuthoriseCustomisation ): ExampleDataD {
-  return  memoise ( 'dataD', 'customerTransactionLineDD' ) ( () => ({
+  return  memoise ( 'customerTransactionLineDD', c.pageName) ( () => ({
     name: 'CustomerTransactionLine',
     description: 'One line for the customer transaction',
     structure: {
@@ -174,7 +174,7 @@ export function customerTransactionLineDD ( c: AuthoriseCustomisation ): Example
 }
 
 export function CustomerTransactionsDD ( c: AuthoriseCustomisation ): ExampleRepeatingD {
-  return  memoise ( 'dataD', 'CustomerTransactionsDD' ) ( () => ({
+  return  memoise ( 'CustomerTransactionsDD', c.pageName) ( () => ({
     name: 'CustomerTransactions',
     description: 'the table of the customer transations',
     dataDD: customerTransactionLineDD ( c ),

@@ -5,6 +5,7 @@ import { ButtonD, ButtonWithControl, isButtonWithControl } from "../buttons/allB
 import { addBrackets, addStringToStartOfFirst, indentList } from "./codegen";
 import { GuardWithCondition, isGuardButton, MakeGuard } from "../buttons/guardButton";
 import { guardName } from "./names";
+import { defaultGuardMessage } from "./makeRender";
 
 export interface CreateButtonData<B, G> {
   params: TSParams,
@@ -42,7 +43,10 @@ const makeButtonGuardVariableFrom = <B extends ButtonD, G extends GuardWithCondi
   if ( isGuardButton<B, G> ( button ) && typeof button.by !== 'string' ) {
     const guardCreator = maker[ button.by.condition ]
     if ( !guardCreator ) throw Error ( `Don't know how to makeButtonGuardVariableFrom(${name},${button.by.condition} in page ${p.name}` )
-    return [ guardCreator.makeGuardVariable ( params, mainP, p, name, button.by ) ]
+    const makerString = guardCreator.makeGuardVariable ( params, mainP, p, name, button.by );
+    const message = defaultGuardMessage(`guard for ${name}`)
+    const guardAsMessages = makerString + `? []:["${message}"]`
+    return [ guardAsMessages ]
   }
   return []
 };

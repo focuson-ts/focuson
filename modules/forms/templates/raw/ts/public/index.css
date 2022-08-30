@@ -1,6 +1,18 @@
 /* @import url("./themes/{theme}/index.css"); */
 @import url("./themes/theme-dark/index.css");
 
+.errormessage {
+    visibility: hidden;
+}
+
+[aria-invalid="true"] {
+    outline: 2px solid red;
+}
+
+[aria-invalid="true"] ~ .errormessage {
+    visibility: visible;
+}
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

@@ -112,12 +112,15 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
 
   }
 }
-export interface GuardWithCondition {
+export interface Guard {
+  message?: string
+}
+export interface GuardWithCondition extends Guard{
   condition: string
 }
-export type Guards<G> = NameAnd<G>
+export type Guards<G extends Guard> = NameAnd<G>
 
-export type MakeGuard<G> = NameAnd<GuardCreator<G>>
+export type MakeGuard<G extends Guard> = NameAnd<GuardCreator<G>>
 
 export interface GuardCreator<G> {
   imports: string[];
@@ -126,77 +129,77 @@ export interface GuardCreator<G> {
 }
 
 
-export interface LocalVariableGuard {
+export interface LocalVariableGuard extends Guard {
   condition: 'in'
   path: string,
   values: NameAnd<any> | undefined
 }
-export interface ContainsGuard {
+export interface ContainsGuard extends Guard {
   condition: 'contains'
   path: string,
   values: string[]
 }
-export interface PageModeIs {
+export interface PageModeIs extends Guard {
   condition: 'pageModeIs'
   mode: PageMode | PageMode[]
 }
 
-export interface LocalVariableMoreThanZero {
+export interface LocalVariableMoreThanZero extends Guard {
   condition: '>0'
   path: string
 }
-export interface LocalVariableValueEquals<T> {
+export interface LocalVariableValueEquals<T> extends Guard {
   condition: 'equals' | 'notEquals';
   path: string;
   value: T
 }
 
-export interface AndOrCondition {
+export interface AndOrCondition extends Guard {
   condition: 'or' | 'and';
   conditions: string[]
 }
-export interface NotCondition {
+export interface NotCondition extends Guard {
   condition: 'not';
   cond: string
 }
-export interface FunctionCondition {
+export interface FunctionCondition extends Guard {
   condition: 'fn';
   name: string
   path: string
 }
-export interface ALessThanB {
+export interface ALessThanB extends Guard {
   condition: 'a<b'
   aPath: string;
   bPath: string;
 }
-export interface BinaryCondition {
+export interface BinaryCondition extends Guard {
   condition: '<#' | '>#'
   path: string;
   value: number
 }
-export interface NumberAndBooleanCondition {
+export interface NumberAndBooleanCondition extends Guard {
   condition: '>0 and true'
   number: string;
   boolean: string
 }
 
 
-export interface LocalVariableDefined {
+export interface LocalVariableDefined extends Guard {
   condition: 'isDefined';
   path: string;
 }
-export interface LocalVariableLessThanLengthMinusOne {
+export interface LocalVariableLessThanLengthMinusOne extends Guard {
   condition: '<arrayEnd'
   varPath: string
   arrayPath: string
 }
 
-export interface RegexCondition {
+export interface RegexCondition extends Guard {
   condition: 'regex',
   regex: RegExp,
   path: string
 }
-export interface PageModeCondition {
+export interface PageModeCondition extends Guard {
   condition: 'pageModeEquals',
   mode: PageMode | PageMode[]
 }

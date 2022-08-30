@@ -118,7 +118,7 @@ export const processParam = <B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G
   if ( dcdType.paramType === 'nameAndPaths' ) return processNameAndPaths ()
   if ( dcdType.paramType === 'pathValue' ) return processPath ( '.optJson()' )
   if ( dcdType.paramType === 'guards' ) {
-    if ( typeof s === 'string' || Array.isArray ( s ) ) return "{" + toArray<string> ( s ).map ( guardName ).join ( ' && ' ) + "}"
+    if ( typeof s === 'string' || Array.isArray ( s ) ) return "{[" + toArray<string> ( s ).map ( guardName ).join ( ',' ) + "]}"
     throw Error ( `${fullErrorPrefix} for guards. Could not process ${JSON.stringify ( s )}` )
   }
   throw new Error ( `${fullErrorPrefix} with type ${dcdType.paramType} which can't be processed` )
@@ -200,13 +200,20 @@ function makeLayoutPrefixPostFix<B, G> ( mainPage: MainPageD<B, G>, page: PageD<
     return { layoutPrefixString, layoutPostfixString };
   } else return { layoutPrefixString: defaultOpen, layoutPostfixString: defaultClose }
 }
+
+export function defaultGuardMessage ( name:string) {
+  return `${name} is not valid`;
+}
 export function makeGuardVariables<B, G extends GuardWithCondition> ( hasGuards: HasGuards<G>, makeGuard: MakeGuard<G>, params: TSParams, mainP: MainPageD<B, G>, page: PageD<B, G> ): string[] {
   if ( hasGuards.guards === undefined ) return []
   let guards = unsortedEntries ( hasGuards.guards ).map ( ( [ name, guard ] ) => {
     const maker = makeGuard[ guard.condition ]
     if ( !maker ) throw new Error ( `Don't know how to process guard with name ${name}: ${JSON.stringify ( guard )}` )
     const debugString = `;if (guardDebug)console.log('${mainP.name} '+ id + '.${name}', ${name}Guard);`
-    return maker.makeGuardVariable ( params, mainP, page, name, guard ) + debugString
+    const makerString = maker.makeGuardVariable ( params, mainP, page, name, guard );
+    const message = guard.message ? guard.message : defaultGuardMessage ( name )
+    const guardAsMessages = makerString + `? []:["${message}"]`
+    return guardAsMessages + debugString + `//Guard ${JSON.stringify(guard)}`
   } );
   return [ `const guardDebug=state.main?.debug?.guardDebug`, ...guards ];
 }

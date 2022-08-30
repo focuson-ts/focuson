@@ -3,7 +3,7 @@ import { reasonFor } from "@focuson/state";
 import React from "react";
 import { CheckboxProps, isCheckboxProps, makeInputChangeTxs, StringProps, TransformerProps } from "./labelAndInput";
 import { BooleanTransformer, BooleanYNTransformer, NumberTransformer, StringTransformer } from "./transformers";
-import { BooleanValidations, NameAnd, NumberValidations, StringValidations } from "@focuson/utils";
+import { BooleanValidations, disabledFrom, NameAnd, NumberValidations, StringValidations } from "@focuson/utils";
 
 import { FocusOnContext } from "@focuson/focuson";
 
@@ -40,7 +40,7 @@ export const CheckboxInput = <S, T extends any, P> ( tProps: CheckboxProps<T> ) 
       state.massTransform ( reasonFor ( 'BooleanInput', 'onChange', id ) ) ( [ state.optional, () => transformer ( e.target.checked ) ], ...makeInputChangeTxs ( id, parentState, onChange ) );
     return <><input type='checkbox' {...cleanInputProps ( props )}
                     checked={checkbox ( state.optJson () )}
-                    disabled={enabledBy === false || mode === 'view' || readonly}
+                    disabled={disabledFrom(enabledBy) || mode === 'view' || readonly}
                     onChange={( e ) => onChangeEventHandler ( e )}/>
       <span className="checkmark"></span>
     </>
@@ -54,7 +54,7 @@ export const NonCheckboxInput = <S, T extends any, P> ( tProps: StringProps<T> )
       state.massTransform ( reasonFor ( 'Input', 'onChange', id ) ) ( [ state.optional, () => transformer ( e.target.value ) ], ...makeInputChangeTxs ( id, parentState, onChange ) );
     const value: T | undefined = tProps.default === undefined ? state.optJson () : state.optJsonOr ( tProps.default );
     return <input className="input" type={type} {...cleanInputProps ( props )}
-                  disabled={enabledBy === false}
+                  disabled={disabledFrom(enabledBy)}
                   value={value === undefined || value === null ? undefined : `${value}`}
                   readOnly={mode === 'view' || readonly} onChange={( e ) => onChangeEventHandler ( transformer, e )}/>
   }

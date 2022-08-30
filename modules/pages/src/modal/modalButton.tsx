@@ -1,13 +1,13 @@
 import { LensState, reasonFor } from "@focuson/state";
 import { fromPathGivenState, mainPage, page, PageMode, PageOps, PageParams, PageSelection, PageSelectionContext, SetToLengthOnClose } from "../pageSelection";
-import { Optional, Transform } from "@focuson/lens";
+import { displayTransformsInState, Optional, Transform } from "@focuson/lens";
 import { CopyCommand, DeleteCommand, HasRestCommandL, ModalChangeCommands, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand, SetChangeCommand } from "@focuson/rest";
-import { anyIntoPrimitive, CopyDetails, DateFn, safeArray, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
+import { anyIntoPrimitive, CopyDetails, DateFn, disabledFrom, errorsToPopup, safeArray, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
 import { CustomButtonType, getButtonClassName } from "../common";
 import { isMainPageDetails, MultiPageDetails } from "../pageConfig";
 import { HasSimpleMessageL } from "../simpleMessage";
 import { HasTagHolderL } from "@focuson/template";
-import { displayTransformsInState } from "@focuson/lens";
+import { wrapWithErrors } from "../errors";
 
 export interface ModalDebug {
   modalDebug?: boolean
@@ -23,7 +23,7 @@ export interface CommonModalButtonProps<S, Context> extends CustomButtonType {
   text: string,
   dateFn: DateFn,
   pageOp?: PageOps;
-  enabledBy?: boolean,
+  enabledBy?: string[][],
   pageMode: PageMode,
   pageParams?: PageParams;
   rest?: RestCommand,
@@ -135,7 +135,7 @@ export function ModalButton<S extends any, Context extends PageSelectionContext<
         const main: S = state.optJson ();
         if ( main === undefined ) throw Error ()
         const display = displayTransformsInState<S> ( main, value );
-        console.log ( errorPrefix,name, display )
+        console.log ( errorPrefix, name, display )
       }
       return value
     }
@@ -146,6 +146,7 @@ export function ModalButton<S extends any, Context extends PageSelectionContext<
       ...log ( 'copyJustStrings', copyJustStrings ),
       ...log ( 'changeTxs', changeTxs ) );
   };
-  const disabled = enabledBy === false
-  return <button className={getButtonClassName ( buttonType )} id={id} disabled={disabled} onClick={onClick}>{text}</button>
+
+  return wrapWithErrors ( id, enabledBy, (errorId, errors, error, onMouseOver, onMouseOut ) =>
+    <button className={getButtonClassName ( buttonType )} onMouseOver={onMouseOver}onMouseOut={onMouseOut} id={id} aria-errormessage={errorId} aria-invalid={error} disabled={error} onClick={onClick}>{text}</button> )
 }

@@ -1,6 +1,6 @@
 import { FocusOnContext } from '@focuson/focuson';
 import { reasonFor } from '@focuson/state';
-import { NameAnd } from '@focuson/utils';
+import { disabledFrom, NameAnd } from '@focuson/utils';
 
 import { CommonStateProps, InputEnabledProps, InputOnChangeProps, LabelAlignment } from "./common";
 import { Label } from './label';
@@ -15,7 +15,7 @@ export interface TextareaProps<S, T, Context> extends CommonStateProps<S, T, Con
   buttons?: string[]
   scrollAfter?: string;
   noLabel?: boolean;
-  enabledBy?: boolean
+  enabledBy?: string[][]
 }
 
 export const cleanTextareaProps = <T extends NameAnd<any>> ( p: T ): T => {
@@ -42,7 +42,7 @@ export function TextAreaInput<S, T, Context extends FocusOnContext<S>> ( props: 
       onChange={( e ) => {
         state.massTransform ( reasonFor ( 'TextAreaInput', 'onChange', id ) ) ( [ state.optional, () => e.target.value ], ...makeInputChangeTxs ( id, parentState, onChange ) );
       }}
-      readOnly={mode === 'view' || readonly || enabledBy === false}
+      readOnly={mode === 'view' || readonly || disabledFrom(enabledBy)}
       value={`${state.optJsonOr ( '' )}`}
       className="input"
     />

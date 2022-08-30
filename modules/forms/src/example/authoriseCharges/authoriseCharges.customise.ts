@@ -19,5 +19,4 @@ export const CreditAC: AuthoriseCustomisation ={
   authoriseTable:authorisedChargesTableDD,
   namePrefix: 'cc',
   urlPrefix: '/api/cc'
-
 }

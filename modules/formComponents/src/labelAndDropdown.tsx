@@ -1,4 +1,4 @@
-import { NameAnd, safeObject } from "@focuson/utils";
+import { disabledFrom, NameAnd, safeObject } from "@focuson/utils";
 import { reasonFor } from "@focuson/state";
 import { HasPathToLens } from "@focuson/focuson";
 import { CommonStateProps, DropDownOnChangeProps, LabelAlignment } from "./common";
@@ -15,7 +15,7 @@ export interface DropdownProps<S, T, Context> extends CommonStateProps<S, T , Co
   readonly?: boolean
   pleaseSelect?: string;
   size?: number;
-  enabledBy?: boolean;
+  enabledBy?: string[][];
   required?: boolean;
 }
 export type ContextForDropdown<S> =  PageSelectionContext<S>& HasRestCommandL<S>& HasSimpleMessageL<S>& HasPathToLens<S>
@@ -53,7 +53,7 @@ export function Dropdown<S, T, Context extends ContextForDropdown<S>> ( props: D
   }
   return (
     <select className={`select ${cssValidInput}`} value={value}
-            disabled={mode === 'view' || readonly || enabledBy === false} id={id} required={required} size={size} aria-label={ariaLabel} onChange={onChangeEventHandler}>
+            disabled={mode === 'view' || readonly || disabledFrom(enabledBy)} id={id} required={required} size={size} aria-label={ariaLabel} onChange={onChangeEventHandler}>
       {pleaseSelect && !hasValid && <option selected>{pleaseSelect}</option>}
       {Object.entries ( safeObject ( enums ) ).map ( ( [ value, name ], key ) => (
         <option key={key} value={value}>{name}</option>

@@ -5,9 +5,10 @@ import { AuthorisedChargesRD, SelectOneBrandPageRD, SummaryOfChargeDatesRD } fro
 import { HideButtonsCD } from "../../buttons/hideButtonsCD";
 import { StringParam } from "../../common/restD";
 import { AuthoriseCustomisation } from "./authoriseCharges.customise";
+import { memoise } from "@focuson/utils";
 
 export function SummaryOfChargesPage ( c: AuthoriseCustomisation ): ExampleModalPage {
-  return {
+  return memoise('pageD','SummaryOfChargesPage')(() =>({
     name: 'SummaryOfCharges',
     pageType: 'ModalPopup',
     modes: [ 'view' ],
@@ -15,7 +16,7 @@ export function SummaryOfChargesPage ( c: AuthoriseCustomisation ): ExampleModal
     buttons: {
       close: { control: "ModalCancelButton" },
     }
-  }
+  }))
 }
 
 export function SelectChargesDatePage ( c: AuthoriseCustomisation ): ExampleModalPage {
@@ -38,7 +39,7 @@ export function ViewChargesPage ( c: AuthoriseCustomisation ): ExampleModalPage 
     layout: { component: HideButtonsCD, displayParams: { hide: [ 'selectDate' ] } },
     display: { dataDD: AuthoriseChargesSummaryDD ( c ), target: '~/authorisedCharges' },
     guards: {
-      somethingSelected: { condition: 'isDefined', path: '~/selectedCharge' }
+      somethingSelected: { condition: 'isDefined', path: '~/selectedCharge', message: 'You need to select something' }
     },
     buttons: {
       selectDate: {
@@ -85,10 +86,10 @@ export function AuthoriseChargesPD ( c: AuthoriseCustomisation ): ExampleMainPag
 
       summaryOfChargesDates: { dataDD: summaryOfChargesSearchDD ( c ) },
       selectedDateIndex: { dataDD: NatNumDd },
-      selectedDateItem: { dataDD: summaryOfChargesDateDD ( c ) },
+      selectedDateItem: { dataDD: summaryOfChargesDateDD ( c )  },
     },
     guards: {
-      brandSelected: { condition: 'isDefined', path: '~/selectedIndex' },
+      brandSelected: { condition: 'isDefined', path: '~/selectedIndex', message: 'you need to select a brand' },
       balanceZero: { condition: 'fn', name: 'balanceZero', path: '~' }
     },
     variables: {
