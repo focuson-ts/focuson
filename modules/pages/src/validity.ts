@@ -8,8 +8,7 @@ import React, { useEffect, useRef } from "react";
 export function getRefForDebounceLogic ( id: string, debounce: number | undefined ) {
   const ref = useRef<HTMLButtonElement> ( null );
 }
-export function getRefForValidateLogicToButton ( id: string, debug: boolean, validate: boolean | undefined, enabledBy: string[][] | undefined, extraCondition?: boolean, errorRef?: React.MutableRefObject<HTMLUListElement> ): React.RefObject<HTMLButtonElement> {
-  const errors = safeFlatten ( enabledBy )
+export function getRefForValidateLogicToButton ( id: string, debug: boolean, validate: boolean | undefined,errors: string[] | undefined,  errorRef?: React.MutableRefObject<HTMLUListElement> ): React.RefObject<HTMLButtonElement> {
   const ref = useRef<HTMLButtonElement> ( null );
   useEffect ( () => {
     if ( ref.current === null ) throw Error ( `Id ${id} has a ref which is null` )
@@ -20,7 +19,7 @@ export function getRefForValidateLogicToButton ( id: string, debug: boolean, val
     // console.log ( 'getRefForValidateLogicToButton', id, 'validate', validate)
     const validityDetails: [ string, string, boolean ][] = validate===false ? [] : findValidityDetails ( focusPageClassName, debug )
     const issues = validityDetails.filter ( v => v[ 2 ] === false ).map ( v => v[ 1 ] )
-    let disabled = errors.length > 0 || issues.length > 0 || extraCondition == false;
+    let disabled = errors.length > 0 || issues.length > 0
     // console.log ( 'getRefForValidateLogicToButton - disabled', id, disabled )
     ref.current.disabled = disabled
     const issues_s = issues.length > 1 ? 's' : ''

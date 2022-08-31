@@ -26,6 +26,6 @@ export function CommandButton<S, C extends FocusOnContext<S>> ( { id, state, lab
     if ( txs.length === 0 ) return
     state.massTransform ( reasonFor ( 'CommandButton', 'onClick', id ) ) ( ...txs )
   }
-  return wrapWithErrors ( id, enabledBy, ( errorProps, error ) =>
+  return wrapWithErrors ( id, enabledBy, [],( errorProps, error ) =>
     <button id={id} {...errorProps}  disabled={error} onClick={onClick} className={getButtonClassName ( buttonType )}>{label}</button>)
 }

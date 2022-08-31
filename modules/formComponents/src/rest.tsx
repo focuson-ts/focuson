@@ -44,8 +44,8 @@ export function RestButton<S, C extends PageSelectionContext<S> & HasRestCommand
       state.copyWithLens ( state.context.restL ).transform ( old => [ ...old, { restAction: action, name: rest, changeOnSuccess: onSuccess, on404 } ], reasonFor ( 'RestButton', 'onClick', id ) )
   }
 
-  return wrapWithErrors ( id, enabledBy, ( errorProps, error, errorRef ) =>
-    <button ref={getRefForValidateLogicToButton ( id, debug, validate, enabledBy, true, errorRef )}
+  return wrapWithErrors ( id, enabledBy, [], ( errorProps, error, errorRef, errors ) =>
+    <button ref={getRefForValidateLogicToButton ( id, debug, validate, errors, errorRef )}
             {...errorProps} onClick={onClick}
             className={getButtonClassName ( buttonType )}
             disabled={error}>{text ? text : name}</button> )

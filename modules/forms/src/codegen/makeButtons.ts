@@ -44,7 +44,7 @@ const makeButtonGuardVariableFrom = <B extends ButtonD, G extends GuardWithCondi
     const guardCreator = maker[ button.by.condition ]
     if ( !guardCreator ) throw Error ( `Don't know how to makeButtonGuardVariableFrom(${name},${button.by.condition} in page ${p.name}` )
     const makerString = guardCreator.makeGuardVariable ( params, mainP, p, name, button.by );
-    const message = defaultGuardMessage(`guard for ${name}`)
+    const message = defaultGuardMessage ( `guard for ${name}` )
     const guardAsMessages = makerString + `? []:["${message}"]`
     return [ guardAsMessages ]
   }
@@ -55,6 +55,7 @@ export function makeGuardButtonVariables<B extends ButtonD, G extends GuardWithC
   return sortedEntries ( p.buttons ).flatMap ( makeButtonGuardVariableFrom ( params, makeGuard, mainP, p ) )
 }
 export function makeButtonsFrom<B extends ButtonD, G> ( params: TSParams, makeGuard: MakeGuard<G>, makeButton: MakeButton<G>, mainPage: MainPageD<B, G>, p: PageD<B, G> ): string[] {
+  if ( !p.buttons ) throw Error ( `Page ${mainPage.name} - ${p.name} doesn't have a buttons section` )
   if ( Object.keys ( p.buttons ).length === 0 ) return [ '{}' ]
   return indentList ( indentList ( addBrackets ( `{`, '}' ) ( sortedEntries ( p.buttons ).flatMap ( ( [ name, button ] ) =>
     addBrackets ( `${name}:`, ',' ) ( makeButtonFrom<B, G> ( makeGuard, makeButton ) ( params ) ( mainPage, p ) ( [ name, button ] ) ) ) ) ) )

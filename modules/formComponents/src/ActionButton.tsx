@@ -13,6 +13,6 @@ export interface ActionButtonProps<S, C> {
 
 export function ActionButton<S, C> ( { id, state, action, text, enabledBy, paths }: ActionButtonProps<S, C> ) {
   const pathsAsLens = Object.fromEntries ( Object.entries ( paths ).map ( ( [ name, fn ] ) => [ name, fn ( state ) ] ) )
-  return  wrapWithErrors ( id, enabledBy, ( errorProps, error ) =>
+  return  wrapWithErrors ( id, enabledBy, [],( errorProps, error ) =>
     <button id={id} onClick={() => action ( state, id, pathsAsLens )} {...errorProps} disabled={error}>{text}</button>)
 }

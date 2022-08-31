@@ -20,7 +20,7 @@ export function SetStateButton<S, T, C> ( { id, label, state, buttonType, target
     if ( txs.length === 0 ) return
     state.massTransform ( reasonFor ( '}', 'onClick', id ) ) ( ...txs )
   }
-  return wrapWithErrors ( id, enabledBy, (errorProps, error) =>
+  return wrapWithErrors ( id, enabledBy, [],(errorProps, error) =>
     <button id={id} {...errorProps} disabled={error} onClick={onClick} className={getButtonClassName ( buttonType )}>{label}</button> )
 
 }

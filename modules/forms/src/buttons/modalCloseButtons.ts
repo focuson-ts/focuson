@@ -18,6 +18,7 @@ export interface ModalCancelButtonInPage extends EnabledBy {
   control: 'ModalCancelButton';
   text?: string;
   confirm?: boolean | string | ConfirmWindow;
+  closeTwoWindowsNotJustOne?: boolean
 }
 // export interface ModalConfirmWindowButtonInPage extends EnabledBy {
 //   control: 'ModalConfirmWindowButton';
@@ -38,6 +39,7 @@ export function makeModalCommitButton<B extends ModalCommitButtonInPage, G> (): 
       return [ [ `<ModalCommitButton id=${makeIdForButton ( button.text ? button.text : name )} ${enabledByString ( button )}`,
         ...opt ( 'text', button.text ),
         ...optT ( 'change', button.change ),
+        ...optT ( 'closeTwoWindowsNotJustOne', button.closeTwoWindowsNotJustOne ),
         ...optObj ( 'confirm', JSON.stringify ( button.confirm ) ),
         ...opt ( 'buttonType', button.buttonType ? button.buttonType : 'primary' ),
         ...optT ( 'validate', button.validate ),
@@ -63,7 +65,7 @@ export function makeModalCommitButton<B extends ModalCommitButtonInPage, G> (): 
 //   })
 // }
 
-export const makeSimpleButton: <G> ( imp: string ) => ButtonCreator<ModalCommitButtonInPage, G> = imp => ({
+export const makeModalCancelButton: <G> ( imp: string ) => ButtonCreator<ModalCommitButtonInPage, G> = imp => ({
   import: imp,
   makeButton: ( { name, button } ) =>
     [ [ `<${button.control} id=${makeIdForButton ( button.text ? button.text : name )} state={state} ${enabledByString ( button )}`,
@@ -76,7 +78,7 @@ export const makeSimpleButton: <G> ( imp: string ) => ButtonCreator<ModalCommitB
 
 export function makeModalCloseButtons<G> (): MakeButton<G> {
   return {
-    ModalCancelButton: makeSimpleButton ( "@focuson/pages" ),
+    ModalCancelButton: makeModalCancelButton ( "@focuson/pages" ),
     ModalCommitButton: makeModalCommitButton (),
     // ModalConfirmWindowButton: makeModalConfirmWindowButton ()
   }

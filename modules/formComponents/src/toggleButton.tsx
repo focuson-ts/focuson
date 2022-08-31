@@ -12,6 +12,6 @@ export interface ToggleButtonProps<S, T, Context> extends LensProps<S, boolean, 
 export function ToggleButton<S, T, Context extends PageSelectionContext<S>> ( props: ToggleButtonProps<S, boolean, Context> ) {
   const { id, state, buttonText, enabledBy } = props
   const text = replaceTextUsingPath ( state, buttonText )
-  return wrapWithErrors ( id, enabledBy, (errorProps, error) =>
+  return wrapWithErrors ( id, enabledBy, [], ( errorProps, error ) =>
     <button id={id} {...errorProps} disabled={error} onClick={() => state.setJson ( !state.optJson (), reasonFor ( 'ToggleButton', 'onClick', id ) )}>{text}</button> )
 }

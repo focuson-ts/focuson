@@ -19,7 +19,7 @@ export function DeleteStateButton<S, C> ( { id, label, states, buttonType, enabl
     if ( txs.length === 0 ) return
     states[ 0 ].massTransform ( reasonFor ( 'DeleteStateButton', 'onClick', id ) ) ( ...txs )
   }
-  return wrapWithErrors ( id, enabledBy, (errorProps, error) =>
+  return wrapWithErrors ( id, enabledBy, [],(errorProps, error) =>
     <button id={id} {...errorProps} disabled={error} onClick={onClick} className={getButtonClassName ( buttonType )}>{label}</button> )
 
 }

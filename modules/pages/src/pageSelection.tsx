@@ -99,6 +99,9 @@ export function page<S, Context extends HasPageSelectionLens<S>> ( context: Cont
 export function popPage<S, Context extends HasPageSelectionLens<S>> ( lensState: LensState<S, any, Context> ): Transform<S, PageSelection[]> {
   return [ lensState.context.pageSelectionL, ps => safeArray ( ps ).slice ( 0, -1 ) ]
 }
+export function popTwoPages<S, Context extends HasPageSelectionLens<S>> ( lensState: LensState<S, any, Context> ): Transform<S, PageSelection[]> {
+  return [ lensState.context.pageSelectionL, ps => safeArray ( ps ).slice ( 0, -2 ) ]
+}
 
 export function currentPageSelection<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context> ): PageSelection[] {
   return safeArray ( state.context.pageSelectionL.getOption ( state.main ) )

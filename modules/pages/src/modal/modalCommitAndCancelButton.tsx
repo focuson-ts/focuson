@@ -1,4 +1,4 @@
-import { applyPageOps, currentPageSelectionTail, fromPathGivenState, mainPage, PageSelection, PageSelectionContext, popPage } from "../pageSelection";
+import { applyPageOps, currentPageSelectionTail, fromPathGivenState, mainPage, PageSelection, PageSelectionContext, pageSelections, popPage, popTwoPages } from "../pageSelection";
 import { LensProps, lensState, LensState, reasonFor } from "@focuson/state";
 import { HasDataFn, safeArray, safeString, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
 import { Optional, Transform } from "@focuson/lens";
@@ -26,13 +26,20 @@ interface ModalCommitCancelButtonProps<S, Context> extends LensProps<S, any, Con
   enabledBy?: string[][];
   text?: string
   confirm?: string | boolean | ConfirmWindow;
+  closeTwoWindowsNotJustOne?: boolean;
+
 }
 interface ModalCommitButtonProps<S, C> extends ModalCommitCancelButtonProps<S, C> {
   change?: ModalChangeCommands | ModalChangeCommands[];
-  closeTwoWindowsNotJustOne?: boolean;
   validate?: boolean
 }
-export function ModalCancelButton<S, Context extends ModalContext<S>> ( { id, state, text, buttonType, confirm, enabledBy }: ModalCommitCancelButtonProps<S, Context> ) {
+function canClosePages<S, Context extends PageSelectionContext<S>> ( id, state: LensState<S, any, Context>, closeTwoWindowsNotJustOne: boolean ): [ boolean, string ] {
+  const pages = pageSelections ( state )
+  const result: [ boolean, string ] = [ closeTwoWindowsNotJustOne ? pages.length <= 2 : pages.length <= 1, 'Not enough pages open to close' ];
+  console.log ( `canClosePages`, pages.length, id, closeTwoWindowsNotJustOne, result )
+  return result;
+}
+export function ModalCancelButton<S, Context extends ModalContext<S>> ( { id, state, text, buttonType, confirm, enabledBy, closeTwoWindowsNotJustOne }: ModalCommitCancelButtonProps<S, Context> ) {
   let onClick = () => {
     if ( isConfirmWindow ( confirm ) ) {
       const { pageName } = confirm
@@ -42,10 +49,16 @@ export function ModalCancelButton<S, Context extends ModalContext<S>> ( { id, st
       state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( openTx )
       return
     }
-    if ( confirmIt ( state, confirm ) ) state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popPage ( state ) );
+    if ( confirmIt ( state, confirm ) )
+      if ( closeTwoWindowsNotJustOne )
+        state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popTwoPages ( state ) );
+      else
+        state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popPage ( state ) );
   }
-  return wrapWithErrors ( id, enabledBy, ( errorProps, error ) =>
-    <button className={getButtonClassName ( buttonType )} id={id} {...errorProps} disabled={error || !canCommitOrCancel ( state )} onClick={onClick}>{text ? text : 'Cancel'} </button> )
+  const canClick = canClosePages ( id, state, closeTwoWindowsNotJustOne );
+
+  return wrapWithErrors ( id, enabledBy, [ canClick ], ( errorProps, error ) =>
+    <button className={getButtonClassName ( buttonType )} id={id} {...errorProps} disabled={error} onClick={onClick}>{text ? text : 'Cancel'} </button> )
 }
 
 
@@ -58,9 +71,6 @@ function findFocusL<S, Context extends PageSelectionContext<S>> ( errorPrefix: s
   if ( onePage === undefined ) throw Error ( `${errorPrefix} cannot find details for main page '${mp.pageName}'. Legal names are [${Object.keys ( pages )}]` )
   if ( !isMainPageDetails ( onePage ) ) throw new Error ( `${errorPrefix} page ${mp.pageName} should be a MainPage but is a ${onePage.pageType}` )
   return onePage.lens
-}
-export function canCommitOrCancel<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ) {
-  return safeArray ( state.context.pageSelectionL.getOption ( state.main ) ).length > 1
 }
 
 function findSetLengthOnClose<S> ( lastPage: PageSelection, main: S, toPathTolens: ( path: string ) => Optional<S, any> ): Transform<S, any>[] {
@@ -151,8 +161,8 @@ export function ModalCommitButton<S, Context extends ModalContext<S>> ( c: Modal
   }
   // @ts-ignore
   const debug = state.main?.debug?.validityDebug
-  return wrapWithErrors ( id, enabledBy, ( props, error, errorRef ) =>
-    <button ref={getRefForValidateLogicToButton ( id, debug, validate, enabledBy, canCommitOrCancel ( state ), errorRef )}
+  return wrapWithErrors ( id, enabledBy, [ canClosePages ( id, state, closeTwoWindowsNotJustOne ) ], ( props, error, errorRef, allErrors ) =>
+    <button ref={getRefForValidateLogicToButton ( id, debug, validate, allErrors, errorRef )}
             disabled={error} {...props}
             className={getButtonClassName ( buttonType )}
             id={id} onClick={onClick}>{text ? text : 'Commit'}</button> )
