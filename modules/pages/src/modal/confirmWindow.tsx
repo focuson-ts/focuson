@@ -4,6 +4,7 @@ import { PageSelection, pageSelections, popPage } from "../pageSelection";
 import { Transform } from "@focuson/lens";
 import { DisplayArbitraryPageFn } from "../pageConfig";
 import { replaceTextUsingPath } from "../replace";
+import { ModalChangeCommands } from "@focuson/rest";
 
 interface ConfirmProps {
   pageName?: string;
@@ -33,6 +34,21 @@ export interface MakeConfirmCommitWindow<S, C> {
   cancelId: string;
   cancel: ( e: any ) => void
 }
+export const closeTwoPagesTxs = <S, C extends ModalContext<S>> ( errorPrefix: string, state: LensState<S, any, C> , otherCommands:  ModalChangeCommands[] ): Transform<S, any>[] => {
+  const ps = pageSelections ( state );
+
+  if ( ps.length < 2 ) throw Error ( `${errorPrefix} Software error in closeTwoPages,ps ${JSON.stringify ( ps )}\n\n${JSON.stringify ( state.main, null, 2 )}` )
+  const thisPage = ps[ ps.length - 1 ]
+  const thisPagetxs = findClosePageTxs ( errorPrefix, state, thisPage, -1, otherCommands )
+  if ( thisPagetxs === undefined ) throw Error ( `${errorPrefix} Software error in ConfirmCommitWindow - this page\n${JSON.stringify ( state.main, null, 2 )}` )
+
+  const modalPage = ps[ ps.length - 2 ]
+  const modalPageTxs = findClosePageTxs ( errorPrefix, state, modalPage, -2, [] )
+  if ( modalPageTxs === undefined ) throw Error ( `${errorPrefix} Software error in ConfirmCommitWindow - last page\n${JSON.stringify ( state.main, null, 2 )}` )
+
+  const pageCloseTx: Transform<S, any> = [ state.context.pageSelectionL, ( ps: PageSelection[] ) => ps.slice ( 0, -2 ) ]
+  return [ pageCloseTx, ...thisPagetxs, ...modalPageTxs ]
+};
 export const makeConfirmCommitWindow = <S, D, C extends ModalContext<S>> ( makeFn: ( makerProps: MakeConfirmCommitWindow<S, C> ) => JSX.Element ): DisplayArbitraryPageFn<S, D, C, ConfirmWindowProps> => ( state: LensState<S, D, C>, props: ConfirmWindowProps ) => {
   const id = 'confirm'
   const confirmId = id + '.confirm';
@@ -50,19 +66,12 @@ export const makeConfirmCommitWindow = <S, D, C extends ModalContext<S>> ( makeF
       state.massTransform ( reasonFor ( 'ConfirmCommitWindow', 'onClick', cancelId ) ) ( closePages )
       return
     }
-    const thisPagetxs = findClosePageTxs ( `ConfirmCommitWindow ${id}`, state, thisPage, -1, [] )
-    if ( thisPagetxs === undefined ) throw Error ( `Software error in ConfirmCommitWindow - this page\n${JSON.stringify ( state.main, null, 2 )}` )
-
-    const modalPage = ps[ ps.length - 2 ]
-    const modalPageTxs = findClosePageTxs ( `ConfirmCommitWindow ${id}`, state, modalPage, -2, [] )
-    if ( modalPageTxs === undefined ) throw Error ( `Software error in ConfirmCommitWindow - last page\n${JSON.stringify ( state.main, null, 2 )}` )
-
-    const pageCloseTx: Transform<S, any> = [ state.context.pageSelectionL, ( ps: PageSelection[] ) => ps.slice ( 0, -2 ) ]
-    state.massTransform ( reasonFor ( 'ConfirmCommitWindow', 'onClick', cancelId ) ) ( pageCloseTx, ...thisPagetxs, ...modalPageTxs )
+    const closePageTxs = closeTwoPagesTxs ( `ConfirmCommitWindow ${id}`, state , [])
+    state.massTransform ( reasonFor ( 'ConfirmCommitWindow', 'onClick', cancelId ) ) ( ...closePageTxs )
   }
 
   function cancel ( e: any ) { state.massTransform ( reasonFor ( 'ConfirmCommitWindow', 'onClick', cancelId ) ) ( popPage ( state ) );}
-  const e: JSX.Element = makeFn ( { state, id,props, confirm, confirmId, cancel, cancelId } )
+  const e: JSX.Element = makeFn ( { state, id, props, confirm, confirmId, cancel, cancelId } )
   return e
 };
 
@@ -70,7 +79,7 @@ export const makeConfirmCommitWindow = <S, D, C extends ModalContext<S>> ( makeF
 export function ConfirmCommitWindow<S, D, C extends ModalContext<S>> () {
   return makeConfirmCommitWindow<S, D, C> ( makerProps => {
     const { confirm, confirmId, cancel, cancelId, props, state } = makerProps
-    const { id,messageText, confirmText, cancelText, title, className } = props
+    const { id, messageText, confirmText, cancelText, title, className } = props
     const realText = messageText ? replaceTextUsingPath ( state, messageText ) : 'Are you sure?'
     return <div id={id} className={className ? className : 'modalPopup-content show-modal confirm-window'}>
       {title && <h1>{replaceTextUsingPath ( state, title )}</h1>}

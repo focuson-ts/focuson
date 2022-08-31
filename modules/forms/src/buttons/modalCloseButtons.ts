@@ -5,10 +5,10 @@ import { ModalChangeCommands } from "@focuson/rest";
 import { ConfirmWindow } from "@focuson/pages";
 
 
-
 export interface ModalCommitButtonInPage extends EnabledBy {
   control: 'ModalCommitButton';
   enabledBy?: string | string[];
+  closeTwoWindowsNotJustOne?: boolean
   validate?: boolean;
   confirm?: boolean | string | ConfirmWindow;
   change?: ModalChangeCommands | ModalChangeCommands[];
@@ -38,7 +38,7 @@ export function makeModalCommitButton<B extends ModalCommitButtonInPage, G> (): 
       return [ [ `<ModalCommitButton id=${makeIdForButton ( button.text ? button.text : name )} ${enabledByString ( button )}`,
         ...opt ( 'text', button.text ),
         ...optT ( 'change', button.change ),
-        ...optObj ( 'confirm', JSON.stringify(button.confirm) ),
+        ...optObj ( 'confirm', JSON.stringify ( button.confirm ) ),
         ...opt ( 'buttonType', button.buttonType ? button.buttonType : 'primary' ),
         ...optT ( 'validate', button.validate ),
         ` state={state} />` ].join ( ' ' ) ];
@@ -70,6 +70,7 @@ export const makeSimpleButton: <G> ( imp: string ) => ButtonCreator<ModalCommitB
       ...opt ( 'text', button.text ),
       ...optT ( 'confirm', button.confirm ),
       ...opt ( 'buttonType', button.buttonType ? button.buttonType : 'secondary' ),
+      ...optT ( 'closeTwoWindowsNotJustOne', button.closeTwoWindowsNotJustOne ),
       '/>' ].join ( ' ' ) ]
 })
 

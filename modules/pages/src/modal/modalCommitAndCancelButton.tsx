@@ -10,7 +10,8 @@ import React from "react";
 import { isMainPageDetails } from "../pageConfig";
 import { replaceTextUsingPath } from "../replace";
 import { HasTagHolderL } from "@focuson/template";
-import { ConfirmWindow, isConfirmWindow } from "./confirmWindow";
+import { closeTwoPagesTxs, ConfirmWindow, isConfirmWindow } from "./confirmWindow";
+import { wrapWithErrors } from "../errors";
 
 
 export const confirmIt = <S, C extends PageSelectionContext<S>> ( state: LensState<S, any, C>, c: boolean | string | undefined ) => {
@@ -28,6 +29,7 @@ interface ModalCommitCancelButtonProps<S, Context> extends LensProps<S, any, Con
 }
 interface ModalCommitButtonProps<S, C> extends ModalCommitCancelButtonProps<S, C> {
   change?: ModalChangeCommands | ModalChangeCommands[];
+  closeTwoWindowsNotJustOne?: boolean;
   validate?: boolean
 }
 export function ModalCancelButton<S, Context extends ModalContext<S>> ( { id, state, text, buttonType, confirm, enabledBy }: ModalCommitCancelButtonProps<S, Context> ) {
@@ -42,7 +44,7 @@ export function ModalCancelButton<S, Context extends ModalContext<S>> ( { id, st
     }
     if ( confirmIt ( state, confirm ) ) state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popPage ( state ) );
   }
-  return <button className={getButtonClassName ( buttonType )} id={id} disabled={disabledFrom(enabledBy) || !canCommitOrCancel ( state )} onClick={onClick}>{text ? text : 'Cancel'} </button>
+  return <button className={getButtonClassName ( buttonType )} id={id} disabled={disabledFrom ( enabledBy ) || !canCommitOrCancel ( state )} onClick={onClick}>{text ? text : 'Cancel'} </button>
 }
 
 
@@ -111,8 +113,16 @@ export function findClosePageTxs<S, C extends PageSelectionContext<S> & HasRestC
 
 export interface ModalContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasTagHolderL<S>, HasDataFn {}
 
+function closeOnePageTxs<S, Context extends ModalContext<S>> ( errorPrefix: string, state: LensState<S, any, Context>, change: ModalChangeCommands[] ): Transform<S, any>[] {
+  const { pageSelectionL } = state.context
+  const pageToClose = currentPageSelectionTail ( state )
+  const txs = findClosePageTxs ( errorPrefix, state, pageToClose, -1, toArray ( change ) )
+  if ( !txs ) return undefined
+  const pageCloseTx: Transform<S, any> = [ pageSelectionL, ( ps: PageSelection[] ) => ps.slice ( 0, -1 ) ]
+  return [ ...txs, pageCloseTx ];
+}
 export function ModalCommitButton<S, Context extends ModalContext<S>> ( c: ModalCommitButtonProps<S, Context> ) {
-  const { id, state, validate, confirm, enabledBy, buttonType, change, text } = c
+  const { id, state, validate, confirm, enabledBy, buttonType, change, text, closeTwoWindowsNotJustOne } = c
   const { dateFn, pageSelectionL } = state.context
   function onClick () {
     const realvalidate = validate === undefined ? true : validate
@@ -130,16 +140,17 @@ export function ModalCommitButton<S, Context extends ModalContext<S>> ( c: Modal
       return
     }
     if ( !confirmIt ( state, confirm ) ) return
-    const pageToClose = currentPageSelectionTail ( state )
-    const txs = findClosePageTxs ( `ModalCommit ${id}`, state, pageToClose, -1, toArray ( change ) )
-    const pageCloseTx: Transform<S, any> = [ pageSelectionL, ( ps: PageSelection[] ) => ps.slice ( 0, -1 ) ]
-    if ( txs )
-      state.massTransform ( reasonFor ( 'ModalCommit', 'onClick', id ) ) ( pageCloseTx, ...txs )
+    const pageCloseTxs = closeTwoWindowsNotJustOne ?
+      closeTwoPagesTxs ( `ModalCommit ${id}`, state, toArray ( change ) ) :
+      closeOnePageTxs ( `ModalCommit ${id}`, state, toArray ( change ) );
+    if ( pageCloseTxs.length > 0 )
+      state.massTransform ( reasonFor ( 'ModalCommit', 'onClick', id ) ) ( ...pageCloseTxs )
     else
       console.error ( 'ModalCommit button called and bad state: No last page', )
   }
   // @ts-ignore
   const debug = state.main?.debug?.validityDebug
-  const ref = getRefForValidateLogicToButton ( id, debug, validate,  enabledBy , canCommitOrCancel ( state ) )
-  return <button ref={ref} className={getButtonClassName ( buttonType )} id={id} onClick={onClick}>{text ? text : 'Commit'}</button>
+  const ref = getRefForValidateLogicToButton ( id, debug, validate, enabledBy, canCommitOrCancel ( state ) )
+  return wrapWithErrors ( id, enabledBy, ( errorId, errors, error ) =>
+    <button ref={ref} disabled={error} aria-errormessage={errorId} aria-invalid={error} className={getButtonClassName ( buttonType )} id={id} onClick={onClick}>{text ? text : 'Commit'}</button> )
 }

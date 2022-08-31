@@ -9,8 +9,8 @@ export const enabledByDataD: ExampleDataD = {
   name: 'EnabledBy',
   description: "",
   guards: {
-    yes: { condition: 'equals', path: 'dropdown', value: '"Y"' },
-    no: { condition: 'equals', path: 'dropdown', value: '"N"' }
+    yes: { condition: 'equals', path: 'dropdown', value: '"Y"', message: 'Select Yes to enable' },
+    no: { condition: 'equals', path: 'dropdown', value: '"N"', message: 'Select No to enable' }
   },
   layout: { component: WithTextLayoutCD, displayParams: { text: 'Some <b>Exciting</b> text {dropdown}' } },
   structure: {

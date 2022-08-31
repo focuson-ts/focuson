@@ -2,7 +2,7 @@ import { LensState, reasonFor } from "@focuson/state";
 import { fromPathGivenState, mainPage, page, PageMode, PageOps, PageParams, PageSelection, PageSelectionContext, SetToLengthOnClose } from "../pageSelection";
 import { displayTransformsInState, Optional, Transform } from "@focuson/lens";
 import { CopyCommand, DeleteCommand, HasRestCommandL, ModalChangeCommands, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand, SetChangeCommand } from "@focuson/rest";
-import { anyIntoPrimitive, CopyDetails, DateFn, disabledFrom, errorsToPopup, safeArray, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
+import { anyIntoPrimitive, CopyDetails, DateFn, safeArray, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
 import { CustomButtonType, getButtonClassName } from "../common";
 import { isMainPageDetails, MultiPageDetails } from "../pageConfig";
 import { HasSimpleMessageL } from "../simpleMessage";
@@ -147,6 +147,6 @@ export function ModalButton<S extends any, Context extends PageSelectionContext<
       ...log ( 'changeTxs', changeTxs ) );
   };
 
-  return wrapWithErrors ( id, enabledBy, (errorId, errors, error, onMouseOver, onMouseOut ) =>
-    <button className={getButtonClassName ( buttonType )} onMouseOver={onMouseOver}onMouseOut={onMouseOut} id={id} aria-errormessage={errorId} aria-invalid={error} disabled={error} onClick={onClick}>{text}</button> )
+  return wrapWithErrors ( id, enabledBy, ( errorId, errors, error ) =>
+    <button className={getButtonClassName ( buttonType )} id={id} aria-errormessage={errorId} aria-invalid={error} disabled={error} onClick={onClick}>{text}</button> )
 }

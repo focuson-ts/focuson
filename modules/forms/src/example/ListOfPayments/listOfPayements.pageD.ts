@@ -29,7 +29,7 @@ export const EditlistOfPaymentsPagePD: ExampleModalPage = {
   modes: [ 'edit' ],
   layout: { component: HideButtonsCD, displayParams: { hide: [ 'address' ] } },
   guards: {
-    canPrint: { condition: 'equals', value: false, path: '~/tempListOfPayments/alreadyPrinted' },
+    canPrint: { condition: 'equals', value: false, path: '~/tempListOfPayments/alreadyPrinted', message: 'Already been printed' },
     sortCodeValid: { condition: 'regex', regex: /^[0-9]{2}[-][0-9]{2}[-][0-9]{2}$/, path: '~/tempListOfPayments/newBankDetails/sortCode' }
   },
   buttons: {

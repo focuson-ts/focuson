@@ -8,8 +8,8 @@ export const EnabledByModalPageD: ExampleModalPage = {
   modes: [ 'view' ],
   display: { dataDD: enabledByDataD, target: '~/onChange' },
   guards: {
-    yesButton: { condition: 'equals', path: '~/onChange/dropdown', value: '"Y"' },
-    noButton: { condition: 'equals', path: '~/onChange/dropdown', value: '"N"' }
+    yesButton: { condition: 'equals', path: '~/onChange/dropdown', value: '"Y"', message: 'select yes' },
+    noButton: { condition: 'equals', path: '~/onChange/dropdown', value: '"N"', message: 'select no' }
   },
   buttons: {
     commit: { control: 'ModalCommitButton', enabledBy: 'yesButton', validate: false, change: { command: 'message', msg: 'Committed' } },

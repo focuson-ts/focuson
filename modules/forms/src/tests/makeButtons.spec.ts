@@ -87,7 +87,7 @@ describe ( "makeButtons", () => {
       "      // If there is a compile error here the focuson path might not exist",
       "      focusOnLensForCompileCheck={pageState(state)<domain.OccupationAndIncomeSummaryPageDomain>().focusOn('otherSourcesOfIncome')}",
       "    />,",
-      "    prevOccupation:<ListPrevButton id={`${id}.prevOccupation`} title='Prev' list={state.copyWithLens(OccupationAndIncomeSummaryOptionals.currentOccupation(identityL))} value={state.copyWithLens(OccupationAndIncomeSummaryOptionals.selected(identityL))} />,}"
+      "    prevOccupation:<ListPrevButton id={`${id}.prevOccupation`} title='Prev' list={state.copyWithLens(OccupationAndIncomeSummaryOptionals.currentOccupation(identityL))} value={state.copyWithLens(OccupationAndIncomeSummaryOptionals.selected(identityL))}  />,}"
     ] )
   } )
 
@@ -140,7 +140,7 @@ describe ( "makeButtons", () => {
   } )
   it ( "should make guard variables for buttons with guards", () => {
     expect ( makeGuardButtonVariables ( paramsForTest, AllGuardCreator, EnabledByPageD, EnabledByPageD ) ).toEqual ( [
-      `const pageGuardDirectGuard =  state.focusOn('dropdown').optJson() === "Y"`
+      "const pageGuardDirectGuard =  state.focusOn('dropdown').optJson() === \"Y\"? []:[\"guard for pageGuardDirect is not valid\"]"
     ] )
 
   } )

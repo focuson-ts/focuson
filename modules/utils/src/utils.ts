@@ -199,7 +199,7 @@ export const errorPromiseMonad = <S extends any> ( onError: ( s: S, e: any ) => 
 
 }
 
-export function safeFlatten ( s: string[][] ): string[] {
+export function safeFlatten ( s: string[][] | undefined ): string[] {
   return safeArray ( s ).flat ()
 }
 export function disabledFrom ( s?: string[][] ): boolean {

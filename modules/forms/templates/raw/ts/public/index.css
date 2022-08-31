@@ -1,16 +1,30 @@
 /* @import url("./themes/{theme}/index.css"); */
 @import url("./themes/theme-dark/index.css");
 
-.errormessage {
-    visibility: hidden;
+.tooltip-wrap {
+    position: relative;
 }
 
-[aria-invalid="true"] {
+.tooltip-wrap .errormessage {
+    display: none;
+    position: absolute;
+    bottom: 2rem;
+    left: 5%;
+    right: 5%;
+    background-color: #fff;
+    padding: .5em;
+    min-width: 10rem;
+}
+
+.tooltip-wrap:hover .errormessage {
     outline: 2px solid red;
+    display: block;
+    display: none; /*    Comment out when want error messages*/
 }
 
-[aria-invalid="true"] ~ .errormessage {
-    visibility: visible;
+.tooltip-wrap:hover .errormessage:empty {
+    outline: 2px solid red;
+    display: none;
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -20,15 +34,18 @@ input::-webkit-inner-spin-button {
     margin: 0;
 }
 
-.fetcher-debug{
+.fetcher-debug {
     border: 1px black;
 }
-.fetcher-debug>table>thead>th{
+
+.fetcher-debug > table > thead > th {
     text-align: left;
 }
+
 .debug-tag-undefined {
     background-color: red;
 }
+
 /* Firefox */
 input[type=number] {
     -moz-appearance: textfield;
@@ -816,12 +833,14 @@ pre {
     margin: 0 2px 2px 0;
 }
 
-.debug-page-data{
+.debug-page-data {
     min-width: 50vw;
 }
-.debug-page-title{
-     font-weight: bold;
+
+.debug-page-title {
+    font-weight: bold;
 }
+
 #debug-pages-container,
 #debug-state-container,
 #debug-context-container,
