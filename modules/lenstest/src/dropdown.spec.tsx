@@ -28,27 +28,21 @@ describe ( "Label and dropdown", () => {
   it ( "should display when the data is undefined", () => {
     expect ( dropDown ( 'someLabel', emptyS, () => {} ).html () ).toEqual (
       '<div class="dropdown-container ">' +
-      '<label for="someId" class="input-label">someLabel</label><div class="">' +
-      '<select class="select  invalid" id="someId"><option value="a">A</option><option value="b">B</option></select></div></div>' )
+      '<label for="someId" class="input-label">someLabel</label>' +
+      '<div class="">' +
+      '<select class="select  invalid" data-validationmessage="someLabel" id="someId"><option value="a">A</option><option value="b">B</option></select></div></div>' )
   } )
   it ( "should display when the data is null", () => {
     expect ( dropDown ( 'someLabel', { ...emptyS, data: null }, () => {} ).html () ).toEqual (
-      '<div class="dropdown-container ">' +
-      '<label for="someId" class="input-label">someLabel</label><div class="">' +
-      '<select class="select  invalid" id="someId"><option value="a">A</option><option value="b">B</option></select></div></div>' )
+      '<div class="dropdown-container "><label for="someId" class="input-label">someLabel</label><div class=""><select class="select  invalid" data-validationmessage="someLabel" id="someId"><option value="a">A</option><option value="b">B</option></select></div></div>' )
   } )
   it ( "should display when the data is set", () => {
     expect ( dropDown ( 'someLabel', { ...emptyS, data: 'a' }, () => {} ).html () ).toEqual (
-      '<div class="dropdown-container ">' +
-      '<label for="someId" class="input-label">someLabel</label><div class="">' +
-      '<select class="select " id="someId"><option value="a">A</option><option value="b">B</option></select></div></div>' )
+      '<div class="dropdown-container "><label for="someId" class="input-label">someLabel</label><div class=""><select class="select " data-validationmessage="someLabel" id="someId"><option value="a">A</option><option value="b">B</option></select></div></div>' )
   } )
   it ( "should display when the data is set to something that isn't in the enum", () => {
     expect ( dropDown ( 'someLabel', { ...emptyS, data: 'someData' }, () => {} ).html () ).toEqual (
-      '<div class="dropdown-container ">' +
-      '<label for="someId" class="input-label">someLabel</label>' +
-      '<div class=""><select class="select  invalid" id="someId"><option value="a">A</option><option value="b">B</option></select>' +
-      '</div></div>' )
+      '<div class="dropdown-container "><label for="someId" class="input-label">someLabel</label><div class=""><select class="select  invalid" data-validationmessage="someLabel" id="someId"><option value="a">A</option><option value="b">B</option></select></div></div>' )
   } )
   it ( "select items", () => {
     var remembered: any = {}
@@ -60,9 +54,6 @@ describe ( "Label and dropdown", () => {
   } )
   it ( "have a label that displays data using {} ", () => {
     expect ( dropDown ( 'label : {/data}', { ...emptyS, data: 'someData' }, () => {} ).html () ).toEqual (
-      '<div class="dropdown-container ">' +
-      '<label for="someId" class="input-label">label : someData</label><div class="">' +
-      '<select class="select  invalid" id="someId"><option value="a">A</option><option value="b">B</option></select>' +
-      '</div></div>' )
+      '<div class="dropdown-container "><label for="someId" class="input-label">label : someData</label><div class=""><select class="select  invalid" data-validationmessage="label : {/data}" id="someId"><option value="a">A</option><option value="b">B</option></select></div></div>' )
   } )
 } )

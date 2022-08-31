@@ -165,7 +165,7 @@ export const printRecordDD: ExampleDataD = {
       dataDD: { ...StringDD, emptyValue: undefined, allowUndefined: true, display: DataDrivenFixedOptionDropDownAndDetailsCD },
       displayParams: {
         pleaseSelect: 'Select...',
-        enabledBy: 'requestedByEnabled',
+        // enabledBy: 'requestedByEnabled',
         dontShowEmpty: true,
         details: {
           M: { valuePath: '~/accountDetails/main/fullname', dataPath: '~/accountDetails/main', display: RequestDetailsDD.name },
@@ -179,7 +179,7 @@ export const printRecordDD: ExampleDataD = {
     // requesterDetails: { dataDD: RequestDetailsDD, guard: { requestedBy: [ 'M', 'J' ] } },
     listOfPayments: { dataDD: ListOfPaymentsDD },
     includeSingleAndInitialDirectDebits: { dataDD: BooleanDD },
-    alreadyPrinted: { dataDD: { ...BooleanDD, resolver: 'alreadyPrinted' }, sample: [ false, true, false ] }, //will be hidden but leaving visible for now.
+    alreadyPrinted: { dataDD: { ...BooleanDD}, sample: [ false, true, false ] }, //will be hidden but leaving visible for now.
     authorisedByCustomer: { dataDD: authorisedByCustomerDD, guard: { requestedBy: [ 'N' ] } },
     datePrinted: { dataDD: StringDD, guard: { alreadyPrinted: [ 'true' ] } }
   }

@@ -15,7 +15,7 @@ export interface InputProps<S, T, Context> extends CommonStateProps<S, T, Contex
 }
 
 export const cleanInputProps = <T extends NameAnd<any>> ( p: T ): T => {
-  const result = { ...p, validationmessage: p.label }
+  const result = { ...p, 'data-validationmessage': p.label }
 
   delete result.allButtons
   delete result.state

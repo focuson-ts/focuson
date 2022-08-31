@@ -113,7 +113,7 @@ export const ListOfPaymentsPagePD: ExampleMainPage = {
     currentListOfPayments: { constructedBy: 'path', path: '#selectedItem/listOfPayments' }
   },
   guards: {
-    canPrint: { condition: 'equals', value: false, path: '~/display[~/selected]/alreadyPrinted' },
+    canPrint: { condition: 'equals', value: false, path: '~/display[~/selected]/alreadyPrinted', message: 'This record has already been printed' },
 
     needsStandingOrders: { condition: '>0 and true', number: '~/currentPayments/standingOrders', boolean: '#currentListOfPayments/standingOrders' },
     needsOpenBankingStandingOrders: { condition: '>0 and true', number: '~/currentPayments/openBankingStandingOrders', boolean: '#currentListOfPayments/openBankingStandingOrders' },
@@ -135,6 +135,7 @@ export const ListOfPaymentsPagePD: ExampleMainPage = {
       control: 'RestButton', action: { state: 'print' }, restName: 'onePayment',
       enabledBy: [ 'authorisedToSend', 'needsSomething', 'canPrint' ],
       confirm: 'Really?',
+      validate: false,
       deleteOnSuccess: '~/display',
     },
   },

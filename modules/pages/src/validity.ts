@@ -13,18 +13,21 @@ export function getRefForValidateLogicToButton ( id: string, debug: boolean, val
   const ref = useRef<HTMLButtonElement> ( null );
   useEffect ( () => {
     if ( ref.current === null ) throw Error ( `Id ${id} has a ref which is null` )
-    if ( validate === false ) {
-      ref.current.disabled = errors.length > 0 || extraCondition == false
-      return
-    }
+    // if ( validate === false ) {
+    //   ref.current.disabled = errors.length > 0 || extraCondition == false
+    //   return
+    // }
     // console.log ( 'getRefForValidateLogicToButton', id, 'validate', validate)
-    const validityDetails: [ string, string, boolean ][] = findValidityDetails ( focusPageClassName, debug )
+    const validityDetails: [ string, string, boolean ][] = validate===false ? [] : findValidityDetails ( focusPageClassName, debug )
     const issues = validityDetails.filter ( v => v[ 2 ] === false ).map ( v => v[ 1 ] )
     let disabled = errors.length > 0 || issues.length > 0 || extraCondition == false;
     // console.log ( 'getRefForValidateLogicToButton - disabled', id, disabled )
     ref.current.disabled = disabled
-    const s = issues.length > 1 ? 's' : ''
-    const allErrors = disabled ? [ ...errors, `${issues.length} validation issue${s}`, ...issues ] : errors
+    const issues_s = issues.length > 1 ? 's' : ''
+    const errors_s = errors.length > 1 ? 's' : ''
+    const errorsTitle = errors.length > 0 ? [ `<b>${errors.length} Guard${errors_s}:</b>` ] : []
+    const issuesTitle = issues.length > 0 ? [ `<b>${issues.length} validation issue${issues_s}:</b>` ] : []
+    const allErrors = disabled ? [ ...errorsTitle, ...errors, ...issuesTitle, ...issues ] : errors
     if ( errorRef ) {
       errorRef.current.innerHTML = allErrors.map ( e => `<li>${e}</li>` ).join ( '' )
     }
@@ -40,7 +43,7 @@ export function findValidityForInput ( thisPage: Element, debug: boolean ): [ st
     for ( var i = 0; i < inputs.length; i++ ) {
       const child = inputs[ i ];
       let id = child.getAttribute ( 'id' );
-      let labelForValidation = child.getAttribute ( 'validationmessage' )
+      let labelForValidation = child.getAttribute ( 'data-validationmessage' )
       let recordedId = id ? id : "noIdForThisElement"
 
       let validity = child.checkValidity ();
@@ -56,12 +59,12 @@ export function findValidityForSelect ( thisPage: Element, debug: boolean ): [ s
   if ( selects ) {
     for ( var i = 0; i < selects.length; i++ ) {
       const child = selects[ i ];
-      let id = child.getAttribute ( 'id' );
-      let clazz = child.getAttribute ( 'class' );
+      const id = child.getAttribute ( 'id' );
+      const clazz = child.getAttribute ( 'class' );
       const valid = !clazz || clazz.indexOf ( 'invalid' ) < 0
-      let recordedId = id ? id : "noIdForThisElement"
-      let labelForValidation = child.getAttribute ( 'labelforvalidation' )
-      let thisResult: [ string, string, boolean ] = [ recordedId, labelForValidation ? labelForValidation : recordedId, valid ];
+      const recordedId = id ? id : "noIdForThisElement"
+      const validationMessage = child.getAttribute ( 'data-validationmessage' )
+      const thisResult: [ string, string, boolean ] = [ recordedId, validationMessage ? validationMessage : recordedId, valid ];
       if ( debug ) console.log ( 'findValidityForSelect: ', id, thisResult )
       result.push ( thisResult )
     }
