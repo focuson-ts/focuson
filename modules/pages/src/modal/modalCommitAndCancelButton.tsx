@@ -1,6 +1,6 @@
 import { applyPageOps, currentPageSelectionTail, fromPathGivenState, mainPage, PageSelection, PageSelectionContext, popPage } from "../pageSelection";
 import { LensProps, lensState, LensState, reasonFor } from "@focuson/state";
-import { disabledFrom, HasDataFn, safeArray, safeFlatten, safeString, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
+import { HasDataFn, safeArray, safeString, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
 import { Optional, Transform } from "@focuson/lens";
 import { HasRestCommandL, ModalChangeCommands, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand } from "@focuson/rest";
 import { getRefForValidateLogicToButton, hasValidationErrorAndReport } from "../validity";
@@ -151,7 +151,9 @@ export function ModalCommitButton<S, Context extends ModalContext<S>> ( c: Modal
   }
   // @ts-ignore
   const debug = state.main?.debug?.validityDebug
-  const ref = getRefForValidateLogicToButton ( id, debug, validate, enabledBy, canCommitOrCancel ( state ) )
-  return wrapWithErrors ( id, enabledBy, ( props, error ) =>
-    <button ref={ref} disabled={error} {...props} className={getButtonClassName ( buttonType )} id={id} onClick={onClick}>{text ? text : 'Commit'}</button> )
+  return wrapWithErrors ( id, enabledBy, ( props, error, errorRef ) =>
+    <button ref={getRefForValidateLogicToButton ( id, debug, validate, enabledBy, canCommitOrCancel ( state ), errorRef )}
+            disabled={error} {...props}
+            className={getButtonClassName ( buttonType )}
+            id={id} onClick={onClick}>{text ? text : 'Commit'}</button> )
 }

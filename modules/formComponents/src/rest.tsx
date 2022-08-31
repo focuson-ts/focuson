@@ -1,8 +1,8 @@
 import { HasRestCommandL, RestChangeCommands } from "@focuson/rest";
 import { reasonFor } from "@focuson/state";
-import { DateFn, disabledFrom, RestAction, RestResult, SimpleMessage } from "@focuson/utils";
+import { DateFn, RestAction, RestResult, SimpleMessage } from "@focuson/utils";
 import { CommonStateProps, CustomButtonType, getButtonClassName } from "./common";
-import { confirmIt, getRefForValidateLogicToButton, HasPageSelectionLens, HasSimpleMessageL, hasValidationErrorAndReport, PageSelectionContext } from "@focuson/pages";
+import { confirmIt, getRefForValidateLogicToButton, HasSimpleMessageL, hasValidationErrorAndReport, PageSelectionContext } from "@focuson/pages";
 import { useRef } from "react";
 import { wrapWithErrors } from "@focuson/pages/dist/src/errors";
 
@@ -23,7 +23,6 @@ export interface RestButtonProps<S, C, MSGs> extends CommonStateProps<S, any, C>
 export function RestButton<S, C extends PageSelectionContext<S> & HasRestCommandL<S> & HasSimpleMessageL<S>> ( props: RestButtonProps<S, C, SimpleMessage> ) {
   const { id, rest, action, result, state, text, confirm, validate, dateFn, onSuccess, enabledBy, name, buttonType, on404 } = props
   const debug = false//just to stop spamming: should already have all the validations visible if debugging is on
-  const ref = getRefForValidateLogicToButton ( id, debug, validate, enabledBy )
   const debounceRef = useRef<Date> ( null )
 
 
@@ -45,6 +44,9 @@ export function RestButton<S, C extends PageSelectionContext<S> & HasRestCommand
       state.copyWithLens ( state.context.restL ).transform ( old => [ ...old, { restAction: action, name: rest, changeOnSuccess: onSuccess, on404 } ], reasonFor ( 'RestButton', 'onClick', id ) )
   }
 
-  return wrapWithErrors ( id, enabledBy, (errorProps, error) =>
-    <button ref={ref} {...errorProps} onClick={onClick} className={getButtonClassName ( buttonType )} disabled={error}>{text ? text : name}</button> )
+  return wrapWithErrors ( id, enabledBy, ( errorProps, error, errorRef ) =>
+    <button ref={getRefForValidateLogicToButton ( id, debug, validate, enabledBy, false, errorRef )}
+            {...errorProps} onClick={onClick}
+            className={getButtonClassName ( buttonType )}
+            disabled={error}>{text ? text : name}</button> )
 }

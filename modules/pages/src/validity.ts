@@ -8,7 +8,7 @@ import React, { useEffect, useRef } from "react";
 export function getRefForDebounceLogic ( id: string, debounce: number | undefined ) {
   const ref = useRef<HTMLButtonElement> ( null );
 }
-export function getRefForValidateLogicToButton ( id: string, debug: boolean, validate: boolean | undefined, enabledBy: string[][] | undefined, extraCondition?: boolean ): React.RefObject<HTMLButtonElement> {
+export function getRefForValidateLogicToButton ( id: string, debug: boolean, validate: boolean | undefined, enabledBy: string[][] | undefined, extraCondition?: boolean, errorRef?: React.MutableRefObject<HTMLUListElement> ): React.RefObject<HTMLButtonElement> {
   const errors = safeFlatten ( enabledBy )
   const ref = useRef<HTMLButtonElement> ( null );
   useEffect ( () => {
@@ -18,33 +18,40 @@ export function getRefForValidateLogicToButton ( id: string, debug: boolean, val
       return
     }
     // console.log ( 'getRefForValidateLogicToButton', id, 'validate', validate)
-    const valid = isValidToCommit ( focusPageClassName, debug )
-    // console.log ( 'getRefForValidateLogicToButton - valid', id, valid )
-    let disabled = errors.length > 0 || !valid || extraCondition == false;
+    const validityDetails: [ string, string, boolean ][] = findValidityDetails ( focusPageClassName, debug )
+    const issues = validityDetails.filter ( v => v[ 2 ] === false ).map ( v => v[ 1 ] )
+    let disabled = errors.length > 0 || issues.length > 0 || extraCondition == false;
     // console.log ( 'getRefForValidateLogicToButton - disabled', id, disabled )
     ref.current.disabled = disabled
+    const s = issues.length > 1 ? 's' : ''
+    const allErrors = disabled ? [ ...errors, `${issues.length} validation issue${s}`, ...issues ] : errors
+    if ( errorRef ) {
+      errorRef.current.innerHTML = allErrors.map ( e => `<li>${e}</li>` ).join ( '' )
+    }
   } );
   return ref
 }
 
 
-export function findValidityForInput ( thisPage: Element, debug: boolean ): [ string, boolean ][] {
+export function findValidityForInput ( thisPage: Element, debug: boolean ): [ string, string, boolean ][] {
   const inputs = thisPage?.getElementsByTagName ( "input" )
-  const result: [ string, boolean ][] = []
+  const result: [ string, string, boolean ][] = []
   if ( inputs ) {
     for ( var i = 0; i < inputs.length; i++ ) {
       const child = inputs[ i ];
       let id = child.getAttribute ( 'id' );
+      let labelForValidation = child.getAttribute ( 'validationmessage' )
       let recordedId = id ? id : "noIdForThisElement"
+
       let validity = child.checkValidity ();
       if ( debug ) console.log ( 'findValidityForInput: ', id, validity )
-      result.push ( [ recordedId, validity ] )
+      result.push ( [ recordedId, labelForValidation ? labelForValidation : id, validity ] )
     }
   }
   return result
 }
-export function findValidityForSelect ( thisPage: Element, debug: boolean ): [ string, boolean ][] {
-  const result: [ string, boolean ][] = []
+export function findValidityForSelect ( thisPage: Element, debug: boolean ): [ string, string, boolean ][] {
+  const result: [ string, string, boolean ][] = []
   const selects = thisPage?.getElementsByTagName ( "select" )
   if ( selects ) {
     for ( var i = 0; i < selects.length; i++ ) {
@@ -53,15 +60,16 @@ export function findValidityForSelect ( thisPage: Element, debug: boolean ): [ s
       let clazz = child.getAttribute ( 'class' );
       const valid = !clazz || clazz.indexOf ( 'invalid' ) < 0
       let recordedId = id ? id : "noIdForThisElement"
-      let thisResult: [ string, boolean ] = [ recordedId, valid ];
+      let labelForValidation = child.getAttribute ( 'labelforvalidation' )
+      let thisResult: [ string, string, boolean ] = [ recordedId, labelForValidation ? labelForValidation : recordedId, valid ];
       if ( debug ) console.log ( 'findValidityForSelect: ', id, thisResult )
       result.push ( thisResult )
     }
   }
   return result
 }
-export function findValidityForRadio ( thisPage: Element, debug: boolean ): [ string, boolean ][] {
-  const result: [ string, boolean ][] = []
+export function findValidityForRadio ( thisPage: Element, debug: boolean ): [ string, string, boolean ][] {
+  const result: [ string, string, boolean ][] = []
   const radios = thisPage?.getElementsByClassName ( "radio-group-container" )
   if ( radios ) {
     for ( var i = 0; i < radios.length; i++ ) {
@@ -70,7 +78,8 @@ export function findValidityForRadio ( thisPage: Element, debug: boolean ): [ st
       let clazz = child.getAttribute ( 'class' );
       const valid = !clazz || clazz.indexOf ( 'invalid' ) < 0
       let recordedId = id ? id : "noIdForThisElement"
-      let thisResult: [ string, boolean ] = [ recordedId, valid ];
+      let labelForValidation = child.getAttribute ( 'labelforvalidation' )
+      let thisResult: [ string, string, boolean ] = [ recordedId, labelForValidation ? labelForValidation : recordedId, valid ];
       if ( debug ) console.log ( 'findValidityForRadio: ', id, thisResult )
       result.push ( thisResult )
     }
@@ -82,7 +91,7 @@ export function findThisPageElement ( pageHolderClass: string ) {
   const thisPage: Element | null = allPages.item ( allPages.length - 1 )
   return thisPage;
 }
-export function findValidityDetails ( pageHolderClass: string, debug: boolean ): [ string, boolean ][] {
+export function findValidityDetails ( pageHolderClass: string, debug: boolean ): [ string, string, boolean ][] {
   const thisPage = findThisPageElement ( pageHolderClass );
   if ( !thisPage ) return []
   return [ ...findValidityForInput ( thisPage, debug ),
@@ -91,7 +100,7 @@ export function findValidityDetails ( pageHolderClass: string, debug: boolean ):
 }
 
 export function isValidToCommit ( pageHolderClass: string, debug: boolean ): boolean {
-  return findValidityDetails ( pageHolderClass, debug ).reduce ( ( acc: boolean, [ id, valid ] ) => acc && valid, true )
+  return findValidityDetails ( pageHolderClass, debug ).reduce ( ( acc: boolean, [ id, label, valid ] ) => acc && valid, true )
 }
 
 export function hasValidationErrorAndReport<S, C extends HasSimpleMessageL<S>> ( id: string, state: LensState<S, any, C>, dateFn: DateFn | undefined ): boolean {

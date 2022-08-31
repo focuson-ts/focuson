@@ -192,12 +192,12 @@ export interface DisplayGuardsProps {
 }
 export function DisplayGuards ( { guards }: DisplayGuardsProps ) {
   return <div className='display-guards'>
-    {guards.map ( ( [ name, value ], i ) => <span key={name} className={`guard-${value}`}>{i === 0 ? '' : ',  '}{name}:{`${JSON.stringify(value)}`}</span> )}
+    {guards.map ( ( [ name, value ], i ) => <span key={name} className={`guard-${value}`}>{i === 0 ? '' : ',  '}{name}:{`${JSON.stringify ( value )}`}</span> )}
   </div>
 }
 const findTagLens = <S extends any> ( { cd, fdd }: RestDetails<S, SimpleMessage>[string], id: string ) => fdd[ id ] ? fdd[ id ] : cd[ id ];
 function TagTable<S, FD, D> ( rest: OneRestDetails<S, FD, D, SimpleMessage>, theseTags: (string | undefined)[], desiredTags: [ string, (string | undefined) ][] ) {
-  if ( rest.ids.length === 0  && rest.resourceId.length===0) return <div>There are no ids</div>
+  if ( rest.ids.length === 0 && rest.resourceId.length === 0 ) return <div>There are no ids</div>
   return <table className="fetcher-debug">
     <thead>
     <tr>
@@ -208,7 +208,7 @@ function TagTable<S, FD, D> ( rest: OneRestDetails<S, FD, D, SimpleMessage>, the
     </tr>
     </thead>
     <tbody>
-    {desiredTags.map ( ( [id,thisTag], tagIndex ) => {
+    {desiredTags.map ( ( [ id, thisTag ], tagIndex ) => {
       const tagLens: Optional<any, any> = findTagLens ( rest, id )
       let thisRememberedTag = theseTags?.[ tagIndex ];
       const classForUndefinedTag = thisTag ? undefined : 'debug-tag-undefined'
@@ -229,7 +229,7 @@ function Fetchers<S, C extends FocusOnContext<S>> ( { state }: LensProps<S, any,
   const page: PageSelection = mainPage ( state )
   const tagsInState = safeObject ( state.context.tagHolderL.getOption ( state.main ) )
   let { tagHolderL, newFetchers, restDetails } = state.context
-  let fromFetchers = restCommandsAndWhyFromFetchers ( tagHolderL, newFetchers, restDetails, page.pageName, {...state.json (), debug: {}} );
+  let fromFetchers = restCommandsAndWhyFromFetchers ( tagHolderL, newFetchers, restDetails, page.pageName, { ...state.json (), debug: {} } );
   return <div>
     <h2>Rest commands</h2>
     {toArray ( state.context.newFetchers?.[ page.pageName ] ).map ( ( f, i ) => {
@@ -287,8 +287,8 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
   const { showDebug } = main.debug
   const validationRef = useRef<HTMLDivElement> ( null )
   useEffect ( () => {
-    function textFor ( title: string, details: [ string, boolean ][] ): string {
-      const text = details.map ( ( [ name, value ] ) => `<span class='validity-${value}'>${name}</span>` ).join ( ' ' )
+    function textFor ( title: string, details: [ string, string, boolean ][] ): string {
+      const text = details.map ( ( [ id, label, value ] ) => `<span class='validity-${value}'>${id}${id !== label ? ` - ${label}` : ''}</span>` ).join ( ' ' )
       return `<h3>${title}</h3>${text}`
     }
     if ( validationRef.current === null ) return
