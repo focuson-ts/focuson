@@ -55,7 +55,7 @@ function displayAndGetButton ( s: RestButtonStateForTest, setMain: ( s: RestButt
 describe ( "RestButton", () => {
   it ( "should render as a button", () => {
     const button = displayAndGetButton ( emptyS, () => {}, s => <RestButton rest='someRestName' action={'get'} state={s} id='someId' name='someButtonName'/> )
-    expect ( button.html () ).toEqual ( '<button class="button">someButtonName</button>' )
+    expect ( button.html () ).toEqual ( '<button aria-errormessage="someId.error" aria-invalid="false" class="button">someButtonName</button>' )
   } )
   it ( "should place a rest command in the state - simple RestAction", () => {
     var remembered: any = undefined

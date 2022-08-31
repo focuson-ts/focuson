@@ -147,6 +147,6 @@ export function ModalButton<S extends any, Context extends PageSelectionContext<
       ...log ( 'changeTxs', changeTxs ) );
   };
 
-  return wrapWithErrors ( id, enabledBy, ( errorId, errors, error ) =>
-    <button className={getButtonClassName ( buttonType )} id={id} aria-errormessage={errorId} aria-invalid={error} disabled={error} onClick={onClick}>{text}</button> )
+  return wrapWithErrors ( id, enabledBy, ( props, error ) =>
+    <button className={getButtonClassName ( buttonType )} id={id}{...props} disabled={error} onClick={onClick}>{text}</button> )
 }

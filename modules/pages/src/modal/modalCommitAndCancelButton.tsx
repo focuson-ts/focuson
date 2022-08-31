@@ -44,7 +44,8 @@ export function ModalCancelButton<S, Context extends ModalContext<S>> ( { id, st
     }
     if ( confirmIt ( state, confirm ) ) state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popPage ( state ) );
   }
-  return <button className={getButtonClassName ( buttonType )} id={id} disabled={disabledFrom ( enabledBy ) || !canCommitOrCancel ( state )} onClick={onClick}>{text ? text : 'Cancel'} </button>
+  return wrapWithErrors ( id, enabledBy, ( errorProps, error ) =>
+    <button className={getButtonClassName ( buttonType )} id={id} {...errorProps} disabled={error || !canCommitOrCancel ( state )} onClick={onClick}>{text ? text : 'Cancel'} </button> )
 }
 
 
@@ -151,6 +152,6 @@ export function ModalCommitButton<S, Context extends ModalContext<S>> ( c: Modal
   // @ts-ignore
   const debug = state.main?.debug?.validityDebug
   const ref = getRefForValidateLogicToButton ( id, debug, validate, enabledBy, canCommitOrCancel ( state ) )
-  return wrapWithErrors ( id, enabledBy, ( errorId, errors, error ) =>
-    <button ref={ref} disabled={error} aria-errormessage={errorId} aria-invalid={error} className={getButtonClassName ( buttonType )} id={id} onClick={onClick}>{text ? text : 'Commit'}</button> )
+  return wrapWithErrors ( id, enabledBy, ( props, error ) =>
+    <button ref={ref} disabled={error} {...props} className={getButtonClassName ( buttonType )} id={id} onClick={onClick}>{text ? text : 'Commit'}</button> )
 }

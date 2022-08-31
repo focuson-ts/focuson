@@ -65,15 +65,15 @@ describe ( "selectedPage", () => {
     const state = lensStateWith ( rootState, () => {}, [ 'firstPage', 'edit', undefined ], [ 'secondPage', 'view', undefined ], [ 'modalData', 'edit', undefined ] )
     const comp = shallow ( <SelectedPage state={state}/> )
     expect ( comp.html () ).toEqual ( '<div class="combine">' +
+      '<div class="focus-page"><div id="default_template"><h1>[firstPageTitle]:</h1>' +
+      '<div><p>Loading</p><span class="tooltip-wrap">' +
+      '<button class="button" id="loading.cancel" aria-errormessage="loading.cancel.error" aria-invalid="false">Cancel </button>' +
+      '<ul hidden="" class="errormessage tooltip" id="loading.cancel.error"></ul></span></div></div></div><div class="focus-page">' +
+      '<div id="default_template"><h1>[secondPageTitle]:</h1><div><p>Loading</p>' +
+      '<span class="tooltip-wrap"><button class="button" id="loading.cancel" aria-errormessage="loading.cancel.error" aria-invalid="false">Cancel </button>' +
+      '<ul hidden="" class="errormessage tooltip" id="loading.cancel.error"></ul></span></div></div></div>' +
       '<div class="focus-page"><div id="default_template">' +
-      '<h1>[firstPageTitle]:</h1>' +
-      '<div><p>Loading</p><button class="button" id="loading.cancel">Cancel </button></div></div></div>' +
-      '<div class="focus-page"><div id="default_template">' +
-      '<h1>[secondPageTitle]:</h1>' +
-      '<div><p>Loading</p><button class="button" id="loading.cancel">Cancel </button></div></div></div>' +
-      '<div class="focus-page"><div id="default_template">' +
-      '<h1>[modalDataTitle]:</h1>' +
-      '<p>modalData[x]/edit</p></div></div></div>' )
+      '<h1>[modalDataTitle]:</h1><p>modalData[x]/edit</p></div></div></div>' )
 
   } )
 } )

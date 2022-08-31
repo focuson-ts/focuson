@@ -4,6 +4,7 @@ import { disabledFrom, SimpleMessage } from "@focuson/utils";
 import { CustomButtonType, getButtonClassName } from "./common";
 import { CommandButtonChangeCommands, commandButtonCommandProcessors, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor } from "@focuson/rest";
 import { FocusOnContext, makeProcessorsConfig } from "@focuson/focuson";
+import { wrapWithErrors } from "@focuson/pages/dist/src/errors";
 
 
 export interface CommandButtonProps<S, C> extends LensProps<S, any, C>, CustomButtonType {
@@ -25,5 +26,6 @@ export function CommandButton<S, C extends FocusOnContext<S>> ( { id, state, lab
     if ( txs.length === 0 ) return
     state.massTransform ( reasonFor ( 'CommandButton', 'onClick', id ) ) ( ...txs )
   }
-  return <button id={id} disabled={disabledFrom(enabledBy)} onClick={onClick} className={getButtonClassName ( buttonType )}>{label}</button>
+  return wrapWithErrors ( id, enabledBy, ( errorProps, error ) =>
+    <button id={id} {...errorProps}  disabled={error} onClick={onClick} className={getButtonClassName ( buttonType )}>{label}</button>)
 }
