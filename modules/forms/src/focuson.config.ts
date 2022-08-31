@@ -22,13 +22,10 @@ import { DatesPageD } from "./example/dates/dates.pageD";
 import { wizardPD } from "./example/wizard/wizard.pageD";
 
 import { ButtonsPageD } from "./example/buttons/buttonsPageD";
-import { dateInfoRefD } from "./common/dateInfoRefD";
+import { dateInfoRefD, dateRefconfig } from "./common/dateInfoRefD";
 import { CreditAC, DirectDebitAC } from "./example/authoriseCharges/authoriseCharges.customise";
 
-export const generatedRefs: ExampleRefD[] = [ dateInfoRefD() ]
-
-
-
+export const generatedRefs: ExampleRefD[] = [ dateInfoRefD(dateRefconfig) ]
 
 export const generatedPages: ExampleMainPage[] = [
   ButtonsPageD,

@@ -3,8 +3,14 @@ import { DataD, DateDDMMYYY_DD, RepeatingDataD, StringDD } from "./dataD";
 import { TableCD } from "./componentsD";
 import { RestD, StringParam } from "./restD";
 
+export interface DateRefConfiguration {
+  urlPrefix: string;
+}
+export const dateRefconfig: DateRefConfiguration = {
+  urlPrefix: '/api'
+}
 
-export function dateInfoRefD<G>() : RefD<G>{
+export function dateInfoRefD<G> ( d: DateRefConfiguration ): RefD<G> {
   const holidayDataD: DataD<G> = {
     description: "A single holiday in one jurisdiction",
     name: "Holiday",
@@ -13,7 +19,7 @@ export function dateInfoRefD<G>() : RefD<G>{
       jurisdiction: { dataDD: StringDD, sample: [ 'GB', "I" ] },
     }
   }
-   const holidayListD: RepeatingDataD<G> = {
+  const holidayListD: RepeatingDataD<G> = {
     name: 'HolidayList',
     description: 'The list of holidays from the server used by the date picker',
     dataDD: holidayDataD,
@@ -21,7 +27,7 @@ export function dateInfoRefD<G>() : RefD<G>{
     displayParams: { order: [ 'date', 'jurisdiction' ], tableTitle: 'Holidays' },
     paged: false
   }
-   const timeDataD: DataD<G> = {
+  const timeDataD: DataD<G> = {
     description: "Today and holidays",
     name: "TimeData",
     structure: {
@@ -34,9 +40,9 @@ export function dateInfoRefD<G>() : RefD<G>{
     actions: [ 'get' ],
     dataDD: timeDataD,
     params: {},
-    url: "/api/dateInfo"
+    url: `${d.urlPrefix}/dateInfo`
   }
-   const commonDataRefD: RefD<G> = {
+  const commonDataRefD: RefD<G> = {
     name: "CommonData",
     refGroups: 'once',
     commonParams: { jurisdiction: { ...StringParam, commonLens: 'jurisdiction', testValue: 'GB' } },
