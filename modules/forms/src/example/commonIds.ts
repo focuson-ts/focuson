@@ -1,4 +1,5 @@
-import { IntParam, RestParams, StringParam } from "../common/restD";
+import { CommonLensRestParam, IntParam, RestParams, StringParam } from "../common/restD";
+import { NameAnd } from "@focuson/utils";
 
 export const allCommonIds = {
   brandRef: { ...IntParam, commonLens: 'brandRef', testValue: 10 },
@@ -8,13 +9,16 @@ export const allCommonIds = {
   vbAcountSeq: { ...IntParam, commonLens: 'vbAcountSeq', testValue: 55555 },
   employeeId: { ...IntParam, commonLens: 'employeeId', testValue: 666666 },
   employeeType: { ...StringParam, commonLens: 'employeeType', testValue: 'basic', annotation: '@RequestHeader @RequestParam' },
-  dbName: { ...StringParam, commonLens: 'dbName', testValue: 'mock' }
+  dbName: { ...StringParam, commonLens: 'dbName', testValue: 'mock' },
+  today: { ...StringParam, commonLens: 'today', testValue: '29/07/2022' },
+  operatorName: { ...StringParam, commonLens: 'operatorName', testValue: 'Phil' }
+
 }
 
 export const commonIds = fromCommonIds ( "brandRef", "applRef", "clientRef", "accountId" )
 
-export function fromCommonIds ( ...keys: (keyof (typeof allCommonIds))[] ): RestParams {
-  const result: RestParams = {}
+export function fromCommonIds ( ...keys: (keyof (typeof allCommonIds))[] ):  NameAnd<CommonLensRestParam<any>> {
+  const result:  NameAnd<CommonLensRestParam<any>> = {}
   keys.forEach ( key => result[ key ] = allCommonIds[ key ] )
   return result
 }

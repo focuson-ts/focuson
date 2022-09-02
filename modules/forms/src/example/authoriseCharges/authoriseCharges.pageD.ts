@@ -6,9 +6,10 @@ import { HideButtonsCD } from "../../buttons/hideButtonsCD";
 import { StringParam } from "../../common/restD";
 import { AuthoriseCustomisation } from "./authoriseCharges.customise";
 import { memoise } from "@focuson/utils";
+import { fromCommonIds } from "../commonIds";
 
 export function SummaryOfChargesPage ( c: AuthoriseCustomisation ): ExampleModalPage {
-  return memoise('pageD','SummaryOfChargesPage')(() =>({
+  return memoise ( 'pageD', 'SummaryOfChargesPage' ) ( () => ({
     name: 'SummaryOfCharges',
     pageType: 'ModalPopup',
     modes: [ 'view' ],
@@ -16,7 +17,7 @@ export function SummaryOfChargesPage ( c: AuthoriseCustomisation ): ExampleModal
     buttons: {
       close: { control: "ModalCancelButton" },
     }
-  }))
+  }) )
 }
 
 export function SelectChargesDatePage ( c: AuthoriseCustomisation ): ExampleModalPage {
@@ -67,10 +68,7 @@ export function AuthoriseChargesPD ( c: AuthoriseCustomisation ): ExampleMainPag
   return {
     name: c.pageName,
     pageType: "MainPage",
-    commonParams: {
-      today: { ...StringParam, commonLens: 'today', testValue: '29/07/2022' },
-      operatorName: { ...StringParam, commonLens: 'operatorName', testValue: 'Phil' }
-    },
+    commonParams: { ...fromCommonIds ( 'today', 'operatorName' ) },
     initialValue: [ { command: 'copy', from: '/CommonIds/today', to: '~/authorisedCharges/date' } ],
     modals: [ { modal: ViewChargesPage ( c ) }, { modal: SummaryOfChargesPage ( c ) }, { modal: SelectChargesDatePage ( c ) } ],
     display: { target: '~/brand', dataDD: SelectOneBrandDD ( c ) },
@@ -86,8 +84,8 @@ export function AuthoriseChargesPD ( c: AuthoriseCustomisation ): ExampleMainPag
 
       summaryOfChargesDates: { dataDD: summaryOfChargesSearchDD ( c ) },
       selectedDateIndex: { dataDD: NatNumDd },
-      selectedDateItem: { dataDD: summaryOfChargesDateDD ( c )  },
-      operatorEligable: {dataDD: operatorEligableDD}
+      selectedDateItem: { dataDD: summaryOfChargesDateDD ( c ) },
+      operatorEligable: { dataDD: operatorEligableDD }
     },
     guards: {
       brandSelected: { condition: 'isDefined', path: '~/selectedIndex', message: 'you need to select a brand' },
@@ -111,7 +109,7 @@ export function AuthoriseChargesPD ( c: AuthoriseCustomisation ): ExampleMainPag
         ]
       },
       summaryOfChargeDates: { rest: SummaryOfChargeDatesRD ( c ), targetFromPath: '~/summaryOfChargesDates/searchResults', fetcher: true },
-      operatorEligable: {rest: operatorEligabilityRD(c), targetFromPath: '~/operatorEligable', fetcher: true},
+      operatorEligable: { rest: operatorEligabilityRD ( c ), targetFromPath: '~/operatorEligable', fetcher: true },
       // summaryOfCharges: { rest: SummaryOfChargesRD, targetFromPath: '~/summaryOfCharges', fetcher: true }
     },
     modes: [ 'view' ],

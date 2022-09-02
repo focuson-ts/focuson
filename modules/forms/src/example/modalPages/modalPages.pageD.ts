@@ -1,6 +1,7 @@
 import { ExampleDataD, ExampleMainPage, ExampleModalPage } from "../common";
 import { StringDD } from "../../common/dataD";
 import { modalPageDD } from "./modalPages.dataD";
+import { modalPageRD } from "./modalPages.restD";
 
 export const modalPage2: ExampleModalPage = {
   name: 'ModalPage2',
@@ -20,7 +21,11 @@ export const modalPage1: ExampleModalPage = {
   display: { dataDD: modalPageDD, target: '~/data' },
   modes: [ 'view', 'edit' ],
   buttons: {
-    page2: { control: "ModalButton", focusOn: '~/data', modal: modalPage2, mode: 'view' },
+    page2: {
+      control: "ModalButton", focusOn: '~/data', modal: modalPage2, mode: 'view',
+      restOnOpen: { restName: 'rest', action: { state: 'one' }, messageOnSuccess: 'page1 opening page2: restOnOpen' },
+      restOnCommit: { restName: 'rest', result: 'nothing', action: { state: 'one' }, messageOnSuccess: 'page1 opening page2: restOnCommit' }
+    },
     commit: { control: "ModalCommitButton", text: 'commit' },
     commit2: { control: "ModalCommitButton", text: 'commit2', closeTwoWindowsNotJustOne: true },
     cancel: { control: 'ModalCancelButton', text: 'cancel1' },
@@ -35,8 +40,12 @@ export const modalPagePD: ExampleMainPage = {
   initialValue: 'empty',
   modes: [ 'view', 'edit' ],
   pageType: 'MainPage',
-  rest: {},
+  rest: { rest: { rest: modalPageRD, targetFromPath: '~/data' } },
   buttons: {
-    page1: { control: "ModalButton", focusOn: '~/data', modal: modalPage1, mode: 'view' },
+    page1: {
+      control: "ModalButton", focusOn: '~/data', modal: modalPage1, mode: 'view',
+      restOnOpen: { restName: 'rest', action: { state: 'one' }, messageOnSuccess: 'mainPage opening page1: restOnOpen' },
+      restOnCommit: { restName: 'rest', result: 'nothing', action: { state: 'one' }, messageOnSuccess: 'mainPage opening page1: restOnCommit' }
+    },
   }
 }

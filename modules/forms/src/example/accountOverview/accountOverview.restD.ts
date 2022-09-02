@@ -2,12 +2,8 @@
 
 import { ExampleRestD } from "../common";
 import { RestParams, StringParam } from "../../common/restD";
-
-// import { ExampleRestD } from "../common";
-// import { commonParams } from "../eAccount/eAccountsSummary.restD";
 import { accountAllFlagsDataDD, accountOverviewAgreementTypeDataD, accountOverviewDataD, accountOverviewExcessHistoryDataD, accountOverviewExcessInfoDataD, accountOverviewOptOutDataD, accountOverviewReasonDataD, arrearsDetailsDataD } from "./accountOverview.dataD";
 import { commonIds } from "../commonIds";
-// import { RestParams } from "@focuson/forms";
 
 export const accountOverviewRestD: ExampleRestD = {
   params: commonIds,
