@@ -10,7 +10,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class FocusonNotFound404ExceptionHandling extends ResponseEntityExceptionHandler {
     @ExceptionHandler(FocusonNotFound404Exception.class)
     public ResponseEntity<Object> handleExceptions(FocusonNotFound404Exception exception, WebRequest webRequest) {
-        ResponseEntity<Object> entity = new ResponseEntity<>(exception.msgs.emptyResult(),  HttpStatus.NOT_FOUND);
+        ResponseEntity<Object> entity = new ResponseEntity<>(exception.msgs.withEmptyData(),  HttpStatus.NOT_FOUND);
         return entity;
     }
 }

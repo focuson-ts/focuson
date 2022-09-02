@@ -45,7 +45,7 @@ export function MyCombined<S extends HasTagHolder & HasSimpleMessages, Context e
 
   if ( firstTimeHappened ) {
     useEffect ( () => {
-      console.log ( 'First time happened' )
+      // console.log ( 'First time happened' )
       resetFirstTimeHappened ()
       const thisPage = findThisPageElement ( focusPageClassName );
       const inputs = thisPage.getElementsByTagName ( 'input' )

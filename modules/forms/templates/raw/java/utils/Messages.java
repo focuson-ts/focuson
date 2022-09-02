@@ -37,7 +37,7 @@ public class Messages {
         return res;
     }
 
-    public Map<String, Object> emptyResult() {
+    public Map<String, Object> withEmptyData() {
         return result(Collections.emptyMap());
     }
 

@@ -5,7 +5,14 @@ import { AuthoriseTableCD, SummaryDetailsCD } from "./custom";
 import { AuthoriseCustomisation } from "./authoriseCharges.customise";
 import { memoise } from "@focuson/utils";
 
-
+export const operatorEligableDD: ExampleDataD = {
+  name: 'OperatorEligability',
+  description: 'is the operator eligable',
+  structure: {
+    canApprove: { dataDD: BooleanDD },
+    canAuthorise: { dataDD: BooleanDD },
+  }
+}
 export function summaryOfChargesDateDD ( c: AuthoriseCustomisation ): ExampleDataD {
   return memoise('summaryOfChargesDateDD', c.pageName)(() =>({
     name: 'SummaryOfChargesDate',

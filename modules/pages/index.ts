@@ -5,6 +5,7 @@ export * from './src/pageConfig'
 export * from './src/pageSelection'
 export * from './src/PageTemplate';
 export * from './src/preMutate';
+export * from './src/refControls';
 export * from './src/replace';
 export * from './src/selectedPage';
 export * from './src/selectedPages'

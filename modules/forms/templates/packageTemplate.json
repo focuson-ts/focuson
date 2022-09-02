@@ -98,5 +98,8 @@
     "printWidth":    200,
     "singleQuote":   true,
     "trailingComma": "none"
+  },
+  "overrides": {
+    "react-error-overlay": "6.0.9"
   }
 }

@@ -1,23 +1,20 @@
 import { focusPageClassName } from "./PageTemplate";
-import { createSimpleMessage, DateFn, safeArray, safeFlatten } from "@focuson/utils";
+import { createSimpleMessage, DateFn, safeArray } from "@focuson/utils";
 import { LensState, reasonFor } from "@focuson/state";
 import { HasSimpleMessageL } from "./simpleMessage";
 import React, { useEffect, useRef } from "react";
+import { useRefs } from "./refControls";
 
 
 export function getRefForDebounceLogic ( id: string, debounce: number | undefined ) {
   const ref = useRef<HTMLButtonElement> ( null );
 }
-export function getRefForValidateLogicToButton ( id: string, debug: boolean, validate: boolean | undefined,errors: string[] | undefined,  errorRef?: React.MutableRefObject<HTMLUListElement> ): React.RefObject<HTMLButtonElement> {
+export const getRefForValidateLogicToButton = <S> ( state: LensState<S, any, any> ) => ( id: string, debug: boolean, validate: boolean | undefined, errors: string[] | undefined, errorRef?: React.MutableRefObject<HTMLUListElement> ): React.RefObject<HTMLButtonElement> => {
   const ref = useRef<HTMLButtonElement> ( null );
+  const canUseRefs = useRefs ( state );
   useEffect ( () => {
     if ( ref.current === null ) throw Error ( `Id ${id} has a ref which is null` )
-    // if ( validate === false ) {
-    //   ref.current.disabled = errors.length > 0 || extraCondition == false
-    //   return
-    // }
-    // console.log ( 'getRefForValidateLogicToButton', id, 'validate', validate)
-    const validityDetails: [ string, string, boolean ][] = validate===false ? [] : findValidityDetails ( focusPageClassName, debug )
+    const validityDetails: [ string, string, boolean ][] = validate === false ? [] : findValidityDetails ( focusPageClassName, debug )
     const issues = validityDetails.filter ( v => v[ 2 ] === false ).map ( v => v[ 1 ] )
     let disabled = errors.length > 0 || issues.length > 0
     // console.log ( 'getRefForValidateLogicToButton - disabled', id, disabled )
@@ -28,11 +25,12 @@ export function getRefForValidateLogicToButton ( id: string, debug: boolean, val
     const issuesTitle = issues.length > 0 ? [ `<b>${issues.length} validation issue${issues_s}:</b>` ] : []
     const allErrors = disabled ? [ ...errorsTitle, ...errors, ...issuesTitle, ...issues ] : errors
     if ( errorRef ) {
-      errorRef.current.innerHTML = allErrors.map ( e => `<li>${e}</li>` ).join ( '' )
+      if ( canUseRefs )
+        errorRef.current.innerHTML = allErrors.map ( e => `<li>${e}</li>` ).join ( '' )
     }
-  } );
+  }, [ state.main ] );
   return ref
-}
+};
 
 
 export function findValidityForInput ( thisPage: Element, debug: boolean ): [ string, string, boolean ][] {

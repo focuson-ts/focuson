@@ -108,7 +108,7 @@ function makeReturnStatement<G> ( params: JavaWiringParams, errorPrefix: string,
   }
   return restActionToDetails ( restAction ).output.needsObj ?
     [ `          return Transform.result(graphQL.get(${dbNameString}),${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( errorPrefix, r, restAction )}), ${selectionFromData}, msgs);` ] :
-    [ `         return  ResponseEntity.ok(msgs.emptyResult());` ];
+    [ `         return  ResponseEntity.ok(msgs.withEmptyData());` ];
 }
 function getMakeJsonString<G> ( hasBody: boolean | undefined, dataD: CompDataD<G> ) {
   if ( hasBody ) {

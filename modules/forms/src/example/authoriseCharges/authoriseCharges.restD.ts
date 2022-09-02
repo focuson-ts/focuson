@@ -1,9 +1,10 @@
-import { ExampleRestD } from "../common";
-import { ListOfChargesDD, SelectOneBrandDD, summaryOfChargesDateTableDD } from "./authoriseCharges.dataD";
+import { ExampleDataD, ExampleRestD } from "../common";
+import { ListOfChargesDD, operatorEligableDD, SelectOneBrandDD, summaryOfChargesDateTableDD } from "./authoriseCharges.dataD";
 import { fromCommonIds } from "../commonIds";
 import { StringParam } from "../../common/restD";
 import { onlySchema } from "../database/tableNames";
 import { AuthoriseCustomisation } from "./authoriseCharges.customise";
+import { BooleanDD } from "../../common/dataD";
 
 
 export function SelectOneBrandPageRD ( c: AuthoriseCustomisation ): ExampleRestD {
@@ -110,3 +111,29 @@ export function SummaryOfChargeDatesRD ( c: AuthoriseCustomisation ): ExampleRes
 }
 
 
+export function operatorEligabilityRD ( c: AuthoriseCustomisation ): ExampleRestD {
+  return {
+    params: { operId: { ...StringParam, commonLens: 'operId', testValue: 'operId' } },
+    dataDD: operatorEligableDD,
+    url: `/${c.urlPrefix}/operatorEligability`,
+    actions: [ 'get' ],
+    resolvers: {
+      getOperatorEligability: [
+        {
+          type: "sql", name: 'operatorEligability', schema: onlySchema, sql: 'select * from sometable', params: [
+            'operId',
+            { type: 'output', name: 'status', rsName: 'STATUS', javaType: 'String' },
+            { type: 'output', name: 'workflowQueue', rsName: 'WORKFLOW_QUEUE', javaType: 'String' },
+            { type: 'output', name: 'operName', rsName: 'OPER_NAME', javaType: 'String' },
+          ],list: true
+        },
+        {
+          type: 'manual', code: 'Map<String,Object> getOperatorEligability=params0.get(0);', params: [
+            { type: 'input', name: 'params0', javaType: 'List<Map<String,Object>>' },
+            { type: 'output', name: 'getOperatorEligability', javaType: 'Map<String,Object>' }
+          ]
+        }
+      ]
+    }
+  }
+}

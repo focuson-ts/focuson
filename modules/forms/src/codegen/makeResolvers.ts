@@ -2,7 +2,7 @@ import { JavaWiringParams } from "./config";
 import { RefD } from "../common/pageD";
 import { RestD } from "../common/restD";
 import { toArray, unique } from "@focuson/utils";
-import { allInputParamNames, allOutputParams, allParentMutationParams, importForTubles, isAutoSqlResolver, isMessageMutation, isSelectMutationThatIsAList, isSqlMutationThatIsAList, ManualMutation, MutationDetail, Mutations, parametersFor } from "../common/resolverD";
+import { allInputParamNames, allOutputParams, allParentMutationParams, importForTubles, isAutoSqlResolver, isManualMutation, isMessageMutation, isMutationThatIsaList, isSelectMutationThatIsAList, isSqlMutationThatIsAList, ManualMutation, MutationDetail, Mutations, parametersFor } from "../common/resolverD";
 import { fetcherInterfaceForResolverName, fetcherPackageName, mutationMethodName, resolverClassName } from "./names";
 import { makeCodeFragmentsForMutation, makeMutationMethod } from "./makeMutations";
 import { ResolverData } from "./makeJavaFetchersInterface";
@@ -60,22 +60,34 @@ function makeCreateResultForManualList ( errorPrefix: string, resolver: ManualMu
   return [ `return ${param.name};` ]
 
 }
+function makeCreateResultForList ( errorPrefix: string, resolvers: MutationDetail[], resolverData: ResolverData ): string[] | undefined {
+  const revResolvers = [ ...resolvers ].reverse ();
+  const resolver: any = revResolvers.find ( md => isSqlMutationThatIsAList ( md ) || findManualMutationThatIsAList ( md, resolverData.name ) || isSelectMutationThatIsAList ( md ) )
+  if ( resolver && isSqlMutationThatIsAList ( resolver ) ) return makeCreateResultForlist ( revResolvers )
+  if ( resolver && isSelectMutationThatIsAList ( resolver ) ) return makeCreateResultForlist ( revResolvers )
+  if ( resolver && resolver.type === 'Manual' ) return makeCreateResultForManualList ( errorPrefix, resolver, resolverData )
+  if ( resolver === undefined ) return [ `There isn't a resolver that is marked as a list, or a manual mutation with an output param name ${resolverData.name} of type List<Map<String,Object>>;` ]
+}
+function makeCreateResultForObject ( errorPrefix: string, resolvers: MutationDetail[], resolverData: ResolverData ): string[] | undefined {
+  const revResolvers = [ ...resolvers ].reverse ();
+  const resolver = revResolvers.find ( m => isManualMutation ( m ) && allOutputParams ( m.params ).find ( p => p.javaType === 'Map<String,Object>' && p.name === resolverData.name ) )
+  if ( resolver )
+    return [ `return ${resolverData.name};` ]
+  else
+    return [
+      `${resolverData.javaType} result=new HashMap<>();`,
+      ...addParams ( resolvers.filter ( r => !isMutationThatIsaList ( r ) ) ),
+      `return result;`
+    ]
+}
+
 export function makeCreateResult ( errorPrefix: string, resolvers: MutationDetail[], resolverData: ResolverData ): string[] {
   const auto = resolvers.find ( isAutoSqlResolver )
   if ( auto !== undefined ) return [ `return result;` ]
-  if ( resolverData.javaType === 'Map<String,Object>' ) return [
-    `${resolverData.javaType} result=new HashMap<>();`,
-    ...addParams ( resolvers ),
-    `return result;`
-  ]
+  if ( resolverData.javaType === 'Map<String,Object>' ) return makeCreateResultForObject ( errorPrefix, resolvers, resolverData )
   if ( resolverData.javaType === 'List<Map<String,Object>>' ) {
-    let revResolvers = [ ...resolvers ].reverse ();
-
-    const resolver: any = revResolvers.find ( md => isSqlMutationThatIsAList ( md ) || findManualMutationThatIsAList ( md, resolverData.name ) || isSelectMutationThatIsAList ( md ) )
-    if ( resolver && isSqlMutationThatIsAList ( resolver ) ) return makeCreateResultForlist ( revResolvers )
-    if ( resolver && isSelectMutationThatIsAList ( resolver ) ) return makeCreateResultForlist ( revResolvers )
-    if ( resolver && resolver.type === 'Manual' ) return makeCreateResultForManualList ( errorPrefix, resolver, resolverData )
-    if ( resolver === undefined ) return [ `There isn't a resolver that is marked as a list, or a manual mutation with an output param name ${resolverData.name} of type List<Map<String,Object>>;` ]
+    const result = makeCreateResultForList ( errorPrefix, resolvers, resolverData )
+    if ( result !== undefined ) return result
   }
   return [
     `//If there is a compilation error is it because you don't have an output variable called ${resolverData.name}, or because it is the wrong type. It should be ${resolverData.javaType}`,

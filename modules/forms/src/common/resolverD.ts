@@ -103,8 +103,8 @@ export function isSqlMutationThatIsAList ( s: MutationDetail ): s is SqlMutation
   return s.type === 'sql' && a.list
 }
 
-export function isMutationThatIsaList ( m: MutationDetail ): m is (SqlMutationThatIsAList | SelectMutation) {
-  return isSqlMutationThatIsAList ( m ) || isSelectMutationThatIsAList ( m )
+export function isMutationThatIsaList ( m: MutationDetail ): m is (SqlMutationThatIsAList | SelectMutation | ManualMutation) {
+  return isSqlMutationThatIsAList ( m ) || isSelectMutationThatIsAList ( m ) || (isManualMutation(m) && m.list)
 }
 
 export interface StoredProcedureMutation {
@@ -142,6 +142,10 @@ export interface ManualMutation {
   name?: string;
   makeMock?: boolean
   code: string | string[]
+}
+export function isManualMutation(m: MutationDetail): m is ManualMutation{
+  const a: any = m
+  return m.type === 'manual'
 }
 
 export interface MultipleMutation {
@@ -345,7 +349,7 @@ export interface AutowiredMutationParam {
   setParam?: string;
   required?: boolean;
 }
-export type JavaTypePrimitive = 'String' | 'Integer' | 'Double' | 'Object' | 'Boolean' | 'Date' | 'Map<String,Object>';
+export type JavaTypePrimitive = 'String' | 'Integer' | 'Double' | 'Object' | 'Boolean' | 'Date' | 'Map<String,Object>' | 'List<Map<String,Object>>';
 
 export const RSGetterForJavaType = {
   String: 'getString',

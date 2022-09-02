@@ -107,7 +107,7 @@ export class LensState<Main, T, Context> implements HasOptional<Main, T> {
   /** The json that this context is focused on */
   optJsonOr ( t: T ): T {
     let result = this.optional.getOption ( this.main );
-    return result ? result : t
+    return result === undefined ? t : result
   }
 
   /** How we edit the json that this is focused on: we call setJson and that will make a new main json with the bit passed in placing the json that we are focused on

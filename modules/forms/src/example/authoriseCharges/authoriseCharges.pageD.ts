@@ -1,7 +1,7 @@
 import { ExampleMainPage, ExampleModalPage } from "../common";
 import { NatNumDd } from "../../common/dataD";
-import { AuthoriseChargesSummaryDD, OneBrandDD, OneChargeDataDD, RememberedData, SelectOneBrandDD, SummaryData, summaryOfChargesDateDD, summaryOfChargesSearchDD } from "./authoriseCharges.dataD";
-import { AuthorisedChargesRD, SelectOneBrandPageRD, SummaryOfChargeDatesRD } from "./authoriseCharges.restD";
+import { AuthoriseChargesSummaryDD, OneBrandDD, OneChargeDataDD, operatorEligableDD, RememberedData, SelectOneBrandDD, SummaryData, summaryOfChargesDateDD, summaryOfChargesSearchDD } from "./authoriseCharges.dataD";
+import { AuthorisedChargesRD, operatorEligabilityRD, SelectOneBrandPageRD, SummaryOfChargeDatesRD } from "./authoriseCharges.restD";
 import { HideButtonsCD } from "../../buttons/hideButtonsCD";
 import { StringParam } from "../../common/restD";
 import { AuthoriseCustomisation } from "./authoriseCharges.customise";
@@ -87,6 +87,7 @@ export function AuthoriseChargesPD ( c: AuthoriseCustomisation ): ExampleMainPag
       summaryOfChargesDates: { dataDD: summaryOfChargesSearchDD ( c ) },
       selectedDateIndex: { dataDD: NatNumDd },
       selectedDateItem: { dataDD: summaryOfChargesDateDD ( c )  },
+      operatorEligable: {dataDD: operatorEligableDD}
     },
     guards: {
       brandSelected: { condition: 'isDefined', path: '~/selectedIndex', message: 'you need to select a brand' },
@@ -110,6 +111,7 @@ export function AuthoriseChargesPD ( c: AuthoriseCustomisation ): ExampleMainPag
         ]
       },
       summaryOfChargeDates: { rest: SummaryOfChargeDatesRD ( c ), targetFromPath: '~/summaryOfChargesDates/searchResults', fetcher: true },
+      operatorEligable: {rest: operatorEligabilityRD(c), targetFromPath: '~/operatorEligable', fetcher: true},
       // summaryOfCharges: { rest: SummaryOfChargesRD, targetFromPath: '~/summaryOfCharges', fetcher: true }
     },
     modes: [ 'view' ],

@@ -45,7 +45,7 @@ export function RestButton<S, C extends PageSelectionContext<S> & HasRestCommand
   }
 
   return wrapWithErrors ( id, enabledBy, [], ( errorProps, error, errorRef, errors ) =>
-    <button ref={getRefForValidateLogicToButton ( id, debug, validate, errors, errorRef )}
+    <button ref={getRefForValidateLogicToButton ( state ) ( id, debug, validate, errors, errorRef )}
             {...errorProps} onClick={onClick}
             className={getButtonClassName ( buttonType )}
             disabled={error}>{text ? text : name}</button> )

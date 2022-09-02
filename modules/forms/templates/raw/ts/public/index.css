@@ -19,7 +19,7 @@
 .tooltip-wrap:hover .errormessage {
     outline: 2px solid red;
     display: block;
-    display: none; /*    Comment out when want error messages*/
+    /*display: none; !*    Uncomment the line to get the data back*!*/
 }
 
 .tooltip-wrap:hover .errormessage:empty {

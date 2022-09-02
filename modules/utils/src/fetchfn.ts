@@ -73,18 +73,18 @@ export function fetchWithDelay ( ms: number, fetchFn: FetchFn ): FetchFn {
 export function loadingCursorFetch ( fetchFn: FetchFn ): FetchFn {
   var count = 0
   return ( re: RequestInfo, init?: RequestInit ): Promise<[ number, any ]> => {
-    console.log ( 'loadingCursorFetch', count )
+    // console.log ( 'loadingCursorFetch', count )
     if ( count === 0 ) {
       document.body.style.cursor = "wait";
-      console.log ( 'loadingCursorFetch - wait' )
+      // console.log ( 'loadingCursorFetch - wait' )
     }
     count += 1
     return fetchFn ( re, init ).finally ( () => {
-      console.log ( 'loadingCursorFetch - finally', count )
+      // console.log ( 'loadingCursorFetch - finally', count )
       count -= 1
       if ( count === 0 )
         if ( count === 0 ) {
-          console.log ( 'loadingCursorFetch - back to default', count )
+          // console.log ( 'loadingCursorFetch - back to default', count )
           document.body.style.cursor = "default";
         }
     } )

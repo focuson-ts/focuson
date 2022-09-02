@@ -301,6 +301,7 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
   const debugState = state.copyWithLens ( Lenses.identity<any> ().focusQuery ( 'debug' ) )
   if ( showDebug ) {
     let showTracingState = debugState.focusOn ( 'showTracing' );
+    let useRefsState = state.focusOn ( 'useRefs' );
     let showValidityState = debugState.focusOn ( 'validityDebug' );
     let recordTracingState = debugState.focusOn ( 'recordTrace' );
     let clearTagsState: LensState<S, TagHolder, C> = state.copyWithLens ( state.context.tagHolderL )
@@ -318,6 +319,7 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
             <li><ClearTrace state={state}/></li>
             <li><SetStateButton id='debug.clearMessage' label='Clear Messages' state={clearMessagesState} target={[]}/></li>
             <li><SetStateButton id='debug.clearTags' label='Clear Tags' state={clearTagsState} target={{}}/></li>
+            <li><ToggleButton id='debug.useRefs' buttonText='{/useRefs|Start using|Stop using} Userefs ' state={useRefsState}defaultValue={false} /></li>
             <li><MakeTest state={state}/></li>
             <li><AssertPages state={state}/></li>
           </ul>

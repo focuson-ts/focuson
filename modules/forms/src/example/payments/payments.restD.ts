@@ -131,7 +131,9 @@ export const newPaymentsRD: ExampleRestD = {
 }
 
 
-export const currencyDD: ExampleDataD = {
+  export const currencyDD
+:
+ExampleDataD = {
   name: 'Currency',
   description: "id and name of the currency ",
   structure: {
@@ -146,8 +148,10 @@ export const currencyListDD: ExampleRepeatingD = {
   display: LabelAndDropDownFromDataCD,
   displayParams: { data: '~/currency', dataId: 'id', dataField: 'currency' },
   paged: false,
-
 }
+
+
+
 export const currencyRD: ExampleRestD = {
   params: {},
   dataDD: currencyListDD,

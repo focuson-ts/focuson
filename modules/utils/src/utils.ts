@@ -202,11 +202,5 @@ export const errorPromiseMonad = <S extends any> ( onError: ( s: S, e: any ) => 
 export function safeFlatten ( s: string[][] | undefined ): string[] {
   return safeArray ( s ).flat ()
 }
-export function disabledFrom ( s?: string[][] ): boolean {
-  const flattened = safeFlatten ( s );
-  const length = flattened.length;
-  const result = length > 0;
-  console.log ( 'displayedFrom', s, 'flattened', flattened, length, result )
-  return result
-}
+export const disabledFrom = ( s?: string[][] ): boolean => safeFlatten ( s ).length > 0;
 

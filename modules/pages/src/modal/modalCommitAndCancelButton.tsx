@@ -36,7 +36,6 @@ interface ModalCommitButtonProps<S, C> extends ModalCommitCancelButtonProps<S, C
 function canClosePages<S, Context extends PageSelectionContext<S>> ( id, state: LensState<S, any, Context>, closeTwoWindowsNotJustOne: boolean ): [ boolean, string ] {
   const pages = pageSelections ( state )
   const result: [ boolean, string ] = [ closeTwoWindowsNotJustOne ? pages.length <= 2 : pages.length <= 1, 'Not enough pages open to close' ];
-  console.log ( `canClosePages`, pages.length, id, closeTwoWindowsNotJustOne, result )
   return result;
 }
 export function ModalCancelButton<S, Context extends ModalContext<S>> ( { id, state, text, buttonType, confirm, enabledBy, closeTwoWindowsNotJustOne }: ModalCommitCancelButtonProps<S, Context> ) {
@@ -122,7 +121,7 @@ export function findClosePageTxs<S, C extends PageSelectionContext<S> & HasRestC
   return [ ...restTransformers, ...copyOnCloseTxs, ...findSetLengthOnClose ( pageToClose, state.main, toPathTolens ), ...changeTxs ]
 }
 
-export interface ModalContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasTagHolderL<S>, HasDataFn {}
+export interface ModalContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasTagHolderL<S>, HasDataFn{}
 
 function closeOnePageTxs<S, Context extends ModalContext<S>> ( errorPrefix: string, state: LensState<S, any, Context>, change: ModalChangeCommands[] ): Transform<S, any>[] {
   const { pageSelectionL } = state.context
@@ -162,7 +161,7 @@ export function ModalCommitButton<S, Context extends ModalContext<S>> ( c: Modal
   // @ts-ignore
   const debug = state.main?.debug?.validityDebug
   return wrapWithErrors ( id, enabledBy, [ canClosePages ( id, state, closeTwoWindowsNotJustOne ) ], ( props, error, errorRef, allErrors ) =>
-    <button ref={getRefForValidateLogicToButton ( id, debug, validate, allErrors, errorRef )}
+    <button ref={getRefForValidateLogicToButton(state) ( id, debug, validate, allErrors, errorRef )}
             disabled={error} {...props}
             className={getButtonClassName ( buttonType )}
             id={id} onClick={onClick}>{text ? text : 'Commit'}</button> )
