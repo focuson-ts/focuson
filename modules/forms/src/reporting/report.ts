@@ -19,7 +19,7 @@ export interface FullReport<B, G> {
 }
 
 function makeFullReportCriticals<B, G> ( ps: MainPageD<B, G>[] ) {
-  const allpages = ps.flatMap ( p => [ p.name, ...safeArray ( p.modals ).flatMap ( flatMapToModal ).map ( m => m.modal.name ) ] )
+  const allpages = ps.flatMap ( p => [ p.name, ...safeArray ( p.modals ).flatMap ( flatMapToModal ).map ( m => p.name + ' / ' + m.modal.name ) ] )
   return findDuplicates ( allpages, p => p ).map ( name => `CRITICAL Multiple pages with name ${name}` )
 }
 export function makeReportData<B extends ButtonD, G extends GuardWithCondition> ( ps: MainPageD<B, G>[] ): FullReport<B, G> {
