@@ -40,7 +40,8 @@ export function ViewChargesPage ( c: AuthoriseCustomisation ): ExampleModalPage 
     layout: { component: HideButtonsCD, displayParams: { hide: [ 'selectDate' ] } },
     display: { dataDD: AuthoriseChargesSummaryDD ( c ), target: '~/authorisedCharges' },
     guards: {
-      somethingSelected: { condition: 'isDefined', path: '~/selectedCharge', message: 'You need to select something' }
+      somethingSelected: { condition: 'isDefined', path: '~/selectedCharge', message: 'You need to select something' },
+      hasSomeData: {condition: 'arrayLength>0', path: '~/authorisedCharges/fromApi/editingData', message: 'There is no data loaded'}
     },
     buttons: {
       selectDate: {
@@ -55,7 +56,7 @@ export function ViewChargesPage ( c: AuthoriseCustomisation ): ExampleModalPage 
       },
       authoriseApprovedFees: { control: "ActionButton", path: '#editingData', text: 'Authorise Approved Fees', action: 'authoriseApprovedFees' },
       summary: {
-        enabledBy: 'somethingSelected',
+        enabledBy: 'hasSomeData',
         control: 'ModalButton', modal: SummaryOfChargesPage ( c ),
         copy: { from: '~/authorisedCharges/fromApi/editingData' },
         mode: 'view', focusOn: '~/summaryOfCharges'

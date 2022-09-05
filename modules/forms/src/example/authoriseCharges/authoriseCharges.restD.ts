@@ -115,7 +115,7 @@ export function operatorEligabilityRD ( c: AuthoriseCustomisation ): ExampleRest
     params: { ...fromCommonIds('operatorName') },
     dataDD: operatorEligableDD,
     namePrefix: c.namePrefix,
-    url: `${c.urlPrefix}/operatorEligability{query}`,
+    url: `${c.urlPrefix}/operatorEligability?{query}`,
     actions: [ 'get' ],
     resolvers: {}
   }

@@ -2,7 +2,7 @@ import { AllDataDD, CompDataD, DisplayParamDD, HasGuards, HasLayout, isDataDd, i
 import { commonParamsWithLabel, DisplayCompD, OneDisplayCompParamD, SimpleDisplayComp } from "../common/componentsD";
 import { dataDsIn, isMainPage, isModalPage, MainPageD, PageD } from "../common/pageD";
 
-import { decamelize, NameAnd, sortedEntries, toArray, unique, unsortedEntries, Validations } from "@focuson/utils";
+import { decamelize, NameAnd, safeArray, safeObject, sortedEntries, toArray, unique, unsortedEntries, Validations } from "@focuson/utils";
 import { componentName, domainName, domainsFileName, emptyFileName, guardName, modalImportFromFileName, modalPageComponentName, optionalsFileName, optionalsName, pageComponentName, pageDomainName } from "./names";
 import { addButtonsFromVariables, MakeButton, makeButtonsVariable, makeGuardButtonVariables } from "./makeButtons";
 import { focusOnFor, indentList, noExtension } from "./codegen";
@@ -350,11 +350,18 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
   const modalRenderImports = pages.flatMap ( p => (isModalPage ( p ) && !p.display.dataDD.display) ? [
     `import {${componentName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..', mainP, p, params.renderFile )}'` ] : [] )
   const pageLayoutImports = pages.flatMap ( p => p.layout ? [ `import { ${p.layout.component.name} } from '${p.layout.component.import}';` ] : [] )
+  const guardImports: string[] = pages.flatMap ( p => Object.values ( safeObject ( p.guards ) ).flatMap ( g => safeArray ( makeGuard[ g.condition ]?.imports ) ) )
   const allImports = unique ( [ ...imports,
-    ...modalDomainImports, ...modalRenderImports,
-    ...makeComponentImports ( pages ),
-    ...params.guardFnsFile ? [ `import * as guardFns from '${params.guardFnsFile}';` ] : [],
-    ...makeButtonImports ( makeButton ), ...pageDomainsImports, ...pageLayoutImports, ...domainImports ], s => s )
+      ...modalDomainImports,
+      ...modalRenderImports,
+      ...makeComponentImports ( pages ),
+      ...params.guardFnsFile ? [ `import * as guardFns from '${params.guardFnsFile}';` ] : [],
+      ...makeButtonImports ( makeButton ),
+      ...pageDomainsImports,
+      ...pageLayoutImports,
+      ...domainImports,
+      ...guardImports ],
+    s => s )
   return [ ...allImports, ...pageComponents, ...dataComponents ]
 }
 

@@ -8,7 +8,8 @@ import { PageMode } from "@focuson/pages";
 
 export type AllGuards = LocalVariableGuard | LocalVariableMoreThanZero | LocalVariableLessThanLengthMinusOne |
   LocalVariableValueEquals<any> | LocalVariableDefined | ALessThanB | BinaryCondition |
-  AndOrCondition | NotCondition | PageModeIs | ContainsGuard | NumberAndBooleanCondition | RegexCondition | PageModeCondition | FunctionCondition
+  AndOrCondition | NotCondition | PageModeIs | ContainsGuard | NumberAndBooleanCondition | RegexCondition | PageModeCondition | FunctionCondition|
+  ArrayLengthMoreThanZero
 
 function errorPrefix ( mainP: PageD<any, any>, p: PageD<any, any>, name: string, guard: any ) {
   if ( mainP.name === p.name ) return `MakeGuardVariable for ${p.name} ${name} ${JSON.stringify ( guard )}`
@@ -18,12 +19,18 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
   in: {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableGuard ) =>
-      `const ${guardName ( name )} = ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJson()`
+      `const ${guardName ( name )} = ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJson()`,
+    raw: true
   },
   isDefined: {
     imports: [],
     makeGuardVariable: ( params, mainPage, page, name, guard: LocalVariableDefined ) =>
       `const ${guardName ( name )} = ${stateQueryForGuards ( errorPrefix ( mainPage, page, name, guard ), params, mainPage, page, guard.path )}.optJson() !== undefined`
+  },
+  "arrayLength>0": {
+    imports: ['import { safeArray } from "@focuson/utils";'],
+    makeGuardVariable: ( params, mainPage, page, name, guard: LocalVariableDefined ) =>
+      `const ${guardName ( name )} = safeArray(${stateQueryForGuards ( errorPrefix ( mainPage, page, name, guard ), params, mainPage, page, guard.path )}.optJson()).length>0`
   },
   equals: {
     imports: [],
@@ -125,6 +132,7 @@ export type MakeGuard<G extends Guard> = NameAnd<GuardCreator<G>>
 export interface GuardCreator<G> {
   imports: string[];
   makeGuardVariable: ( params: TSParams, mainPage: MainPageD<any, G>, page: PageD<any, G>, name: string, guard: G ) => string
+  raw?: boolean
 
 }
 
@@ -188,6 +196,13 @@ export interface LocalVariableDefined extends Guard {
   condition: 'isDefined';
   path: string;
 }
+
+export interface ArrayLengthMoreThanZero extends Guard {
+  condition: 'arrayLength>0';
+  path: string;
+}
+
+
 export interface LocalVariableLessThanLengthMinusOne extends Guard {
   condition: '<arrayEnd'
   varPath: string

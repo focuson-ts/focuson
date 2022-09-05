@@ -70,7 +70,7 @@ export const PaymentsPageD: ExampleMainPage = {
     validatePayee: { rest: ValidatePayeeRD, targetFromPath: '~/validatedPayeeDetails' }
   },
   guards: {
-    tableItemSelected: { condition: "isDefined", path: '~/selectedPaymentIndex' }
+    tableItemSelected: { condition: "isDefined", path: '~/selectedPaymentIndex', message: 'Please select a row to copy (you need to choose EMT or Chaps first)'}
   },
   buttons: {
     new: {
