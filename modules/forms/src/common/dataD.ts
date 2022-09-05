@@ -19,23 +19,25 @@ export function sampleFromDataD<G> ( o: OneDataDD<G> | undefined, d: AllDataDD<G
   return isPrimDd ( d ) ? [ ...safeArray<any> ( d.sample ).map ( ( t: any ) => t ), ...safeArray ( d.enum ? Object.keys ( d.enum ) : [] ) ] : []
 }
 
-export interface OneDataDDForPrim<D extends CommonPrimitiveDD<T>, T, G> extends HasSample<T> {
+interface HasGuard {
+  guard?: NameAnd<string[] | boolean>
+
+}
+export interface OneDataDDForPrim<D extends CommonPrimitiveDD<T>, T, G> extends HasSample<T> , HasGuard{
   dataDD: D;
   hidden?: boolean;
-  guard?: NameAnd<string[]>
   displayParams?: ComponentDisplayParams,
   sampleOffset?: number;
   db?: DbValues
 }
-export function isOneDataDDForPrim<D extends CommonPrimitiveDD<T>, T, G> ( o: OneDataDD<G> ): o is OneDataDDForPrim<D, T, G> {
+export function isOneDataDDForPrim<D extends CommonPrimitiveDD<T>, T, G> ( o: OneDataDD<G>|undefined ): o is OneDataDDForPrim<D, T, G> {
   // @ts-ignore
-  return o.sample !== undefined
+  return o?.sample !== undefined
 }
-export interface OneDataDDNonePrim<G> {
+export interface OneDataDDNonePrim<G>  extends  HasGuard{
   sample?: undefined;
   dataDD: AllDataDD<G>;
   hidden?: boolean;
-  guard?: NameAnd<string[]>
   displayParams?: ComponentDisplayParams,
   sampleOffset?: number;
   db?: DbValues

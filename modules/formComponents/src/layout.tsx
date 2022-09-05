@@ -1,4 +1,4 @@
-import { Children, CSSProperties } from "react";
+import { Children, CSSProperties, MutableRefObject } from "react";
 import { FocusOnContext, makeProcessorsConfig } from "@focuson/focuson";
 import { LensProps } from "@focuson/state";
 import { inputCommandProcessors, processChangeCommandProcessor } from "@focuson/rest";
@@ -7,6 +7,7 @@ import { safeString } from "@focuson/utils";
 
 export interface LayoutProps<S, C> extends LensProps<S, any, C> {
   details: string;
+  divRef?: MutableRefObject<HTMLDivElement>,
   children: JSX.Element | JSX.Element[];
   title?: string;
   titleClassName?: string;
@@ -24,7 +25,7 @@ function getLayoutAsArray ( details: string ) {
     return undefined
   }
 }
-export function Layout<S, C extends FocusOnContext<S>> ( { state, details, children, title, titleClassName, rightHandTitle, rightHandClassName, defaultProps, displayAsCards, scrollAfter }: LayoutProps<S, C> ) {
+export function Layout<S, C extends FocusOnContext<S>> ( { state, details, children, title, titleClassName, rightHandTitle, rightHandClassName, defaultProps, displayAsCards, scrollAfter ,divRef}: LayoutProps<S, C> ) {
   let elemIndex = 0
   const maxHeightString: CSSProperties | undefined = scrollAfter ? { maxHeight: scrollAfter, overflowY: 'scroll', scrollbarWidth: 'thin',overflowX:'hidden' } : undefined
   const parsedDetails = getLayoutAsArray ( details )
@@ -37,7 +38,7 @@ export function Layout<S, C extends FocusOnContext<S>> ( { state, details, child
   const hrBetweenRows = true
 
 
-  return <div style={maxHeightString}>
+  return <div ref={divRef} style={maxHeightString}>
     {(title || rightHandTitle) && <div className="layout-title-holder">{title && <div className={titleClassName ? titleClassName : 'layout-title'} dangerouslySetInnerHTML={{ __html: replaceTextUsingPath ( state, safeString ( title ) ) }}/>}
       {rightHandTitle && <div className={rightHandClassName ? rightHandClassName : 'layout-right-title'}>{replaceTextUsingPath ( state, safeString ( rightHandTitle ) )}</div>}</div>}
     {parsedDetails.map ( ( row: any, rowIndex: number ) =>

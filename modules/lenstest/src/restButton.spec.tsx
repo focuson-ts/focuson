@@ -9,6 +9,7 @@ import { FocusOnContext } from "@focuson/focuson";
 import { identityOptics, Lenses } from "@focuson/lens";
 import { RestButton } from "@focuson/form_components";
 import { HasTagHolder } from "@focuson/template";
+import { ModalButtonStateForTest } from "./modalButton.integration.spec";
 
 enzymeSetup ()
 
@@ -42,6 +43,7 @@ const context: Context = {
   newFetchers: {},
   restDetails: {},
   tagHolderL: Lenses.identity<RestButtonStateForTest> ().focusQuery ( 'tags' ),
+  currentState<D, C> ( state: LensState<RestButtonStateForTest, any, C> ): LensState<RestButtonStateForTest, D, C> {return state}
 }
 
 

@@ -7,7 +7,7 @@ export interface LensProps<Main, T, Context> {
   state: LensState<Main, T, Context>
 }
 
-type SetJsonReasonEvent = 'onClick' | 'onChange' | 'textChanged' | 'changeRaw'
+export type SetJsonReasonEvent = 'onClick' | 'onChange' | 'textChanged' | 'changeRaw' | 'onBlur'
 /** The reason we changed the json if it was a component event */
 export interface SetJsonReasonForComponent {
   component?: string;
@@ -180,6 +180,10 @@ export class LensState<Main, T, Context> implements HasOptional<Main, T> {
       }
 
     }
+  }
+
+  copyWithNewMain ( newMain: Main ) {
+    return new LensState ( newMain, this.dangerouslySetMain, this.optional, this.context )
   }
 }
 

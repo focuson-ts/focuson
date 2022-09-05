@@ -2,17 +2,16 @@ import { applyMiddleware } from 'redux'
 import { legacy_createStore, Store } from '@reduxjs/toolkit'
 import { Context, emptyState, FState, identityL } from "./common";
 import { defaultDateFn, errorMonad, errorPromiseMonad, fetchWithDelay, fetchWithPrefix, loggingFetchFn, safeArray, SimpleMessage, stringToSimpleMsg } from "@focuson/utils";
-import { lensState } from "@focuson/state";
+import { lensState, LensState } from "@focuson/state";
 import { Reducer } from "react";
 import { dispatchRestAndFetchCommands, FocusOnConfig, FocusOnContext, FocusOnDebug, HasFocusOnDebug, restCountL, traceL, makeProcessorsConfig} from "@focuson/focuson";
-import { Lens, massTransform, Transform } from "@focuson/lens";
+import { Lens, Lenses, massTransform, Transform } from "@focuson/lens";
 import { pageSelectionlens, preMutateForPages, simpleMessagesL } from "@focuson/pages";
 import { newFetchers } from "./fetchers";
 import { restDetails, restUrlMutator } from "./rests";
 import { pages } from "./pages";
 import { RestCommand, RestCommandAndTxs, restL } from "@focuson/rest";
 import { config, context, start } from "./config";
-
 
 export interface FocusOnSetMainAction<S> {
   type: 'setMain',
@@ -46,7 +45,7 @@ export const {teamName}Reducer: any = <BigState, S> ( rootLens: Lens<BigState, S
   if ( isFocusOnMassTxsAction<S> ( action ) && action.team=== '{teamName}' ) {
     if ( debug ) console.log ( "   {teamName}Reducer- action is massTxs", action.type, action.txs.map ( t => [ t[ 0 ].description, t[ 1 ] ( t[ 0 ].getOption ( action.s ) ) ] ) )
     if ( action.txs.length === 0 ) {
-      console.log ( "  nothing to do..." );
+      if (debug) console.log ( "  nothing to do..." );
       return state
     }
     let result: S = massTransform<S> ( action.s, ...action.txs );
@@ -112,7 +111,12 @@ export const focusOnMiddlewareFor{teamName} = <BigState, S extends HasFocusOnDeb
   // if ( debug ) console.log ( 'focusOnMiddleware - finalResult is ', finalResult );
   // return res;
 };
-export function makeLsFor{teamName}<S> ( store: Store<S>, team: string ) {
-  // @ts-ignore
-  return lensState ( store.getState ()[ team ], ( s, reason ) => store.dispatch ( { type: 'setMain', s, team, reason } ), team, context )
+export function makeLsForfocuson<S> ( store: Store<S>, team: string ) {
+  function currentState<D,C> ( ls: LensState<S, D, C> ): LensState<S,D,C> {
+    const currentMain: any = store.getState ();
+    const newMain = currentMain[ team ];
+    return ls.copyWithNewMain(newMain)
+  }
+  let value: any = store.getState ();
+  return lensState ( value[ team ], ( s, reason ) => store.dispatch ( { type: 'setMain', s, team, reason } ), team, { ...context, currentState } )
 }

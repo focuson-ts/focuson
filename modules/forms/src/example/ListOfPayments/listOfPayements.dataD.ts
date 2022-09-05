@@ -181,7 +181,7 @@ export const printRecordDD: ExampleDataD = {
     includeSingleAndInitialDirectDebits: { dataDD: BooleanDD },
     alreadyPrinted: { dataDD: { ...BooleanDD}, sample: [ false, true, false ] }, //will be hidden but leaving visible for now.
     authorisedByCustomer: { dataDD: authorisedByCustomerDD, guard: { requestedBy: [ 'N' ] } },
-    datePrinted: { dataDD: StringDD, guard: { alreadyPrinted: [ 'true' ] } }
+    datePrinted: { dataDD: StringDD, guard: { alreadyPrinted: true} }
   }
 }
 

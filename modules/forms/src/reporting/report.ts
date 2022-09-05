@@ -274,9 +274,14 @@ function makeTitle<G> ( title: string, g: HasGuards<G> ): string[] {
   return [ `| ${names.join ( "|" )}`, `|${names.map ( n => ' --- ' ).join ( '|' )}` ]
 
 }
+function reportStringForOneGuard<G> ( oneDataD: OneDataDD<G>, title: string ) {
+  const guard: string[] | boolean = oneDataD.guard[ title ];
+  if ( Array.isArray ( guard ) ) return safeArray ( guard ).join ( "," )
+  return ''
+}
 const makeGuardReportFor = ( titles: string[] ) => <G> ( [ name, oneDataD ]: [ string, OneDataDD<G> ] ): string[] => {
   if ( oneDataD.guard === undefined ) return []
-  return [ [ name, ...titles.map ( t => oneDataD.guard[ t ] ? safeArray ( oneDataD.guard[ t ] ).join ( "," ) : ' ' ) ].join ( '|' ) ]
+  return [ [ name, ...titles.map ( t => reportStringForOneGuard ( oneDataD, t ) ) ].join ( '|' ) ]
 };
 function makeGuardReportForDataD<G> ( d: CompDataD<G> ): string[] {
   if ( isRepeatingDd ( d ) ) return []

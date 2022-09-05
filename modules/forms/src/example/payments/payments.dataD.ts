@@ -1,6 +1,7 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
 import { BooleanDD, DateDD, DateDDMMYYY_DD, MoneyDD, StringDD, stringPrimDD, StringPrimitiveDD } from "../../common/dataD";
-import { LabelAndDropDownCD, LabelAndDropDownFromDataCD, LabelAndRadioCD, LayoutCd, TableWithVaryingOrderCD } from "../../common/componentsD";
+import { ConfirmChangesToAnyCD, LabelAndDropDownCD, LabelAndDropDownFromDataCD, LabelAndRadioCD, LayoutCd, TableWithVaryingOrderCD } from "../../common/componentsD";
+import { ConfirmChangesToAny } from "@focuson/form_components";
 
 export const PaymentTypeDd: StringPrimitiveDD = {
   ...stringPrimDD,
@@ -80,15 +81,15 @@ export const ChargeDetailsDD: ExampleDataD = {
 export const amountDD: ExampleDataD = {
   name: 'Amount',
   description: '',
-  layout: { component: LayoutCd, displayParams: { details: '[[1,1,1], [1]]' } },
+  layout: { component: ConfirmChangesToAnyCD, displayParams: { confirm: { messageText: 'Are you sure you want:' }, layoutDetails: '[[1,1,1], [1]]' } },
   guards: {
     sterlingZero: { condition: 'equals', path: 'sterlingAmount', value: 0 },
     currencyZero: { condition: 'equals', path: 'currencyAmount', value: 0 }
   },
   structure: {
     currency: { dataDD: CurrencyEnum },
-    sterlingAmount: { dataDD: MoneyDD, guard: { currencyZero: [ 'true' ] }, sample: [ 123, 2345, 5654 ] },
-    currencyAmount: { dataDD: MoneyDD, guard: { sterlingZero: [ 'true' ] }, sample: [ 222, 333, 444 ] },
+    sterlingAmount: { dataDD: MoneyDD, guard: { currencyZero: true }, sample: [ 123, 2345, 5654 ], displayParams: { min: 0.01, step: 0.01 } },
+    currencyAmount: { dataDD: MoneyDD, guard: { sterlingZero: true }, sample: [ 222, 333, 444 ], displayParams: { min: 0.01, step: 0.01 } },
     amountInWords: { dataDD: StringDD, sample: [ 'one hundred', 'two hundred', 'three hundred' ] },
   }
 

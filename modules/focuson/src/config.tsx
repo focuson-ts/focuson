@@ -43,7 +43,10 @@ export interface HasFetchersAndRest<S, MSGs> {
   /** The optional that points to where the tags for the fetchers are stored */
   tagHolderL: Optional<S, TagHolder>;
 }
-export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasPathToLens<S>, HasFetchersAndRest<S, SimpleMessage>, HasDataFn {
+export interface HasGetCurrentMain<S> {
+  currentState<D, C> ( state: LensState<S, any, C> ): LensState<S, D, C>
+}
+export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasPathToLens<S>, HasFetchersAndRest<S, SimpleMessage>, HasDataFn, HasGetCurrentMain<S> {
   commonIds: NameAndLens<S>;
 }
 export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSelection & HasRestCommands & HasSimpleMessages & HasTagHolder>
@@ -62,7 +65,8 @@ export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSele
     restL: restL<S> (),
     tagHolderL: Lenses.identity<S> ().focusQuery ( 'tags' ),
     newFetchers,
-    restDetails
+    restDetails,
+    currentState<D, C> ( state: LensState<S, D, C> ) {return state} // default that may replaced by the redux code in store.ts
   }
 }
 

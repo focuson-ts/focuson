@@ -10,7 +10,6 @@ import { TSParams } from "./config";
 import { ButtonD } from "../buttons/allButtons";
 import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 import { stateFocusQueryWithTildaFromPage, stateQueryForParams, stateQueryForPathsFnParams } from "./lens";
-import { mainPage } from "@focuson/pages";
 
 
 export type AllComponentData<G> = ComponentData<G> | ErrorComponentData
@@ -19,7 +18,7 @@ export interface ComponentData<G> {
   dataDD: AllDataDD<G>;
   display: DisplayCompD;
   hidden?: boolean;
-  guard?: NameAnd<string[]>;
+  guard?: NameAnd<string[] | boolean>;
   displayParams?: ComponentDisplayParams
 }
 function componentDataForRootPage<G> ( d: CompDataD<G> ): ComponentData<G> {
@@ -101,6 +100,7 @@ export const processParam = <B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G
     return '{{' + Object.entries ( s ).map ( ( [ name, path ] ) => `${name}:${stateQueryForPathsFnParams ( fullErrorPrefix + ` the path is ${s} name is ${name}, path is ${path}`, params, mainPage, mainPage, path )}` ).join ( ',' ) + '}}'
   }
 
+  function processStoreParam () {return `{store}`}
   if ( dcdType.paramType === 'string' ) return processStringParam ()
   if ( dcdType.paramType === 'boolean' ) return processObjectParam ()
   if ( dcdType.paramType === 'object' ) return processObjectParam ()
@@ -201,7 +201,7 @@ function makeLayoutPrefixPostFix<B, G> ( mainPage: MainPageD<B, G>, page: PageD<
   } else return { layoutPrefixString: defaultOpen, layoutPostfixString: defaultClose }
 }
 
-export function defaultGuardMessage ( name:string) {
+export function defaultGuardMessage ( name: string ) {
   return `${name} is not valid`;
 }
 export function makeGuardVariables<B, G extends GuardWithCondition> ( hasGuards: HasGuards<G>, makeGuard: MakeGuard<G>, params: TSParams, mainP: MainPageD<B, G>, page: PageD<B, G> ): string[] {
@@ -213,7 +213,7 @@ export function makeGuardVariables<B, G extends GuardWithCondition> ( hasGuards:
     const makerString = maker.makeGuardVariable ( params, mainP, page, name, guard );
     const message = guard.message ? guard.message : defaultGuardMessage ( name )
     const guardAsMessages = makerString + `? []:["${message}"]`
-    return guardAsMessages + debugString + `//Guard ${JSON.stringify(guard)}`
+    return guardAsMessages + debugString + `//Guard ${JSON.stringify ( guard )}`
   } );
   return [ `const guardDebug=state.main?.debug?.guardDebug`, ...guards ];
 }

@@ -1,5 +1,5 @@
 import { CommonStateProps, InputOnChangeProps, LabelAlignment } from "./common";
-import { BooleanInput, Input, } from "./input";
+import { Input, } from "./input";
 import { Label } from "./label";
 import { BooleanTransformer, BooleanYNTransformer, NumberTransformer, StringTransformer } from "./transformers";
 import { BooleanValidations, defaultDateFn, NameAnd, NumberValidations, SimpleMessage, stringToSimpleMsg, StringValidations, toArray } from "@focuson/utils";
@@ -20,6 +20,7 @@ export interface LabelAndInputProps<S, T, Context> extends CommonStateProps<S, T
   noLabel?: boolean;
   enabledBy?: string[][];
   placeholder?: string;
+  onBlur?: (e: any) => void
 }
 
 export interface StringProps<T> { // T is the type that we are displaying/editing. V is the value expected by the target. boolean if a checkbox, but otherwise a string

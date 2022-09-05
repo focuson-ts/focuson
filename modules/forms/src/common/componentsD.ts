@@ -84,6 +84,15 @@ export const WithTextLayoutCD: DisplayCompD = {
   }
 }
 
+export const ConfirmChangesToAnyCD: DisplayCompD = {
+  import: "@focuson/form_components", name: "ConfirmChangesToAny",
+  params: {
+    id: { paramType: 'string', needed: 'id' },
+    state: { paramType: 'state', needed: 'defaultToPath' },
+    confirm: { paramType: 'json', needed: 'defaultToPath' },
+    layoutDetails: { paramType: 'string', needed: 'yes' }
+  }
+}
 
 export const commonParamsWithLabel: DisplayCompParamD = {
   ...commonParams,
