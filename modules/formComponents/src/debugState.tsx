@@ -13,7 +13,6 @@ import { AccordionCollapseAll, AccordionExpandAll, AccordionWithInfo } from "./a
 import { trimDownText } from "./common";
 import { CopyToClipboard } from "./CopyToClipboard";
 import { useEffect, useRef } from "react";
-import { DeleteStateButton } from "./deleteStateButton";
 import { SetStateButton } from "./setStateButton";
 
 
@@ -53,6 +52,37 @@ export function CommonIds<S, C extends FocusOnContext<S>> ( { state }: DebugProp
     } )}</ul>
   </>
 }
+
+export function Optionals<S, C extends FocusOnContext<S>> ( { state }: DebugProps<S, C> ) {
+  const p = mainPage ( state )
+  if ( p === undefined ) return <></>
+  const details = state.context.pages
+  const pageDetails = details[ p.pageName ]
+  if ( pageDetails && isMainPageDetails ( pageDetails ) ) {
+    const optionals = safeObject ( pageDetails.namedOptionals )
+    const identity = Lenses.identity<S> ()
+    const optionalJsx = Object.keys ( optionals ).length == 0 ? <p>No Optionals</p> :
+      <table>
+        <thead>
+        <th>Optional</th>
+        <th>Description</th>
+        <th>Value</th>
+        </thead>
+        <tbody>
+        {Object.entries ( optionals ).map ( ( [ name, optional ] ) => <tr key={name}>
+          <td>{name}</td>
+          <td>{optional ( identity ).description}</td>
+          <td>
+            <pre>{JSON.stringify ( optional ( identity ).getOption ( state.main ), null, 2 )}</pre>
+          </td>
+        </tr> )}
+        </tbody>
+      </table>
+    return optionalJsx
+  }
+  return <></>
+}
+
 export function ClearTrace<S, C> ( { state }: LensProps<S, any, C> ) {
   const traceState = state.copyWithLens ( traceL<S> () )
   return <button id='ClearTrace' onClick={() => traceState.setJson ( [], reasonFor ( 'ClearTrace', 'onClick', 'ClearTrace' ) )}>Clear Trace</button>
@@ -181,6 +211,7 @@ export function ToggleDebugs<S, C extends PageSelectionContext<S>> ( { state }: 
     <li><ToggleOneDebug state={debugState} name='tagFetcherDebug'/></li>
     <li><ToggleOneDebug state={debugState} name='guardDebug'/></li>
     <li><ToggleOneDebug state={debugState} name='validityDebug'/></li>
+    <li><ToggleOneDebug state={debugState} name='showOptionalsDebug'/></li>
     <li><ToggleOneDebug state={debugState} name='dateDebug'/></li>
     <li><ToggleOneDebug state={debugState} name='modalDebug'/></li>
   </ul>
@@ -301,6 +332,7 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
   const debugState = state.copyWithLens ( Lenses.identity<any> ().focusQuery ( 'debug' ) )
   if ( showDebug ) {
     let showTracingState = debugState.focusOn ( 'showTracing' );
+    let showOptionalsState = debugState.focusOn ( 'showOptionalsDebug' );
     let useRefsState = state.focusOn ( 'useRefs' );
     let showValidityState = debugState.focusOn ( 'validityDebug' );
     let recordTracingState = debugState.focusOn ( 'recordTrace' );
@@ -319,7 +351,7 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
             <li><ClearTrace state={state}/></li>
             <li><SetStateButton id='debug.clearMessage' label='Clear Messages' state={clearMessagesState} target={[]}/></li>
             <li><SetStateButton id='debug.clearTags' label='Clear Tags' state={clearTagsState} target={{}}/></li>
-            <li><ToggleButton id='debug.useRefs' buttonText='{/useRefs|Start using|Stop using} Userefs ' state={useRefsState}defaultValue={false} /></li>
+            <li><ToggleButton id='debug.useRefs' buttonText='{/useRefs|Start using|Stop using} Userefs ' state={useRefsState} defaultValue={false}/></li>
             <li><MakeTest state={state}/></li>
             <li><AssertPages state={state}/></li>
           </ul>
@@ -352,18 +384,27 @@ export function DebugState<S extends HasTagHolder & HasSimpleMessages, C extends
           </tr>
           </thead>
           <tbody>
-          {/* <tr>
-          <td><Pages state={state}/></td>
-          <td><Tags state={state}/></td>
-          <td><Rest state={state}/></td>
-        </tr> */}
           <tr>
-            {/* <td><Messages state={state}/></td> */}
             <td><CommonIds {...props}/></td>
           </tr>
           </tbody>
         </table>
       </div>
+      {showOptionalsState.optJsonOr ( false ) &&
+      <div id="debug-state-container">
+          <table className="table-bordered">
+              <thead>
+              <tr>
+                  <th>Optionals</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                  <td><Optionals {...props}/></td>
+              </tr>
+              </tbody>
+          </table>
+      </div>}
       <PagesData {...props} />
       <div id="debug-context-container">
         <table className="table-bordered">

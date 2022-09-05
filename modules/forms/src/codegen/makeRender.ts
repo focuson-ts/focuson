@@ -212,7 +212,7 @@ export function makeGuardVariables<B, G extends GuardWithCondition> ( hasGuards:
     const debugString = `;if (guardDebug)console.log('${mainP.name} '+ id + '.${name}', ${name}Guard);`
     const makerString = maker.makeGuardVariable ( params, mainP, page, name, guard );
     const message = guard.message ? guard.message : defaultGuardMessage ( name )
-    const guardAsMessages = makerString + `? []:["${message}"]`
+    const guardAsMessages = maker.raw? makerString: makerString + `? []:["${message}"]`
     return guardAsMessages + debugString + `//Guard ${JSON.stringify ( guard )}`
   } );
   return [ `const guardDebug=state.main?.debug?.guardDebug`, ...guards ];
