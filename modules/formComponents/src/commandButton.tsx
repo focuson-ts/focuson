@@ -5,16 +5,18 @@ import { CustomButtonType, getButtonClassName } from "./common";
 import { CommandButtonChangeCommands, commandButtonCommandProcessors, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor } from "@focuson/rest";
 import { FocusOnContext, makeProcessorsConfig } from "@focuson/focuson";
 import { wrapWithErrors } from "@focuson/pages/dist/src/errors";
+import { getRefForValidateLogicToButton } from "@focuson/pages";
 
 
 export interface CommandButtonProps<S, C> extends LensProps<S, any, C>, CustomButtonType {
   id: string;
+  validate?: boolean;
   enabledBy?: string[][];
   label: string;
   commands: CommandButtonChangeCommands[]
 }
 
-export function CommandButton<S, C extends FocusOnContext<S>> ( { id, state, label, commands, buttonType, enabledBy }: CommandButtonProps<S, C> ) {
+export function CommandButton<S, C extends FocusOnContext<S>> ( { id, state, label, commands, buttonType, enabledBy, validate }: CommandButtonProps<S, C> ) {
   function onClick () {
     const errorPrefix = `CommandButton ${id}`;
     const s: S = state.optJson ()
@@ -26,6 +28,7 @@ export function CommandButton<S, C extends FocusOnContext<S>> ( { id, state, lab
     if ( txs.length === 0 ) return
     state.massTransform ( reasonFor ( 'CommandButton', 'onClick', id ) ) ( ...txs )
   }
-  return wrapWithErrors ( id, enabledBy, [],( errorProps, error ) =>
-    <button id={id} {...errorProps}  disabled={error} onClick={onClick} className={getButtonClassName ( buttonType )}>{label}</button>)
+  return wrapWithErrors ( id, enabledBy, [], ( errorProps, error, errorRef, allErrors ) =>
+    <button ref={getRefForValidateLogicToButton ( state ) ( id, false, validate, allErrors, errorRef )}
+            id={id} {...errorProps} disabled={error} onClick={onClick} className={getButtonClassName ( buttonType )}>{label}</button> )
 }

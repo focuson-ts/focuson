@@ -1,5 +1,5 @@
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
-import { opt } from "../codegen/codegen";
+import { opt, optT } from "../codegen/codegen";
 import { decamelize, toArray } from "@focuson/utils";
 import { EnabledBy, enabledByString } from "./enabledBy";
 import { CommandButtonChangeCommands } from "@focuson/rest";
@@ -10,7 +10,11 @@ function makeCommandButton<G> (): ButtonCreator<CommandButtonInPage, G> {
     makeButton:
       ( createButton ) => {
         const { params, parent, name, button } = createButton
-        return [ `<CommandButton  id=${makeIdForButton ( name )}${enabledByString(button)} state={state} commands={${JSON.stringify(toArray(button.command))}} ${opt ( 'label', button.label ? button.label : decamelize ( name, ' ' ) )}  ${opt ( 'buttonType', button.buttonType ? button.buttonType : 'primary' )} />` ]
+        return [ `<CommandButton  id=${makeIdForButton ( name )}${enabledByString ( button )} state={state} commands={${JSON.stringify ( toArray ( button.command ) )}} ${opt ( 'label', button.label ? button.label : decamelize ( name, ' ' ) )}` + [
+          opt ( 'buttonType', button.buttonType ? button.buttonType : 'primary' ),
+          optT ( 'validate', button.validate ),
+          `/>` ].join ( " " )
+        ]
       }
   }
 }
@@ -22,6 +26,7 @@ export function makeCommandButtons<G> (): MakeButton<G> {
 export interface CommandButtonInPage extends EnabledBy {
   control: 'CommandButton';
   label?: string;
-  command: CommandButtonChangeCommands|CommandButtonChangeCommands[];
+  validate?: boolean;
+  command: CommandButtonChangeCommands | CommandButtonChangeCommands[];
 }
 

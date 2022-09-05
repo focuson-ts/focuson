@@ -19,6 +19,7 @@ export const EnabledByModalPageD: ExampleModalPage = {
       confirm: { type: 'window', confirmText: 'Confirm', cancelText: 'Cancel', messageText: "some message" },
       change: { command: 'message', msg: 'from confirm button' }
     },
+    message: { control: 'CommandButton', command: { command: "message", msg: 'Clicked' }, enabledBy: 'yesButton' , validate: true},
     cancel: { control: 'ModalCancelButton', confirm: { type: 'window' } }
   }
 }
