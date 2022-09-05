@@ -102,8 +102,8 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
   display: { target: '~/fromApi', dataDD: occupationAndIncomeFullDomainDD },
   /** When the page is selected for the first time this is the initial state */
   initialValue: [ 'empty',
-    { command: 'set', path: 'selectedItem', value: 0 },
-    { command: 'set', path: 'mainOrJoint', value: false } ],
+    { command: 'set', path: '~/selectedItem', value: 0 },
+    { command: 'set', path: '~/mainOrJoint', value: false } ],
 
   /** This defines the domain data structures in react*/
   domain: {
@@ -126,6 +126,9 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
       constructedBy: 'code',
       code: `id => id.focusQuery ( 'OccupationAndIncomeSummary' ).focusQuery ( 'fromApi' ).focusQuery ( 'customerOccupationIncomeDetails' )`
     },
+    selectedOccupation: {
+      constructedBy: 'path', path: '#currentOccupation[#selected]'
+    }
   },
 
   /** Binds the rest to 'where it takes place'. So we have these rest actions, and the gui data is at the location defined by 'targetFromPath'. Fetcher 'true' means set up a fetcher to go get the data when the page is selected */
@@ -172,11 +175,11 @@ export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
       control: 'ModalButton', modal: listOccupationsModalPD, mode: 'edit',
       focusOn: '~/searchList',
       copy: [
-        { from: '#currentOccupation[#selected]/occupation', to: '~/searchList/search' },
-        { from: '#currentOccupation[#selected]/occupation', to: '~/searchList/selectedOccupationName' },
+        { from: '#selectedOccupation/occupation', to: '~/searchList/search' },
+        { from: '#selectedOccupation/occupation', to: '~/searchList/selectedOccupationName' },
       ],
       copyOnClose: [
-        { from: '~/searchList/selectedOccupationName', to: '#currentOccupation[#selected]/occupation' },
+        { from: '~/searchList/selectedOccupationName', to: '#selectedOccupation/occupation' },
       ]
     },
   }
