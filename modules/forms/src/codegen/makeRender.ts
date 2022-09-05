@@ -226,7 +226,7 @@ export function makeDisplayGuard<B, G extends GuardWithCondition> ( hasGuards: H
 function makeSealedString<B, G> ( dataD: CompDataD<G> ): string[] {
   if ( isDataDd ( dataD ) && dataD.sealedBy ) {
     return [ `//added by sealed: ${JSON.stringify ( dataD.sealedBy )} in component ${dataD.name}. If it doesn't compile check the name and type of the guard variable named`,
-      `if (${dataD.sealedBy}Guard) mode='view'`
+      `if (${dataD.sealedBy}Guard.length===0) mode='view'`
     ]
   }
   return []
