@@ -52,7 +52,7 @@ export function SummaryTable<S, D extends SummaryTableData, C> ( props: SummaryT
     const chargeType = key.slice ( index + 1 ) //ditto
     return { status, chargeType, accAmount, accountId: accId }
   } )
-  const totalWaste = Object.values ( groups ).reduce ( ( acc, v ) => acc + v )
+  const totalWaste = Object.values ( groups ).reduce ( ( acc, v ) => acc + v, 0 )
   const onClick = ( i: number ) => ( e: any ) => {
     selectedItem.setJson ( tableLines[ i ], reasonFor ( 'SummaryDetailsPage', 'onClick', id, `selected row ${i}` ) )
   };

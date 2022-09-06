@@ -41,7 +41,7 @@ export function ViewChargesPage ( c: AuthoriseCustomisation ): ExampleModalPage 
     display: { dataDD: AuthoriseChargesSummaryDD ( c ), target: '~/authorisedCharges' },
     guards: {
       somethingSelected: { condition: 'isDefined', path: '~/selectedCharge', message: 'You need to select something' },
-      hasSomeData: {condition: 'arrayLength>0', path: '~/authorisedCharges/fromApi/editingData', message: 'There is no data loaded'}
+      hasSomeData: { condition: 'arrayLength>0', path: '~/authorisedCharges/fromApi/editingData', message: 'There is no data loaded' }
     },
     buttons: {
       selectDate: {
@@ -86,7 +86,7 @@ export function AuthoriseChargesPD ( c: AuthoriseCustomisation ): ExampleMainPag
       summaryOfChargesDates: { dataDD: summaryOfChargesSearchDD ( c ) },
       selectedDateIndex: { dataDD: NatNumDd },
       selectedDateItem: { dataDD: summaryOfChargesDateDD ( c ) },
-      operatorEligable: { dataDD: operatorEligableDD }
+      operatorEligable: { dataDD: operatorEligableDD ( c ) }
     },
     guards: {
       brandSelected: { condition: 'isDefined', path: '~/selectedIndex', message: 'you need to select a brand' },

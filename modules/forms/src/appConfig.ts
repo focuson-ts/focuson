@@ -36,7 +36,7 @@ export const devAppConfig: AppConfig = {
   debug: {
     fetcherDebug: false, guardDebug: false, restDebug: false, reduxDebug: false, selectedPageDebug: false,
     loadTreeDebug: false, showTracing: false, dateDebug: false,
-    showOptionalsDebug: true,
+    optionalsDebug: true,
     recordTrace: true, tagFetcherDebug: false, validityDebug: false, modalDebug: false, accordions: []
   },
   makeSqlStrings: true

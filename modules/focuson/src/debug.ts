@@ -19,10 +19,10 @@ export interface ShowValidityDebug {
 export interface DateDebug {
   dateDebug?: boolean
 }
-export interface ShowOptionalsDebug{
-  showOptionalsDebug?: boolean
+export interface OptionalsDebug {
+  optionalsDebug?: boolean
 }
-export interface FocusOnDebug extends FetcherDebug, SelectedPageDebug, RestDebug, TracingDebug, AccordionsInDebug, TagFetcherDebug, GuardDebug, ReduxDebug, ShowValidityDebug, DateDebug, ModalDebug,ShowOptionalsDebug {
+export interface FocusOnDebug extends FetcherDebug, SelectedPageDebug, RestDebug, TracingDebug, AccordionsInDebug, TagFetcherDebug, GuardDebug, ReduxDebug, ShowValidityDebug, DateDebug, ModalDebug,OptionalsDebug {
 
 
 }

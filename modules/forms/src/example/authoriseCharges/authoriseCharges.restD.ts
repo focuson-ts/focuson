@@ -113,7 +113,7 @@ export function SummaryOfChargeDatesRD ( c: AuthoriseCustomisation ): ExampleRes
 export function operatorEligabilityRD ( c: AuthoriseCustomisation ): ExampleRestD {
   const result: ExampleRestD = {
     params: { ...fromCommonIds('operatorName') },
-    dataDD: operatorEligableDD,
+    dataDD: operatorEligableDD(c),
     namePrefix: c.namePrefix,
     url: `${c.urlPrefix}/operatorEligability?{query}`,
     actions: [ 'get' ],
