@@ -4,7 +4,7 @@ import { DateFn, RestAction, RestResult, SimpleMessage } from "@focuson/utils";
 import { CommonStateProps, CustomButtonType, getButtonClassName } from "./common";
 import { confirmIt, getRefForValidateLogicToButton, HasSimpleMessageL, hasValidationErrorAndReport, PageSelectionContext } from "@focuson/pages";
 import { useRef } from "react";
-import { wrapWithErrors } from "@focuson/pages/dist/src/errors";
+import { wrapWithErrors } from "@focuson/pages";
 
 export interface RestButtonProps<S, C, MSGs> extends CommonStateProps<S, any, C>, CustomButtonType {
   rest: string;

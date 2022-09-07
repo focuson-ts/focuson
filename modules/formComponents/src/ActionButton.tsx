@@ -1,6 +1,6 @@
 import { LensState } from "@focuson/state";
 import { disabledFrom, NameAnd } from "@focuson/utils";
-import { wrapWithErrors } from "@focuson/pages/dist/src/errors";
+import { wrapWithErrors } from "@focuson/pages";
 
 export interface ActionButtonProps<S, C> {
   id: string;

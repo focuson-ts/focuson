@@ -3,7 +3,7 @@ import { findValidityDetails, fromPathGivenState, PageSelectionContext, pageStat
 import { Lens, massTransform, Optional, Transform } from "@focuson/lens";
 import { toArray } from "@focuson/utils";
 import { CustomButtonType, getButtonClassName } from "./common";
-import { wrapWithErrors } from "@focuson/pages/dist/src/errors";
+import { wrapWithErrors } from "@focuson/pages";
 
 
 export interface DeleteStateButtonProps<S, C> extends CustomButtonType {

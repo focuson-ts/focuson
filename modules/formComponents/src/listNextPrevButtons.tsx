@@ -1,7 +1,7 @@
 import { LensState, reasonFor } from "@focuson/state";
 import { disabledFrom, or, safeArray, useOrDefault } from "@focuson/utils";
 import { CustomButtonType, getButtonClassName } from "./common";
-import { wrapWithErrors } from "@focuson/pages/dist/src/errors";
+import { wrapWithErrors } from "@focuson/pages";
 
 export interface ListButtonProps<S, C> extends CustomButtonType {
   id: string;

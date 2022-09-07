@@ -28,7 +28,7 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
       `const ${guardName ( name )} = ${stateQueryForGuards ( errorPrefix ( mainPage, page, name, guard ), params, mainPage, page, guard.path )}.optJson() !== undefined`
   },
   "arrayLength>0": {
-    imports: ['import { safeArray } from "@focuson/utils";'],
+    imports: [],
     makeGuardVariable: ( params, mainPage, page, name, guard: LocalVariableDefined ) =>
       `const ${guardName ( name )} = safeArray(${stateQueryForGuards ( errorPrefix ( mainPage, page, name, guard ), params, mainPage, page, guard.path )}.optJson()).length>0`
   },
@@ -40,18 +40,18 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
   'a<b': {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: ALessThanB ) =>
-      `const ${guardName ( name )} =  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.aPath )}.optJsonOr(Number.MAX_VALUE) <  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.bPath )}.optJsonOr(Number.MIN_VALUE)`
+      `const ${guardName ( name )} =  safeNumber(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.aPath )}.optJson(),Number.MAX_VALUE) <  safeNumber(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.bPath )}.optJson(),Number.MIN_VALUE)`
   },
   '<#': {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: BinaryCondition ) =>
-      `const ${guardName ( name )} =  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJsonOr(Number.MAX_VALUE) <  ${guard.value}`
+      `const ${guardName ( name )} =  safeNumber(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJson(), Number.MAX_VALUE) <  ${guard.value}`
   },
 
   '>#': {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: BinaryCondition ) =>
-      `const ${guardName ( name )} =  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJsonOr(Number.MIN_VALUE) > ${guard.value}`
+      `const ${guardName ( name )} =  safeNumber(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJson(), Number.MIN_VALUE) > ${guard.value}`
   },
 
   notEquals: {
@@ -87,29 +87,29 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
   "contains": {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: ContainsGuard ) =>
-      `const ${guardName ( name )} =  ${JSON.stringify ( guard.values )}.includes( ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJsonOr(''))`
+      `const ${guardName ( name )} =  ${JSON.stringify ( guard.values )}.includes(safeString( ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJson()))`
   },
   ">0": {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableMoreThanZero ) =>
-      `const ${guardName ( name )} =  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJsonOr(0) >0`
+      `const ${guardName ( name )} =  safeNumber(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJson(), 0) >0`
   },
 
   '>0 and true': {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: NumberAndBooleanCondition ) =>
-      `const ${guardName ( name )} =  (${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.number )}.optJsonOr(0) >0) && ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.boolean )}.optJsonOr(false)      `
+      `const ${guardName ( name )} =  (safeNumber(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.number )}.optJson(), 0) >0) && ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.boolean )}.optJsonOr(false)      `
   },
 
   "<arrayEnd": {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableLessThanLengthMinusOne ) =>
-      `const ${guardName ( name )} =  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.varPath )}.optJsonOr(0) <  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.arrayPath )}.optJsonOr([]).length - 1`
+      `const ${guardName ( name )} =  safeNumber(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.varPath )}.optJson(), 0) <  safeArray(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.arrayPath )}.optJson()).length - 1`
   },
   'regex': {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: RegexCondition ) =>
-      `const ${guardName ( name )} =  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJsonOr('').match(${guard.regex}) !== null `
+      `const ${guardName ( name )} =  safeString(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJson()).match(${guard.regex}) !== null `
 
   },
   pageModeEquals: {

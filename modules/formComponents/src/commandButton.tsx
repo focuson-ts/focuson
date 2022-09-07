@@ -4,7 +4,7 @@ import { disabledFrom, SimpleMessage } from "@focuson/utils";
 import { CustomButtonType, getButtonClassName } from "./common";
 import { CommandButtonChangeCommands, commandButtonCommandProcessors, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor } from "@focuson/rest";
 import { FocusOnContext, makeProcessorsConfig } from "@focuson/focuson";
-import { wrapWithErrors } from "@focuson/pages/dist/src/errors";
+import { wrapWithErrors } from "@focuson/pages";
 import { getRefForValidateLogicToButton } from "@focuson/pages";
 
 
