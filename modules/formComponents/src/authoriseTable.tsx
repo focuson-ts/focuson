@@ -19,6 +19,7 @@ export interface AuthoriseTableData {
 }
 
 export interface AuthoriseTableProps<S, D extends AuthoriseTableData, C> extends TableProps<S, D, C> {
+  firstColumnName?: string
 }
 
 const getValueForAuthorisedTable = <T extends AuthoriseTableData> ( o: keyof T, row: T, joiners: undefined | string | string[] ) => {
@@ -39,7 +40,7 @@ function sum<D extends AuthoriseTableData> ( ds: D[], crOrDr: 'CR' | 'DR' ): str
 }
 
 export function AuthoriseTable<S, D extends AuthoriseTableData, C extends FocusOnContext<S>> ( props: AuthoriseTableProps<S, D, C> ) {
-  const { state, order, id, mode, copySelectedItemTo } = props
+  const { state, order, id, mode, copySelectedItemTo, firstColumnName } = props
   const AuthTable = rawTable<S, any, C> ( [ ...order, 'Halt' ], defaultOnClick ( props ), defaultOneRowWithGetValue ( getValueForAuthorisedTable ) ( id, order, [], haltBox ( state, id ) ) )
   const data = state.optJsonOr ( [] )
   const credits = sum ( data, 'CR' )
@@ -50,7 +51,7 @@ export function AuthoriseTable<S, D extends AuthoriseTableData, C extends FocusO
   const authorisedByS: LensState<S, string, C> = copySelectedItemTo.focusOn ( 'authorisedBy' );
 
   return <Layout state={state} details='[[1],[1,1],[1,1,1]]'>
-    <AuthTable{...props} />
+    <AuthTable{...props}  />
     <LabelAndStringInput id={`${id}.approvedBy`} label='Approved By' state={approvedByS} mode='view' allButtons={{}}/>
     <LabelAndStringInput id={`${id}.authorisedBy`} label='Authorised By' state={authorisedByS} mode='view' allButtons={{}}/>
     <LabelAndFixedNumber id={`${id}.totalCredits`} label='Total Credits' number={credits}/>

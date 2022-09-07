@@ -46,14 +46,17 @@ export function defaultOnClick<S, Context, T> ( props: CommonTableProps<S, T, Co
   return onClick;
 }
 export type OneRowFn<T> = ( row: T, i: number, selectedClass: string | undefined, rights: string[] | undefined, onClick: ( i: number, row: T ) => ( e: any ) => void ) => JSX.Element
+export type DisplayTitleFn = ( id: string, field: string, i: number ) => JSX.Element
+const defaultDisplayTitleFn: DisplayTitleFn = ( id, field, i ) => <th key={field} id={`${id}.th[${i}]`}>{decamelize ( field, ' ' )}</th>
 export const rawTable = <S, T, Context extends PageSelectionContext<S>> (
   titles: any[],
   onClick: ( i: number, row: T ) => ( e: any ) => void,
-  oneRow: OneRowFn<T> ) =>
+  oneRow: OneRowFn<T>, displayTitleFn?: DisplayTitleFn ) =>
   ( props: CommonTableProps<S, T, Context> ) => {
+    const realDisplayTitleFn = displayTitleFn ? displayTitleFn : defaultDisplayTitleFn
     const { id, state, copySelectedIndexTo, copySelectedItemTo, joiners, prefixFilter, prefixColumn, maxCount, emptyData, tableTitle, scrollAfter, rights } = props
     const tbodyScroll: CSSProperties | undefined = scrollAfter ? { height: scrollAfter, overflow: 'auto' } : undefined
-    const orderJsx = titles.map ( ( o, i ) => <th key={o.toString ()} id={`${id}.th[${i}]`}>{decamelize ( o.toString (), ' ' )}</th> )
+    const orderJsx = titles.map ( ( o, i ) => realDisplayTitleFn ( id, o.toString (), i ) )
     const json: T[] = safeArray ( state.optJson () )
     const selected = copySelectedIndexTo?.optJson ()
     function selectedClass ( i: number ) {return i === selected ? 'grid-selected' : undefined }
@@ -67,7 +70,7 @@ export const rawTable = <S, T, Context extends PageSelectionContext<S>> (
         <td colSpan={titles.length}>{emptyData}</td>
       </tr> :
       json.map ( ( row, i ) => filter ( row ) && (maxCount === undefined || count++ < maxCountInt) ? oneRow ( row, i, selectedClass ( i ), rights, onClick ) : null );
-    const title = tableTitle ? <h2 dangerouslySetInnerHTML={{__html: replaceTextUsingPath ( state, tableTitle )}} /> : null
+    const title = tableTitle ? <h2 dangerouslySetInnerHTML={{ __html: replaceTextUsingPath ( state, tableTitle ) }}/> : null
     return <>{title}
       <table id={id} className="grid">
         <thead>

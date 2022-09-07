@@ -94,7 +94,8 @@ export function ListOfChargesDD ( c: AuthoriseCustomisation ): ExampleRepeatingD
     displayParams: {
       order: [ 'chargeType', 'status', 'type', 'sortCode', 'accountNo', 'amount', 'narrative', 'hold' ],
       copySelectedItemTo: '~/selectedCharge',
-      copySelectedIndexTo: '~/selectedChargeIndex'
+      copySelectedIndexTo: '~/selectedChargeIndex',
+      firstColumnName: c.firstColumnName
     },
     paged: false
   }) )

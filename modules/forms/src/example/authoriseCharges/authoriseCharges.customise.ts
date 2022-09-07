@@ -6,17 +6,20 @@ export interface AuthoriseCustomisation{
   authoriseTable: DBTable
   urlPrefix: string
   namePrefix: string
+  firstColumnName: string
 }
 
 export const DirectDebitAC: AuthoriseCustomisation ={
   pageName: 'AuthoriseCharges',
   authoriseTable: authorisedChargesTableDD,
   namePrefix: 'ac',
-  urlPrefix: '/api/dd'
+  urlPrefix: '/api/dd',
+  firstColumnName: 'Charge Type'
 }
 export const CreditAC: AuthoriseCustomisation ={
   pageName: 'Credit',
   authoriseTable:authorisedChargesTableDD,
   namePrefix: 'cc',
-  urlPrefix: '/api/cc'
+  urlPrefix: '/api/cc',
+  firstColumnName: 'Waste'
 }
