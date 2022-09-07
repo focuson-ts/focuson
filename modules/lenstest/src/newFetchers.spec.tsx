@@ -60,6 +60,7 @@ const oneRestDetails: OneRestDetails<StateForNewFetcherTests, NewFetcherDomain, 
   cd,
   fdd,
   ids: [ 'id1', 'id2' ],
+  jwtIds: [ 'id2' ],
   resourceId: [],
   messages: ( status: number | undefined, body: any ): SimpleMessage[] => status === undefined ?
     [ createSimpleMessage ( 'error', `Cannot connect. ${JSON.stringify ( body )}`, testDateFn () ) ] :
@@ -75,9 +76,10 @@ const restDetails: RestDetails<StateForNewFetcherTests, SimpleMessage> = {
 function fetchFn ( a: any, b: any ): Promise<[ number, number ]> {
   return Promise.resolve ( [ 200, 123 ] )
 }
-function config (): FocusOnConfig<StateForNewFetcherTests, FocusOnContext<StateForNewFetcherTests>, SimpleMessage> {
+function config (mockJwt: boolean): FocusOnConfig<StateForNewFetcherTests, FocusOnContext<StateForNewFetcherTests>, SimpleMessage> {
   return {
     fetchFn: fetchFn,
+    mockJwt,
     messageL: simpleMessagesL (),
     newFetchers: newFetchers,
     onError ( s: StateForNewFetcherTests, e: any ): StateForNewFetcherTests {throw Error ( `on error. ${e}\n${JSON.stringify ( s )}` )},
@@ -94,7 +96,7 @@ function config (): FocusOnConfig<StateForNewFetcherTests, FocusOnContext<StateF
     restCountL: restCountL ()
   }
 }
-const someConfig = config ()
+const someConfig = config (true)
 
 
 const pathToLens = ( s: StateForNewFetcherTests ) => ( path: string ): Optional<StateForNewFetcherTests, any> => {
@@ -102,7 +104,7 @@ const pathToLens = ( s: StateForNewFetcherTests ) => ( path: string ): Optional<
 }
 describe ( "test setup for new fetcher", () => {
   it ( "just check the rest works ", async () => {
-    const props: RestToTransformProps<StateForNewFetcherTests, SimpleMessage> = { fetchFn, d: restDetails, urlMutatorForRest: someConfig.restUrlMutator, pathToLens, messageL: someConfig.messageL, traceL: traceL (), stringToMsg: someConfig.stringToMsg }
+    const props: RestToTransformProps<StateForNewFetcherTests, SimpleMessage> = { fetchFn, mockJwt: true, d: restDetails, urlMutatorForRest: someConfig.restUrlMutator, pathToLens, messageL: someConfig.messageL, traceL: traceL (), stringToMsg: someConfig.stringToMsg }
     const [ actual ] = await restToTransforms<StateForNewFetcherTests, SimpleMessage> ( props, () => empty, [ { name: 'someRestName', restAction: 'get' } ] )
     expect ( actual.restCommand ).toEqual ( { name: 'someRestName', restAction: 'get' } )
     expect ( actual.status ).toEqual ( 200 )
@@ -167,7 +169,7 @@ describe ( "restCommandsFromFetchers should create a rest command when needed", 
 
 describe ( "processRestsAndFetchers", () => {
   it ( "should load if fetcher needs it", async () => {
-    const [ actual ] = await processRestsAndFetchers ( config (),
+    const [ actual ] = await processRestsAndFetchers ( config (true),
       defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {}, newFetchers, restDetails, testDateFn ) ) ( [] ) (
       () => ({ ...empty, ids: { id1: 111, id2: 222 } })
     )
@@ -188,7 +190,7 @@ describe ( "processRestsAndFetchers", () => {
 
   } )
   it ( "should load and record trace if fetcher needs it and recordTrace is on", async () => {
-    const [ actual ] = await processRestsAndFetchers ( config (),
+    const [ actual ] = await processRestsAndFetchers ( config (true),
       defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {}, newFetchers, restDetails, testDateFn ) ) ( [] ) (
       () => ({ ...empty, ids: { id1: 111, id2: 222 }, debug: { recordTrace: true } })
     )
@@ -215,7 +217,7 @@ describe ( "processRestsAndFetchers", () => {
     ] )
   } )
   it ( "should not load if fetcher doesn't needs it", async () => {
-    const actual = await processRestsAndFetchers ( config (),
+    const actual = await processRestsAndFetchers ( config (true),
       defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {}, newFetchers, restDetails, testDateFn ) ) ( [] ) (
       () => empty
     )

@@ -1,4 +1,4 @@
-import { AllLensRestParams, findIds, isRestLens, LensRestParam, RestStateDetails } from "../common/restD";
+import { AllLensRestParams, findIds, isCommonLens, isRestLens, LensRestParam, RestStateDetails } from "../common/restD";
 import { domainName, domainsFileName, pageDomainName, restDetailsName, restFileName } from "./names";
 import { TSParams } from "./config";
 import { allRestAndActions, RefD, RestDefnInPageProperties } from "../common/pageD";
@@ -28,6 +28,7 @@ export const makeRest = <G> ( params: TSParams, p: RefD<G> ) => ( restName: stri
     [ `    //This compilation error is because you used a variable name in the target '${r.targetFromPath}'. Currently that is not supported` ] : []
   const states = safeObject ( r.rest.states )
   const errorPrefix = `${p.name}.rest[${restName}]`;
+  const jwtIds =allParams.filter(([name, f]) => isCommonLens(f) && f.inJwtToken).map(([name,f]) =>name)
   return [
     `//If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs`,
     `export function ${restDetailsName ( p, restName, r.rest )} ( cd: NameAndLens<${params.stateName}>, dateFn: DateFn  ): OneRestDetails<${params.stateName}, ${pageDomain}, ${params.domainsFile}.${domainName ( r.rest.dataDD )}, SimpleMessage> {`,
@@ -41,6 +42,7 @@ export const makeRest = <G> ( params: TSParams, p: RefD<G> ) => ( restName: stri
     `    dLens: ${lensFocusQueryWithTildaFromPage ( `makeRest for page ${p.name}, ${restName}`, params, p, r.targetFromPath )},`,
     `    cd, fdd,`,
     `    ids: ${JSON.stringify ( ids )},`,
+    `    jwtIds:${JSON.stringify(jwtIds)},`,
     `    resourceId:  ${JSON.stringify ( resourceIds )},`,
     `    extractData: ${params.extractData},`,
     `    messages: extractMessages(dateFn),`,

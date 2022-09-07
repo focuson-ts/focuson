@@ -43,5 +43,6 @@ export const paramsForTest: CombinedParams = {
   endpointAnnotations: [ "@EndPointAnnotation()" ],
   teamName: 'focuson',
   debugLevel: 'debug',
-  cssDirectory: undefined
+  cssDirectory: undefined,
+  mockUpJwtToken: true
 };

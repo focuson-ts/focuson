@@ -1,4 +1,4 @@
-import { isHeaderLens, postFixForEndpoint, RestD, RestParams, stateToNameAndUrlAndParamsForState } from "../common/restD";
+import {  postFixForEndpoint, RestD, RestParams, stateToNameAndUrlAndParamsForState } from "../common/restD";
 import { endPointName, mutationClassName, mutationMethodName, mutationVariableName, queryClassName, queryName, queryPackage, restControllerName, restControllerPackage, sampleName, sqlMapName, sqlMapPackageName, wiringName } from "./names";
 import { JavaWiringParams } from "./config";
 import { actionsEqual, beforeSeparator, isRestStateChange, RestAction, safeArray, safeObject, toArray, unique } from "@focuson/utils";
@@ -20,9 +20,9 @@ export function makeParamsForJava<G> ( errorPrefix: string, r: RestD<G>, restAct
   const comma = makeCommaIfHaveParams ( errorPrefix, r, restAction );
   const requestParam = getRestTypeDetails ( restAction ).params.needsObj ? `${comma}@RequestBody String body` : ""
   return params.map ( (( [ name, param ] ) => {
-    if ( isHeaderLens ( param ) )
-      return `${param.annotation ? param.annotation : '@RequestHeader @RequestParam'} ${param.javaType} ${name}`;
-    else
+    // if ( isHeaderLens ( param ) )
+    //   return `${param.annotation ? param.annotation : '@RequestHeader @RequestParam'} ${param.javaType} ${name}`;
+    // else
       return `${param.annotation ? param.annotation : '@RequestParam'} ${param.javaType} ${name}`;
   }) ).join ( ", " ) + requestParam
 }

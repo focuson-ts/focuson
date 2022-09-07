@@ -48,6 +48,7 @@ export interface TSParams {
   extractData: string;
   teamName: string;
   cssDirectory: string|undefined;
+  mockUpJwtToken: boolean
 }
 
 export interface CombinedParams extends JavaWiringParams, TSParams {}

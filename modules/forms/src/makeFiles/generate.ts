@@ -57,7 +57,8 @@ export const params: Omit<CombinedParams, 'focusOnVersion'> = {
   controllerAnnotations: [ "@CrossOrigin()" ],
   endpointAnnotations: [],// ['@ApiOperation(value="{description}",notes="{notes}")', '@PreAuthorise("{authorisation}")']
   debugLevel: 'info',
-  cssDirectory: 'css'
+  cssDirectory: 'css',
+  mockUpJwtToken: true
 };
 
 export const directorySpec: DirectorySpec = {

@@ -1,5 +1,6 @@
 import { LensProps, LensState, reasonFor } from "@focuson/state";
 import { NameAnd } from "@focuson/utils";
+import { useEffect } from "react";
 
 
 export interface SummaryTableData {
@@ -56,6 +57,11 @@ export function SummaryTable<S, D extends SummaryTableData, C> ( props: SummaryT
   const onClick = ( i: number ) => ( e: any ) => {
     selectedItem.setJson ( tableLines[ i ], reasonFor ( 'SummaryDetailsPage', 'onClick', id, `selected row ${i}` ) )
   };
+  useEffect ( () => {
+    if ( selectedItem.optJson () === undefined ) {
+      onClick ( 0 )({})
+    }
+  }, [] )
   return <div>
     <table className='grid'>
       {/*headers go here*/}

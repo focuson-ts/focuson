@@ -7,7 +7,7 @@ export const allCommonIds = {
   clientRef: { ...IntParam, commonLens: 'clientRef', testValue: 333, annotation: '@RequestHeader @RequestParam' },
   accountId: { ...IntParam, commonLens: 'accountId', testValue: 44444444 },
   vbAcountSeq: { ...IntParam, commonLens: 'vbAcountSeq', testValue: 55555 },
-  employeeId: { ...IntParam, commonLens: 'employeeId', testValue: 666666 },
+  employeeId: { ...IntParam, commonLens: 'employeeId', testValue: 666666, inJwtToken: true },
   employeeType: { ...StringParam, commonLens: 'employeeType', testValue: 'basic', annotation: '@RequestHeader @RequestParam' },
   dbName: { ...StringParam, commonLens: 'dbName', testValue: 'mock' },
   today: { ...StringParam, commonLens: 'today', testValue: '29/07/2022' },

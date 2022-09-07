@@ -41,7 +41,8 @@ function oneRestDetails ( cd: NameAndLens<RestStateForTest>, fdd: NameAndLens<Fu
     dLens: identityOptics<FullDomainForTest> ().focusQuery ( 'fromApi' ),
     cd,
     fdd,
-    ids: [ 'token' ],
+    ids: [ 'token', 'nontoken' ],
+    jwtIds: [ 'token' ],
     resourceId: [ 'id' ],
     extractData: ( status: number | undefined, body: any ): string => `Extracted[${status}].${body}`,
     messages: ( status: number | undefined, body: any ): SimpleMessage[] => status == undefined ?
@@ -49,25 +50,27 @@ function oneRestDetails ( cd: NameAndLens<RestStateForTest>, fdd: NameAndLens<Fu
       [ createSimpleMessage ( 'info', `${status}/${JSON.stringify ( body )}`, testDateFn () ) ],
     url: "/some/url/{token}?{query}",
     states: {
-      newState: { url: "/some/new/state/{token}?{query}", params: ['token','id'] }
+      newState: { url: "/some/new/state/{token}?{query}", params: [ 'token', 'id' ] }
     }
   }
 }
 const restDetails: RestDetails<RestStateForTest, SimpleMessage> = {
   one: oneRestDetails ( cd, fdd )
 }
-function withRestCommand ( r: RestStateForTest, ...restCommands: RestCommand[] ):() => RestStateForTest {
-  return () =>({ ...r, restCommands })
+function withRestCommand ( r: RestStateForTest, ...restCommands: RestCommand[] ): () => RestStateForTest {
+  return () => ({ ...r, restCommands })
 }
 
 function restMutatator ( r: RestAction, url: string ) { return insertBefore ( "?", "/" + (isRestStateChange ( r ) ? r.state : r), url )}
+
 describe ( "restReq", () => {
   const populatedState: RestStateForTest = { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } }
   it ( "it should turn post commands into fetch requests - empty", () => {
-    expect ( restReq ( restDetails, [], restMutatator, emptyRestState ) ).toEqual ( [] )
+    expect ( restReq ( restDetails, false, [], restMutatator, emptyRestState ) ).toEqual ( [] )
+    expect ( restReq ( restDetails, true, [], restMutatator, emptyRestState ) ).toEqual ( [] )
   } )
-  it ( "it should turn post commands  into fetch requests - one", () => {
-    const results = restReq ( restDetails, [ { restAction: 'update', name: 'one' } ], restMutatator, populatedState );
+  it ( "it should turn post commands  into fetch requests - one - mockjwt", () => {
+    const results = restReq ( restDetails, true, [ { restAction: 'update', name: 'one' } ], restMutatator, populatedState );
     expect ( results.map ( a => [ a[ 0 ], a[ 1 ].url, a[ 2 ], a[ 3 ] ] ) ).toEqual ( [
       [
         { "name": "one", "restAction": "update" },
@@ -77,8 +80,33 @@ describe ( "restReq", () => {
       ]
     ] )
   } )
-  it ( "it should turn post commands iinto fetch requests - many", () => {
-    let results = restReq ( restDetails, [ { restAction: 'get', name: 'one' },
+  it ( "it should turn post commands  into fetch requests - one - without mockjwt", () => {
+    const results = restReq ( restDetails, false, [ { restAction: 'update', name: 'one' } ], restMutatator, populatedState );
+    expect ( results.map ( a => [ a[ 0 ], a[ 1 ].url, a[ 2 ], a[ 3 ] ] ) ).toEqual ( [
+      [
+        { "name": "one", "restAction": "update" },
+        "/some/url/{token}?{query}",
+        "/some/url/someToken/update?token=someToken&id=someId",
+        { "body": "\"someData\"", "method": "put" }
+      ]
+    ] )
+  } )
+  it ( "it should turn post commands iinto fetch requests - many - mockjwt", () => {
+    let results = restReq ( restDetails, true, [ { restAction: 'get', name: 'one' },
+      { restAction: 'create', name: 'one' },
+      { restAction: 'delete', name: 'one' },
+      { restAction: 'update', name: 'one' },
+      { restAction: { state: 'newState' }, name: 'one' } ], restMutatator, populatedState );
+    expect ( results.map ( a => [ a[ 2 ], a[ 3 ] ] ) ).toEqual ( [
+      [ "/some/url/someToken/get?token=someToken&id=someId", undefined ],
+      [ "/some/url/someToken/create?token=someToken", { "body": "\"someData\"", "method": "post" } ],
+      [ "/some/url/someToken/delete?token=someToken&id=someId", { "method": "delete" } ],
+      [ "/some/url/someToken/update?token=someToken&id=someId", { "body": "\"someData\"", "method": "put" } ],
+      [ "/some/new/state/someToken/newState?token=someToken&id=someId", { "method": "post", "body": "\"someData\"" } ] ]
+    )
+  } )
+  it ( "it should turn post commands iinto fetch requests - without mockjwt", () => {
+    let results = restReq ( restDetails, false, [ { restAction: 'get', name: 'one' },
       { restAction: 'create', name: 'one' },
       { restAction: 'delete', name: 'one' },
       { restAction: 'update', name: 'one' },
@@ -111,14 +139,14 @@ describe ( "massFetch", () => {
 const pathToLens: ( s: RestStateForTest ) => ( path: string ) => Optional<RestStateForTest, any> = ( unused ) => path => parsePath ( path, lensBuilder<RestStateForTest> ( { '/': Lenses.identity () }, {} ) )
 const msgFn = stringToSimpleMsg ( () => 'now', 'info' );
 
-const props: RestToTransformProps<RestStateForTest, SimpleMessage> = { fetchFn: mockFetch, d: restDetails, urlMutatorForRest: restMutatator, pathToLens, messageL: simpleMessageL, stringToMsg: msgFn, traceL: traceL () };
+const props: RestToTransformProps<RestStateForTest, SimpleMessage> = { fetchFn: mockFetch, mockJwt: false, d: restDetails, urlMutatorForRest: restMutatator, pathToLens, messageL: simpleMessageL, stringToMsg: msgFn, traceL: traceL () };
 describe ( "rest", () => {
   it ( "should fetch the results and put them into the state, removing the rest commands", async () => {
     const result = await rest<RestStateForTest, SimpleMessage> ( props, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
       { restAction: 'get', name: 'one' },
       { restAction: 'create', name: 'one' },
       { restAction: 'createWithoutFetch', name: 'one' },
-            { restAction: 'delete', name: 'one' },
+      { restAction: 'delete', name: 'one' },
       { restAction: 'update', name: 'one' },
       { restAction: 'updateWithoutFetch', name: 'one' },
     ) );
@@ -283,7 +311,7 @@ describe ( "rest", () => {
   } )
   it ( "should delete items specified in the 'delete on success' - multiple item", async () => {
     const deleteCommands: DeleteCommand[] = [ { command: 'delete', path: '/token' }, { command: "delete", path: '/fullDomain/idFromFullDomain' } ];
-    const result = await rest<RestStateForTest, SimpleMessage> (props,  restL (),
+    const result = await rest<RestStateForTest, SimpleMessage> ( props, restL (),
       withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
         { restAction: { state: 'newState' }, name: 'one', changeOnSuccess: deleteCommands }
       ) );
@@ -325,7 +353,7 @@ describe ( "rest", () => {
 describe ( "deprecated rest commands", () => {
 
   it ( "should delete items specified in the 'delete on success' - single item", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage> ( props ,restL (),
+    const result = await rest<RestStateForTest, SimpleMessage> ( props, restL (),
       withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
         { restAction: { state: 'newState' }, name: 'one', deleteOnSuccess: '/token' }
       ) );

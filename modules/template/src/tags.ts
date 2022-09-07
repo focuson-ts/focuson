@@ -10,7 +10,7 @@ export interface HasTagHolder {
   tags: TagHolder
 }
 export interface HasTagHolderL<S> {
-  tagHolderL: Optional<S,TagHolder>
+  tagHolderL: Optional<S, TagHolder>
 }
 /** The tags are the 'bits of data' that tell us if we need to load something'
  * For example a statement needs a customer id. If the customer id changes then we need to fetch the statement data again
@@ -42,6 +42,7 @@ export interface UrlConfig<S, FD, D> {
   dLens: Optional<FD, D>;
   resourceId: string [];
   ids: string [];
+  jwtIds: string[]
 }
 
 type TagOpsFn<T> = <S, FD, D>( urlConfig: UrlConfig<S, FD, D>, restAction: RestAction ) => ( m: S ) => T
@@ -49,7 +50,7 @@ export interface TagOps {
   /** puts the values defined in the urlConfig as tags. */
   tags: TagOpsFn<NamePlusTags>
   /** The lens is to describe where the data comes from (in a update/create) or goes to (get/list) it's not used in the get/list, but having it means that we can simplify the calling code */
-  reqFor: TagOpsFn<( url: string ) => [ RequestInfo, RequestInit | undefined ]>
+  reqFor: ( mockJwt: boolean ) => TagOpsFn<( url: string ) => [ RequestInfo, RequestInit | undefined ]>
 }
 
 
@@ -87,7 +88,7 @@ export const bodyFor: TagOpsFn<RequestInit | undefined> =
                ( urlConfig, restAction ) => s => {
                  const method = methodFor ( restAction )
                  if ( restAction === 'get' ) return undefined // || restAction === 'list'
-                 if ( restAction === 'delete'  ) return { method }
+                 if ( restAction === 'delete' ) return { method }
                  let bodyL = urlConfig.bodyFrom ? urlConfig.bodyFrom : urlConfig.fdLens.chain ( urlConfig.dLens );
                  const body: any = bodyL.getOption ( s )
                  if ( body ) {
@@ -97,9 +98,10 @@ export const bodyFor: TagOpsFn<RequestInit | undefined> =
                  throw new Error ( `Cannot execute restAction ${restAction}, using the data at [${bodyL.description}] because the data object is empty\n${JSON.stringify ( s )}` )
                }
 
-export const reqFor: TagOpsFn<( url: string ) => [ RequestInfo, RequestInit | undefined ]> =
-               <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, restAction: RestAction ) => ( s: S ) =>
-                 u => [ url ( urlConfig, restAction ) ( s ) ( u ), bodyFor<S, FD, D> ( urlConfig, restAction ) ( s ) ]
+export const reqFor: ( mockJwt: boolean ) => TagOpsFn<( url: string ) => [ RequestInfo, RequestInit | undefined ]> =
+               mockJwt =>
+                 <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, restAction: RestAction ) => ( s: S ) =>
+                   u => [ url ( urlConfig, restAction ) ( s ) ( u ), bodyFor<S, FD, D> ( urlConfig, restAction ) ( s ) ]
 
 export const tagOps: TagOps = ({ tags, reqFor });
 
