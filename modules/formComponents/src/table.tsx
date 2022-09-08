@@ -47,7 +47,7 @@ export function defaultOnClick<S, Context, T> ( props: CommonTableProps<S, T, Co
 }
 export type OneRowFn<T> = ( row: T, i: number, selectedClass: string | undefined, rights: string[] | undefined, onClick: ( i: number, row: T ) => ( e: any ) => void ) => JSX.Element
 export type DisplayTitleFn = ( id: string, field: string, i: number ) => JSX.Element
-const defaultDisplayTitleFn: DisplayTitleFn = ( id, field, i ) => <th key={field} id={`${id}.th[${i}]`}>{decamelize ( field, ' ' )}</th>
+export const defaultDisplayTitleFn: DisplayTitleFn = ( id, field, i ) => <th key={field} id={`${id}.th[${i}]`}>{decamelize ( field, ' ' )}</th>
 export const rawTable = <S, T, Context extends PageSelectionContext<S>> (
   titles: any[],
   onClick: ( i: number, row: T ) => ( e: any ) => void,

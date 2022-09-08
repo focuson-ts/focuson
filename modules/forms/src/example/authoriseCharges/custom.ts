@@ -9,6 +9,7 @@ export const AuthoriseTableCD: DisplayCompD = {
     scrollAfter: { paramType: 'string', needed: 'no' },
     copySelectedItemTo: { paramType: 'path', needed: 'no' },
     copySelectedIndexTo: { paramType: 'path', needed: 'no' },
+    firstColumnName: { paramType: 'string', needed: 'yes' },
   }
 }
 export const SummaryDetailsCD: DisplayCompD = {

@@ -4,7 +4,7 @@ import { PageMode } from "@focuson/pages";
 import { LabelAndStringInput } from "./labelAndInput";
 import { FocusOnContext } from "@focuson/focuson";
 import { Layout } from "./layout";
-import { defaultOnClick, defaultOneRowWithGetValue, getValueForTable, rawTable, TableProps } from "./table";
+import { defaultDisplayTitleFn, defaultOnClick, defaultOneRowWithGetValue, DisplayTitleFn, getValueForTable, rawTable, TableProps } from "./table";
 import { LabelAndFixedNumber } from "./labelAndFixedNumber";
 import { safeArray } from "@focuson/utils";
 
@@ -38,14 +38,14 @@ const haltBox = <S, D extends AuthoriseTableData, C> ( state: LensState<S, D[], 
 function sum<D extends AuthoriseTableData> ( ds: D[], crOrDr: 'CR' | 'DR' ): string {
   return "" + safeArray ( ds ).reduce ( ( acc, v ) => v.type == crOrDr ? acc + Number.parseFloat ( v.amount ) : acc, 0 )
 }
-
 export function AuthoriseTable<S, D extends AuthoriseTableData, C extends FocusOnContext<S>> ( props: AuthoriseTableProps<S, D, C> ) {
   const { state, order, id, mode, copySelectedItemTo, firstColumnName } = props
-  const AuthTable = rawTable<S, any, C> ( [ ...order, 'Halt' ], defaultOnClick ( props ), defaultOneRowWithGetValue ( getValueForAuthorisedTable ) ( id, order, [], haltBox ( state, id ) ) )
+  const dispTitle: DisplayTitleFn = ( id, field, i ) => i === 0 ? <th key={field} id={`${id}.th[${i}]`}>{firstColumnName}</th> : defaultDisplayTitleFn ( id, field, i );
+  const AuthTable = rawTable<S, any, C> ( [ ...order, 'Halt' ], defaultOnClick ( props ), defaultOneRowWithGetValue ( getValueForAuthorisedTable ) ( id, order, [], haltBox ( state, id ) ), dispTitle )
   const data = state.optJsonOr ( [] )
   const credits = sum ( data, 'CR' )
   const debits = sum ( data, 'DR' )
-  // @ts-ignore
+  // @ts-ignorea
   const approvedByS: LensState<S, string, C> = copySelectedItemTo.focusOn ( 'approvedBy' );
   // @ts-ignore
   const authorisedByS: LensState<S, string, C> = copySelectedItemTo.focusOn ( 'authorisedBy' );
