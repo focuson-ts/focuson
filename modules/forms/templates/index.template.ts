@@ -6,7 +6,7 @@ import { context } from "./config";
 import { defaultDateFn } from "@focuson/utils";
 import { IndexPage } from "@focuson/form_components";
 import { config, start } from "./config";
-import { focusOnMiddlewareFor{teamName}, {teamName}Reducer, makeLsFor{teamName} } from "./store";
+import { focusOnMiddlewareFor{teamName}, {teamName}Reducer, makeLs } from "./store";
 import { applyMiddleware, combineReducers, legacy_createStore } from "@reduxjs/toolkit";
 import { Lenses } from '@focuson/lens'
 import { loadAtStart } from "./{loadRefsFile}";
@@ -18,7 +18,7 @@ export const store: any = legacy_createStore ( combineAll, undefined, applyMiddl
 let rootElement = getElement ( "root" );
 console.log ( "set json" )
 store.subscribe ( () => {
-  const state = makeLsFor{teamName}<{stateName}> ( store, '{teamName}' );
+  const state = makeLs<{stateName}> ( store, '{teamName}' );
   loadAtStart ( state)
   ReactDOM.render (
     <IndexPage state={state} dateFn={defaultDateFn}>

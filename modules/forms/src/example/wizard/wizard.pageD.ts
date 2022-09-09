@@ -20,7 +20,10 @@ const wizard3: ExampleModalPage = {
   modes: [ 'view' ],
   name: "Wizard3",
   buttons: {
-    next: { control: 'ModalButton', modal: wizard4, mode: 'view', focusOn: '~/nothing' , pageOp: 'replace'},
+    next: { control: 'ModalButton', modal: wizard4, mode: 'view', focusOn: '~/nothing' , pageOp: 'replace',
+
+
+    },
     cancel: { control: 'ModalCancelButton' }
   },
 

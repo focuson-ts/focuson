@@ -111,7 +111,7 @@ export const focusOnMiddlewareFor{teamName} = <BigState, S extends HasFocusOnDeb
   // if ( debug ) console.log ( 'focusOnMiddleware - finalResult is ', finalResult );
   // return res;
 };
-export function makeLsForfocuson<S> ( store: Store<S>, team: string ) {
+export function makeLs<S> ( store: Store<S>, team: string ) {
   function currentState<D,C> ( ls: LensState<S, D, C> ): LensState<S,D,C> {
     const currentMain: any = store.getState ();
     const newMain = currentMain[ team ];
