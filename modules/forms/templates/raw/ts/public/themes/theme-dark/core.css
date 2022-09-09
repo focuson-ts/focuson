@@ -37,6 +37,11 @@
     --h1-custom-line-height: 56px;
     --h1-custom-brand-colour: var(--blue);
 
+    --h3-font-size:20px;
+    --h3-line-height:32px;
+    --h3-font:var(--font-family-main);
+    --h3-brand-colour:var(--blue);
+
     --input-height: 44px;
     --input-border: 1px solid var(--grey);
     --input-padding: 10px 16px;

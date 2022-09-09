@@ -88,13 +88,20 @@ export function ConfirmCommitWindow<S, D, C extends ModalContext<S>> () {
   return makeConfirmCommitWindow<S, D, C> ( makerProps => {
     const { confirm, confirmId, cancel, cancelId, props, state } = makerProps
     const { id, messageText, confirmText, cancelText, title, className } = props
-    console.log('ConfirmCommitWindow', messageText)
+    console.log ( 'ConfirmCommitWindow', messageText )
     const realText = messageText ? replaceTextUsingPath ( state, messageText ) : 'Are you sure?'
-    return <div id={id} className={className ? className : 'modalPopup-content show-modal confirm-window'}>
-      {title && <h1>{replaceTextUsingPath ( state, title )}</h1>}
-      <p dangerouslySetInnerHTML={{__html: realText}} />
-      <button id={confirmId} onClick={confirm}>{confirmText ? replaceTextUsingPath ( state, confirmText ) : 'OK'}</button>
-      <button id={cancelId} onClick={cancel}>{cancelText ? replaceTextUsingPath ( state, cancelText ) : 'Cancel'}</button>
+    const fullCancelText = cancelText ? replaceTextUsingPath ( state, cancelText ) : 'Cancel'
+    const fullConfirmText = confirmText ? replaceTextUsingPath ( state, confirmText ) : 'OK'
+    return <div id={id} className={className ? className : 'dialog confirm-window'}>
+      <span className="sr-only">Start of Dialog Box</span>
+      <div className='header'><a href="#" aria-label='close window' title={fullCancelText} id='close-window' className={'header-close'} onClick={cancel}/>
+      {title && <h3 className='dialog-header'>{replaceTextUsingPath ( state, title )}</h3>}
+      </div>
+      <div className='dialog-text' dangerouslySetInnerHTML={{ __html: realText }}/>
+      <div className='dialog-buttons'>
+        <button id={confirmId} aria-label='ok' title={fullCancelText} className="button primary-btn" onClick={confirm}>{fullConfirmText}</button>
+      </div>
+      <span className="sr-only">End of Dialog Box</span>
     </div>;
   } )
 }

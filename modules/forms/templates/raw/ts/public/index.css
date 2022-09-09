@@ -1,5 +1,6 @@
 /* @import url("./themes/{theme}/index.css"); */
 @import url("./themes/theme-dark/index.css");
+@import url("./confirm.css");
 
 .tooltip-wrap {
     position: relative;
