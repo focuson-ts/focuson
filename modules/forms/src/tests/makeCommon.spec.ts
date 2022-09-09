@@ -1,6 +1,5 @@
 import { findAllCommonParams, findAllCommonParamsDetails, findAllCommonParamsWithSamples, makeCommon, makeCommonParams, makeFullState, validateCommonParams } from "../codegen/makeCommon";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
-import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 import { OccupationAndIncomeSummaryPD } from "../example/occupationAndIncome/occupationAndIncome.pageD";
 import { generatedPages, generatedRefs } from "../focuson.config";
 import { paramsForTest } from "./paramsForTest";
@@ -86,7 +85,7 @@ describe ( "makeCommon", () => {
       "  pageSelection: [{ pageName: 'EAccountsSummary', firstTime: true, pageMode: 'view', time: defaultDateFn() }],",
       "  EAccountsSummary:{},",
       "  restCommands: [],",
-      "  debug: {'fetcherDebug':false,'guardDebug':false,'restDebug':false,'reduxDebug':false,'selectedPageDebug':false,'loadTreeDebug':false,'showTracing':false,'dateDebug':false,'recordTrace':true,'tagFetcherDebug':false,'validityDebug':false,'modalDebug':false,'accordions':[]}",
+      "  debug: {'fetcherDebug':false,'guardDebug':false,'restDebug':false,'reduxDebug':false,'selectedPageDebug':false,'loadTreeDebug':false,'showTracing':false,'dateDebug':false,'optionalsDebug':true,'recordTrace':true,'tagFetcherDebug':false,'validityDebug':false,'modalDebug':false,'accordions':[]}",
       "  }"
     ] )
 

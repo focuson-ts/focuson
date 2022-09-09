@@ -10,6 +10,7 @@ import { StringParam } from "../../common/restD";
 
 export const listOccupationsModalPD: ExampleModalPage = {
   name: 'ListOccupationsModal',
+  title: {title: 'List Occupations', className: 'ListOccupationsH1'},
   pageType: 'ModalPopup',
   modes: [ 'edit' ],
   display: { target: '', dataDD: listOccupationsDD },
@@ -88,6 +89,7 @@ export const businessDetailsModalPD: ExampleModalPage = {
 export const OccupationAndIncomeSummaryPD: ExampleMainPage = {
   name: 'OccupationAndIncomeSummary',
   pageType: 'MainPage',
+  title: {title: 'Income Summary', className: 'IncSummaryH1ClassName'},
   commonParams: { role: { ...StringParam, commonLens: 'role', testValue: 'user' } },
   /** This page can only view data */
   modes: [ 'view', 'edit', 'create' ],

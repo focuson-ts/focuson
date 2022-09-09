@@ -1,7 +1,7 @@
-import { AllDataDD, CompDataD, DataD, findAllDataDs, HasGuards, HasLayout, isCompDD, isDataDd, NamesAndDataDs } from "./dataD";
+import { AllDataDD, CompDataD, findAllDataDs, HasGuards, HasLayout, isCompDD, NamesAndDataDs } from "./dataD";
 import { CommonLensRestParam, RestD } from "./restD";
 import { HasName, NameAnd, RestAction, safeString, sortedEntries, unique } from "@focuson/utils";
-import { PageMode } from "@focuson/pages";
+import { HasTitle, PageMode } from "@focuson/pages";
 import { getRestTypeDetails, NewPageChangeCommands, RestActionDetail, RestChangeCommands } from "@focuson/rest";
 
 
@@ -109,9 +109,9 @@ export function isRefD<G> ( p: PageD<any, G> | RefD<G> ): p is RefD<G> {
   const a: any = p
   return a.rest ? true : false;
 }
-export interface MainPageD<Buttons, G> extends HasLayout, HasGuards<G>, RefD<G>, HasName {
+
+export interface MainPageD<Buttons, G> extends HasLayout, HasGuards<G>, RefD<G>, HasName, HasTitle {
   pageType: 'MainPage' | 'MainPopup',
-  title?: string;
   name: string,
   modes: PageMode[],
   display: PageDisplay<G>,
@@ -124,9 +124,8 @@ export interface MainPageD<Buttons, G> extends HasLayout, HasGuards<G>, RefD<G>,
   buttons: ButtonDefnInPage<Buttons>;
 }
 
-export interface ModalPageD<Buttons, G> extends HasLayout, HasGuards<G>, HasName {
+export interface ModalPageD<Buttons, G> extends HasLayout, HasGuards<G>, HasName, HasTitle {
   pageType: 'ModalPage' | 'ModalPopup',
-  title?: string;
   name: string,
   modes: PageMode[],
   display: PageDisplay<G>, //importFrom is deprecated

@@ -46,7 +46,7 @@ describe ( " listComponentsIn", () => {
       "import { Context, FocusedProps, FState, identityL } from '../common';",
       "import { Lenses } from '@focuson/lens';",
       "import { DisplayGuards, Guard, GuardButton } from '@focuson/form_components';",
-      "import { defaultDateFn } from '@focuson/utils';",
+      "import { defaultDateFn, safeNumber, safeArray, safeString} from '@focuson/utils';",
       "import * as action from '../actions'",
       "import { EAccountsSummaryOptionals } from '../EAccountsSummary/EAccountsSummary.optionals';",
       "import { LabelAndNumberInput } from '@focuson/form_components';",
@@ -76,7 +76,7 @@ describe ( " listComponentsIn", () => {
       "import {EAccountSummaryDomain} from '../EAccountsSummary/EAccountsSummary.domains'",
       "export function EAccountsSummaryPage(){",
       "   //A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/fromApi",
-      "  return focusedPageWithExtraState<FState, EAccountsSummaryPageDomain, EAccountsSummaryDomain, Context> ( s => 'E Accounts Summary' ) ( state => state.focusOn('fromApi')) (",
+      "  return focusedPageWithExtraState<FState, EAccountsSummaryPageDomain, EAccountsSummaryDomain, Context> ( s => ({title: 'E Accounts Summary'})) ( state => state.focusOn('fromApi')) (",
       "( fullState, state , full, d, mode, index) => {",
       "const id=`page${index}`;",
       "  const allButtons =    {amendExistingPlan:<ModalButton id={`${id}.amendExistingPlan`} text='Amend Existing Plan' dateFn={defaultDateFn} state={state} modal='EAccountsSummary_CreatePlan' ",
@@ -163,7 +163,7 @@ describe ( " listComponentsIn", () => {
       "import { Context, FocusedProps, FState, identityL } from '../common';",
       "import { Lenses } from '@focuson/lens';",
       "import { DisplayGuards, Guard, GuardButton } from '@focuson/form_components';",
-      "import { defaultDateFn } from '@focuson/utils';",
+      "import { defaultDateFn, safeNumber, safeArray, safeString} from '@focuson/utils';",
       "import * as action from '../actions'",
       "import { OccupationAndIncomeSummaryOptionals } from '../OccupationAndIncomeSummary/OccupationAndIncomeSummary.optionals';",
       "//if there is an error message here check that the PageD links to this DataD in a domain or rest block",
@@ -182,7 +182,7 @@ describe ( " listComponentsIn", () => {
       "import {ToggleButton} from '@focuson/form_components';",
       "import {ValidationButton} from '@focuson/form_components';",
       "export function OccupationAndIncomeSummary_ListOccupationsModalPage(){",
-      "  return focusedPage<FState, ListOccupationsDomain, Context> ( s => 'List Occupations Modal'  ) (//If there is a compilation here have you added this to the 'domain' of the main page",
+      "  return focusedPage<FState, ListOccupationsDomain, Context> ( s => ({title: replaceTextUsingPath(s,'List Occupations'), className: 'ListOccupationsH1'}) ) (//If there is a compilation here have you added this to the 'domain' of the main page",
       "     ( state, d, mode, index ) => {",
       "          const id=`page${index}`;",
       "          const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state}  buttonType='secondary' />,",
@@ -198,7 +198,7 @@ describe ( " listComponentsIn", () => {
   it ( "should create a simple page", () => {
     expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), EAccountsSummaryPD, CreatePlanPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function EAccountsSummary_CreatePlanPage(){",
-      "  return focusedPage<FState, CreatePlanDomain, Context> ( s => 'Create Plan'  ) (//If there is a compilation here have you added this to the 'domain' of the main page",
+      "  return focusedPage<FState, CreatePlanDomain, Context> ( s => ({title: 'Create Plan'}) ) (//If there is a compilation here have you added this to the 'domain' of the main page",
       "     ( state, d, mode, index ) => {",
       "          const id=`page${index}`;",
       "          const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state}  confirm={'It will start on {~/tempCreatePlan/createPlanStart}'} buttonType='secondary' />,",
@@ -215,7 +215,7 @@ describe ( " listComponentsIn", () => {
     expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), PostCodeMainPage, PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function PostCodeMainPagePage(){",
       "   //A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/main",
-      "  return focusedPageWithExtraState<FState, PostCodeMainPagePageDomain, PostCodeNameAndAddressDomain, Context> ( s => 'Post Code Main Page' ) ( state => state.focusOn('main')) (",
+      "  return focusedPageWithExtraState<FState, PostCodeMainPagePageDomain, PostCodeNameAndAddressDomain, Context> ( s => ({title: 'Post Code Main Page'})) ( state => state.focusOn('main')) (",
       "( fullState, state , full, d, mode, index) => {",
       "const id=`page${index}`;",
       "  const allButtons =    {save:<RestButton state={state} id={`${id}.save`}  text='Save'",
@@ -251,9 +251,9 @@ describe ( "makeComponentWithGuard", () => {
     expect ( createReactComponent ( paramsForTest, AllGuardCreator, OccupationAndIncomeSummaryPD, OccupationAndIncomeSummaryPD ) ( oneOccupationIncomeDetailsDD ).slice ( 0, 5 ).map ( r => r.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function OneOccupationIncomeDetails({id,state,mode,allButtons,label}: FocusedProps<FState, OneOccupationIncomeDetailsDomain,Context>){",
       "const guardDebug=state.main?.debug?.guardDebug",
-      "const areYouGuard = state.focusOn('areYou').optJson()? []:['areYou is not valid'];if (guardDebug)console.log('OccupationAndIncomeSummary '+ id + '.areYou', areYouGuard);//Guard {'condition':'in','path':'areYou','values':{'X':'','E':'Employed','S':'Self Employed','C':'Currently not earning','R':'Retired','T':'Student','U':'Unknown','H':'Home Family Responsibilities'}}",
-      "const ownShareOfTheCompanyGuard = state.focusOn('ownShareOfTheCompany').optJson()? []:['ownShareOfTheCompany is not valid'];if (guardDebug)console.log('OccupationAndIncomeSummary '+ id + '.ownShareOfTheCompany', ownShareOfTheCompanyGuard);//Guard {'condition':'in','path':'ownShareOfTheCompany','values':{'X':'','N':'No','Y':'Yes'}}",
-      "const owningSharesPctGuard = state.focusOn('owningSharesPct').optJson()? []:['owningSharesPct is not valid'];if (guardDebug)console.log('OccupationAndIncomeSummary '+ id + '.owningSharesPct', owningSharesPctGuard);//Guard {'condition':'in','path':'owningSharesPct','values':{'X':'','N':'No','Y':'Yes'}}"
+      "const areYouGuard = state.focusOn('areYou').optJson();if (guardDebug)console.log('OccupationAndIncomeSummary '+ id + '.areYou', areYouGuard);//Guard {'condition':'in','path':'areYou','values':{'X':'','E':'Employed','S':'Self Employed','C':'Currently not earning','R':'Retired','T':'Student','U':'Unknown','H':'Home Family Responsibilities'}}",
+      "const ownShareOfTheCompanyGuard = state.focusOn('ownShareOfTheCompany').optJson();if (guardDebug)console.log('OccupationAndIncomeSummary '+ id + '.ownShareOfTheCompany', ownShareOfTheCompanyGuard);//Guard {'condition':'in','path':'ownShareOfTheCompany','values':{'X':'','N':'No','Y':'Yes'}}",
+      "const owningSharesPctGuard = state.focusOn('owningSharesPct').optJson();if (guardDebug)console.log('OccupationAndIncomeSummary '+ id + '.owningSharesPct', owningSharesPctGuard);//Guard {'condition':'in','path':'owningSharesPct','values':{'X':'','N':'No','Y':'Yes'}}"
     ] )
   } )
 } )
@@ -311,14 +311,14 @@ describe ( "makeGuardButtonVariables", () => {
     expect ( makeGuardVariables ( ListOfPaymentsPagePD, AllGuardCreator, paramsForTest, ListOfPaymentsPagePD, ListOfPaymentsPagePD ) ).toEqual ( [
       "const guardDebug=state.main?.debug?.guardDebug",
       "const canPrintGuard =  pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('display').chainNthFromPath(pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('selected')).focusOn('alreadyPrinted').optJson() === false? []:[\"This record has already been printed\"];if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.canPrint', canPrintGuard);//Guard {\"condition\":\"equals\",\"value\":false,\"path\":\"~/display[~/selected]/alreadyPrinted\",\"message\":\"This record has already been printed\"}",
-      "const needsStandingOrdersGuard =  (pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('currentPayments').focusOn('standingOrders').optJsonOr(0) >0) && state.copyWithLens(ListOfPaymentsPageOptionals.currentListOfPayments(identityL)).focusOn('standingOrders').optJsonOr(false)      ? []:[\"needsStandingOrders is not valid\"];if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.needsStandingOrders', needsStandingOrdersGuard);//Guard {\"condition\":\">0 and true\",\"number\":\"~/currentPayments/standingOrders\",\"boolean\":\"#currentListOfPayments/standingOrders\"}",
-      "const needsOpenBankingStandingOrdersGuard =  (pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('currentPayments').focusOn('openBankingStandingOrders').optJsonOr(0) >0) && state.copyWithLens(ListOfPaymentsPageOptionals.currentListOfPayments(identityL)).focusOn('openBankingStandingOrders').optJsonOr(false)      ? []:[\"needsOpenBankingStandingOrders is not valid\"];if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.needsOpenBankingStandingOrders', needsOpenBankingStandingOrdersGuard);//Guard {\"condition\":\">0 and true\",\"number\":\"~/currentPayments/openBankingStandingOrders\",\"boolean\":\"#currentListOfPayments/openBankingStandingOrders\"}",
-      "const needsDirectDirectsGuard =  (pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('currentPayments').focusOn('directDebits').optJsonOr(0) >0) && state.copyWithLens(ListOfPaymentsPageOptionals.currentListOfPayments(identityL)).focusOn('directDebits').optJsonOr(false)      ? []:[\"needsDirectDirects is not valid\"];if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.needsDirectDirects', needsDirectDirectsGuard);//Guard {\"condition\":\">0 and true\",\"number\":\"~/currentPayments/directDebits\",\"boolean\":\"#currentListOfPayments/directDebits\"}",
-      "const needBillPaymentsGuard =  (pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('currentPayments').focusOn('billPayments').optJsonOr(0) >0) && state.copyWithLens(ListOfPaymentsPageOptionals.currentListOfPayments(identityL)).focusOn('billPayments').optJsonOr(false)      ? []:[\"needBillPayments is not valid\"];if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.needBillPayments', needBillPaymentsGuard);//Guard {\"condition\":\">0 and true\",\"number\":\"~/currentPayments/billPayments\",\"boolean\":\"#currentListOfPayments/billPayments\"}",
-      "const needsOpenBankingGuard =  (pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('currentPayments').focusOn('openBanking').optJsonOr(0) >0) && state.copyWithLens(ListOfPaymentsPageOptionals.currentListOfPayments(identityL)).focusOn('billPayments').optJsonOr(false)      ? []:[\"needsOpenBanking is not valid\"];if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.needsOpenBanking', needsOpenBankingGuard);//Guard {\"condition\":\">0 and true\",\"number\":\"~/currentPayments/openBanking\",\"boolean\":\"#currentListOfPayments/billPayments\"}",
+      "const needsStandingOrdersGuard =  (safeNumber(pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('currentPayments').focusOn('standingOrders').optJson(), 0) >0) && state.copyWithLens(ListOfPaymentsPageOptionals.currentListOfPayments(identityL)).focusOn('standingOrders').optJsonOr(false)      ? []:[\"needsStandingOrders is not valid\"];if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.needsStandingOrders', needsStandingOrdersGuard);//Guard {\"condition\":\">0 and true\",\"number\":\"~/currentPayments/standingOrders\",\"boolean\":\"#currentListOfPayments/standingOrders\"}",
+      "const needsOpenBankingStandingOrdersGuard =  (safeNumber(pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('currentPayments').focusOn('openBankingStandingOrders').optJson(), 0) >0) && state.copyWithLens(ListOfPaymentsPageOptionals.currentListOfPayments(identityL)).focusOn('openBankingStandingOrders').optJsonOr(false)      ? []:[\"needsOpenBankingStandingOrders is not valid\"];if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.needsOpenBankingStandingOrders', needsOpenBankingStandingOrdersGuard);//Guard {\"condition\":\">0 and true\",\"number\":\"~/currentPayments/openBankingStandingOrders\",\"boolean\":\"#currentListOfPayments/openBankingStandingOrders\"}",
+      "const needsDirectDirectsGuard =  (safeNumber(pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('currentPayments').focusOn('directDebits').optJson(), 0) >0) && state.copyWithLens(ListOfPaymentsPageOptionals.currentListOfPayments(identityL)).focusOn('directDebits').optJsonOr(false)      ? []:[\"needsDirectDirects is not valid\"];if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.needsDirectDirects', needsDirectDirectsGuard);//Guard {\"condition\":\">0 and true\",\"number\":\"~/currentPayments/directDebits\",\"boolean\":\"#currentListOfPayments/directDebits\"}",
+      "const needBillPaymentsGuard =  (safeNumber(pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('currentPayments').focusOn('billPayments').optJson(), 0) >0) && state.copyWithLens(ListOfPaymentsPageOptionals.currentListOfPayments(identityL)).focusOn('billPayments').optJsonOr(false)      ? []:[\"needBillPayments is not valid\"];if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.needBillPayments', needBillPaymentsGuard);//Guard {\"condition\":\">0 and true\",\"number\":\"~/currentPayments/billPayments\",\"boolean\":\"#currentListOfPayments/billPayments\"}",
+      "const needsOpenBankingGuard =  (safeNumber(pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('currentPayments').focusOn('openBanking').optJson(), 0) >0) && state.copyWithLens(ListOfPaymentsPageOptionals.currentListOfPayments(identityL)).focusOn('billPayments').optJsonOr(false)      ? []:[\"needsOpenBanking is not valid\"];if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.needsOpenBanking', needsOpenBankingGuard);//Guard {\"condition\":\">0 and true\",\"number\":\"~/currentPayments/openBanking\",\"boolean\":\"#currentListOfPayments/billPayments\"}",
       "const needsSomethingGuard =  needsStandingOrdersGuard||needsOpenBankingStandingOrdersGuard||needsDirectDirectsGuard||needBillPaymentsGuard||needsOpenBankingGuard? []:[\"needsSomething is not valid\"];if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.needsSomething', needsSomethingGuard);//Guard {\"condition\":\"or\",\"conditions\":[\"needsStandingOrders\",\"needsOpenBankingStandingOrders\",\"needsDirectDirects\",\"needBillPayments\",\"needsOpenBanking\"]}",
       "const authorisedByUserGuard =  pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('display').chainNthFromPath(pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('selected')).focusOn('authorisedByCustomer').optJson() === \"y\"? []:[\"authorisedByUser is not valid\"];if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.authorisedByUser', authorisedByUserGuard);//Guard {\"condition\":\"equals\",\"value\":\"\\\"y\\\"\",\"path\":\"~/display[~/selected]/authorisedByCustomer\"}",
-      "const sendingToUserGuard =  [\"M\",\"J\"].includes( pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('display').chainNthFromPath(pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('selected')).focusOn('requestedBy').optJsonOr(''))? []:[\"sendingToUser is not valid\"];if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.sendingToUser', sendingToUserGuard);//Guard {\"condition\":\"contains\",\"values\":[\"M\",\"J\"],\"path\":\"~/display[~/selected]/requestedBy\"}",
+      "const sendingToUserGuard =  [\"M\",\"J\"].includes(safeString( pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('display').chainNthFromPath(pageState(state)<domain.ListOfPaymentsPagePageDomain>().focusOn('selected')).focusOn('requestedBy').optJson()))? []:[\"sendingToUser is not valid\"];if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.sendingToUser', sendingToUserGuard);//Guard {\"condition\":\"contains\",\"values\":[\"M\",\"J\"],\"path\":\"~/display[~/selected]/requestedBy\"}",
       "const authorisedToSendGuard =  sendingToUserGuard||authorisedByUserGuard? []:[\"authorisedToSend is not valid\"];if (guardDebug)console.log('ListOfPaymentsPage '+ id + '.authorisedToSend', authorisedToSendGuard);//Guard {\"condition\":\"or\",\"conditions\":[\"sendingToUser\",\"authorisedByUser\"]}"
     ])
   } )

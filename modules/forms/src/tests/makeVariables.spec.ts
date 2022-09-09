@@ -11,7 +11,8 @@ describe ( 'makeOptionals', () => {
       "",
       "export const OccupationAndIncomeSummaryOptionals: NameAndLensFn<FState> = {",
       "  selected: id => id.focusQuery ( 'OccupationAndIncomeSummary' ).focusQuery ( 'selectedItem' ),",
-      "  currentOccupation: id => id.focusQuery ( 'OccupationAndIncomeSummary' ).focusQuery ( 'fromApi' ).focusQuery ( 'customerOccupationIncomeDetails' )",
+      "  currentOccupation: id => id.focusQuery ( 'OccupationAndIncomeSummary' ).focusQuery ( 'fromApi' ).focusQuery ( 'customerOccupationIncomeDetails' ),",
+      "  selectedOccupation: id => OccupationAndIncomeSummaryOptionals.currentOccupation(identityL).chainNthFromPath(OccupationAndIncomeSummaryOptionals.selected(identityL))",
       "}"
     ])
   } )

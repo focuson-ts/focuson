@@ -46,7 +46,7 @@ const makeButtonGuardVariableFrom = <B extends ButtonD, G extends GuardWithCondi
     const makerString = guardCreator.makeGuardVariable ( params, mainP, p, name, button.by );
     const message = defaultGuardMessage ( `guard for ${name}` )
     const guardAsMessages = guardCreator.raw === true ? makerString : makerString + `? []:["${message}"]`
-    return [ `//${guardCreator.raw} => ${guardCreator}` ,guardAsMessages ]
+    return [ guardAsMessages ]
   }
   return []
 };

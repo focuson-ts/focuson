@@ -1,5 +1,5 @@
 import { LensProps, LensState } from "@focuson/state";
-import { FocusedPage } from "./focusedPage";
+import { FocusedPage, TitleDetails } from "./focusedPage";
 import { PageMode } from "./pageSelection";
 
 
@@ -25,5 +25,6 @@ export function DefaultTemplate<S extends any, D extends any, Msgs, Context> ( {
   if ( debug ) console.log ( `DefaultTemplate.bodyFn`, bodyFn )
   const child: JSX.Element = bodyFn ( state, pageMode, index )
   if ( debug ) console.log ( `DefaultTemplate.child`, child )
-  return (<div key={index} id='default_template'><h1 dangerouslySetInnerHTML={{ __html: title ( state ) }}/>{child}</div>)
+  const titleDetails: TitleDetails = title ( state );
+  return (<div key={index} id='default_template'><h1 className={titleDetails.className} dangerouslySetInnerHTML={{ __html: titleDetails.title }}/>{child}</div>)
 }

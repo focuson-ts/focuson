@@ -10,6 +10,7 @@ import { TSParams } from "./config";
 import { ButtonD } from "../buttons/allButtons";
 import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 import { stateFocusQueryWithTildaFromPage, stateQueryForParams, stateQueryForPathsFnParams } from "./lens";
+import { mapTitleDetails } from "@focuson/pages";
 
 
 export type AllComponentData<G> = ComponentData<G> | ErrorComponentData
@@ -66,7 +67,7 @@ export const listComponentsIn = <G> ( dataDD: CompDataD<G> ): AllComponentData<G
       }
       return c
     }
-    const c = componentDataForPage ( oneDataDD, child )
+    const c: any = componentDataForPage ( oneDataDD, child )
     delete c.path
     return { path: [ n ], ...c } //just to get format nice on o/p
 
@@ -172,7 +173,7 @@ export function createOneReact<B, G> ( mainPage: MainPageD<B, G>, params: TSPara
   if ( name === undefined ) throw Error ( errorPrefix + " cannot find the name of the display component. Check it is a dataD or similar" )
   const validate = isPrimDd ( dataDD ) && dataDD.validate ? dataDD.validate : {};
   const fullDisplayParams = makeParams ( mainPage, pageD, params, errorPrefix, path,
-    isPrimDd ( dataDD ) && dataDD.enum, display, dataDD.displayParams, displayParams, validate );
+    isPrimDd ( dataDD )? dataDD.enum: undefined, display, dataDD.displayParams, displayParams, validate );
 
   const displayParamsString = fullDisplayParams.map ( ( [ k, v ] ) => `${k}=${v}` ).join ( " " )
 
@@ -184,7 +185,7 @@ export function createOneReact<B, G> ( mainPage: MainPageD<B, G>, params: TSPara
 }
 export function createAllReactCalls<B, G> ( mainPage: MainPageD<B, G>, params: TSParams, p: PageD<B, G>, d: AllComponentData<G>[] ): string[] {
   return d.filter ( ds => isComponentData ( ds ) && !ds.hidden ).flatMap ( d => {
-    const comment = []//isComponentData ( d ) ? [ " {/*" + JSON.stringify ( { ...d, dataDD: d.dataDD?.name } ) + '*/}' ] : []
+    const comment: string[] = []//isComponentData ( d ) ? [ " {/*" + JSON.stringify ( { ...d, dataDD: d.dataDD?.name } ) + '*/}' ] : []
     if ( isErrorComponentData ( d ) ) return [ d.error ]
     const comp = [ ...comment, ...createOneReact ( mainPage, params, p, d ) ]
     return comp
@@ -212,7 +213,7 @@ export function makeGuardVariables<B, G extends GuardWithCondition> ( hasGuards:
     const debugString = `;if (guardDebug)console.log('${mainP.name} '+ id + '.${name}', ${name}Guard);`
     const makerString = maker.makeGuardVariable ( params, mainP, page, name, guard );
     const message = guard.message ? guard.message : defaultGuardMessage ( name )
-    const guardAsMessages = maker.raw? makerString: makerString + `? []:["${message}"]`
+    const guardAsMessages = maker.raw ? makerString : makerString + `? []:["${message}"]`
     return guardAsMessages + debugString + `//Guard ${JSON.stringify ( guard )}`
   } );
   return [ `const guardDebug=state.main?.debug?.guardDebug`, ...guards ];
@@ -259,9 +260,10 @@ export const createReactPageComponent = <B extends ButtonD, G extends GuardWithC
   throw new Error ( `Unknown page type ${pageD.pageType} in ${pageD.name}` )
 };
 
-function makeTitle<B, G> ( pageD: PageD<B, G> ) {
-  const title = pageD.title ? `replaceTextUsingPath(s,'${pageD.title}')` : `'${decamelize ( pageD.name, ' ' )}' `;
-  return title;
+function makeStringifiedTitle<B, G> ( pageD: PageD<B, G> ): string {
+  const { title, className } = mapTitleDetails ( pageD, `'${decamelize ( pageD.name, ' ' )}'`, title => `replaceTextUsingPath(s,'${title}')` )
+  const classNameString = className === undefined ? '' : `, className: ${JSON.stringify ( className )}`
+  return `({title: ${title}${classNameString}})`;
 }
 export function createReactModalPageComponent<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButtons: MakeButton<G>, mainP: MainPageD<B, G>, pageD: PageD<B, G> ): string[] {
   const { dataDD } = pageD.display
@@ -272,7 +274,7 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
   const guards = makeGuardVariables ( pageD, makeGuard, params, mainP, pageD )
   return [
     `export function ${modalPageComponentName ( mainP ) ( pageD )}(){`,
-    `  return focusedPage<${params.stateName}, ${domName}, Context> ( s => ${(makeTitle ( pageD ))} ) (//If there is a compilation here have you added this to the 'domain' of the main page`,
+    `  return focusedPage<${params.stateName}, ${domName}, Context> ( s => ${(makeStringifiedTitle ( pageD ))} ) (//If there is a compilation here have you added this to the 'domain' of the main page`,
     `     ( state, d, mode, index ) => {`,
     ...(indentList ( indentList ( indentList ( indentList ( indentList ( [
       'const id=`page${index}`;',
@@ -297,7 +299,7 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
   return [
     `export function ${pageComponentName ( pageD )}(){`,
     `   //A compilation error here is often because you have specified the wrong path in display. The path you gave is ${pageD.display.target}`,
-    `  return focusedPageWithExtraState<${params.stateName}, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => ${makeTitle ( pageD )}) ( state => state${stateFocusQueryWithTildaFromPage ( `createReactMainPageComponent for page ${pageD.name}`, params, pageD, pageD, pageD.display.target )}) (`,
+    `  return focusedPageWithExtraState<${params.stateName}, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => ${makeStringifiedTitle ( pageD )}) ( state => state${stateFocusQueryWithTildaFromPage ( `createReactMainPageComponent for page ${pageD.name}`, params, pageD, pageD, pageD.display.target )}) (`,
     `( fullState, state , full, d, mode, index) => {`,
     ...indentList ( makeGuardButtonVariables ( params, makeGuard, pageD, pageD ) ),
     'const id=`page${index}`;',
