@@ -5,9 +5,12 @@ export interface HasSimpleMessages {
   messages: SimpleMessage[];
 }
 
-export interface SimpleMessage {
+export interface MessageAndLevel{
   level: SimpleMessageLevel,
   msg: string,
+
+}
+export interface SimpleMessage  extends MessageAndLevel{
   time: string
 }
 

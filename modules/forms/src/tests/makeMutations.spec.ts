@@ -168,14 +168,14 @@ describe ( "sql functions", () => {
       "    public Integer getAccountTypeI(Connection connection, Messages msgs, Object dbName) throws SQLException {",
       "      String sqlFunction = '{? = call b00.getAccountType()}';",
       "      try (CallableStatement s = connection.prepareCall(sqlFunction)) {",
-      "      logger.debug(MessageFormat.format('sqlFunction: {0}', sqlFunction));",
+      "            logger.debug(MessageFormat.format('sqlFunction: {0}', sqlFunction));",
       "      s.registerOutParameter(1,java.sql.Types.INTEGER);",
-      "      long start = System.nanoTime();",
-      "      s.execute();",
+      "            long start = System.nanoTime();",
+      "            s.execute();",
       "      Integer accountType = s.getInt(1);",
       "      logger.debug(MessageFormat.format('Duration: {0,number,#.##}, accountType: {1}', (System.nanoTime() - start) / 1000000.0, accountType));",
       "      return accountType;",
-      "  }}"
+      "    }}"
     ] )
   } )
 
@@ -234,8 +234,9 @@ describe ( "makeMutations", () => {
       "      long start = System.nanoTime();",
       "      s.execute();",
       "      logger.debug(MessageFormat.format(\"Duration: {0,number,#.##}\", (System.nanoTime() - start) / 1000000.0));",
-      "      return;",
-      "  }}",
+      "return;",
+      "}",
+      "  }",
       "",
       "}"
     ] )
@@ -358,8 +359,9 @@ describe ( "makeMutations", () => {
       "      Integer fourteen = s.getInt(16);",
       "      Integer fiveteen = s.getInt(17);",
       "      logger.debug(MessageFormat.format('Duration: {0,number,#.##}, one: {1}, two: {2}, three: {3}, four: {4}, five: {5}, six: {6}, seven: {7}, eight: {8}, nine: {9}, ten: {10}, eleven: {11}, twelve: {12}, thirteen: {13}, fourteen: {14}, fiveteen: {15}', (System.nanoTime() - start) / 1000000.0, one,two,three,four,five,six,seven,eight,nine,ten,eleven,twelve,thirteen,fourteen,fiveteen));",
-      "      return new Tuple15<String,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer>(one,two,three,four,five,six,seven,eight,nine,ten,eleven,twelve,thirteen,fourteen,fiveteen);",
-      "  }}",
+      "return new Tuple15<String,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Integer>(one,two,three,four,five,six,seven,eight,nine,ten,eleven,twelve,thirteen,fourteen,fiveteen);",
+      "}",
+      "  }",
       "    public Tuple2<Integer,String> two0_1(Connection connection, Messages msgs, Object dbName, int accountId) throws SQLException {",
       "      String storedProc = 'call bo11.two(?, ?, ?, ?)';",
       "        if (dbName.equals(IFetcher.mock)) {",
@@ -377,8 +379,9 @@ describe ( "makeMutations", () => {
       "      Integer two = s.getInt(2);",
       "      String one = s.getString(3);",
       "      logger.debug(MessageFormat.format('Duration: {0,number,#.##}, two: {1}, one: {2}', (System.nanoTime() - start) / 1000000.0, two,one));",
-      "      return new Tuple2<Integer,String>(two,one);",
-      "  }}",
+      "return new Tuple2<Integer,String>(two,one);",
+      "}",
+      "  }",
       "",
       "}"
     ] )

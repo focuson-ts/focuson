@@ -1,4 +1,4 @@
-import { NameAnd, RestAction, SimpleMessageLevel, toArray, unique } from "@focuson/utils";
+import { MessageAndLevel, NameAnd, RestAction, SimpleMessageLevel, toArray, unique } from "@focuson/utils";
 import { JavaWiringParams } from "../codegen/config";
 import { indentList } from "../codegen/codegen";
 import { Pattern } from "./dataD";
@@ -58,6 +58,30 @@ export function getMakeMock ( m: MutationDetail ): boolean {
   if ( isMessageMutation ( m ) || isMultipleMutation ( m ) || isAutoSqlResolver ( m ) ) return false
   return m.makeMock === undefined ? true : m.makeMock
 }
+
+
+export interface MessagesForSuccessAndFailure {
+  messageOnSuccess?: string | MessageAndLevel
+  messageOnFailure?: string | MessageAndLevel
+}
+export interface FullMessageForSuccessAndFailure {
+  messageOnSuccess?: MessageAndLevel
+  messageOnFailure?: MessageAndLevel
+
+}
+export function getMessagesForSuccessAndFailure ( md: MutationDetail ): FullMessageForSuccessAndFailure | undefined {
+  const a: any = md
+  function toMessageAndLevel ( s: string | MessageAndLevel, defaultLevel: SimpleMessageLevel ): MessageAndLevel {
+    if ( s === undefined ) return undefined
+    if ( typeof s === 'string' ) return { msg: s, level: defaultLevel }
+    return s
+  }
+  const messageOnSuccess = toMessageAndLevel ( a.messageOnSuccess, 'info' )
+  const messageOnFailure = toMessageAndLevel ( a.messageOnFailure, 'error' )
+  return messageOnFailure || messageOnSuccess ? { messageOnSuccess, messageOnFailure } : undefined
+}
+
+
 export type PrimaryMutationDetail = StoredProcedureMutation | SqlFunctionMutation | AutoSqlResolver |
   SqlMutation | SqlMutationThatIsAList |
   ManualMutation | SelectMutation | MessageMutation
@@ -76,7 +100,7 @@ export interface Autowiring {
   imports: boolean
 }
 
-export interface SqlMutation {
+export interface SqlMutation extends MessagesForSuccessAndFailure {
   type: 'sql',
   schema: Schema;
   /**The name of the procedure that does this: should capture the intent of what this does */
@@ -104,10 +128,10 @@ export function isSqlMutationThatIsAList ( s: MutationDetail ): s is SqlMutation
 }
 
 export function isMutationThatIsaList ( m: MutationDetail ): m is (SqlMutationThatIsAList | SelectMutation | ManualMutation) {
-  return isSqlMutationThatIsAList ( m ) || isSelectMutationThatIsAList ( m ) || (isManualMutation(m) && m.list)
+  return isSqlMutationThatIsAList ( m ) || isSelectMutationThatIsAList ( m ) || (isManualMutation ( m ) && m.list)
 }
 
-export interface StoredProcedureMutation {
+export interface StoredProcedureMutation extends MessagesForSuccessAndFailure {
   type: 'storedProc',
   list?: boolean,
   schema: Schema,
@@ -116,7 +140,7 @@ export interface StoredProcedureMutation {
   makeMock?: boolean
   params: MutationParamForStoredProc | MutationParamForStoredProc[]
 }
-export interface SqlFunctionMutation {
+export interface SqlFunctionMutation extends MessagesForSuccessAndFailure {
   type: 'sqlFunction',
   list?: boolean,
   schema: Schema,
@@ -143,12 +167,12 @@ export interface ManualMutation {
   makeMock?: boolean
   code: string | string[]
 }
-export function isManualMutation(m: MutationDetail): m is ManualMutation{
+export function isManualMutation ( m: MutationDetail ): m is ManualMutation {
   const a: any = m
   return m.type === 'manual'
 }
 
-export interface MultipleMutation {
+export interface MultipleMutation{
   type: 'multiple',
   name?: 'string',
   mutations: MutationDetail[]

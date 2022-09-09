@@ -31,7 +31,12 @@ export const additionalInfoRD: RestD<any> = {
   url: '/customer/occupation/v2/additionalInfo?{query}',
   actions: [ 'get' ],
   mutations: [
-    { restAction: 'get', mutateBy: { type: 'storedProc', name: 'auditGetCustomeAdditionalInfo', schema: onlySchema, params: [ 'clientRef' ] } },
+    {
+      restAction: 'get', mutateBy: {
+        type: 'storedProc', name: 'auditGetCustomeAdditionalInfo', schema: onlySchema, params: [ 'clientRef' ],
+        messageOnSuccess: 'success', messageOnFailure: 'failure'
+      },
+    },
   ]
 }
 

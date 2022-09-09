@@ -60,32 +60,39 @@ export function SummaryOfChargeDatesRD ( c: AuthoriseCustomisation ): ExampleRes
           {
             type: 'sql', schema: onlySchema, sql: 'select something from somewhere', params: [
               { type: 'output', name: 'something', rsName: 'something', javaType: 'String' }
-            ]
+            ],
+            messageOnSuccess: 'step11'
           },
           {
             type: 'sql', schema: onlySchema, sql: 'somesql', params: [ 'brandRef', 'something',
               { type: 'output', javaType: 'String', name: 'bob', rsName: 'bob' }
-            ], list: true
+            ], list: true,
+            messageOnSuccess: 'step12',
+            messageOnFailure: 'step12 - failed'
+
           },
-          { type: 'sql', schema: onlySchema, sql: 'insert something in audit file', params: 'brandRef' } ]
+          {
+            type: 'sql', schema: onlySchema, sql: 'insert something in audit file', params: 'brandRef', messageOnSuccess: 'step13'
+          },
+        ]
       },
       {
         guard: [], type: 'sql', schema: onlySchema, sql: 'someOtherSql', params: [ 'brandRef',
           { type: 'output', javaType: 'String', name: 'bill', rsName: 'bil' },
-          { type: 'output', javaType: 'String', name: 'bob', rsName: 'bob' }
-        ], list: true
+          { type: 'output', javaType: 'String', name: 'bob', rsName: 'bob' },
+        ], list: true, messageOnSuccess: 'step2'
       },
       {
         guard: [], type: 'multiple', mutations: [
           {
             type: 'sql', schema: onlySchema, sql: 'select something from somewhere', params: [
               { type: 'output', name: 'something', rsName: 'something', javaType: 'String' }
-            ]
+            ], messageOnFailure: 'step31 - fail', messageOnSuccess: 'step31'
           },
           {
             type: 'sql', schema: onlySchema, sql: 'somesql', params: [ 'brandRef', 'something',
               { type: 'output', javaType: 'String', name: 'bob', rsName: 'bob' }
-            ], list: true
+            ], list: true, messageOnSuccess: 'step32'
           },
           { type: 'sql', schema: onlySchema, sql: 'insert something in audit file', params: 'brandRef' } ]
       },
@@ -112,8 +119,8 @@ export function SummaryOfChargeDatesRD ( c: AuthoriseCustomisation ): ExampleRes
 
 export function operatorEligabilityRD ( c: AuthoriseCustomisation ): ExampleRestD {
   const result: ExampleRestD = {
-    params: { ...fromCommonIds('operatorName') },
-    dataDD: operatorEligableDD(c),
+    params: { ...fromCommonIds ( 'operatorName' ) },
+    dataDD: operatorEligableDD ( c ),
     namePrefix: c.namePrefix,
     url: `${c.urlPrefix}/operatorEligability?{query}`,
     actions: [ 'get' ],

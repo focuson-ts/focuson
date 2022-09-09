@@ -109,8 +109,9 @@ describe ( "makeResolvers", () => {
       "      Integer val1 = s.getInt(1);",
       "      String val2 = DateFormatter.formatDate(\"dd-MM-yyyy\", s.getDate(2));",
       "      logger.debug(MessageFormat.format(\"Duration: {0,number,#.##}, val1: {1}, val2: {2}\", (System.nanoTime() - start) / 1000000.0, val1,val2));",
-      "      return new Tuple2<Integer,String>(val1,val2);",
-      "  }}",
+      "return new Tuple2<Integer,String>(val1,val2);",
+      "}",
+      "  }",
       "    public Tuple2<String,String> getMeMyData21(Connection connection, Messages msgs, Object dbName) throws SQLException {",
       "      String storedProc = \"call getMeMyData2(?, ?, ?)\";",
       "    try (CallableStatement s = connection.prepareCall(storedProc)) {",
@@ -123,8 +124,9 @@ describe ( "makeResolvers", () => {
       "      String val3 = DateFormatter.formatDate(\"dd-MM-yyyy\", s.getDate(1));",
       "      String val4 = s.getString(2);",
       "      logger.debug(MessageFormat.format(\"Duration: {0,number,#.##}, val3: {1}, val4: {2}\", (System.nanoTime() - start) / 1000000.0, val3,val4));",
-      "      return new Tuple2<String,String>(val3,val4);",
-      "  }}",
+      "return new Tuple2<String,String>(val3,val4);",
+      "}",
+      "  }",
       "",
       "public String dbName() {return IFetcher.db; }",
       "}"
@@ -291,12 +293,13 @@ describe ( "makeResolvers", () => {
       "      Double oneAccountBalance = s.getDouble(8);",
       "      Double currentAccountBalance = s.getDouble(9);",
       "      logger.debug(MessageFormat.format('Duration: {0,number,#.##}, totalMonthlyCost: {1}, oneAccountBalance: {2}, currentAccountBalance: {3}', (System.nanoTime() - start) / 1000000.0, totalMonthlyCost,oneAccountBalance,currentAccountBalance));",
-      "      return new Tuple3<Double,Double,Double>(totalMonthlyCost,oneAccountBalance,currentAccountBalance);",
-      "  }}",
+      "return new Tuple3<Double,Double,Double>(totalMonthlyCost,oneAccountBalance,currentAccountBalance);",
+      "}",
+      "  }",
       "",
       "public String dbName() {return IFetcher.db; }",
       "}"
-    ] )
+    ])
   } )
 
   it ( "should make resolvers for a sql list resolvers", () => {

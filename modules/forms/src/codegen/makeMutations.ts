@@ -4,7 +4,7 @@ import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationDetailsName, mutationMethodName, sqlMapFileName } from "./names";
 import { AllLensRestParams, RestD } from "../common/restD";
 import { indentList } from "./codegen";
-import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutoSqlResolver, AutowiredMutationParam, displayParam, getMakeMock, importForTubles, InputMutationParam, isAutoSqlResolver, isBodyMutationParam, isInputParam, isMessageMutation, isMultipleMutation, isMutationThatIsaList, isOutputParam, isSelectMutationThatIsAList, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, paramNamePathOrValue, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlFunctionMutation, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
+import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutoSqlResolver, AutowiredMutationParam, displayParam, getMakeMock, getMessagesForSuccessAndFailure, importForTubles, InputMutationParam, isAutoSqlResolver, isBodyMutationParam, isInputParam, isMessageMutation, isMultipleMutation, isMutationThatIsaList, isOutputParam, isSelectMutationThatIsAList, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, paramNamePathOrValue, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlFunctionMutation, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
 import { applyToTemplate } from "@focuson/template";
 import { restActionForName } from "@focuson/rest";
 import { outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint";
@@ -195,6 +195,21 @@ export function postTransactionLogger ( params: JavaWiringParams, paramsA: Mutat
 function cleanSql ( sql: string ) {
   return sql.split ( /\n/g ).filter ( s => s.length > 0 ).map ( s => `"${s.trim ()} "` ).join ( "+\n      " )
 }
+
+function makeMessages ( md: MutationDetail, code: string[], returnCode: string | string[] ): string[] {
+  const m = getMessagesForSuccessAndFailure ( md )
+  if ( m === undefined ) return [ ...code, ...toArray ( returnCode ) ]
+  const { messageOnSuccess, messageOnFailure } = m
+  const success: string[] = messageOnSuccess ? [ `msgs.${messageOnSuccess.level}(${JSON.stringify ( messageOnSuccess.msg )});` ] : []
+  if ( messageOnFailure === undefined ) return [ ...code, ...success, ...toArray ( returnCode ) ]
+  return [ `try {`,
+    ...indentList ( [ ...code, ...success, ...toArray ( returnCode ) ] ),
+    `} catch (Exception e) {`,
+    `   msgs.${messageOnFailure.level}(${JSON.stringify ( messageOnFailure.msg )});`,
+    `   throw e;`,
+    '}' ]
+}
+
 export function mutationCodeForSqlMapCalls<G> ( params: JavaWiringParams, errorPrefix: string, p: RefD<G>, r: RestD<G>, name: string, m: SqlMutation, index: string, includeMockIf: boolean ): string[] {
 
   const paramsA = toArray ( m.params )
@@ -215,13 +230,15 @@ export function mutationCodeForSqlMapCalls<G> ( params: JavaWiringParams, errorP
     `    String sql = ${cleanSql ( m.sql )};`,
     `    try (PreparedStatement s = connection.prepareStatement(sql)) {`,
     ...preTransactionLogger ( params, m.type, paramsA ),
-    ...indentList ( indentList ( indentList ( [
-        ...allSetObjectForInputs ( errorPrefix, m.params ),
-        `long start = System.nanoTime();`,
-        ...execute,
-        ...getFromResultSetIntoVariables ( errorPrefix, 'rs', paramsA ),
-        ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ),
-        makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) )
+    ...indentList ( indentList ( indentList (
+      [ ...makeMessages ( m, [
+          ...allSetObjectForInputs ( errorPrefix, m.params ),
+          `long start = System.nanoTime();`,
+          ...execute,
+          ...getFromResultSetIntoVariables ( errorPrefix, 'rs', paramsA ),
+          ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ),
+        ],
+        makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ),
       ]
     ) ) ),
     `  }}`,
@@ -238,7 +255,7 @@ export function mutationCodeForSqlListCalls<G> ( params: JavaWiringParams, error
     `    String sql = ${cleanSql ( m.sql )};`,
     `    try (PreparedStatement s = connection.prepareStatement(sql)) {`,
     ...preTransactionLogger ( params, m.type, paramsA ),
-    ...indentList ( indentList ( indentList ( [
+    ...indentList ( indentList ( indentList ( makeMessages ( m, [
         ...allSetObjectForInputs ( errorPrefix, m.params ),
         `long start = System.nanoTime();`,
         `ResultSet rs = s.executeQuery();`,
@@ -251,9 +268,8 @@ export function mutationCodeForSqlListCalls<G> ( params: JavaWiringParams, error
         '}',
         ...check404,
         ...messageLine,
-        ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ),
-        `return result;`,
-      ]
+        ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ) ],
+      `return result;` )
     ) ) ),
     `  }}`,
   ];
@@ -265,6 +281,7 @@ function makeMethodDecl<G> ( errorPrefix: string, paramsA: MutationParam[], resu
   return [ `    public ${resultType} ${mutationMethodName ( r, name, m, index )}(Connection connection, Messages msgs, ${paramStrings}) throws SQLException {`,
     ...indentList ( indentList ( indentList ( requiredmentCheckCodeForJava ( paramsA, parametersFor ( m ) ) ) ) ) ];
 }
+
 export function mutationCodeForFunctionCalls<G> ( params: JavaWiringParams, errorPrefix: string, p: RefD<G>, r: RestD<G>, name: string, m: SqlFunctionMutation, index: string, includeMockIf: boolean ): string[] {
   const paramsA = toArray ( m.params )
   let fullName = m.package ? `${m.package}.${m.name}` : m.name;
@@ -273,15 +290,18 @@ export function mutationCodeForFunctionCalls<G> ( params: JavaWiringParams, erro
     `      String sqlFunction = "{? = call ${fullName}(${toArray ( m.params ).slice ( 1 ).map ( () => '?' ).join ( ", " )})}";`,
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ),
     `      try (CallableStatement s = connection.prepareCall(sqlFunction)) {`,
-    ...preTransactionLogger ( params, m.type, paramsA ),
-    ...indentList ( indentList ( indentList ( allSetObjectForStoredProcs ( errorPrefix, m.params ) ) ) ),
-    `      long start = System.nanoTime();`,
-    `      s.execute();`,
-    ...indentList ( indentList ( indentList ( [
-      ...getFromStatement ( errorPrefix, 's', paramsA ),
-      ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ),
-      makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ] ) ) ),
-    `  }}`,
+    ...indentList ( indentList ( indentList (
+      makeMessages ( m, [
+          ...preTransactionLogger ( params, m.type, paramsA ),
+          ...allSetObjectForStoredProcs ( errorPrefix, m.params ),
+          `      long start = System.nanoTime();`,
+          `      s.execute();`,
+
+          ...getFromStatement ( errorPrefix, 's', paramsA ),
+          ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ),
+        ],
+        makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ) ) ) ),
+    `    }}`
   ];
 }
 export function mutationCodeForStoredProcedureCalls<G> ( params: JavaWiringParams, errorPrefix: string, p: RefD<G>, r: RestD<G>, name: string, m: StoredProcedureMutation, index: string, includeMockIf: boolean ): string[] {
@@ -289,18 +309,20 @@ export function mutationCodeForStoredProcedureCalls<G> ( params: JavaWiringParam
   let fullName = m.package ? `${m.package}.${m.name}` : m.name;
   return [
     ...makeMethodDecl ( errorPrefix, paramsA, javaTypeForOutput ( paramsA ), r, name, m, index ),
-    `      String storedProc = "call ${fullName}(${toArray ( m.params ).map ( () => '?' ).join ( ", " )})";`,
-    ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ), `    try (CallableStatement s = connection.prepareCall(storedProc)) {`,
-    ...preTransactionLogger ( params, m.type, paramsA ),
-    ...indentList ( indentList ( indentList ( allSetObjectForStoredProcs ( errorPrefix, m.params ) ) ) ),
-    `      long start = System.nanoTime();`,
-    `      s.execute();`,
-    ...indentList ( indentList ( indentList ( [
-      ...getFromStatement ( errorPrefix, 's', paramsA ),
-      ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ),
-      makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ] ) ) ),
-    `  }}`,
-  ];
+    ...makeMessages ( m, [
+        `      String storedProc = "call ${fullName}(${toArray ( m.params ).map ( () => '?' ).join ( ", " )})";`,
+        ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ), `    try (CallableStatement s = connection.prepareCall(storedProc)) {`,
+        ...preTransactionLogger ( params, m.type, paramsA ),
+        ...indentList ( indentList ( indentList ( allSetObjectForStoredProcs ( errorPrefix, m.params ) ) ) ),
+        `      long start = System.nanoTime();`,
+        `      s.execute();`,
+        ...indentList ( indentList ( indentList ( [
+          ...getFromStatement ( errorPrefix, 's', paramsA ),
+          ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ) ],
+        ) ) ) ],
+      [ makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ), '}' ] ),
+    `  }`,
+  ]
 }
 
 export function mutationCodeForManual<G> ( errorPrefix: string, p: RefD<G>, r: RestD<G>, name: string, m: ManualMutation, index: string, includeMockIf: boolean ): string[] {
