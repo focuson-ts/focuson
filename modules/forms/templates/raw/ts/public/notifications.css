@@ -1,5 +1,9 @@
 :root{
     --gold: #FBBA20;
+    --red: #DD0303;
+    --dark-grey: #333333;
+    --dark-grey-2: #666666;
+    --green: #429448;
     --notification-color: var(--dark-grey);
     --notification-large-icon-padding: 24px;
     --notification-border-width: 2px;
@@ -12,14 +16,13 @@
     --notification-success-bevel-colour: var(--green);
     --notification-info-bevel-colour: var(--dark-grey-2);
     --notification-error-bevel-colour: var(--red);
-    --notification-error-icon-asset: url(./themes/theme-dark/icons/icon-error_large.svg);
-    --notification-info-icon-asset: url(./themes/theme-dark/icons/icon-info_large.svg);
-    --notification-warning-icon-asset: url(./themes/theme-dark/icons/icon-warning_large.svg);
+    --notification-error-icon-asset: url(./themes/theme-dark/icons/icon-error_medium.svg);
+    --notification-info-icon-asset: url(./themes/theme-dark/icons/icon-info_medium.svg);
+    --notification-warning-icon-asset: url(./themes/theme-dark/icons/icon-warning_medium.svg);
     /*--notification-success-icon-asset: url(./themes/theme-dark/icons/icon-error_large.svg);*/
-    --notification-icon-min-width: 60px;
     --line-height-main: 24px;
-    --notification-icon-min-width: 60px;
-    --notification-icon-min-height: 60px;
+    --notification-icon-min-width: 32px;
+    --notification-icon-min-height: 32px;
     --font-family-main: 'RNHouseSans-Regular';
     --font-size-main: 16px;
 }
@@ -31,12 +34,13 @@
     color: var(--notification-color);
     padding: var(--notification-large-icon-padding);
     display: flex;
+    border-radius: 0 0 var(--notification-bevel-size) var(--notification-bevel-size);
+    align-items: center;
 }
 
 .page-notification-wrapper.error {
     border: var(--notification-border-width) solid var(--notification-error-border-color);
     border-bottom: var(--notification-bevel-size) solid var(--notification-error-bevel-colour);
-    border-radius: 0 0 var(--notification-bevel-size) var(--notification-bevel-size);
 }
 
 .page-notification-wrapper.error .notification-icon{
@@ -47,35 +51,33 @@
 .notification-icon{
     min-width: var(--notification-icon-min-width);
     min-height: var(--notification-icon-min-height);
+    background-repeat: no-repeat;
+    height: 2.5rem;
 }
 
 .notification-msg-noheader {
     line-height: var(--line-height-main);
-    padding-top: 3px;
     font-size: var(--font-size-main);
     font-family: var( --font-family-main);
+    margin-left: 20px;
 }
 .page-notification-wrapper.warning {
     border: var(--notification-border-width) solid var(--notification-warning-border-color);
     border-bottom: var(--notification-bevel-size) solid var(--notification-warning-bevel-colour);
-    border-radius: 0 0 var(--notification-bevel-size) var(--notification-bevel-size);
 }
 
 .page-notification-wrapper.warning .notification-icon{
     background-image: var(--notification-warning-icon-asset);
-    background-repeat: no-repeat;
 }
 
 .page-notification-wrapper.info {
      border: var(--notification-border-width) solid var(--notification-info-border-color);
     border-bottom: var(--notification-bevel-size) solid var(--notification-info-bevel-colour);
-    border-radius: 0 0 var(--notification-bevel-size) var(--notification-bevel-size);
 }
 
 .page-notification-wrapper.success {
     border: var(--notification-border-width) solid var(--notification-success-border-color);
     border-bottom: var(--notification-bevel-size) solid var(--notification-success-bevel-colour);
-    border-radius: 0 0 var(--notification-bevel-size) var(--notification-bevel-size);
 }
 
 .page-notification-wrapper.info .notification-icon{

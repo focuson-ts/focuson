@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 56 56" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <!-- Generator: Sketch 58 (84663) - https://sketch.com -->
+<title>Atom/System-Icon/56X56/icon-info</title>
+<desc>Created with Sketch.</desc>
+<g id="Symbols/Info/Page/#Medium" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+<g id="Molecule/Message/Info/Page/#Medium" transform="translate(-24.000000, -24.000000)" fill="#666666">
+    <g id="Atom/System-Icon/56X56/icon-info-medium">
+        <g transform="translate(24.000000, 24.000000)">
+            <path d="M28,0 C43.463973,0 56,12.536027 56,28 C56,43.463973 43.463973,56 28,56 C12.536027,56 0,43.463973 0,28 C0,12.536027 12.536027,0 28,0 Z M31.5,24.5 L21,24.5 L21,28 L24.5,28 L24.5,42 L31.5,42 L31.5,24.5 Z M31.5035,14.2205 L24.7205,14.2205 L24.7205,21.0035 L31.5035,21.0035 L31.5035,14.2205 Z" id="Combined-Shape"></path>
+        </g>
+    </g>
+</g>
+</g>
+       </svg>

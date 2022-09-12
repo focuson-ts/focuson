@@ -128,7 +128,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
     function copyTheme ( theme: string ) {
       copyFiles ( tsPublic + `/themes/${theme}`, `templates/raw/ts/public/themes/${theme}`, directorySpec ) ( 'button.css', 'checkbox.css', 'core.css', 'dropdown.css', 'index.css', 'input.css', 'radio.css', 'table.css' )
       copyFiles ( tsPublic + `/themes/${theme}/icons`, `templates/raw/ts/public/themes/${theme}/icons`, directorySpec )
-      ( 'chevron-down.svg', 'close-cross-icon.svg', 'icon-error_large.svg', 'icon-warning_large.svg', 'icon-info_large.svg' )
+      ( 'chevron-down.svg', 'close-cross-icon.svg', 'icon-error_medium.svg', 'icon-warning_medium.svg', 'icon-info_medium.svg' )
     }
     themes.forEach ( copyTheme )
     templateFile ( `${tsPublic}/index.css`, 'templates/raw/ts/public/index.css', params, directorySpec, details )
