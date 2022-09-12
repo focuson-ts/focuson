@@ -127,11 +127,13 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
     copyFiles ( tsPublic, 'templates/raw/ts/public', directorySpec ) ( 'favicon.ico', 'logo192.png', 'logo512.png', 'manifest.json', 'robots.txt' )
     function copyTheme ( theme: string ) {
       copyFiles ( tsPublic + `/themes/${theme}`, `templates/raw/ts/public/themes/${theme}`, directorySpec ) ( 'button.css', 'checkbox.css', 'core.css', 'dropdown.css', 'index.css', 'input.css', 'radio.css', 'table.css' )
-      copyFiles ( tsPublic + `/themes/${theme}/icons`, `templates/raw/ts/public/themes/${theme}/icons`, directorySpec ) ( 'chevron-down.svg', 'close-cross-icon.svg' )
+      copyFiles ( tsPublic + `/themes/${theme}/icons`, `templates/raw/ts/public/themes/${theme}/icons`, directorySpec )
+      ( 'chevron-down.svg', 'close-cross-icon.svg', 'icon-error_large.svg', 'icon-warning_large.svg', 'icon-info_large.svg' )
     }
     themes.forEach ( copyTheme )
     templateFile ( `${tsPublic}/index.css`, 'templates/raw/ts/public/index.css', params, directorySpec, details )
     templateFile ( `${tsPublic}/confirm.css`, 'templates/raw/ts/public/confirm.css', params, directorySpec, details )
+    templateFile ( `${tsPublic}/notifications.css`, 'templates/raw/ts/public/notifications.css', params, directorySpec, details )
     const cssImports = params.cssDirectory && fs.existsSync ( params.cssDirectory ) ? GetFilelistRecursively2 ( params.cssDirectory, 0 )
       .filter ( res => !res.isDir && res.file.endsWith ( '.css' ) )
       .map ( ( { isDir, file } ) => `    <link rel="stylesheet" href="%PUBLIC_URL%/css/${file}" type="text/css">` ).join ( "\n" ) : ''

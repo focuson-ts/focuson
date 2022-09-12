@@ -1,6 +1,7 @@
 /* @import url("./themes/{theme}/index.css"); */
 @import url("./themes/theme-dark/index.css");
 @import url("./confirm.css");
+@import url("./notifications.css");
 
 .tooltip-wrap {
     position: relative;
@@ -398,9 +399,9 @@ th {
 /* }  */
 
 .messages {
-    max-height: 200px;
+    max-height: 250px;
     overflow-y: auto;
-    border: 1px solid #dc3545;
+    border: 1px solid lightgray;
 }
 
 .alert {
