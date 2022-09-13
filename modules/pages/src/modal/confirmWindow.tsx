@@ -13,6 +13,7 @@ export interface ConfirmProps {
   messageText?: string
   confirmText?: string;
   cancelText?: string;
+  showCancelButton?: boolean
 }
 export interface ConfirmWindow extends ConfirmProps {
   type: 'window'
@@ -34,6 +35,7 @@ export interface MakeConfirmCommitWindow<S, C> {
   confirmId: string;
   confirm: ( e: any ) => void;
   cancelId: string;
+  closeId: string;
   cancel: ( e: any ) => void
 }
 export const closeTwoPagesTxs = <S, C extends ModalContext<S>> ( errorPrefix: string, state: LensState<S, any, C>, otherCommands: ModalChangeCommands[] ): Transform<S, any>[] => {
@@ -56,6 +58,7 @@ export const makeConfirmCommitWindow = <S, D, C extends ModalContext<S>> ( makeF
   const id = 'confirm'
   const confirmId = id + '.confirm';
   const cancelId = id + '.cancel';
+  const closeId = id + '.close';
   function confirm ( e: any ) {
 
     const ps = pageSelections ( state );
@@ -79,27 +82,30 @@ export const makeConfirmCommitWindow = <S, D, C extends ModalContext<S>> ( makeF
   }
 
   function cancel ( e: any ) { state.massTransform ( reasonFor ( 'ConfirmCommitWindow', 'onClick', cancelId ) ) ( popPage ( state ) );}
-  const e: JSX.Element = makeFn ( { state, id, props, confirm, confirmId, cancel, cancelId } )
+  const e: JSX.Element = makeFn ( { state, id, props, confirm, confirmId, cancel, cancelId, closeId } )
   return e
 };
 
 //This needs to be a function so that it can be 'customised' to the relevant S,D and C. Without that it's always 'unknown'
 export function ConfirmCommitWindow<S, D, C extends ModalContext<S>> () {
   return makeConfirmCommitWindow<S, D, C> ( makerProps => {
-    const { confirm, confirmId, cancel, cancelId, props, state } = makerProps
-    const { id, messageText, confirmText, cancelText, title, className } = props
+    const { confirm, confirmId, cancel, cancelId, closeId, props, state } = makerProps
+    const { id, messageText, confirmText, cancelText, title, className, showCancelButton } = props
     console.log ( 'ConfirmCommitWindow', messageText )
     const realText = messageText ? replaceTextUsingPath ( state, messageText ) : 'Are you sure?'
     const fullCancelText = cancelText ? replaceTextUsingPath ( state, cancelText ) : 'Cancel'
     const fullConfirmText = confirmText ? replaceTextUsingPath ( state, confirmText ) : 'OK'
     return <div id={id} className={className ? className : 'dialog confirm-window'}>
       <span className="sr-only">Start of Dialog Box</span>
-      <div className='header'><a href="#" aria-label='close window' title={fullCancelText} id='close-window' className={'header-close'} onClick={cancel}/>
-      {title && <h3 className='dialog-header'>{replaceTextUsingPath ( state, title )}</h3>}
+      <div className='header'><a href="#" aria-label='close window' title={fullCancelText} id={closeId} className={'header-close'} onClick={cancel}/>
+        {title && <h3 className='dialog-header'>{replaceTextUsingPath ( state, title )}</h3>}
       </div>
       <div className='dialog-text' dangerouslySetInnerHTML={{ __html: realText }}/>
       <div className='dialog-buttons'>
         <button id={confirmId} aria-label='ok' title={fullCancelText} className="button primary-btn" onClick={confirm}>{fullConfirmText}</button>
+        {showCancelButton &&
+        <button id={cancelId} aria-label='ok' title={fullCancelText} className="button secondary-btn" onClick={cancel}>{fullCancelText}</button>
+        }
       </div>
       <span className="sr-only">End of Dialog Box</span>
     </div>;

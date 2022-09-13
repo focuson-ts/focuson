@@ -9,6 +9,7 @@ export interface AppConfig {
   tsPort: number;
   javaPort: number;
   makeSqlStrings?: boolean; //default true
+  manualMaxTuples?: number
 }
 
 

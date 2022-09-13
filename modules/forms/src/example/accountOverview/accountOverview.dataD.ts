@@ -257,7 +257,7 @@ export const accountOverviewOptOutDataD: ExampleDataD = {
 export const accountOverviewDataD: ExampleDataD = {
   name: "AccountOverview",
   description: "Account overview data definition",
-  layout: { component: LayoutCd, displayParams: { details: '[[4,3],[7,6]]', displayAsCards: true}},
+  layout: { component: LayoutCd, displayParams: { details: '[[4,3],[7,6]]', displayAsCards: true, buttons: {0: ['excessInfo'], 1: ['flags']}}},
   structure: {
     score: { dataDD: IntegerDD, displayParams: { label: "Score" } },
     accountType: { dataDD: EAccountDisplayTypeDD, displayParams: { label: "Account Type" } },

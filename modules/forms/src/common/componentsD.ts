@@ -256,7 +256,9 @@ export const LayoutCd: DisplayCompD = {
     rightHandClassName: { paramType: 'string', needed: 'no' },
     defaultProps: { paramType: 'string', needed: 'no' },
     displayAsCards: { paramType: 'boolean', needed: 'no' },
-    scrollAfter: { paramType: 'string', needed: 'no' }
+    scrollAfter: { paramType: 'string', needed: 'no' },
+    buttons: {paramType: 'json', needed: "no"},
+    allButtons: { paramType: 'object', needed: 'defaultToButtons' }
   },
   import: "@focuson/form_components",
   name: "Layout"

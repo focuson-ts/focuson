@@ -172,7 +172,7 @@ export function isManualMutation ( m: MutationDetail ): m is ManualMutation {
   return m.type === 'manual'
 }
 
-export interface MultipleMutation{
+export interface MultipleMutation {
   type: 'multiple',
   name?: 'string',
   mutations: MutationDetail[]
@@ -291,7 +291,7 @@ export function allStoredProcOutputParams ( m: MutationParam | MutationParam[] )
   return toArray ( m ).flatMap ( m => isStoredProcOutputParam ( m ) ? [ m ] : [] )
 }
 export function allOutputParams ( m: MutationParam | MutationParam[] ): OutputMutationParam[] {
-  return toArray ( m ).flatMap ( m => isSqlOutputParam ( m ) || isStoredProcOutputParam ( m ) ? [ m ] : [] )
+  return toArray ( m ).flatMap ( m => isOutputParam ( m ) ? [ m ] : [] )
 }
 export function javaTypeForOutput ( m: MutationParam | MutationParam[] ) {
   const outputs = allOutputParams ( m )

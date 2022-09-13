@@ -50,6 +50,7 @@ clip: rect(1px,1px,1px,1px);
 }
 .dialog-buttons .button{
     margin-left: 0;
+    margin-right: 30px;
 }
 
 .sr-only {

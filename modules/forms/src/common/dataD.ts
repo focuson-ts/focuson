@@ -392,7 +392,6 @@ export const MoneyStringDD: StringPrimitiveDD = {
   ...stringPrimDD,
   display: LabelAndStringInputCD,
   format: { type: 'Double', pattern: '%.2f' },
-  displayParams: { readonly: true },
   sample: [ '100.23', '200.45', '300.00' ],
   name: 'DisplayMoney',
   description: "The primitive representing an amount of the local currency that is represented as a string",

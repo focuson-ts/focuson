@@ -35,6 +35,7 @@ export * from './src/common/dataD'
 export * from './src/common/restD'
 export * from './src/common/pageD'
 export * from './src/common/resolverD'
+export * from './src/common/dateInfoRefD'
 
 export * from './src/makeFiles/generate'
 export * from './src/reporting/report'

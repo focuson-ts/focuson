@@ -3,7 +3,10 @@ import { FocusOnContext, makeProcessorsConfig } from "@focuson/focuson";
 import { LensProps } from "@focuson/state";
 import { inputCommandProcessors, processChangeCommandProcessor } from "@focuson/rest";
 import { replaceTextUsingPath } from "@focuson/pages";
-import { safeString } from "@focuson/utils";
+import { NameAnd, safeArray, safeObject, safeString } from "@focuson/utils";
+
+export type LayoutButtons = NameAnd<string[]>
+
 
 export interface LayoutProps<S, C> extends LensProps<S, any, C> {
   details: string;
@@ -16,6 +19,8 @@ export interface LayoutProps<S, C> extends LensProps<S, any, C> {
   defaultProps?: string;
   displayAsCards?: boolean;
   scrollAfter?: string;
+  buttons?: LayoutButtons;
+  allButtons?: NameAnd<JSX.Element>
 }
 
 function getLayoutAsArray ( details: string ) {
@@ -25,9 +30,9 @@ function getLayoutAsArray ( details: string ) {
     return undefined
   }
 }
-export function Layout<S, C extends FocusOnContext<S>> ( { state, details, children, title, titleClassName, rightHandTitle, rightHandClassName, defaultProps, displayAsCards, scrollAfter ,divRef}: LayoutProps<S, C> ) {
+export function Layout<S, C extends FocusOnContext<S>> ( { state, details, children, title, titleClassName, rightHandTitle, rightHandClassName, defaultProps, displayAsCards, scrollAfter, divRef, buttons, allButtons }: LayoutProps<S, C> ) {
   let elemIndex = 0
-  const maxHeightString: CSSProperties | undefined = scrollAfter ? { maxHeight: scrollAfter, overflowY: 'scroll', scrollbarWidth: 'thin',overflowX:'hidden' } : undefined
+  const maxHeightString: CSSProperties | undefined = scrollAfter ? { maxHeight: scrollAfter, overflowY: 'scroll', scrollbarWidth: 'thin', overflowX: 'hidden' } : undefined
   const parsedDetails = getLayoutAsArray ( details )
   if ( parsedDetails === undefined ) return <span><span className='validity-false'>Cannot parse layout {details}</span><br/><span>It should be an array of arrays.Most often like this [[1,1],[3],[5]] </span></span>
   const defaultPropsL = defaultProps && JSON.parse ( defaultProps )
@@ -37,7 +42,21 @@ export function Layout<S, C extends FocusOnContext<S>> ( { state, details, child
   const totalElementsToRenderCount = Array.isArray ( children ) ? children.length : 0
   const hrBetweenRows = true
 
-
+  function buttonFor ( name: string ) {
+    const button = allButtons [ name ];
+    return <span key={name}>{button ? button : `Button ${name} not in ${Object.keys ( allButtons )}`}</span>
+  }
+  const buttonsForTheCard = ( initialValue: number ) => {
+    var colIndex = initialValue
+    return (): JSX.Element => {
+      if ( buttons === undefined || allButtons === undefined ) return <></>
+      const names = safeArray<string> ( buttons [ colIndex++ ] )
+      const displayButtons = names.map ( buttonFor );
+      if ( displayButtons.length === 0 ) return <></>
+      return <div className='buttons-in-card'>{displayButtons}</div>
+    };
+  }
+  const realButtonsForCard = buttonsForTheCard ( 0 )
   return <div ref={divRef} style={maxHeightString}>
     {(title || rightHandTitle) && <div className="layout-title-holder">{title && <div className={titleClassName ? titleClassName : 'layout-title'} dangerouslySetInnerHTML={{ __html: replaceTextUsingPath ( state, safeString ( title ) ) }}/>}
       {rightHandTitle && <div className={rightHandClassName ? rightHandClassName : 'layout-right-title'}>{replaceTextUsingPath ( state, safeString ( rightHandTitle ) )}</div>}</div>}
@@ -57,6 +76,7 @@ export function Layout<S, C extends FocusOnContext<S>> ( { state, details, child
                     : defaultPropsL ? <div className={`${defaultPropsL.labelWidth ? `labelWidth${defaultPropsL.labelWidth}` : ''} ${defaultPropsL.valueWidth ? `inputWidth${defaultPropsL.valueWidth}` : ''}`}>{child}</div> : <div className={`labelWidth${initialLabelWidthPct} inputWidth${initialInputWidthPct}`}>{child}</div>
                 } )}
               </div>
+              {realButtonsForCard ()}
             </div>
           </div>
         )}</>

@@ -274,15 +274,18 @@ export interface MutuationAndResolverFolder<G, Acc> {
 export function foldPagesToRestToMutationsAndResolvers<G, Acc> ( ps: RefD<G>[], acc: Acc, folder: MutuationAndResolverFolder<G, Acc> ): Acc {
   return ps.reduce ( ( acc, p ) => Object.entries ( p.rest ).reduce ( ( acc, [ name, rdp ], i ) => {
     if ( rdp.rest === undefined ) throw Error ( `Error in page ${p.name}.rest[${name}]. The rest is undefined.\n    ${JSON.stringify ( rdp )}` )
+
     const mutationsAcc = toArray ( rdp.rest.mutations ).flatMap ( mr => toArray ( mr.mutateBy ) ).reduce ( ( acc, m, j ) => {
       let simple = folder.simple ( m, i + "", p, name, rdp, rdp.rest, undefined ) ( acc );
       if ( m.type !== 'case' ) return simple;
       return m.select.reduce ( ( acc, g ) => folder.guarded ( m, g, i + '_' + j, p, name, rdp, rdp.rest, undefined ) ( acc ), simple )
     }, acc )
+
     const resolvers = Object.entries ( safeObject ( rdp.rest.resolvers ) ).flatMap ( ( [ resName, res ] ): [ string, PrimaryMutationDetail ][] => toArray ( res ).map ( r => [ resName, r ] ) ).reduce ( ( acc, tuple, i ) => {
       const [ resName, md ] = tuple
       return folder.simple ( md, i + "", p, name, rdp, rdp.rest, resName ) ( acc );
     }, mutationsAcc )
+
     return resolvers
   }, acc ), acc )
 }

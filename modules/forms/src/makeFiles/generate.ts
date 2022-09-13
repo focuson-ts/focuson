@@ -67,7 +67,7 @@ export const directorySpec: DirectorySpec = {
 export function maxTuplesFor<G> ( pages: RefD<G>[] ) {
   return foldPagesToRestToMutationsAndResolvers<G, number> ( pages, 0, {
     simple: ( mut ) => ( acc ) => {
-      let fromMd: number = Math.max ( acc, allOutputParams ( parametersFor ( mut ) ).length );
+      const fromMd: number = Math.max ( acc, allOutputParams ( parametersFor ( mut ) ).length );
       return mut.type === 'case' ?
         mut.select.reduce ( ( acc, smd ) => Math.max ( allOutputParams ( parametersFor ( smd ) ).length, acc ), fromMd ) :
         fromMd
@@ -79,7 +79,7 @@ export const generate = <G extends GuardWithCondition> ( logLevel: GenerateLogLe
   <B extends ButtonD> ( pages: MainPageD<B, G>[], references?: RefD<G>[], extraPages?: NameAnd<ExtraPage> ) => {
     const refs = toArray ( references );
     const paramsWithTuples = {
-      ...params, maxTuples: maxTuplesFor ( [ ...refs, ...pages ] )
+      ...params, maxTuples: appConfig.manualMaxTuples ? appConfig.manualMaxTuples : maxTuplesFor ( [ ...refs, ...pages ] )
     }
 
     if ( pages.length === 0 ) {
