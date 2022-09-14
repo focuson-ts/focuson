@@ -1,7 +1,7 @@
 import { NameAnd, safeArray } from "@focuson/utils";
 import { CommonStateProps, LabelAlignment } from "./common";
 import { format, parse } from 'date-fns';
-import { LensState, reasonFor } from "@focuson/state";
+import { LensState, reasonFor, SetJsonReasonEvent } from "@focuson/state";
 import { PageSelectionContext } from "@focuson/pages";
 import { Label } from "./label";
 import { makeButtons } from "./makeButtons";
@@ -203,17 +203,25 @@ export interface DatePickerProps<S, C> extends CommonStateProps<S, string, C>, L
   dateInfo?: LensState<S, DateInfo, C>;
 }
 
-export function DatePicker<S, C extends PageSelectionContext<S>> ( props: DatePickerProps<S, C> ) {
-  const { state, jurisdiction, dateInfo, dateRange, name, label, id, mode, readonly, dateFormat,showMonthYearPicker } = props
+export type DatePickerSelectFn = <S extends any>( id: string, debug: boolean, state: LensState<S, any, any> ) => ( eventName: SetJsonReasonEvent, date: string ) => void
+
+export const defaultDatePickerOnCheck: DatePickerSelectFn = <S extends any> ( id: string, debug: boolean, state: LensState<S, any, any> ) => ( eventName: SetJsonReasonEvent, date: string ) => {
+  if ( debug ) console.log ( 'datePicker.defaultDatePickerOnCheck', id, date, debug )
+  state.setJson ( date, reasonFor ( 'DatePicker', eventName, id ) )
+};
+export const RawDatePicker = <S extends any> ( selectFn: DatePickerSelectFn ) => <C extends PageSelectionContext<S>> ( props: DatePickerProps<S, C> ) => {
+  const { state, jurisdiction, dateInfo, dateRange, name, label, id, mode, readonly, dateFormat, showMonthYearPicker } = props
   const main: any = state.main
   const debug = main?.debug?.dateDebug
 
   const { defaultDate, dateFilter, holidays } = calcInfoTheDatePickerNeeds ( id, jurisdiction?.optJson (), dateInfo?.optJson (), dateFormat, dateRange, debug )
   const { date, selectedDateErrors, scrollToDate } = selectedDate ( state, dateFormat, defaultDate )
+
   function onChange ( e: any/* probably a date or an array of dates if we are selecting a range (which we aren't)*/ ) {
     try {
       let formattedDate = format ( e, dateFormat );
       if ( debug ) console.log ( 'datePicker.onChange', id, e, dateFormat, formattedDate, debug )
+      selectFn ( id, debug, state ) ( 'onChange', formattedDate )
       state.setJson ( formattedDate, reasonFor ( 'DatePicker', 'onChange', id ) )
     } catch ( err ) {
       console.error ( "e is", e )
@@ -221,9 +229,10 @@ export function DatePicker<S, C extends PageSelectionContext<S>> ( props: DatePi
       throw err
     }
   }
+
   function onChangeRaw ( e: React.FocusEvent<HTMLInputElement> ) {
     if ( debug ) console.log ( 'datePicker.onChangeRaw', id, e.target?.value, 'changed' )
-    state.setJson ( e.target?.value, reasonFor ( 'DatePicker', 'changeRaw', id ) )
+    selectFn ( id, debug, state ) ( 'changeRaw', e.target?.value )
   }
   let value = state.optJson ();
   if ( debug ) console.log ( 'datePicker', id, 'value', value, 'date', date )
@@ -252,4 +261,6 @@ export function DatePicker<S, C extends PageSelectionContext<S>> ( props: DatePi
       {makeButtons ( props )}
     </div>
   </div>
-}
+};
+export const DatePicker = <S extends any, C extends PageSelectionContext<S>> ( props: DatePickerProps<S, C> ): JSX.Element =>
+  RawDatePicker ( defaultDatePickerOnCheck ) ( props );
