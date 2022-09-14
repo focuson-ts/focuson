@@ -12,7 +12,7 @@
     ]
   },
   "dependencies": {
-    "@focuson/focuson": "1.39.6"
+    "@focuson/focuson": "1.39.7"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -53,7 +53,7 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "1.39.6",
+  "version": "1.39.7",
   "template": "noreact",
   "description": "Storybook showing the components' ",
   "details": {
