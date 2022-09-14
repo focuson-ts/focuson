@@ -42,16 +42,16 @@ export function Layout<S, C extends FocusOnContext<S>> ( { state, details, child
   const totalElementsToRenderCount = Array.isArray ( children ) ? children.length : 0
   const hrBetweenRows = true
 
-  function buttonFor ( name: string ) {
+  const buttonFor = ( allButtons: NameAnd<JSX.Element> ) => ( name: string ) => {
     const button = allButtons [ name ];
     return <span key={name}>{button ? button : `Button ${name} not in ${Object.keys ( allButtons )}`}</span>
-  }
+  };
   const buttonsForTheCard = ( initialValue: number ) => {
     var colIndex = initialValue
     return (): JSX.Element => {
       if ( buttons === undefined || allButtons === undefined ) return <></>
       const names = safeArray<string> ( buttons [ colIndex++ ] )
-      const displayButtons = names.map ( buttonFor );
+      const displayButtons = names.map ( buttonFor ( allButtons ) );
       if ( displayButtons.length === 0 ) return <></>
       return <div className='buttons-in-card'>{displayButtons}</div>
     };

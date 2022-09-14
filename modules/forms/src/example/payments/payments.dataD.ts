@@ -81,7 +81,7 @@ export const ChargeDetailsDD: ExampleDataD = {
 export const amountDD: ExampleDataD = {
   name: 'Amount',
   description: '',
-  layout: { component: ConfirmChangesToAnyCD, displayParams: { confirm: { messageText: 'Are you sure you want:' }, layoutDetails: '[[1,1,1], [1]]' } },
+  layout: { component: ConfirmChangesToAnyCD, displayParams: { confirm: { messageText: 'Are you sure you want:'}, useRawMessage: true , layoutDetails: '[[1,1,1], [1]]' } },
   guards: {
     sterlingZero: { condition: 'equals', path: 'sterlingAmount', value: 0 },
     currencyZero: { condition: 'equals', path: 'currencyAmount', value: 0 }

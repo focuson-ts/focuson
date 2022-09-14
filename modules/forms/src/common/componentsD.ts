@@ -90,7 +90,8 @@ export const ConfirmChangesToAnyCD: DisplayCompD = {
     id: { paramType: 'string', needed: 'id' },
     state: { paramType: 'state', needed: 'defaultToPath' },
     confirm: { paramType: 'json', needed: 'defaultToPath' },
-    layoutDetails: { paramType: 'string', needed: 'yes' }
+    layoutDetails: { paramType: 'string', needed: 'yes' },
+    useRawMessage: {paramType: 'boolean', needed: 'no'}
   }
 }
 

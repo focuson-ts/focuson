@@ -10,12 +10,13 @@ export interface ConfirmChangesToAnyProps<S, D, C> {
   state: LensState<S, any, C>;
   layoutDetails: string;
   confirm: ConfirmProps;
+  useRawMessage?: boolean
   children: JSX.Element | JSX.Element[]
 }
 
 
 export function ConfirmChangesToAny<S, D, C extends FocusOnContext<S>> ( props: ConfirmChangesToAnyProps<S, D, C> ) {
-  const { id, state,  confirm, layoutDetails, children } = props
+  const { id, state, confirm, layoutDetails, children, useRawMessage } = props
   //@ts-ignore
   const ref: React.MutableRefObject<HTMLDivElement> = useRef<HTMLDivElement> ();
   useEffect ( () => {
@@ -28,9 +29,10 @@ export function ConfirmChangesToAny<S, D, C extends FocusOnContext<S>> ( props: 
         if ( !item?.checkValidity () ) return
         list.push ( `<tr><td>${item.getAttribute ( "data-validationmessage" )}</td><td>${item.value}</td></tr>` )
       }
+      const messageText = useRawMessage ? confirm.messageText : `<p>${confirm.messageText}</p><table><thead><th>Field</th><th>Value</th></thead><tbody>${list.join ( '' )}</tbody></table>`
       const realConfirm: ConfirmProps = {
         ...confirm,
-        messageText: `<p>${confirm.messageText}</p><table><thead><th>Field</th><th>Value</th></thead><tbody>${list.join ( '' )}</tbody></table>`
+        messageText
       }
       openConfirmWindow ( realConfirm, 'justclose', [], state.context.currentState ( state ), 'ConfirmChangesToAny', id, 'onBlur' );
     };
