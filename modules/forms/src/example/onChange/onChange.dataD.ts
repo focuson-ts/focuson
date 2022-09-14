@@ -2,7 +2,7 @@ import { ExampleDataD } from "../common";
 import { BooleanDD, ManyLineStringDD, NatNumDd, PrimitiveDD, StringDD } from "../../common/dataD";
 import { MessageCommand } from "@focuson/rest";
 import { yesNoDD } from "../SingleOccupation/singleOccupation.dataD";
-import { LabelAndDropDownCD, LabelAndDropDownWithVaryingContentCD } from "../../common/componentsD";
+import { LabelAndDropDownCD, LabelAndDropDownWithVaryingContent2CD, LabelAndDropDownWithVaryingContentCD } from "../../common/componentsD";
 
 export const reasonsEnum = { Reason1: 'Because I wanted to', Reason2: 'I just di d it', Reason3: "Who cares" }
 export const reasonDD: PrimitiveDD = {
@@ -22,7 +22,12 @@ export const nextActionDD: PrimitiveDD = {
   displayParams: { pleaseSelect: 'Select...' },
   // enum: { action1: 'Shoot the messenger', action2: 'Throw a paddy', action3: "Say thank you" }
 }
-
+export const anotherActionDD: PrimitiveDD = {
+  ...StringDD,
+  display: LabelAndDropDownWithVaryingContent2CD,
+  displayParams: { pleaseSelect: 'Select...' },
+  // enum: { action1: 'Shoot the messenger', action2: 'Throw a paddy', action3: "Say thank you" }
+}
 
 
 function msg ( msg: string ): MessageCommand {
@@ -52,12 +57,29 @@ export const onChangeDataD: ExampleDataD = {
       dataDD: nextActionDD,
       displayParams: {
         selector: 'dropdown1',
-        buttons: ['button'] ,
+        buttons: [ 'button' ],
         pleaseSelect: "please select",
         enums: {
           Reason1: actionEnums ( 'action1', 'action2' ),
           Reason2: actionEnums ( 'action1' ),
           Reason3: actionEnums ( 'action3' )
+        }
+      }
+    },
+    dropdown3: {
+      dataDD: anotherActionDD,
+      displayParams: {
+        selector1: 'dropdown1',
+        selector2: 'dropdown2',
+        buttons: [ 'button' ],
+        pleaseSelect: "please select",
+        enums: {
+          Reason1: {
+            action1: { a11: 'Action11', a12: 'Action12' },
+            action2: { a21: 'Action21', a22: 'Action22' }
+          },
+          Reason2: {},
+          Reason3: { action3: { a31: 'Action31', a32: 'Action 32' } },
         }
       }
     }

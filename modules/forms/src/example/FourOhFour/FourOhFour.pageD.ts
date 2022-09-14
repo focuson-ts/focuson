@@ -11,7 +11,7 @@ export const FourOhFourPageD: ExampleMainPage = {
   display: { dataDD: FourOhFourSearchDD, target: '~/display' },
   domain: { display: { dataDD: FourOhFourSearchDD } },
   rest: {
-    single: { rest: fourOhFourSingleRD, targetFromPath: '~/display/singleResult', fetcher: true },
+    single: { rest: fourOhFourSingleRD, targetFromPath: '~/display/singleResult', fetcher: true, on404: {command: 'message', msg: 'on404 fetcher for single'} },
     multiple: { rest: fourOhFourRepeatingRD, targetFromPath: '~/display/multipleResult', fetcher: true },
     singleByResolver: { rest: fourOhFourSingleByResolverRD, targetFromPath: '~/display/singleResultByResolver', fetcher: true },
   },

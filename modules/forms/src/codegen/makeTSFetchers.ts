@@ -99,7 +99,7 @@ export function makeFetchersDataStructure<G> ( params: TSParams, { stateName, va
 export function makeNewFetchersDataStructure<G> ( params: TSParams, ps: RefD<G>[] ) {
   const obj = Object.fromEntries ( ps.map ( p =>
     [ p.name, sortedEntries ( p.rest ).filter ( t => t[ 1 ].fetcher ).map ( ( [ restName, rdp ] ) =>
-      ({ tagName: rdp.targetFromPath, restName: restDetailsName ( p, restName, rdp.rest ), postFetchCommands: toArray ( rdp.postFetchCommands ) }) ) ] )
+      ({ tagName: rdp.targetFromPath, restName: restDetailsName ( p, restName, rdp.rest ), postFetchCommands: toArray ( rdp.postFetchCommands ) , on404Commands: toArray ( rdp.on404 ) }) ) ] )
   )
   return (`export const newFetchers: AllFetcherUsingRestConfig = ` + JSON.stringify ( obj, null, 2 )).split ( "\n" )
 }

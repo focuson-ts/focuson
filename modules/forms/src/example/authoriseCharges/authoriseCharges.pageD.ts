@@ -107,7 +107,8 @@ export function AuthoriseChargesPD ( c: AuthoriseCustomisation ): ExampleMainPag
         postFetchCommands: [
           { command: 'message', msg: 'loading the authorised charges' },
           { command: 'copyResult', from: '', to: '~/authorisedCharges/fromApi/originalData' }
-        ]
+        ],
+        on404: [ { command: 'message', msg: '404 finding the authorised charges' } ]
       },
       summaryOfChargeDates: { rest: SummaryOfChargeDatesRD ( c ), targetFromPath: '~/summaryOfChargesDates/searchResults', fetcher: true },
       operatorEligable: { rest: operatorEligabilityRD ( c ), targetFromPath: '~/operatorEligable', fetcher: true },

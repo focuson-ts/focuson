@@ -205,62 +205,68 @@ export interface DatePickerProps<S, C> extends CommonStateProps<S, string, C>, L
 
 export type DatePickerSelectFn = <S extends any>( id: string, debug: boolean, state: LensState<S, any, any> ) => ( eventName: SetJsonReasonEvent, date: string ) => void
 
-export const defaultDatePickerOnCheck: DatePickerSelectFn = <S extends any> ( id: string, debug: boolean, state: LensState<S, any, any> ) => ( eventName: SetJsonReasonEvent, date: string ) => {
-  if ( debug ) console.log ( 'datePicker.defaultDatePickerOnCheck', id, date, debug )
-  state.setJson ( date, reasonFor ( 'DatePicker', eventName, id ) )
-};
-export const RawDatePicker = <S extends any> ( selectFn: DatePickerSelectFn ) => <C extends PageSelectionContext<S>> ( props: DatePickerProps<S, C> ) => {
-  const { state, jurisdiction, dateInfo, dateRange, name, label, id, mode, readonly, dateFormat, showMonthYearPicker } = props
-  const main: any = state.main
-  const debug = main?.debug?.dateDebug
+export function defaultDatePickerOnCheck<S extends any> ( id: string, debug: boolean, state: LensState<S, any, any> ) {
+  return ( eventName: SetJsonReasonEvent, date: string ) => {
+    if ( debug ) console.log ( 'datePicker.defaultDatePickerOnCheck', id, date, debug )
+    state.setJson ( date, reasonFor ( 'DatePicker', eventName, id ) )
+  };
+}
+export function RawDatePicker<S extends any, C extends PageSelectionContext<S>> ( selectFn: DatePickerSelectFn ) {
+  return ( props: DatePickerProps<S, C> ) => {
+    const { state, jurisdiction, dateInfo, dateRange, name, label, id, mode, readonly, dateFormat, showMonthYearPicker } = props
+    const main: any = state.main
+    const debug = main?.debug?.dateDebug
 
-  const { defaultDate, dateFilter, holidays } = calcInfoTheDatePickerNeeds ( id, jurisdiction?.optJson (), dateInfo?.optJson (), dateFormat, dateRange, debug )
-  const { date, selectedDateErrors, scrollToDate } = selectedDate ( state, dateFormat, defaultDate )
+    const { defaultDate, dateFilter, holidays } = calcInfoTheDatePickerNeeds ( id, jurisdiction?.optJson (), dateInfo?.optJson (), dateFormat, dateRange, debug )
+    const { date, selectedDateErrors, scrollToDate } = selectedDate ( state, dateFormat, defaultDate )
 
-  function onChange ( e: any/* probably a date or an array of dates if we are selecting a range (which we aren't)*/ ) {
-    try {
-      let formattedDate = format ( e, dateFormat );
-      if ( debug ) console.log ( 'datePicker.onChange', id, e, dateFormat, formattedDate, debug )
-      selectFn ( id, debug, state ) ( 'onChange', formattedDate )
-      state.setJson ( formattedDate, reasonFor ( 'DatePicker', 'onChange', id ) )
-    } catch ( err ) {
-      console.error ( "e is", e )
-      console.error ( "e is", e.toISOString () )
-      throw err
+    function onChange ( e: any/* probably a date or an array of dates if we are selecting a range (which we aren't)*/ ) {
+      try {
+        let formattedDate = format ( e, dateFormat );
+        if ( debug ) console.log ( 'datePicker.onChange', id, e, dateFormat, formattedDate, debug )
+        selectFn ( id, debug, state ) ( 'onChange', formattedDate )
+        state.setJson ( formattedDate, reasonFor ( 'DatePicker', 'onChange', id ) )
+      } catch ( err ) {
+        console.error ( "e is", e )
+        console.error ( "e is", e.toISOString () )
+        throw err
+      }
     }
-  }
 
-  function onChangeRaw ( e: React.FocusEvent<HTMLInputElement> ) {
-    if ( debug ) console.log ( 'datePicker.onChangeRaw', id, e.target?.value, 'changed' )
-    selectFn ( id, debug, state ) ( 'changeRaw', e.target?.value )
-  }
-  let value = state.optJson ();
-  if ( debug ) console.log ( 'datePicker', id, 'value', value, 'date', date )
-  let error = selectedDateErrors.length > 0;
-  // const ref=useRef<any>(null)
+    function onChangeRaw ( e: React.FocusEvent<HTMLInputElement> ) {
+      if ( debug ) console.log ( 'datePicker.onChangeRaw', id, e.target?.value, 'changed' )
+      selectFn ( id, debug, state ) ( 'changeRaw', e.target?.value )
+    }
+    let value = state.optJson ();
+    if ( debug ) console.log ( 'datePicker', id, 'value', value, 'date', date )
+    let error = selectedDateErrors.length > 0;
+    // const ref=useRef<any>(null)
 
-  return <div className={`labelAndDate ${props.labelPosition == 'Horizontal' ? 'd-flex-inline' : ''}`}>
-    <Label state={state} htmlFor={name} label={label}/>
-    <div className={`${props.buttons && props.buttons.length > 0 ? 'inputAndButtons' : ''} `}>
-      <ReactDatePicker id={id}
-        // customInputRef={ref}
-                       dateFormat={dateFormat}
-                       todayButton='Today'
-                       openToDate={scrollToDate}
-                       selected={error ? undefined : date}
-                       onChange={( date ) => onChange ( date )}
-                       filterDate={dateFilter}
-                       showMonthYearPicker={showMonthYearPicker}
-                       highlightDates={holidays}
-                       readOnly={mode === 'view' || readonly}
-                       className={error ? "red-border" : ""}
-                       closeOnScroll={true}
-                       onChangeRaw={onChangeRaw}
-                       value={error ? value : undefined} // whats going on here? Well the value is read as a date. And the date picker might change it
-                       placeholderText="Select a date"/>
-      {makeButtons ( props )}
+    return <div className={`labelAndDate ${props.labelPosition == 'Horizontal' ? 'd-flex-inline' : ''}`}>
+      <Label state={state} htmlFor={name} label={label}/>
+      <div className={`${props.buttons && props.buttons.length > 0 ? 'inputAndButtons' : ''} `}>
+        <ReactDatePicker id={id}
+          // customInputRef={ref}
+                         dateFormat={dateFormat}
+                         todayButton='Today'
+                         openToDate={scrollToDate}
+                         selected={error ? undefined : date}
+                         onChange={( date ) => onChange ( date )}
+                         filterDate={dateFilter}
+                         showMonthYearPicker={showMonthYearPicker}
+                         highlightDates={holidays}
+                         readOnly={mode === 'view' || readonly}
+                         className={error ? "red-border" : ""}
+                         closeOnScroll={true}
+                         onChangeRaw={onChangeRaw}
+                         value={error ? value : undefined} // whats going on here? Well the value is read as a date. And the date picker might change it
+                         placeholderText="Select a date"/>
+        {makeButtons ( props )}
+      </div>
     </div>
-  </div>
-};
-export const DatePicker = <S extends any, C extends PageSelectionContext<S>> ( props: DatePickerProps<S, C> ): JSX.Element =>
-  RawDatePicker ( defaultDatePickerOnCheck ) ( props );
+  };
+}
+export function DatePicker<S extends any, C extends PageSelectionContext<S>> ( props: DatePickerProps<S, C> ): JSX.Element {
+  const selectFn: DatePickerSelectFn = defaultDatePickerOnCheck;
+  return RawDatePicker<S, C> ( selectFn ) ( props );
+}

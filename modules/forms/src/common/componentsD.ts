@@ -335,7 +335,21 @@ export const LabelAndDropDownWithVaryingContentCD: DisplayCompD = {
     required: { paramType: 'boolean', needed: 'no' },
   }
 }
-
+export const LabelAndDropDownWithVaryingContent2CD: DisplayCompD = {
+  import: '@focuson/form_components',
+  name: "LabelAndDropDownWithVaryingContent2",
+  params: {
+    ...commonParamsWithLabel,
+    ...specificOnChangeAndParentState,
+    ...enabledByForInputs,
+    selector1: { paramType: 'path', needed: 'yes' },
+    selector2: { paramType: 'path', needed: 'yes' },
+    enums: { paramType: 'json', needed: 'yes' },
+    pleaseSelect: { paramType: 'string', needed: 'no' },
+    size: { paramType: 'object', needed: 'no' },
+    required: { paramType: 'boolean', needed: 'no' },
+  }
+}
 export const LabelAndTextAreaCD: DisplayCompD = {
   import: '@focuson/form_components',
   name: "LabelAndTextarea",

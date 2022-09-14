@@ -32,7 +32,7 @@ export const resolverRestD: ExampleRestD = {
       type: 'case',
 
       name: 'case',
-      params: ['brandRef', 'clientRef'],
+      params: [ 'brandRef', 'clientRef' ],
       select: [
         {
           guard: [ 'brandRef==3' ], type: "manual", name: 'manual0',
@@ -42,7 +42,11 @@ export const resolverRestD: ExampleRestD = {
         {
           guard: [], type: "multiple",
           mutations: [
-            { type: "manual", name: 'manual10', code: manualCode ( 'output', 10 ), params: [ 'brandRef', 'clientRef', ...nOutputParams ( 10, manualOutputParams ( 'output' ) ) ] },
+            {
+              type: "manual", name: 'manual10',
+              code: manualCode ( 'output', 10 ),
+              params: [ 'brandRef', 'clientRef', ...nOutputParams ( 10, manualOutputParams ( 'output' ) ) ]
+            },
             { type: "message", message: 'some message' },
           ]
         },
