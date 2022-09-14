@@ -100,6 +100,7 @@ export interface PageDisplay<G> {
 type NewPageCommandOrEmpty = 'empty' | NewPageChangeCommands
 export type InitialValue = NewPageCommandOrEmpty | NewPageCommandOrEmpty[]
 export interface RefD<G> extends HasName {
+  description?: string
   rest: RestDefnInPage<G>,
   refGroups?: string | string[]
   domain: DomainDefnInPage<G>,

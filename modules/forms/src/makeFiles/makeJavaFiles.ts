@@ -217,6 +217,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
   } )
   foldPagesToRestToMutationsAndResolvers<G, string[]> ( allRefs, [], {
     guarded: <G> ( mut: SelectMutation, guarded: GuardedMutation, index: string, p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, r: RestD<G> ) => acc => acc,
+    multiple:<G> (mut, index, p, restName, rdp, r, resolverName1) => acc=>acc,
     simple: <G> ( mut: MutationDetail, index: string, p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, r: RestD<G>, resolverName: string ) => acc => {
       if ( isAutoSqlResolver ( mut ) ) {
         walkSqlRoots ( findSqlRoot ( mut ), ( root, path ) => {

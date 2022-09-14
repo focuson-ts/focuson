@@ -1,7 +1,7 @@
 import { CompDataD, findAllDataDs, findDataDDIn } from "./dataD";
 import { NameAnd, RestAction, safeObject, safeString, sortedEntries, toArray, unique } from "@focuson/utils";
 import { paramsForRestAction } from "../codegen/codegen";
-import { AccessDetails, GuardedMutation, MutationDetail, MutationsForRestAction, PrimaryMutationDetail, PrimaryMutations, SelectMutation } from "./resolverD";
+import { AccessDetails, GuardedMutation, MultipleMutation, MutationDetail, MutationsForRestAction, PrimaryMutationDetail, PrimaryMutations, SelectMutation } from "./resolverD";
 import { MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
 import { allMainPages, MainPageD, PageD, RefD, RestDefnInPageProperties } from "./pageD";
 import { getRestTypeDetails, RestActionDetail, restActionForName, UrlAndParamsForState } from "@focuson/rest";
@@ -269,6 +269,7 @@ export function forEachRestAndActionsUsingRefs<B, G> ( ps: PageD<B, G>[], refs: 
 
 export interface MutuationAndResolverFolder<G, Acc> {
   simple: ( mut: MutationDetail, index: string, p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, r: RestD<any>, resolverName: string | undefined ) => ( acc: Acc ) => Acc;
+  multiple: ( mut: MultipleMutation, index: string, p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, r: RestD<any>, resolverName: string | undefined ) => ( acc: Acc ) => Acc;
   guarded: ( mut: SelectMutation, guarded: GuardedMutation, index: string, p: RefD<G>, restName: string, rdp: RestDefnInPageProperties<G>, r: RestD<any>, resolverName: string | undefined ) => ( acc: Acc ) => Acc;
 }
 export function foldPagesToRestToMutationsAndResolvers<G, Acc> ( ps: RefD<G>[], acc: Acc, folder: MutuationAndResolverFolder<G, Acc> ): Acc {

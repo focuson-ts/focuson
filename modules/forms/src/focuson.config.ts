@@ -25,8 +25,9 @@ import { ButtonsPageD } from "./example/buttons/buttonsPageD";
 import { dateInfoRefD, dateRefconfig } from "./common/dateInfoRefD";
 import { CreditAC, DirectDebitAC } from "./example/authoriseCharges/authoriseCharges.customise";
 import { modalPagePD } from "./example/modalPages/modalPages.pageD";
+import { resolversRefD } from "./example/resolvers/resolvers.refD";
 
-export const generatedRefs: ExampleRefD[] = [ dateInfoRefD ( dateRefconfig ) ]
+export const generatedRefs: ExampleRefD[] = [ dateInfoRefD ( dateRefconfig ) , resolversRefD]
 
 export const generatedPages: ExampleMainPage[] = [
   ButtonsPageD,

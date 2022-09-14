@@ -72,6 +72,7 @@ export function maxTuplesFor<G> ( pages: RefD<G>[] ) {
         mut.select.reduce ( ( acc, smd ) => Math.max ( allOutputParams ( parametersFor ( smd ) ).length, acc ), fromMd ) :
         fromMd
     },
+    multiple: ( mut, index, p, restName, rdp, r, resolverName ) => acc => acc,
     guarded: ( sel, guarded ) => ( acc ) => acc
   } )
 }
