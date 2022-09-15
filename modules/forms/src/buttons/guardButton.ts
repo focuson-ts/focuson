@@ -7,8 +7,8 @@ import { PageMode } from "@focuson/pages";
 
 
 export type AllGuards = LocalVariableGuard | LocalVariableMoreThanZero | LocalVariableLessThanLengthMinusOne |
-  LocalVariableValueEquals<any> | LocalVariableDefined | ALessThanB | BinaryCondition |
-  AndOrCondition | NotCondition | PageModeIs | ContainsGuard | NumberAndBooleanCondition | RegexCondition | PageModeCondition | FunctionCondition|
+  LocalVariableValueEquals<any> | LocalVariableDefined | ALessThanB | AEqualsB | BinaryCondition |
+  AndOrCondition | NotCondition | PageModeIs | ContainsGuard | NumberAndBooleanCondition | RegexCondition | PageModeCondition | FunctionCondition |
   ArrayLengthMoreThanZero
 
 function errorPrefix ( mainP: PageD<any, any>, p: PageD<any, any>, name: string, guard: any ) {
@@ -41,6 +41,11 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: ALessThanB ) =>
       `const ${guardName ( name )} =  safeNumber(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.aPath )}.optJson(),Number.MAX_VALUE) <  safeNumber(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.bPath )}.optJson(),Number.MIN_VALUE)`
+  },
+  'a=b': {
+    imports: [],
+    makeGuardVariable: ( params, mainP, page, name, guard: AEqualsB ) =>
+      `const ${guardName ( name )} =  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.aPath )}.optJson() === ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.bPath )}.optJson()`
   },
   '<#': {
     imports: [],
@@ -122,7 +127,7 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
 export interface Guard {
   message?: string
 }
-export interface GuardWithCondition extends Guard{
+export interface GuardWithCondition extends Guard {
   condition: string
 }
 export type Guards<G extends Guard> = NameAnd<G>
@@ -177,6 +182,11 @@ export interface FunctionCondition extends Guard {
 }
 export interface ALessThanB extends Guard {
   condition: 'a<b'
+  aPath: string;
+  bPath: string;
+}
+export interface AEqualsB extends Guard {
+  condition: 'a=b'
   aPath: string;
   bPath: string;
 }

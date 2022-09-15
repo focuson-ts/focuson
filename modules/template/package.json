@@ -12,7 +12,7 @@
     ]
   },
   "dependencies": {
-    "@focuson/utils": "1.39.7"
+    "@focuson/utils": "1.39.8"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -44,7 +44,7 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "1.39.7",
+  "version": "1.39.8",
   "template": "noreact",
   "description": "Putting the values from lens into strings. For things like urls, or general string substitutio",
   "details": {

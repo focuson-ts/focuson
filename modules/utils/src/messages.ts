@@ -1,4 +1,4 @@
-export type SimpleMessageLevel = 'error' | 'warning' | 'info'
+export type SimpleMessageLevel = 'error' | 'warning' | 'info' | 'success'
 /** A simple default messaging system. Often a project will have something more complex */
 
 export interface HasSimpleMessages {

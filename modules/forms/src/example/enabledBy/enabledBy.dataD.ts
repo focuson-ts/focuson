@@ -10,7 +10,8 @@ export const enabledByDataD: ExampleDataD = {
   description: "",
   guards: {
     yes: { condition: 'equals', path: 'dropdown', value: '"Y"', message: 'Select Yes to enable' },
-    no: { condition: 'equals', path: 'dropdown', value: '"N"', message: 'Select No to enable' }
+    no: { condition: 'equals', path: 'dropdown', value: '"N"', message: 'Select No to enable' },
+    stringEqualsTextArea: { condition: 'a=b', aPath: 'string', bPath: 'textArea', message: 'The string has to equal the text area' }
   },
   layout: { component: WithTextLayoutCD, displayParams: { text: 'Some <b>Exciting</b> text {dropdown}' } },
   structure: {
@@ -50,7 +51,8 @@ export const enabledByDataD: ExampleDataD = {
     ynCheckbox: { dataDD: YesNoCheckboxDD, displayParams: { enabledBy: 'yes' } },
     number: { dataDD: { ...NatNumDd, emptyValue: undefined, allowUndefined: true }, displayParams: { enabledBy: 'no', placeholder: 'Number goes here...' } },
     textArea: { dataDD: ManyLineStringDD, displayParams: { enabledBy: [ 'yes' ], maxlength: 200, placeholder: 'Text goes here' } },
-    date: { dataDD: DateWithDatePickerDD }
+    date: { dataDD: DateWithDatePickerDD },
+    stringWhenEqual: { dataDD: StringDD, displayParams: { enabledBy: 'stringEqualsTextArea' } }
 
   }
 }
