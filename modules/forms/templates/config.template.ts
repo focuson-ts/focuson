@@ -38,7 +38,8 @@ export const config: FocusOnConfig<{stateName}, Context, SimpleMessage> = {
   restL: context.restL,
   restDetails: restDetails,
   restCountL: restCountL(),
-  maxRestCount: 5000
+  maxRestCount: 5000,
+  mockJwt: false
 }
 
 

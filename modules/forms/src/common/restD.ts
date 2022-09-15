@@ -8,7 +8,7 @@ import { getRestTypeDetails, RestActionDetail, restActionForName, UrlAndParamsFo
 import { findChildResolvers, ResolverData } from "../codegen/makeJavaFetchersInterface";
 
 
-export type AllLensRestParams<T> = CommonLensRestParam<T> | LensRestParam<T> | HeaderRestParam<T>
+export type AllLensRestParams<T> = CommonLensRestParam<T> | LensRestParam<T>
 
 export interface ParamPrim<T> {
   rsSetter: string,
@@ -39,16 +39,6 @@ export const FloatParam: ParamPrim<number> = {
   javaParser: 'Double.parseDouble'
 }
 
-export interface HeaderRestParam<T> extends ParamPrim<T> {
-  header: string,
-  testValue: T,
-  main?: false,
-  rsSetter: string;
-  javaType: string;
-  graphQlType: string;
-  javaParser: string;
-  annotation?: string;
-}
 
 export interface CommonLensRestParam<T> extends ParamPrim<T> {
   commonLens: string,
@@ -59,6 +49,7 @@ export interface CommonLensRestParam<T> extends ParamPrim<T> {
   graphQlType: string;
   javaParser: string;
   annotation?: string;
+  inJwtToken?: boolean
 }
 export interface LensRestParam<T> extends ParamPrim<T> {
   lens: string,
@@ -78,10 +69,6 @@ export function isCommonLens<T> ( a: AllLensRestParams<T> ): a is CommonLensRest
 export function isRestLens<T> ( a: AllLensRestParams<T> ): a is LensRestParam<T> {
   // @ts-ignore
   return a.lens !== undefined
-}
-export function isHeaderLens<T> ( a: AllLensRestParams<T> ): a is HeaderRestParam<T> {
-  // @ts-ignore
-  return a.header !== undefined
 }
 
 export interface RestParams {
@@ -205,7 +192,7 @@ export function makeParamValueForTest<G> ( errorPrefix: string, r: RestD<G>, res
 }
 export function makeCommonValueForTest<G> ( errorPrefix: string, r: RestD<G>, restAction: RestAction ) {
   let visibleParams = paramsForRestAction ( errorPrefix, r, restAction );
-  return Object.fromEntries ( visibleParams.filter ( ( [ name, p ] ) => isCommonLens ( p ) || isHeaderLens ( p ) ).map ( ( [ name, v ] ) => [ name, v.testValue ] ) )
+  return Object.fromEntries ( visibleParams.filter ( ( [ name, p ] ) => isCommonLens ( p ) ).map ( ( [ name, v ] ) => [ name, v.testValue ] ) )
 }
 
 export function findIds<G> ( rest: RestD<G> ) {
@@ -250,7 +237,7 @@ export function flatMapParams<T> ( pds: RefD<any>[], fn: ( p: RefD<any>, restNam
 }
 export function flatMapCommonParams<T> ( pds: RefD<any>[], fn: ( p: RefD<any>, restName: string | undefined, r: RestD<any> | undefined, name: string, c: CommonLensRestParam<any> ) => T[] ): T[] {
   return flatMapParams ( pds, ( p, restName, r, name, c ) =>
-    isCommonLens ( c ) ? fn ( p, restName, r, name, c ) : isHeaderLens ( c ) ? fn ( p, restName, r, name, { ...c, commonLens: c.header } ) : [] )
+    isCommonLens ( c ) ? fn ( p, restName, r, name, c ) :  [] )
 }
 
 
