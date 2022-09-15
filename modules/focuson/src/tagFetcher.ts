@@ -22,8 +22,6 @@ export interface CommonTagFetcherProps<S, T, MSGS> {
   messagesFromTarget: ( t: T, date: string ) => MSGS[],
   /** Time/Dates must be consistent in tests, so we use this instead of the singleton clock */
   dateFn: DateFn
-
-
 }
 
 /** Main States use 'HasSimpleMessages', 'HasTagHolder' and 'HasPageSelection'. This just provides a helper method to get the CommonTagFetcherProps for them
@@ -79,6 +77,7 @@ export interface SpecificTagFetcherProps<S, FD, D, MSGS> extends CommonTagFetche
 
 export function pageAndTagFetcher<S, Full, T, MSGS> (
   ctf: CommonTagFetcherProps<S, T, MSGS>,
+  mockJwt: boolean,
   pageName: string,
   tagName: string | undefined,
   fdLens: Optional<S, Full>,
@@ -101,11 +100,12 @@ export function pageAndTagFetcher<S, Full, T, MSGS> (
     return result
   }
   return ifEEqualsFetcher<S> ( ( s ) =>
-    selected ( s, pageName ), `Page ${pageName} not selected`, tagFetcher ( stf ), description );
+    selected ( s, pageName ), `Page ${pageName} not selected`, tagFetcher ( stf, mockJwt ), description );
 }
 
 export function simpleTagFetcher<S extends HasSimpleMessages, FD> (
   ctf: CommonTagFetcherProps<S, FD, SimpleMessage>,
+  mockJwt: boolean,
   pageName: string,
   fdLens: Optional<S, FD>,
   cd: NameAndLens<S>, fdd: NameAndLens<FD>,
@@ -114,6 +114,7 @@ export function simpleTagFetcher<S extends HasSimpleMessages, FD> (
   url: string,
   description?: string ) {
   return pageAndTagFetcher<S, FD, FD, SimpleMessage> ( ctf,
+    mockJwt,
     pageName,
     undefined,
     fdLens,
@@ -127,7 +128,7 @@ export interface TagFetcherDebug {
   tagFetcherDebug?: boolean
 }
 
-export function tagFetcher<S, Full, T, MSGS> ( stf: SpecificTagFetcherProps<S, Full, T, MSGS> ): Fetcher<S, T> {
+export function tagFetcher<S, Full, T, MSGS> ( stf: SpecificTagFetcherProps<S, Full, T, MSGS>, mockJwt: boolean ): Fetcher<S, T> {
   const identity = Lenses.identity<S> ()
   const { tagHolderL, fdLens, dLens, messageL, messagesFromTarget, onError } = stf
   const tagL = makeTagLens ( tagHolderL, stf.pageName, stf.tagName )
@@ -156,7 +157,7 @@ export function tagFetcher<S, Full, T, MSGS> ( stf: SpecificTagFetcherProps<S, F
       const tagAndNames = tagOps.tags ( stf, 'get' ) ( s );
       const desiredTags = tagAndNames.map ( ( [ name, tag ] ) => tag )
       if ( !areAllDefined ( desiredTags ) ) throw partialFnUsageError ( result, s );
-      const req = tagOps.reqFor ( stf, 'get' ) ( s ) ( stf.url );
+      const req = tagOps.reqFor ( mockJwt ) ( stf, 'get' ) ( s ) ( stf.url );
       if ( !req ) throw partialFnUsageError ( result, s );
       const [ info, init ] = req;
       const mutateForHolder: MutateFn<S, T> = ( state ) => ( status, response ) => {
@@ -168,7 +169,7 @@ export function tagFetcher<S, Full, T, MSGS> ( stf: SpecificTagFetcherProps<S, F
           let resultWithoutMessages: S | undefined = tagAndTargetLens.setOption ( state, [ desiredTags, response ] );
           if ( !resultWithoutMessages ) { console.error ( `Unexpected problem seting response and tags in state. ${this.description}` )}
           let messages = messagesFromTarget ( response, stf.dateFn () );
-          let result = resultWithoutMessages ? messageL.transform(old => [...old,...messages]) ( resultWithoutMessages ) : undefined;
+          let result = resultWithoutMessages ? messageL.transform ( old => [ ...old, ...messages ] ) ( resultWithoutMessages ) : undefined;
           if ( !result ) {
             console.error ( 'tagFetcher.load.mutate - failed to set state' )
             console.log ( `tagAndTargetLens`, tagAndTargetLens.description, `messageL`, messageL.description )

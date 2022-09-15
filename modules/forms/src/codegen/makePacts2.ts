@@ -94,7 +94,7 @@ export function makeRestPact<G> ( params: TSParams, page: RefD<G>, restName: str
     `    const withIds = massTransform ( firstState, ...lensTransforms )`,
     `    const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );`,
     `    const props: RestToTransformProps<${params.stateName}, SimpleMessage> = {`,
-    `       fetchFn, d: rests.restDetails, urlMutatorForRest: restUrlMutator, pathToLens, messageL: simpleMessagesL (), stringToMsg: stringToSimpleMsg ( () => 'now', 'info' ), traceL: traceL ()`,
+    `       fetchFn, mockJwt: true, d: rests.restDetails, urlMutatorForRest: restUrlMutator, pathToLens, messageL: simpleMessagesL (), stringToMsg: stringToSimpleMsg ( () => 'now', 'info' ), traceL: traceL ()`,
     `    }`,
     `    const newState = await rest ( props, restL(), () =>withIds )`,
     `    const rawExpected:any = { ...withIds, restCommands: []}`,

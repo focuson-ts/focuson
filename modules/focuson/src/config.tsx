@@ -72,6 +72,8 @@ export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSele
 
 
 export interface FocusOnConfig<S, Context, MSGs> extends HasFetchersAndRest<S, MSGs> {
+  /** Do we need to mock up jwt tokens? */
+  mockJwt: boolean,
   /** How data is sent to/fetched from apis */
   fetchFn: FetchFn,
   /** A hook that is called before anything else.  */
@@ -155,7 +157,7 @@ export const processRestsAndFetchers = <S, Context extends FocusOnContext<S>, MS
     if ( debug ) console.log ( 'processRestsAndFetchers - pageName', pageName )
     const fromFetchers = restCommandsFromFetchers ( tagHolderL, newFetchers, restDetails, pageName, s )
     const allCommands: RestCommand[] = [ ...restCommands, ...fromFetchers ]
-    const restProps: RestToTransformProps<S, MSGs> = { fetchFn, d: restDetails, pathToLens, messageL, stringToMsg, traceL: traceL (), urlMutatorForRest: restUrlMutator }
+    const restProps: RestToTransformProps<S, MSGs> = { fetchFn, mockJwt: config.mockJwt, d: restDetails, pathToLens, messageL, stringToMsg, traceL: traceL (), urlMutatorForRest: restUrlMutator }
     const txs = await restToTransforms ( restProps, sFn, allCommands )
     const result = addTagTxsForFetchers ( config.tagHolderL, txs )
     return result
@@ -258,7 +260,7 @@ export function setJsonForFocusOn<S, Context extends FocusOnContext<S>> ( config
       const withPreMutate = preMutate ( withDebug )
       const processorsConfig = makeProcessorsConfig ( main, context );
       const firstPageProcesses: S = preMutateForPages<S, Context> ( context, processorsConfig ) ( withPreMutate )
-      const restProps: RestToTransformProps<S, SimpleMessage> = { fetchFn, d: restDetails, pathToLens, messageL, stringToMsg, traceL: traceL (), urlMutatorForRest: config.restUrlMutator }
+      const restProps: RestToTransformProps<S, SimpleMessage> = { fetchFn, mockJwt: config.mockJwt, d: restDetails, pathToLens, messageL, stringToMsg, traceL: traceL (), urlMutatorForRest: config.restUrlMutator }
       const afterRest = await rest ( restProps, restL, () => firstPageProcesses )
       if ( afterRest ) newStateFn ( afterRest )
       let newMain = await loadTree ( fetchers, afterRest, fetchFn, debug )

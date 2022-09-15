@@ -30,13 +30,13 @@ const stateWithAzero: TagTestState = {
 let identityState = Lenses.identity<TagTestState> ();
 let identityChild = Lenses.identity<ChildTagTestState> ();
 const urlConfig: UrlConfig<TagTestState, ChildTagTestState, string> = {
+  jwtIds: [ 'a', 'c' ],
   cd: { aId: identityState.focusQuery ( 'a' ), bId: identityState.focusQuery ( 'b' ) },
   fdd: { cId: identityChild.focusQuery ( 'c' ), dId: identityChild.focusQuery ( 'd' ) },
   fdLens: identityState.focusQuery ( 'child' ),
   dLens: identityOptics<ChildTagTestState> ().focusQuery ( 'data' ),
   ids: [ "aId", "bId", "cId" ],
   resourceId: [ "dId" ]
-
 }
 
 describe ( "tags", () => {
@@ -109,8 +109,18 @@ describe ( "url", () => {
 describe ( "reqFn", () => {
   let simplerState: TagTestState = { ...state, b: 2 }
   describe ( "for restAction create", () => {
-    it ( "should replace named ids,  body", () => {
-      expect ( reqFor ( urlConfig, 'create' ) ( simplerState ) ( '/{aId}/{bId}/{cId}/{dId}?{query}' ) ).toEqual (
+    it ( "should replace named ids,  body - mockJwt true", () => {
+      expect ( reqFor ( true ) ( urlConfig, 'create' ) ( simplerState ) ( '/{aId}/{bId}/{cId}/{dId}?{query}' ) ).toEqual (
+        [
+          "/1/2/3/4?aId=1&bId=2&cId=3",
+          {
+            "body": "\"someData\"",
+            "method": "post"
+          }
+        ] )
+    } )
+    it ( "should replace named ids,  body - mockJwt false", () => {
+      expect ( reqFor ( false ) ( urlConfig, 'create' ) ( simplerState ) ( '/{aId}/{bId}/{cId}/{dId}?{query}' ) ).toEqual (
         [
           "/1/2/3/4?aId=1&bId=2&cId=3",
           {
@@ -121,21 +131,39 @@ describe ( "reqFn", () => {
     } )
   } )
   describe ( "for restAction delete", () => {
-    it ( "should replace named ids, no body", () => {
-      expect ( reqFor ( urlConfig, 'delete' ) ( simplerState ) ( '/{aId}/{bId}/{cId}/{dId}?{query}' ) ).toEqual (
+    it ( "should replace named ids, no body - mockJwt true", () => {
+      expect ( reqFor (true)( urlConfig, 'delete' ) ( simplerState ) ( '/{aId}/{bId}/{cId}/{dId}?{query}' ) ).toEqual (
+        [ "/1/2/3/4?aId=1&bId=2&cId=3&dId=4", { method: 'delete' } ] )
+    } )
+    it ( "should replace named ids, no body - mockJwt false", () => {
+      expect ( reqFor (false)( urlConfig, 'delete' ) ( simplerState ) ( '/{aId}/{bId}/{cId}/{dId}?{query}' ) ).toEqual (
         [ "/1/2/3/4?aId=1&bId=2&cId=3&dId=4", { method: 'delete' } ] )
     } )
   } )
   describe ( "for restAction get", () => {
-    it ( "should replace named ids, no body", () => {
-      expect ( reqFor ( urlConfig, 'get' ) ( simplerState ) ( '/{aId}/{bId}/{cId}/{dId}?{query}' ) ).toEqual (
+    it ( "should replace named ids, no body - mockjwt true", () => {
+      expect ( reqFor (true)( urlConfig, 'get' ) ( simplerState ) ( '/{aId}/{bId}/{cId}/{dId}?{query}' ) ).toEqual (
+        [ "/1/2/3/4?aId=1&bId=2&cId=3&dId=4", undefined ] )
+    } )
+    it ( "should replace named ids, no body mockjwt false", () => {
+      expect ( reqFor (false)( urlConfig, 'get' ) ( simplerState ) ( '/{aId}/{bId}/{cId}/{dId}?{query}' ) ).toEqual (
         [ "/1/2/3/4?aId=1&bId=2&cId=3&dId=4", undefined ] )
     } )
   } )
 
   describe ( "for restAction update", () => {
-    it ( "should replace named ids,  body", () => {
-      expect ( reqFor ( urlConfig, 'update' ) ( simplerState ) ( '/{aId}/{bId}/{cId}/{dId}?{query}' ) ).toEqual (
+    it ( "should replace named ids,  body - mockJwt true", () => {
+      expect ( reqFor(true) ( urlConfig, 'update' ) ( simplerState ) ( '/{aId}/{bId}/{cId}/{dId}?{query}' ) ).toEqual (
+        [
+          "/1/2/3/4?aId=1&bId=2&cId=3&dId=4",
+          {
+            "body": "\"someData\"",
+            "method": "put"
+          }
+        ] )
+    } )
+    it ( "should replace named ids,  body - mockJwt false", () => {
+      expect ( reqFor(false) ( urlConfig, 'update' ) ( simplerState ) ( '/{aId}/{bId}/{cId}/{dId}?{query}' ) ).toEqual (
         [
           "/1/2/3/4?aId=1&bId=2&cId=3&dId=4",
           {
@@ -149,8 +177,8 @@ describe ( "reqFn", () => {
   describe ( "'bodyFrom'", () => {
     let bodyFromState: TagTestState = { ...state, b: 2, bodyForParam: { c: 'C', d: 'D' } }
 
-    it ( "should replace named ids,  body", () => {
-      expect ( reqFor ( { ...urlConfig, bodyFrom: identityState.focusQuery ( 'bodyForParam' ) }, 'update' ) ( bodyFromState ) ( '/{aId}/{bId}/{cId}/{dId}?{query}' ) ).toEqual (
+    it ( "should replace named ids,  body - mockJwt true", () => {
+      expect ( reqFor(true) ( { ...urlConfig, bodyFrom: identityState.focusQuery ( 'bodyForParam' ) }, 'update' ) ( bodyFromState ) ( '/{aId}/{bId}/{cId}/{dId}?{query}' ) ).toEqual (
         [
           "/1/2/3/4?aId=1&bId=2&cId=3&dId=4",
           {

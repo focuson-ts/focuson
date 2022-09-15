@@ -9,20 +9,16 @@ function sum<D extends AuthoriseTableData> ( ds: D[], crOrDr: 'CR' | 'DR' ): num
 }
 
 function updateTable<S, D extends AuthoriseTableData, C extends ModalContext<S>> ( s: LensState<S, D[], C>, id: string, update: keyof D, fromValue: string, toValue: string ) {
- // @ts-ignore
+  // @ts-ignore
   const operatorName = s.main?.CommonIds?.operatorName;
   const rows = s.optJsonOr ( [] )
   const lens = s.optional
-
   const credits = sum ( rows, 'CR' )
   const debits = sum ( rows, 'DR' )
   const balance = credits - debits
   console.log ( 'updateTable', 'credits', credits, 'debits', debits, 'balanace', balance )
   if ( balance !== 0 ) {
-    openConfirmWindow ( {
-        title: `The balance is ${balance} which is not zero`,
-        messageText: update.toString() },
-      'justclose', [], s, 'AuthoriseButton', id, 'onClick' )
+    openConfirmWindow ( { title: `The balance is ${balance} which is not zero`, messageText: update.toString() }, 'justclose', [], s, 'AuthoriseButton', id, 'onClick' )
     return
   }
   const txs: Transform<S, any>[] = rows.flatMap ( ( row, i ) =>

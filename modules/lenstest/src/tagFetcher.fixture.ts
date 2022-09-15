@@ -16,6 +16,7 @@ export const commonLens: NameAndLens<PageSpecState> = {
 }
 export const simpleFetcherWithMessages: Fetcher<PageSpecState, string> = simpleTagFetcher (
   withMessages (),
+  true,
   'firstPage',
   Lenses.identity<PageSpecState> ().focusQuery ( 'firstPage' ),
   commonLens,
@@ -26,6 +27,7 @@ export const simpleFetcherWithMessages: Fetcher<PageSpecState, string> = simpleT
 export const stateAndFromApiFetcher: Fetcher<PageSpecState, string> =
                pageAndTagFetcher (
                  withMessages (),
+                 true,
                  'secondPage',
                  'tag1',
                  Lenses.identity<PageSpecState> ().focusQuery ( 'secondPage' ),

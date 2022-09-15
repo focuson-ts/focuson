@@ -186,6 +186,7 @@ function makeModifiedUrlConfig<S, MSGS> ( restAction: RestAction, one: OneRestDe
 }
 
 export function restReq<S, Details extends RestDetails<S, MSGS>, MSGS> ( d: Details,
+                                                                         mockJwt: boolean,
                                                                          commands: RestCommand[],
                                                                          urlMutatorForRest: ( r: RestAction, url: string ) => string,
                                                                          s: S ): [ RestCommand, OneRestDetails<S, any, any, any>, RequestInfo, RequestInit | undefined ][] {
@@ -204,7 +205,7 @@ export function restReq<S, Details extends RestDetails<S, MSGS>, MSGS> ( d: Deta
         console.log ( "restReq-dLens", one.dLens.description, one.dLens );
       }
       const adjustedUrlConfig = makeModifiedUrlConfig ( restAction, one, urlMutatorForRest, fdLens );
-      let request = reqFor ( adjustedUrlConfig, restAction ) ( s ) ( adjustedUrlConfig.url );
+      const request = reqFor ( mockJwt ) ( adjustedUrlConfig, restAction ) ( s ) ( adjustedUrlConfig.url );
       if ( debug ) console.log ( "restReq-req", request )
       return [ command, one, ...request ]
     } catch ( e: any ) {
@@ -236,6 +237,7 @@ export interface RestCommandAndTxs<S> {
 
 export interface RestToTransformProps<S, MSGS> {
   fetchFn: FetchFn,
+  mockJwt: boolean,
   d: RestDetails<S, MSGS>,
   urlMutatorForRest: ( r: RestAction, url: string ) => string,
   pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>,
@@ -263,7 +265,7 @@ export async function restToTransforms<S, MSGS> (
   if ( commands.length == 0 ) return Promise.resolve ( [] )
   const { d, urlMutatorForRest, pathToLens, stringToMsg, messageL, fetchFn, traceL } = props
 
-  const requests: [ RestCommand, OneRestDetails<S, any, any, any>, RequestInfo, (RequestInit | undefined) ][] = restReq ( d, commands, urlMutatorForRest, startS )
+  const requests: [ RestCommand, OneRestDetails<S, any, any, any>, RequestInfo, (RequestInit | undefined) ][] = restReq ( d, props.mockJwt, commands, urlMutatorForRest, startS )
   if ( debug ) console.log ( "rest-requests", requests )
   const results: RestResult<S, MSGS, any>[] = await massFetch ( fetchFn, requests )
   const sAfterFetch = sFn ()
