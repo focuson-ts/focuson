@@ -1,7 +1,7 @@
 import { CommonStateProps, InputOnChangeProps, LabelAlignment } from "./common";
 import { Input, } from "./input";
 import { Label } from "./label";
-import { BooleanTransformer, BooleanYNTransformer, NumberTransformer, StringTransformer } from "./transformers";
+import { BooleanTransformer, BooleanYNTransformer, InputSelectFn, NumberTransformer, StringTransformer } from "./transformers";
 import { BooleanValidations, defaultDateFn, NameAnd, NumberValidations, SimpleMessage, stringToSimpleMsg, StringValidations, toArray } from "@focuson/utils";
 import { FocusOnContext, HasPathToLens } from "@focuson/focuson";
 import { LensState } from "@focuson/state";
@@ -27,6 +27,7 @@ export interface StringProps<T> { // T is the type that we are displaying/editin
   transformer: ( s: string ) => T,
   type: string;
   default: T | undefined;
+  selectFn: InputSelectFn
 }
 export function isStringProps<T> ( p: TransformerProps<T> ): p is StringProps<T> {
   const a: any = p
@@ -36,6 +37,7 @@ export interface CheckboxProps<T> { // T is the type that we are displaying/edit
   transformer: ( b: boolean ) => T,
   checkbox: ( t: T | undefined ) => boolean
   default: T | undefined;
+  selectFn: InputSelectFn
 }
 export function isCheckboxProps<T> ( p: TransformerProps<T> ): p is CheckboxProps<T> {
   const a: any = p
