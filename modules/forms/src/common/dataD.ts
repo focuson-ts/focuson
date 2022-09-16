@@ -1,5 +1,5 @@
 //Common Data Definitions
-import { DatePicker2CD, DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndDropDownCD, LabelAndNumberInputCD, LabelAndRadioCD, LabelAndStringInputCD, LabelAndTextAreaCD, LabelAndYNCheckboxInputCD, NumberInputCD } from "./componentsD";
+import { DatePicker2CD, DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndDropDownCD, LabelAndNumberInputCD, LabelAndRadioCD, LabelAndStringInputCD, LabelAndTextAreaCD, LabelAndYNCheckboxInputCD, MonthYearDatePickerWithLengthCD, NumberInputCD } from "./componentsD";
 import { ComponentDisplayParams } from "../codegen/makeRender";
 import { BooleanValidations, NameAnd, NumberValidations, safeArray, StringValidations } from "@focuson/utils";
 import { Guards } from "../buttons/guardButton";
@@ -23,18 +23,18 @@ interface HasGuard {
   guard?: NameAnd<string[] | boolean>
 
 }
-export interface OneDataDDForPrim<D extends CommonPrimitiveDD<T>, T, G> extends HasSample<T> , HasGuard{
+export interface OneDataDDForPrim<D extends CommonPrimitiveDD<T>, T, G> extends HasSample<T>, HasGuard {
   dataDD: D;
   hidden?: boolean;
   displayParams?: ComponentDisplayParams,
   sampleOffset?: number;
   db?: DbValues
 }
-export function isOneDataDDForPrim<D extends CommonPrimitiveDD<T>, T, G> ( o: OneDataDD<G>|undefined ): o is OneDataDDForPrim<D, T, G> {
+export function isOneDataDDForPrim<D extends CommonPrimitiveDD<T>, T, G> ( o: OneDataDD<G> | undefined ): o is OneDataDDForPrim<D, T, G> {
   // @ts-ignore
   return o?.sample !== undefined
 }
-export interface OneDataDDNonePrim<G>  extends  HasGuard{
+export interface OneDataDDNonePrim<G> extends HasGuard {
   sample?: undefined;
   dataDD: AllDataDD<G>;
   hidden?: boolean;
@@ -441,6 +441,7 @@ export const DateDD: DatePrimitiveDD = {
   displayParams: { dateFormat: "yyyy-MM-dd" },
   sample: [ "2020-10-01", '2021-09-01', '2022-11-01' ],
 }
+const commonDateDisplayParams = { dateFormat: "dd-MM-yyyy", dateInfo: '/CommonData/dates', jurisdiction: '/CommonIds/jurisdiction' };
 export const DateWithDatePickerDD: DatePrimitiveDD = {
   format: { type: 'Date', pattern: "dd-MM-yyyy" },
   ...datePrimDD,
@@ -449,7 +450,7 @@ export const DateWithDatePickerDD: DatePrimitiveDD = {
   allowUndefined: true,
   description: "The primitive representing a date (w/o time)",
   display: DatePicker2CD,
-  displayParams: { dateFormat: "dd-MM-yyyy", dateInfo: '/CommonData/dates', jurisdiction: '/CommonIds/jurisdiction' },
+  displayParams: commonDateDisplayParams,
   sample: [ "1-10-2022", '01-11-2022', '01-12-2022' ],
 }
 export const MonthYearWithDatePickerDD: DatePrimitiveDD = {
@@ -460,9 +461,18 @@ export const MonthYearWithDatePickerDD: DatePrimitiveDD = {
   allowUndefined: true,
   description: "The primitive representing a date (w/o time)",
   display: DatePicker2CD,
-  displayParams: { dateFormat: "MM-yyyy", showMonthYearPicker: true, dateInfo: '/CommonData/dates', jurisdiction: '/CommonIds/jurisdiction' },
+  displayParams: { ...commonDateDisplayParams, dateFormat: "MM-yyyy",showMonthYearPicker: true },
   sample: [ "1-10-2022", '01-11-2022', '01-12-2022' ],
 }
+
+export const MonthYearFromRangeFromWithDatePickerDD: DatePrimitiveDD = {
+  ...MonthYearWithDatePickerDD,
+  name: 'Date',
+  description: "The primitive representing a date (w/o time)",
+  display: MonthYearDatePickerWithLengthCD,
+  displayParams: { ...MonthYearWithDatePickerDD.displayParams},
+}
+
 export const DateDDMMYYY_DD: DatePrimitiveDD = {
   format: { type: 'Date', pattern: "dd-MM-yyyy" },
   ...datePrimDD,

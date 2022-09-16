@@ -91,7 +91,7 @@ export const ConfirmChangesToAnyCD: DisplayCompD = {
     state: { paramType: 'state', needed: 'defaultToPath' },
     confirm: { paramType: 'json', needed: 'defaultToPath' },
     layoutDetails: { paramType: 'string', needed: 'yes' },
-    useRawMessage: {paramType: 'boolean', needed: 'no'}
+    useRawMessage: { paramType: 'boolean', needed: 'no' }
   }
 }
 
@@ -164,6 +164,16 @@ export const DatePicker2CD: DisplayCompD = {
     dateInfo: { paramType: 'path', needed: 'no' },
     showMonthYearPicker: { paramType: 'boolean', needed: 'no' },
     placeholder: { paramType: 'string', needed: 'no' }
+  }
+}
+export const MonthYearDatePickerWithLengthCD: DisplayCompD = {
+  ...DatePicker2CD,
+  name: "MonthYearDatePickerWithLength",
+  params: {
+    ...DatePicker2CD.params,
+    pathToOtherDate: { paramType: 'path', needed: 'yes' },
+    lengthPath: { paramType: 'path', needed: 'yes' },
+    subtract: { paramType: 'boolean', needed: 'yes' }
   }
 }
 export const LabelAndDropDownFromDataCD: DisplayCompD = {
@@ -258,7 +268,7 @@ export const LayoutCd: DisplayCompD = {
     defaultProps: { paramType: 'string', needed: 'no' },
     displayAsCards: { paramType: 'boolean', needed: 'no' },
     scrollAfter: { paramType: 'string', needed: 'no' },
-    buttons: {paramType: 'json', needed: "no"},
+    buttons: { paramType: 'json', needed: "no" },
     allButtons: { paramType: 'object', needed: 'defaultToButtons' }
   },
   import: "@focuson/form_components",

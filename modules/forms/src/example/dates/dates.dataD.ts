@@ -1,5 +1,5 @@
 import { ExampleDataD } from "../common";
-import { DateWithDatePickerDD, MonthYearWithDatePickerDD } from "../../common/dataD";
+import { DateWithDatePickerDD, MonthYearFromRangeFromWithDatePickerDD, MonthYearWithDatePickerDD, NatNumDd } from "../../common/dataD";
 import { LayoutCd } from "../../common/componentsD";
 
 export const datesDataD: ExampleDataD = {
@@ -31,6 +31,9 @@ export const datesDataD: ExampleDataD = {
       dataDD: { ...DateWithDatePickerDD, emptyValue: undefined, allowUndefined: true }, displayParams: {
         dateRange: { type: 'future', allowWeekends: false, allowHolidays: true, minWorkingDaysBefore: 5 }
       }
-    }
+    },
+    length: { dataDD: NatNumDd },
+    startDate: { dataDD: MonthYearFromRangeFromWithDatePickerDD, displayParams: { pathToOtherDate: 'endDate', lengthPath: 'length', subtract: false } },
+    endDate: { dataDD: MonthYearFromRangeFromWithDatePickerDD, displayParams: { pathToOtherDate: 'startDate', lengthPath: 'length', subtract: true } },
   }
 }

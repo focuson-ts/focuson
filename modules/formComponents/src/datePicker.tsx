@@ -225,7 +225,7 @@ export function RawDatePicker<S extends any, C extends PageSelectionContext<S>> 
         let formattedDate = format ( e, dateFormat );
         if ( debug ) console.log ( 'datePicker.onChange', id, e, dateFormat, formattedDate, debug )
         selectFn ( id, debug, state ) ( 'onChange', formattedDate )
-        state.setJson ( formattedDate, reasonFor ( 'DatePicker', 'onChange', id ) )
+        // state.setJson ( formattedDate, reasonFor ( 'DatePicker', 'onChange', id ) )
       } catch ( err ) {
         console.error ( "e is", e )
         console.error ( "e is", e.toISOString () )
@@ -234,8 +234,11 @@ export function RawDatePicker<S extends any, C extends PageSelectionContext<S>> 
     }
 
     function onChangeRaw ( e: React.FocusEvent<HTMLInputElement> ) {
-      if ( debug ) console.log ( 'datePicker.onChangeRaw', id, e.target?.value, 'changed' )
-      selectFn ( id, debug, state ) ( 'changeRaw', e.target?.value )
+      const value = e.target?.value;
+      if ( value !== undefined ) {
+        if ( debug ) console.log ( 'datePicker.onChangeRaw', id, value, 'changed', e )
+        selectFn ( id, debug, state ) ( 'changeRaw', value )
+      }
     }
     let value = state.optJson ();
     if ( debug ) console.log ( 'datePicker', id, 'value', value, 'date', date )
