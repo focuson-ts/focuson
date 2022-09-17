@@ -1,14 +1,9 @@
 import { CommonStateProps, InputEnabledProps, InputOnChangeProps } from "./common";
-import { LensState, reasonFor } from "@focuson/state";
 import React from "react";
-import { CheckboxProps, isCheckboxProps, makeInputChangeTxs, StringProps, TransformerProps } from "./labelAndInput";
-import { BooleanTransformer, BooleanYNTransformer, NumberTransformer, StringTransformer } from "./transformers";
+import { BooleanTransformer, BooleanYNTransformer, CheckboxProps, isCheckboxProps, NumberTransformer, StringProps, StringTransformer, TransformerProps } from "./transformers";
 import { BooleanValidations, disabledFrom, NameAnd, NumberValidations, StringValidations } from "@focuson/utils";
 
 import { FocusOnContext } from "@focuson/focuson";
-import { InputChangeCommands } from "@focuson/rest";
-import { on } from "cluster";
-
 
 
 export interface InputProps<S, T, Context> extends CommonStateProps<S, T, Context>, InputOnChangeProps<S, Context>, InputEnabledProps {

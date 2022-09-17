@@ -28,7 +28,7 @@ describe ( " listComponentsIn", () => {
     expect ( createReactComponent ( paramsForTest, AllGuardCreator, EAccountsSummaryPD, EAccountsSummaryPD ) ( EAccountsSummaryDD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function EAccountsSummary({id,state,mode,allButtons,label}: FocusedProps<FState, EAccountsSummaryDomain,Context>){",
       "  return<>",
-      "<Layout state={state} details='[[10]]' defaultProps='{'valueWidth': 50}'>",
+      "<Layout state={state} allButtons={allButtons} details='[[10]]' defaultProps='{'valueWidth': 50}'>",
       "    <LabelAndBooleanInput id={`${id}.useEStatements`} state={state.focusOn('useEStatements')} mode={mode} label='Use E Statements' allButtons={allButtons} parentState={state} />",
       "    <Table id={`${id}.eAccountsTable`} state={state.focusOn('eAccountsTable')} mode={mode} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} />",
       "    <BalancesAndMonthlyCost id={`${id}.balancesAndMonthlyCost`} state={state.focusOn('balancesAndMonthlyCost')} mode={mode} label='Balances And Monthly Cost' allButtons={allButtons} />",
@@ -132,7 +132,7 @@ describe ( " listComponentsIn", () => {
       "",
       "export function EAccountsSummary({id,state,mode,allButtons,label}: FocusedProps<FState, EAccountsSummaryDomain,Context>){",
       "  return<>",
-      "<Layout state={state} details='[[10]]' defaultProps='{'valueWidth': 50}'>",
+      "<Layout state={state} allButtons={allButtons} details='[[10]]' defaultProps='{'valueWidth': 50}'>",
       "    <LabelAndBooleanInput id={`${id}.useEStatements`} state={state.focusOn('useEStatements')} mode={mode} label='Use E Statements' allButtons={allButtons} parentState={state} />",
       "    <Table id={`${id}.eAccountsTable`} state={state.focusOn('eAccountsTable')} mode={mode} order={['accountId','displayType','description','virtualBankSeq','frequency','total']} />",
       "    <BalancesAndMonthlyCost id={`${id}.balancesAndMonthlyCost`} state={state.focusOn('balancesAndMonthlyCost')} mode={mode} label='Balances And Monthly Cost' allButtons={allButtons} />",

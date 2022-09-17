@@ -1,5 +1,5 @@
 //Common Data Definitions
-import { DatePicker2CD, DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndDropDownCD, LabelAndNumberInputCD, LabelAndRadioCD, LabelAndStringInputCD, LabelAndTextAreaCD, LabelAndYNCheckboxInputCD, MonthYearDatePickerWithLengthCD, NumberInputCD } from "./componentsD";
+import { DatePicker2CD, DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndDropDownCD, LabelAndMonthYearLengthCD, LabelAndNumberInputCD, LabelAndRadioCD, LabelAndStringInputCD, LabelAndTextAreaCD, LabelAndYNCheckboxInputCD, MonthYearDatePickerWithLengthCD, NumberInputCD } from "./componentsD";
 import { ComponentDisplayParams } from "../codegen/makeRender";
 import { BooleanValidations, NameAnd, NumberValidations, safeArray, StringValidations } from "@focuson/utils";
 import { Guards } from "../buttons/guardButton";
@@ -461,7 +461,7 @@ export const MonthYearWithDatePickerDD: DatePrimitiveDD = {
   allowUndefined: true,
   description: "The primitive representing a date (w/o time)",
   display: DatePicker2CD,
-  displayParams: { ...commonDateDisplayParams, dateFormat: "MM-yyyy",showMonthYearPicker: true },
+  displayParams: { ...commonDateDisplayParams, dateFormat: "MM-yyyy", showMonthYearPicker: true },
   sample: [ "1-10-2022", '01-11-2022', '01-12-2022' ],
 }
 
@@ -470,7 +470,14 @@ export const MonthYearFromRangeFromWithDatePickerDD: DatePrimitiveDD = {
   name: 'Date',
   description: "The primitive representing a date (w/o time)",
   display: MonthYearDatePickerWithLengthCD,
-  displayParams: { ...MonthYearWithDatePickerDD.displayParams},
+  displayParams: { ...MonthYearWithDatePickerDD.displayParams },
+}
+export const LabelAndMonthYearLengthDD: NumberPrimitiveDD = {
+  ...NatNumDd,
+  name: 'LabelAndMonthYearLength',
+  description: "A range of months",
+  display: LabelAndMonthYearLengthCD,
+  displayParams: { ...NatNumDd.displayParams },
 }
 
 export const DateDDMMYYY_DD: DatePrimitiveDD = {

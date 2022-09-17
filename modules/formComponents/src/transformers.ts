@@ -1,12 +1,38 @@
-import { CheckboxProps, makeInputChangeTxs, StringProps } from "./labelAndInput";
+import { makeInputChangeTxs } from "./labelAndInput";
 import { FocusOnContext } from "@focuson/focuson";
 import { LensState, reasonFor } from "@focuson/state";
 import { InputChangeCommands } from "@focuson/rest";
 
-export type InputSelectFn = <S, T, Context extends FocusOnContext<S>> ( state: LensState<S, T, Context>, id: string, value: T, parentState: LensState<S, any, Context>, onChange: undefined | InputChangeCommands | InputChangeCommands[] ) => void
 
-export const defaultInputSelectFn: InputSelectFn = <S, T, Context extends FocusOnContext<S>> ( state, id, value, parentState, onChange ) =>
+export type InputSelectFn = <S, T, Context extends FocusOnContext<S>> ( state: LensState<S, T, Context>, id: string, value: T, parentState: LensState<S, any, Context>|undefined, onChange: undefined | InputChangeCommands | InputChangeCommands[] ) => void
+
+export const defaultInputSelectFn: InputSelectFn = <S, T, Context extends FocusOnContext<S>> (  state: LensState<S, T, Context>, id: string, value: T, parentState: LensState<S, any, Context>|undefined, onChange: undefined | InputChangeCommands | InputChangeCommands[]  ) =>
   state.massTransform ( reasonFor ( 'Input', 'onChange', id ) ) ( [ state.optional, () => value ], ...makeInputChangeTxs ( id, parentState, onChange ) );
+
+
+
+export interface StringProps<T> { // T is the type that we are displaying/editing. V is the value expected by the target. boolean if a checkbox, but otherwise a string
+  transformer: ( s: string ) => T,
+  type: string;
+  default: T | undefined;
+  selectFn: InputSelectFn
+}
+export function isStringProps<T> ( p: TransformerProps<T> ): p is StringProps<T> {
+  const a: any = p
+  return a.type
+}
+export interface CheckboxProps<T> { // T is the type that we are displaying/editing. V is the value expected by the target. boolean if a checkbox, but otherwise a string
+  transformer: ( b: boolean ) => T,
+  checkbox: ( t: T | undefined ) => boolean
+  default: T | undefined;
+  selectFn: InputSelectFn
+}
+export function isCheckboxProps<T> ( p: TransformerProps<T> ): p is CheckboxProps<T> {
+  const a: any = p
+  return a.checkbox
+}
+
+export type TransformerProps<T> = StringProps<T> | CheckboxProps<T>
 
 
 export const StringTransformer: StringProps<string> = { transformer: s => s, type: 'text', default: '', selectFn: defaultInputSelectFn }

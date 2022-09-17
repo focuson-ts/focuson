@@ -1,7 +1,7 @@
 import { CommonStateProps, InputOnChangeProps, LabelAlignment } from "./common";
 import { Input, } from "./input";
 import { Label } from "./label";
-import { BooleanTransformer, BooleanYNTransformer, InputSelectFn, NumberTransformer, StringTransformer } from "./transformers";
+import { BooleanTransformer, BooleanYNTransformer, isCheckboxProps, NumberTransformer, StringTransformer, TransformerProps } from "./transformers";
 import { BooleanValidations, defaultDateFn, NameAnd, NumberValidations, SimpleMessage, stringToSimpleMsg, StringValidations, toArray } from "@focuson/utils";
 import { FocusOnContext, HasPathToLens } from "@focuson/focuson";
 import { LensState } from "@focuson/state";
@@ -20,31 +20,8 @@ export interface LabelAndInputProps<S, T, Context> extends CommonStateProps<S, T
   noLabel?: boolean;
   enabledBy?: string[][];
   placeholder?: string;
-  onBlur?: (e: any) => void
+  onBlur?: ( e: any ) => void
 }
-
-export interface StringProps<T> { // T is the type that we are displaying/editing. V is the value expected by the target. boolean if a checkbox, but otherwise a string
-  transformer: ( s: string ) => T,
-  type: string;
-  default: T | undefined;
-  selectFn: InputSelectFn
-}
-export function isStringProps<T> ( p: TransformerProps<T> ): p is StringProps<T> {
-  const a: any = p
-  return a.type
-}
-export interface CheckboxProps<T> { // T is the type that we are displaying/editing. V is the value expected by the target. boolean if a checkbox, but otherwise a string
-  transformer: ( b: boolean ) => T,
-  checkbox: ( t: T | undefined ) => boolean
-  default: T | undefined;
-  selectFn: InputSelectFn
-}
-export function isCheckboxProps<T> ( p: TransformerProps<T> ): p is CheckboxProps<T> {
-  const a: any = p
-  return a.checkbox
-}
-
-export type TransformerProps<T> = StringProps<T> | CheckboxProps<T>
 
 export function makeInputChangeTxs<S, C extends HasSimpleMessageL<S> & HasPathToLens<S>> ( id: string, parentState: LensState<S, any, C> | undefined, change?: InputChangeCommands | InputChangeCommands[] ): Transform<S, any>[] {
   if ( parentState === undefined ) return []
@@ -58,7 +35,7 @@ export function makeInputChangeTxs<S, C extends HasSimpleMessageL<S> & HasPathTo
   return processChangeCommandProcessor ( `Modal button.${id}`, inputCommandProcessors ( config ) ( parentState.main ), toArray ( change ) );
 }
 
-const LabelAndTInput = <T extends any, P> ( tProps: TransformerProps<T> ) =>
+export const LabelAndTInput = <T extends any, P> ( tProps: TransformerProps<T> ) =>
   <S, Context extends FocusOnContext<S>> ( props: LabelAndInputProps<S, T, Context> & P ) => {
     const label = <Label state={props.state} htmlFor={props.id} label={props.label}/>;
     const input = Input<S, T, P> ( tProps )<LabelAndInputProps<S, T, Context> & P, Context> ( props );
@@ -72,8 +49,13 @@ const LabelAndTInput = <T extends any, P> ( tProps: TransformerProps<T> ) =>
     </div>
   }
 
-export const LabelAndStringInput = LabelAndTInput<string, StringValidations> ( StringTransformer )
-export const LabelAndNumberInput = LabelAndTInput<number, NumberValidations> ( NumberTransformer )
-export const LabelAndBooleanInput = LabelAndTInput<boolean, BooleanValidations> ( BooleanTransformer )
-export const LabelAndYNBooleanInput = LabelAndTInput<string, BooleanValidations> ( BooleanYNTransformer )
+
+export const LabelAndStringInput: <S, Context extends FocusOnContext<S>> ( props: LabelAndInputProps<S, string, Context> & StringValidations ) => JSX.Element =
+               LabelAndTInput<string, StringValidations> ( StringTransformer )
+export const LabelAndNumberInput: <S, Context extends FocusOnContext<S>> ( props: LabelAndInputProps<S, number, Context> & NumberValidations ) => JSX.Element =
+               LabelAndTInput<number, NumberValidations> ( NumberTransformer )
+export const LabelAndBooleanInput: <S, Context extends FocusOnContext<S>> ( props: LabelAndInputProps<S, boolean, Context> & BooleanValidations ) => JSX.Element =
+               LabelAndTInput<boolean, BooleanValidations> ( BooleanTransformer )
+export const LabelAndYNBooleanInput: <S, Context extends FocusOnContext<S>> ( props: LabelAndInputProps<S, string, Context> & BooleanValidations ) => JSX.Element =
+               LabelAndTInput<string, BooleanValidations> ( BooleanYNTransformer )
 

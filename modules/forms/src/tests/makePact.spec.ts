@@ -5,9 +5,7 @@ import { paramsForTest } from "./paramsForTest";
 
 describe ( "makePacts", () => {
 
-
   it ( "should make a pact", () => {
-
     expect ( makeFetcherPact ( paramsForTest, PostCodeMainPage, 'postcode', PostCodeMainPage.rest.postcode ) ).toEqual ( [
       "//GetFetcher pact test",
       "describe ( 'PostCodeMainPage - postcode - fetcher', () => {",
@@ -57,7 +55,7 @@ describe ( "makePacts", () => {
       "    const withIds = massTransform ( firstState, ...lensTransforms )",
       "    const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );",
       "    const props: RestToTransformProps<FState, SimpleMessage> = {",
-      "       fetchFn, d: rests.restDetails, urlMutatorForRest: restUrlMutator, pathToLens, messageL: simpleMessagesL (), stringToMsg: stringToSimpleMsg ( () => 'now', 'info' ), traceL: traceL ()",
+      "       fetchFn, mockJwt: true, d: rests.restDetails, urlMutatorForRest: restUrlMutator, pathToLens, messageL: simpleMessagesL (), stringToMsg: stringToSimpleMsg ( () => 'now', 'info' ), traceL: traceL ()",
       "    }",
       "    const newState = await rest ( props, restL(), () =>withIds )",
       "    const rawExpected:any = { ...withIds, restCommands: []}",
@@ -101,7 +99,7 @@ describe ( "makePacts", () => {
       "    const withIds = massTransform ( firstState, ...lensTransforms )",
       "    const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );",
       "    const props: RestToTransformProps<FState, SimpleMessage> = {",
-      "       fetchFn, d: rests.restDetails, urlMutatorForRest: restUrlMutator, pathToLens, messageL: simpleMessagesL (), stringToMsg: stringToSimpleMsg ( () => 'now', 'info' ), traceL: traceL ()",
+      "       fetchFn, mockJwt: true, d: rests.restDetails, urlMutatorForRest: restUrlMutator, pathToLens, messageL: simpleMessagesL (), stringToMsg: stringToSimpleMsg ( () => 'now', 'info' ), traceL: traceL ()",
       "    }",
       "    const newState = await rest ( props, restL(), () =>withIds )",
       "    const rawExpected:any = { ...withIds, restCommands: []}",
@@ -144,7 +142,7 @@ describe ( "makePacts", () => {
       "    const withIds = massTransform ( firstState, ...lensTransforms )",
       "    const fetchFn = fetchWithPrefix ( provider.mockService.baseUrl, loggingFetchFn );",
       "    const props: RestToTransformProps<FState, SimpleMessage> = {",
-      "       fetchFn, d: rests.restDetails, urlMutatorForRest: restUrlMutator, pathToLens, messageL: simpleMessagesL (), stringToMsg: stringToSimpleMsg ( () => 'now', 'info' ), traceL: traceL ()",
+      "       fetchFn, mockJwt: true, d: rests.restDetails, urlMutatorForRest: restUrlMutator, pathToLens, messageL: simpleMessagesL (), stringToMsg: stringToSimpleMsg ( () => 'now', 'info' ), traceL: traceL ()",
       "    }",
       "    const newState = await rest ( props, restL(), () =>withIds )",
       "    const rawExpected:any = { ...withIds, restCommands: []}",

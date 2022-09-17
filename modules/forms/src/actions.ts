@@ -13,14 +13,15 @@ function updateTable<S, D extends AuthoriseTableData, C extends ModalContext<S>>
   const operatorName = s.main?.CommonIds?.operatorName;
   const rows = s.optJsonOr ( [] )
   const lens = s.optional
-  const credits = sum ( rows, 'CR' )
-  const debits = sum ( rows, 'DR' )
-  const balance = credits - debits
-  console.log ( 'updateTable', 'credits', credits, 'debits', debits, 'balanace', balance )
-  if ( balance !== 0 ) {
-    openConfirmWindow ( { title: `The balance is ${balance} which is not zero`, messageText: update.toString() }, 'justclose', [], s, 'AuthoriseButton', id, 'onClick' )
-    return
-  }
+  //This commented out code is how we handle 'confirm windows' in custom buttons
+  // const credits = sum ( rows, 'CR' )
+  // const debits = sum ( rows, 'DR' )
+  // const balance = credits - debits
+  // console.log ( 'updateTable', 'credits', credits, 'debits', debits, 'balanace', balance )
+  // if ( balance !== 0 ) {
+  //   openConfirmWindow ( { title: `The balance is ${balance} which is not zero`, messageText: update.toString() }, 'justclose', [], s, 'AuthoriseButton', id, 'onClick' )
+  //   return
+  // }
   const txs: Transform<S, any>[] = rows.flatMap ( ( row, i ) =>
     row.hold !== true && row.status === fromValue ? [
       [ lens.chain ( Lenses.nth ( i ) ),
