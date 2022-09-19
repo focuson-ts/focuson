@@ -111,7 +111,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
     writeToFile ( `${tsCode}/${params.pagesFile}.ts`, () => makePages ( params, mainPs, extraPages ), details )
 
 
-    templateFile ( `${tsCode}/index.tsx`, 'templates/index.template.ts', { ...params, pageMode: JSON.stringify ( allMainPages ( allPages )[ 0 ].modes[ 0 ] ), firstPage: allPages[ 0 ].name, fetch: appConfig.fetch, debug: JSON.stringify ( appConfig.debug ) }, directorySpec, details )
+    templateFile ( `${tsCode}/index.tsx`, 'templates/index.template.ts', { ...params, pageMode: JSON.stringify ( allMainPages ( allPages )[ 0 ].modes[ 0 ] ), firstPage: allPages[ 0 ].name, fetch: appConfig.fetch, delayBeforeMessagesRemoved: appConfig.delayBeforeMessagesRemoved?appConfig.delayBeforeMessagesRemoved:'undefined',debug: JSON.stringify ( appConfig.debug ) }, directorySpec, details )
     templateFile ( `${tsCode}/store.ts`, 'templates/store.template.ts', { ...params, pageMode: JSON.stringify ( allMainPages ( allPages )[ 0 ].modes[ 0 ] ), firstPage: allPages[ 0 ].name, fetch: appConfig.fetch, debug: JSON.stringify ( appConfig.debug ) }, directorySpec, details )
     templateFile ( `${tsCode}/config.ts`, 'templates/config.template.ts', { ...params, pageMode: JSON.stringify ( allMainPages ( allPages )[ 0 ].modes[ 0 ] ), firstPage: allPages[ 0 ].name, fetch: appConfig.fetch, debug: JSON.stringify ( appConfig.debug ) }, directorySpec, details )
     templateFile ( `${tsCode}/index.package.ts`, 'templates/index.package.ts', params, directorySpec, details )

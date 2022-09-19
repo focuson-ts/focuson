@@ -34,7 +34,7 @@ export const config: FocusOnConfig<{stateName}, Context, SimpleMessage> = {
   pages: context.pages,
   // fetchers,
   messageL: simpleMessagesL (),
-  stringToMsg: stringToSimpleMsg(() => new Date().toUTCString(), 'info'),
+  stringToMsg: stringToSimpleMsg(() => new Date().toISOString(), 'info'),
   restL: context.restL,
   restDetails: restDetails,
   restCountL: restCountL(),

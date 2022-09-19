@@ -1,6 +1,6 @@
 import { yesNoDD } from "../occupationAndIncome/occupationAndIncome.dataD";
 import { ExampleDataD, ExampleRepeatingD } from "../common";
-import { BooleanDD, DateDD, IntegerDD, ManyLineStringDD, MoneyDD, NatNumDd, OneLineStringDD, StringDD, StringPrimitiveDD } from "../../common/dataD";
+import { BooleanDD, DateDD, DateWithDatePickerDD, IntegerDD, ManyLineStringDD, MoneyDD, NatNumDd, OneLineStringDD, StringDD, StringPrimitiveDD } from "../../common/dataD";
 import { EAccountDisplayTypeDD } from "../eAccounts/eAccountsSummary.dataD";
 import { PaymentTypeDd } from "../commonEnums";
 import { LabelAndDropDownCD, LayoutCd, TableCD, TableWithCheckboxInputCD, UnpaidCardOrMisuseItemsCD } from "../../common/componentsD";
@@ -17,7 +17,7 @@ export const accountOverviewFacilitiesLineDataD: ExampleDataD = {
   description: "Account overview facilities data definition",
   structure: {
     facility: { dataDD: MoneyDD, sample: [ 1234 ] },
-    changeDate: { dataDD: DateDD, sample: [ '23-03-2022' ] },
+    changeDate: { dataDD: DateWithDatePickerDD, sample: [ '23-03-2022' ] },
     unApproved: { dataDD: BooleanDD, sample: [ true ] },
     reason: { dataDD: StringDD, sample: [ 'some reason' ] },
     amount: { dataDD: MoneyDD, sample: [ 2345 ] }
@@ -73,8 +73,8 @@ const arrearsDetailsLineDataD: ExampleDataD = {
   name: "ArrearsDetailsLine",
   description: "Arrears Details data definition",
   structure: {
-    collectionsDate: { dataDD: DateDD },
-    creditedDate: { dataDD: DateDD },
+    collectionsDate: { dataDD: DateWithDatePickerDD },
+    creditedDate: { dataDD: DateWithDatePickerDD },
     minPayment: { dataDD: MoneyDD },
     contractualAmount: { dataDD: MoneyDD },
     paymentType: { dataDD: PaymentTypeDd },
@@ -110,11 +110,11 @@ export const arrearsInformationDataD: ExampleDataD = {
     actualMonthsDown: { dataDD: NatNumDd, displayParams: { label: "Actual Months Down (this period)" } },
     arrearsLetterSent: { dataDD: StringDD, displayParams: { label: "Arrears Letter Sent?" } },
     currentArrearsPct: { dataDD: NatNumDd, displayParams: { label: "Current Arrears %" } },
-    lastCapitalizationDate: { dataDD: DateDD, displayParams: { label: "Date of Last Capitalization" } },
+    lastCapitalizationDate: { dataDD: DateWithDatePickerDD, displayParams: { label: "Date of Last Capitalization" } },
     contractualAmount: { dataDD: MoneyDD, displayParams: { label: "Arrears Contractual Amount" } },
     arrearsTotalBalance: { dataDD: MoneyDD, displayParams: { label: "Arrears Total Balance" } },
     paymentType: { dataDD: PaymentTypeDd, displayParams: { label: "Payment Type" } },
-    collectionDate: { dataDD: DateDD, displayParams: { label: "Collection Date(dd/mm/yyy)" } },
+    collectionDate: { dataDD: DateWithDatePickerDD, displayParams: { label: "Collection Date(dd/mm/yyy)" } },
     paymentReceived: { dataDD: MoneyDD, displayParams: { label: "Payment Received" } },
     minPayment: { dataDD: MoneyDD, displayParams: { label: "Minimum Payment" } },
     shortfall: { dataDD: MoneyDD, displayParams: { label: "Shortfall" } }
@@ -125,8 +125,8 @@ export const accountOverviewExcessHistoryLineDataD: ExampleDataD = {
   name: "AccountOverviewExcessHistoryLine",
   description: "Account overview excess history data definition",
   structure: {
-    start: { dataDD: DateDD },
-    end: { dataDD: DateDD },
+    start: { dataDD: DateWithDatePickerDD },
+    end: { dataDD: DateWithDatePickerDD },
     consecutiveDays: { dataDD: NatNumDd },
   }
 }
@@ -153,8 +153,8 @@ export const accountOverviewExcessPeriodDetailsLineDataD: ExampleDataD = {
   name: "AccountOverviewExcessPeriodDetailsLine",
   description: "Account overview excess period details data definition",
   structure: {
-    start: { dataDD: DateDD },
-    end: { dataDD: DateDD },
+    start: { dataDD: DateWithDatePickerDD },
+    end: { dataDD: DateWithDatePickerDD },
     consecutiveDays: { dataDD: NatNumDd },
   }
 }
@@ -232,7 +232,7 @@ export const accountOverviewOptOutLineDataD: ExampleDataD = {
     optedOut: { dataDD: BooleanDD },
     addrLine5: { dataDD: StringDD },
     changedBy: { dataDD: StringDD },
-    changedDate: { dataDD: DateDD },
+    changedDate: { dataDD: DateWithDatePickerDD },
   }
 }
 
@@ -261,8 +261,8 @@ export const accountOverviewDataD: ExampleDataD = {
   structure: {
     score: { dataDD: IntegerDD, displayParams: { label: "Score" } },
     accountType: { dataDD: EAccountDisplayTypeDD, displayParams: { label: "Account Type" } },
-    drawDownDate: { dataDD: DateDD, displayParams: { label: "Drawdown Date" } },
-    repaymentDate: { dataDD: DateDD, displayParams: { label: "Repayment Date" } },
+    drawDownDate: { dataDD: DateWithDatePickerDD, displayParams: { label: "Drawdown Date" } },
+    repaymentDate: { dataDD: DateWithDatePickerDD, displayParams: { label: "Repayment Date" } },
     propertyValue: { dataDD: MoneyDD, displayParams: { label: "Property Value" }, sample: [ 220000 ] },
     mul: { dataDD: MoneyDD, displayParams: { label: "MUL" }, sample: [ 173750 ] },
     drawDownAmount: { dataDD: MoneyDD, displayParams: { label: "Drawdown Amount" }, sample: [ 90007 ] },
@@ -290,7 +290,7 @@ export const accountOverviewExcessInfoDataD: ExampleDataD = {
     dayOfCurrentExcess: { dataDD: NatNumDd },
     currentExcessOnAccount: { dataDD: NatNumDd, displayParams: { label: "Current Excess on Account" } },
     currentPctExcess: { dataDD: NatNumDd },
-    dateOfLastCapitalization: { dataDD: DateDD },
-    dateOfLastExcessFulfillment: { dataDD: DateDD }
+    dateOfLastCapitalization: { dataDD: DateWithDatePickerDD },
+    dateOfLastExcessFulfillment: { dataDD: DateWithDatePickerDD }
   }
 }

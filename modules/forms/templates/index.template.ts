@@ -14,7 +14,7 @@ export const combineAll = combineReducers ( {
    {teamName}: {teamName}Reducer ( identityL )
 } )
 export const store: any = legacy_createStore ( combineAll, undefined, applyMiddleware ( 
-  focusOnMiddlewareFor{teamName} ( config, context, Lenses.identity<any> ().focusOn ( '{teamName}' ) ) ) );
+  focusOnMiddlewareFor{teamName} ( config, context, Lenses.identity<any> ().focusOn ( '{teamName}' ), {delayBeforeMessagesRemoved} ) ) );
 let rootElement = getElement ( "root" );
 console.log ( "set json" )
 store.subscribe ( () => {

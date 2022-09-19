@@ -1,16 +1,25 @@
 import { Lenses, Optional } from "@focuson/lens";
 import { LensState } from "@focuson/state";
-import { createSimpleMessage, DateFn, HasSimpleMessages, SimpleMessage, stringToSimpleMsg, testDateFn, toArray } from "@focuson/utils";
-import { SimpleMessageLevel } from "@focuson/utils/src/messages";
-import { type } from "os";
+import { createSimpleMessage, DateFn, HasSimpleMessages, SimpleMessage, SimpleMessageLevel, stringToSimpleMsg, toArray } from "@focuson/utils";
 
 export interface HasSimpleMessageL<S> {
   simpleMessagesL: Optional<S, SimpleMessage[]>
 }
-export const simpleMessagesL = <S extends HasSimpleMessages> () => Lenses.identity<S> ().focusQuery ( 'messages' );
+export const simpleMessagesL = <S extends HasSimpleMessages> (): Optional<S, SimpleMessage[]> => Lenses.identity<S> ().focusQuery ( 'messages' );
 export function simpleMessagesLFn<S extends HasSimpleMessages, D, Context> (): ( s: LensState<S, S, Context>, domainLens: Optional<S, D> ) => LensState<S, SimpleMessage[], Context> {
   return ( s, d ) => s.focusOn ( "messages" )
 }
+
+export const removeOldMessages = <S> ( dateFn: DateFn, messageL: Optional<S, SimpleMessage[]>, delayBeforeMessagesRemoved: number | undefined ) => (state: S)=>{
+  if ( delayBeforeMessagesRemoved === undefined ) return state
+  const firstDateToKeep = new Date ( dateFn () )
+  firstDateToKeep.setMilliseconds ( firstDateToKeep.getMilliseconds () - delayBeforeMessagesRemoved )
+  function removeIfOld ( s: SimpleMessage ): SimpleMessage[] {
+    const messageTime = new Date ( s.time )
+    return messageTime >= firstDateToKeep ? [s] : [  ]
+  }
+  return messageL.transform ( oldM => oldM.flatMap ( removeIfOld ) )(state)
+};
 
 export const mutateStateAddingMessagesFromSource = <S, SOURCE, MSG> ( messageL: Optional<S, MSG[]>, stringToErrorMsg: ( s: string ) => MSG ) => ( msgs: ( a: SOURCE ) => MSG[] ) =>
   ( s: S, api: SOURCE ): S => {

@@ -10,8 +10,8 @@ export interface AppConfig {
   javaPort: number;
   makeSqlStrings?: boolean; //default true
   manualMaxTuples?: number
+  delayBeforeMessagesRemoved?: number // if undefined will not remove messages
 }
-
 
 export const javaOutputRoot = '../formJava'
 export const tsRoot = "../formTs"
@@ -40,6 +40,7 @@ export const devAppConfig: AppConfig = {
     optionalsDebug: true,
     recordTrace: true, tagFetcherDebug: false, validityDebug: false, modalDebug: false, accordions: []
   },
-  makeSqlStrings: true
+  makeSqlStrings: true,
+  delayBeforeMessagesRemoved: 60000
 }
 

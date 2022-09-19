@@ -6,7 +6,7 @@ import { lensState, LensState } from "@focuson/state";
 import { Reducer } from "react";
 import { dispatchRestAndFetchCommands, FocusOnConfig, FocusOnContext, FocusOnDebug, HasFocusOnDebug, restCountL, traceL, makeProcessorsConfig} from "@focuson/focuson";
 import { Lens, Lenses, massTransform, Transform } from "@focuson/lens";
-import { pageSelectionlens, preMutateForPages, simpleMessagesL } from "@focuson/pages";
+import { pageSelectionlens, preMutateForPages, simpleMessagesL, removeOldMessages } from "@focuson/pages";
 import { newFetchers } from "./fetchers";
 import { restDetails, restUrlMutator } from "./rests";
 import { pages } from "./pages";
@@ -61,7 +61,7 @@ function traceTransform<S> ( trace: any, s: S ): Transform<S, any> [] {
   const debug: any = s.debug;
   return debug?.recordTrace ? [ [ traceL<S> (), old => [ ...old ? old : [], trace ] ] ] : [];
 }
-export const focusOnMiddlewareFor{teamName} = <BigState, S extends HasFocusOnDebug, C extends FocusOnContext<S>> ( config: FocusOnConfig<S, any, SimpleMessage>, context: C, rootLens: Lens<BigState, S> ) => ( store: any ) => ( dispatch: any ) => async ( action: any ) => {
+export const focusOnMiddlewareFor{teamName} = <BigState, S extends HasFocusOnDebug, C extends FocusOnContext<S>> ( config: FocusOnConfig<S, any, SimpleMessage>, context: C, rootLens: Lens<BigState, S> , delayBeforeMessagesRemoved?: number) => ( store: any ) => ( dispatch: any ) => async ( action: any ) => {
   if ( !isFocusOnSetMainAction<S> ( action ) ) return dispatch ( action );
   if ( action.team !== '{teamName}' ) return dispatch ( action )
   const clearCount: Transform<S, any> = [ config.restCountL, () => undefined ]
@@ -75,6 +75,7 @@ export const focusOnMiddlewareFor{teamName} = <BigState, S extends HasFocusOnDeb
   const processorsConfig = makeProcessorsConfig ( s, context );
   let start: S = errorMonad ( s, debug, onError,
     [ 'preMutateForPages', preMutateForPages<S, C> ( context,processorsConfig ) ],
+    ['removeOldMessage',  removeOldMessages<S> ( context.dateFn,  context.simpleMessagesL, delayBeforeMessagesRemoved )],
     [ 'preMutate', preMutate ],
     [ 'dispatch pre rests', s => dispatch ( { type: 'massTxs', s, team: '{teamName}', txs: [ ...traceTransform ( reason, s ), deleteRestCommands, clearCount ], comment: 'dispatchPreRests' } ) ]//This updates the gui 'now' pre rest/fetcher goodness. We need to kill the rest commands to stop them being sent twice
   );
