@@ -105,7 +105,7 @@ export function AuthoriseChargesPD ( c: AuthoriseCustomisation ): ExampleMainPag
       authorisedCharges: {
         rest: AuthorisedChargesRD ( c ), targetFromPath: '~/authorisedCharges/fromApi/editingData', fetcher: true,
         postFetchCommands: [
-          { command: 'message', msg: 'loading the authorised charges' },
+          { command: 'message', msg: 'loading the authorised charges', level: 'success' },
           { command: 'copyResult', from: '', to: '~/authorisedCharges/fromApi/originalData' }
         ],
         on404: [ { command: 'message', msg: '404 finding the authorised charges' } ]

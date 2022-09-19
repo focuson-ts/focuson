@@ -29,7 +29,7 @@ const OneMessage = ( removeMessage: ( i: number ) => void, cssClasses: ( message
 const OneNewMessage = ( removeMessage: ( i: number ) => void, cssClasses: ( messageType: SimpleMessageLevel ) => (undefined | string) ) =>
   ( message: SimpleMessage, index: number ): JSX.Element =>
     <div key={index} role="alert">
-      <div className={`page-notification-wrapper ${message.level}`} role={ariaRoleForMessageLevel ( message.level )} title={message.msg} >
+      <div className={`page-notification-wrapper ${message.level}`} role={ariaRoleForMessageLevel ( message.level )} title={message.msg}>
         <div className="notification-icon"></div>
         <div className="">
           <div className="notification-msg-noheader">{message.msg}</div>
@@ -60,6 +60,7 @@ export function Messages<S, T, Context> ( { state, pageDisplayTime, nextPageDisp
     if ( !messageType ) return;
     const classes = [ 'alert-dismissable' ];
     const alertTypeClass = {
+      success: 'alert alert-success',
       error: 'alert alert-danger',
       info: 'alert alert-info',
       warning: 'alert alert-warning'

@@ -42,7 +42,7 @@ export const extractMessages = ( dateFn: DateFn ) => ( status: number | undefine
     if ( msgsDebug ) console.log ( 'in fromHeaderOrMessages', m )
     if ( m === undefined ) return []
     const fromOne = ( level: SimpleMessageLevel ) => {
-      let result = toArray ( m?.[ level ] ).map ( stringToSimpleMsg ( dateFn, level ) );
+      let result = toArray ( m?.[ level ] ).map ( m => stringToSimpleMsg ( dateFn, level )(m, level) );
       if ( msgsDebug ) console.log ( 'from one', level, result, m?.[ level ] )
       return result;
     };

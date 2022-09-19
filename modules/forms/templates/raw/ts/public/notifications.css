@@ -19,7 +19,7 @@
     --notification-error-icon-asset: url(./themes/theme-dark/icons/icon-error_medium.svg);
     --notification-info-icon-asset: url(./themes/theme-dark/icons/icon-info_medium.svg);
     --notification-warning-icon-asset: url(./themes/theme-dark/icons/icon-warning_medium.svg);
-    /*--notification-success-icon-asset: url(./themes/theme-dark/icons/icon-error_large.svg);*/
+    --notification-success-icon-asset: url(./themes/theme-dark/icons/icon-success_medium.svg);
     --line-height-main: 24px;
     --notification-icon-min-width: 32px;
     --notification-icon-min-height: 32px;
@@ -74,14 +74,17 @@
      border: var(--notification-border-width) solid var(--notification-info-border-color);
     border-bottom: var(--notification-bevel-size) solid var(--notification-info-bevel-colour);
 }
-
+.page-notification-wrapper.info .notification-icon{
+    background-image: var(--notification-info-icon-asset);
+    background-repeat: no-repeat;
+}
 .page-notification-wrapper.success {
     border: var(--notification-border-width) solid var(--notification-success-border-color);
     border-bottom: var(--notification-bevel-size) solid var(--notification-success-bevel-colour);
 }
 
-.page-notification-wrapper.info .notification-icon{
-    background-image: var(--notification-info-icon-asset);
+.page-notification-wrapper.success .notification-icon{
+    background-image: var(--notification-success-icon-asset);
     background-repeat: no-repeat;
 }
 

@@ -1,6 +1,6 @@
 import { Optional, replaceTextFn, Transform } from "@focuson/lens";
 import { TagHolder } from "@focuson/template";
-import { filterObject, toArray } from "@focuson/utils";
+import { filterObject, SimpleMessageLevel, toArray } from "@focuson/utils";
 
 export interface ChangeCommand {
   command: string
@@ -69,6 +69,7 @@ export const strictCopyCommandProcessor = <S> ( fromPathToLens: ( path: string )
 export interface MessageCommand extends ChangeCommand {
   command: 'message'
   msg: string;
+  level?: SimpleMessageLevel
 }
 const isMessageCommand = ( c: ChangeCommand ): c is MessageCommand => c.command === 'message';
 
@@ -79,7 +80,7 @@ export const messageCommandProcessor = <S, MSGs> ( config: DeleteMessageStrictCo
       //@ts-ignore
       const replacer: ( str: string ) => string = str => replaceTextFn<S> ( '', s, toPathTolens, str );
       const res = c.msg.replace ( /{[^}]*}/g, replacer )
-      return [ [ messageL, old => [ stringToMsg ( res ), ...old ] ] ];
+      return [ [ messageL, old => [ stringToMsg ( res,c.level ), ...old ] ] ];
     }
   }
 }
@@ -125,7 +126,7 @@ export type CommandButtonChangeCommands = CommonCommands | StrictCopyCommand
 export interface DeleteMessageStrictCopySetProcessorsConfig<S, MSGs> {
   toPathTolens: ( path: string ) => Optional<S, any>;
   messageL: Optional<S, MSGs[]>;
-  stringToMsg: ( s: string ) => MSGs;
+  stringToMsg: ( s: string, level?: SimpleMessageLevel ) => MSGs;
   s: S
 }
 export interface DeleteMessageStrictCopySetProcessorsDeleteTagsConfig<S, MSGs> extends DeleteMessageStrictCopySetProcessorsConfig<S, MSGs> {

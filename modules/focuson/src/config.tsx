@@ -3,7 +3,7 @@ import { HasPostCommand, HasPostCommandLens } from "@focuson/poster";
 import { FetcherTree, loadTree } from "@focuson/fetcher";
 import { lensState, LensState } from "@focuson/state";
 import { identityOptics, Lenses, massTransform, NameAndLens, Optional, Transform } from "@focuson/lens";
-import { DateFn, defaultDateFn, errorMonad, FetchFn, HasDataFn, HasSimpleMessages, RestAction, safeArray, safeString, SimpleMessage, stringToSimpleMsg } from "@focuson/utils";
+import { DateFn, defaultDateFn, errorMonad, FetchFn, HasDataFn, HasSimpleMessages, RestAction, safeArray, safeString, SimpleMessage, SimpleMessageLevel, stringToSimpleMsg } from "@focuson/utils";
 import { HasRestCommandL, HasRestCommands, ModalProcessorsConfig, rest, RestCommand, RestCommandAndTxs, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson/rest";
 import { HasTagHolder, TagHolder } from "@focuson/template";
 import { AllFetcherUsingRestConfig, restCommandsFromFetchers } from "./tagFetcherUsingRest";
@@ -82,7 +82,7 @@ export interface FocusOnConfig<S, Context, MSGs> extends HasFetchersAndRest<S, M
   postMutate: ( s: S ) => Promise<S>,
   /** A last ditch error handler  */
   onError: ( s: S, e: any ) => S,
-  stringToMsg: ( msg: string ) => MSGs,
+  stringToMsg: ( msg: string , level?: SimpleMessageLevel) => MSGs,
 
   /** The lens to the current selected page */
   pageL: Optional<S, PageSelection[]>,
