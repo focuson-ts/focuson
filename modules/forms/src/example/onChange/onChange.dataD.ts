@@ -79,8 +79,8 @@ export const onChangeDataD: ExampleDataD = {
             action2: { a21: 'Action21', a22: 'Action22' }
           },
           Reason2: {},
-          Reason3: { action3: { a31: 'Action31', a32: 'Action 32' } },
-        }
+        },
+        defaultForSelector1: { action3: { a31: 'Action31', a32: 'Action 32' } },
       }
     }
 

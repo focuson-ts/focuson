@@ -366,6 +366,7 @@ export const LabelAndDropDownWithVaryingContent2CD: DisplayCompD = {
     ...enabledByForInputs,
     selector1: { paramType: 'path', needed: 'yes' },
     selector2: { paramType: 'path', needed: 'yes' },
+    defaultForSelector1: {paramType: 'json', needed: 'no'},
     enums: { paramType: 'json', needed: 'yes' },
     pleaseSelect: { paramType: 'string', needed: 'no' },
     size: { paramType: 'object', needed: 'no' },
