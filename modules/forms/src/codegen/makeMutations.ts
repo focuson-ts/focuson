@@ -179,7 +179,7 @@ export function preTransactionLogger ( params: JavaWiringParams, type: string, p
   const inputParamsWithoutBody = inputParams.filter ( p => !isBodyMutationParam ( p ) );
   const paramsToLog = [ ...inputParamsWithoutBody, ...hasBodyParams ? [ 'bodyAsJson' ] : [] ]
   const paramNamesAndValues = [ `${type}: {0}`, ...paramsToLog.map ( ( p, i ) => `${paramNamePathOrValue ( p )}: {${i + 1}}` ) ].join ( ',' )
-  const messageFormatParams = [ `"${paramNamesAndValues}"`, `${type}`, ...inputParamsWithoutBody.map ( paramNamePathOrValue ) ].join ( ',' )
+  const messageFormatParams = [ `"${paramNamesAndValues}"`, `${type}`, ...paramsToLog.map ( paramNamePathOrValue ) ].join ( ',' )
   return [ `      logger.${debugLevel}(MessageFormat.format(${messageFormatParams}));` ];
 }
 

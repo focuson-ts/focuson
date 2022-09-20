@@ -40,7 +40,7 @@ export interface CommonModalButtonInPage<G> extends EnabledBy {
   copyOnClose?: CopyDetails | CopyDetails[];
   change?: ModalChangeCommands | ModalChangeCommands[];
   changeOnClose?: ModalChangeCommands | ModalChangeCommands[];
-  changeOnRestSuccessful?: ModalChangeCommands | ModalChangeCommands[];
+  // changeOnRestSuccessful?: ModalChangeCommands | ModalChangeCommands[];
   changeOnRest404?: ModalChangeCommands | ModalChangeCommands[];
   restOnOpen?: CommonRestOnCommit | CommonRestOnCommit[]
   copyJustString?: CopyStringDetails | CopyStringDetails[],
