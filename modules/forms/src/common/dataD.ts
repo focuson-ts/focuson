@@ -97,6 +97,8 @@ export interface StringPrimitiveDD extends CommonPrimitiveDD<string> {
   javaType: 'String'
   validate?: StringValidations;
   format?: Pattern;
+  sample?: string[]
+  emptyValue: string | undefined
 }
 
 export interface BooleanPattern {
@@ -116,7 +118,8 @@ export interface DatePrimitiveDD extends CommonPrimitiveDD<string> {
   reactType: 'string';
   graphQlType: 'String';
   javaType: 'String',
-  validate?: { required?: boolean };
+  validate?: BooleanValidations;
+
 }
 export interface BooleanPrimitiveDD extends CommonPrimitiveDD<boolean> {
   reactType: 'boolean';

@@ -1,20 +1,21 @@
 
+export interface PrimitiveValidation<T>{}
 
-export interface StringValidations {
+export interface StringValidations extends PrimitiveValidation<string>{
     minlength?: number;
     maxlength?: number;
     pattern?: string;
     required?: boolean;
 }
 
-export interface NumberValidations {
+export interface NumberValidations extends PrimitiveValidation<number>{
     min?: number;
     max?: number;
     step?: number;
     required?: boolean;
 }
 
-export interface BooleanValidations {
+export interface BooleanValidations extends PrimitiveValidation<boolean>{
     required?: boolean;
 }
 

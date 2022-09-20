@@ -69,12 +69,12 @@ export const onChangeDataD: ExampleDataD = {
     dropdown3: {
       dataDD: anotherActionDD,
       displayParams: {
-        selector1: 'dropdown1',
+        selector1: 'dropdown1',  // this is the path to the collectiontype
         selector2: 'dropdown2',
         buttons: [ 'button' ],
         pleaseSelect: "please select",
         enums: {
-          Reason1: {
+          adhoc: {
             action1: { a11: 'Action11', a12: 'Action12' },
             action2: { a21: 'Action21', a22: 'Action22' }
           },
