@@ -1,6 +1,6 @@
 import { ExampleMainPage, ExampleModalPage } from "../common";
 import { PaymentDD, PaymentsLaunchDD, SummaryOfPaymentsLineDD, ValidatedPayeeDetailsDD } from "./payments.dataD";
-import { currencyListDD, currencyRD, newPaymentsRD,  summaryOfPreviousPaymentsRD, ValidatePayeeRD } from "./payments.restD";
+import { currencyListDD, currencyRD, newPaymentsRD, summaryOfPreviousPaymentsRD, ValidatePayeeRD } from "./payments.restD";
 import { NatNumDd } from "../../common/dataD";
 import { nothingDD } from "../../common/commonDataDs";
 
@@ -39,7 +39,7 @@ export const EditPaymentsPD: ExampleModalPage = {
       createEmpty: nothingDD,
       restOnOpen: { restName: 'validatePayee', action: { state: 'validate' } },
       copyOnSuccess: { from: 'payeeStatus', to: '~/singlePayment/payeeStatus' },
-      changeOnClose: {command: 'deleteAllMessages'}
+      changeOnClose: { command: 'deleteAllMessages' }
     }
     // chargeDetails: { control: 'ModalButton', modal: ChargeDetailsPD, mode: 'edit', focusOn: '~/onePayment/chargeDetails',
     // createEmptyIfUndefined: ChargeDetailsDD
@@ -69,8 +69,18 @@ export const PaymentsPageD: ExampleMainPage = {
     currency: { rest: currencyRD, targetFromPath: '~/currency', fetcher: true },
     validatePayee: { rest: ValidatePayeeRD, targetFromPath: '~/validatedPayeeDetails' }
   },
+  variables: {
+    amount: {
+      constructedBy: 'code', code: `id =>{
+    const amountL = id.focusQuery ( 'Payments' ).focusQuery ( 'summary' ).focusQuery ( 'payment' ).focusQuery ( 'amount' )
+    const sterlingL = amountL.focusQuery ( 'sterlingAmount' )
+    const currencyL = amountL.focusQuery ( 'currencyAmount' )
+    return Lenses.condition ( sterlingL, ( sterling ) => sterling != 0, sterlingL, currencyL )
+}`
+    }
+  },
   guards: {
-    tableItemSelected: { condition: "isDefined", path: '~/selectedPaymentIndex', message: 'Please select a row to copy (you need to choose EMT or Chaps first)'}
+    tableItemSelected: { condition: "isDefined", path: '~/selectedPaymentIndex', message: 'Please select a row to copy (you need to choose EMT or Chaps first)' }
   },
   buttons: {
     new: {
