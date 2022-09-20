@@ -34,6 +34,7 @@ const OneNewMessage = ( removeMessage: ( i: number ) => void, cssClasses: ( mess
         <div className="">
           <div className="notification-msg-noheader">{message.msg}</div>
         </div>
+        <a id={`messages[${index}].close`} className="close-button" onClick={() => removeMessage ( index )}>&times;</a>
       </div>
     </div>
 
