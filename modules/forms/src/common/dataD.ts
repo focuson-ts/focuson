@@ -53,8 +53,9 @@ export interface DisplayParamDD {
   [ name: string ]: boolean | number | string | string[] | NameAnd<string|boolean> | NameAnd<string[]>
 }
 
+export type LayoutDD = { component: DisplayCompD, displayParams?: DisplayParamDD };
 export interface HasLayout {
-  layout?: { component: DisplayCompD, displayParams?: DisplayParamDD },
+  layout?: LayoutDD | LayoutDD[],
 }
 
 export interface CommonDataDD extends HasLayout {

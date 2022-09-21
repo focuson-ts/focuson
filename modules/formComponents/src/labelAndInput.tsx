@@ -43,7 +43,7 @@ export const LabelAndTInput = <T extends any, P> ( tProps: TransformerProps<T> )
     const buttonClasses = props.buttons && props.buttons.length > 0 ? [ 'inputAndButtons' ] : []
     const checkboxClasses = isCheckboxProps ( tProps ) ? [ 'checkbox-container' ] : []
     const classNameFromProps = props.className? [props.className]:[]
-    const allClasses = [ ...buttonClasses, ...checkboxClasses ,, classNameFromProps];
+    const allClasses = [ ...buttonClasses, ...checkboxClasses , ...classNameFromProps];
     const classes = allClasses.length > 0 ? allClasses.join ( ' ' ) : ''
 
     return <div className={`labelValueButton ${props.labelPosition == 'Horizontal' ? 'd-flex-inline' : ''}`}> {props.noLabel ? '' : label}

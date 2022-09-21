@@ -15,7 +15,7 @@ export const enabledByDataD: ExampleDataD = {
     stringEqualsTextArea: { condition: 'a=b', aPath: 'string', bPath: 'textArea', message: 'The string has to equal the text area' },
     and: { condition: 'and', conditions: [ 'yes', 'stringEqualsTextArea' ] }
   },
-  layout: { component: WithTextLayoutCD, displayParams: { text: 'Some <b>Exciting</b> text {dropdown}' } },
+  layout: [{ component: WithTextLayoutCD, displayParams: { text: 'Some <b>Exciting</b> text {dropdown}' } }],
   structure: {
     dropdown: { dataDD: yesNoDD },
     dropdownWithNull: { dataDD: { ...yesNoDD, emptyValue: null, allowNull: true } },

@@ -18,15 +18,15 @@ export const EAccountSummaryDD: DataD<AllGuards> = {
   description: "This is the summary data about a single EAccount",
   table: accountT,
   structure: {
-    accountId: { dataDD: AccountIdDD, displayParams: { label: "Account Id" } },
+    accountId: { dataDD: AccountIdDD, displayParams: { label: "Account Id", className: 'accountIdClazz' } },
     displayType: { dataDD: EAccountDisplayTypeDD },//No label because it is derivable from the camelCase
-    description: { dataDD: { ...OneLineStringDD, resolver: 'getAccountSummaryDescription' }, sample:  ["This account's description"] },
+    description: { dataDD: { ...OneLineStringDD, resolver: 'getAccountSummaryDescription' }, sample: [ "This account's description" ], displayParams: { className: 'descriptionClazz' } },
     virtualBankSeq: { dataDD: OneLineStringDD, sample: [ 'seq1', 'seq2', 'seq3' ] },
-    total: { dataDD: { ...MoneyDD, sample: [ 1000, 2991 ] } },
+    total: { dataDD: { ...MoneyDD, sample: [ 1000, 2991 ] }, displayParams: { className: 'moneyClazz' } },
     frequency: { dataDD: OneLineStringDD, sample: [ '23' ], displayParams: { label: "Frequency/Amount" } },
   }
 }
-export const EAccountsSummaryTableDD: RepeatingDataD <AllGuards> = {
+export const EAccountsSummaryTableDD: RepeatingDataD<AllGuards> = {
   name: "EAccountsSummaryTable",
   paged: false,
   description: "Just the raw EAccountSummaryDD data",
@@ -57,20 +57,20 @@ export const BalancesAndMonthlyCostDD: DataD<AllGuards> = {
   // tableName: 'CustomerSUmmaryView',
   structure: {
     totalMonthlyCost: { dataDD: { ...MoneyDD, resolver: 'totalMonthlyCost', sample: [ 1000 ] } },
-    oneAccountBalance: { dataDD: { ...MoneyDD,  sample: [ 9921 ] } },
-    currentAccountBalance: { dataDD: { ...MoneyDD,  sample: [ 12321 ] } },
+    oneAccountBalance: { dataDD: { ...MoneyDD, sample: [ 9921 ] } },
+    currentAccountBalance: { dataDD: { ...MoneyDD, sample: [ 12321 ] } },
   }
 }
 
 export const EAccountsSummaryDD: DataD<AllGuards> = {
   name: "EAccountsSummary",
   description: "This is the summary data about all the EAccounts for a single user",
-  layout: { component: LayoutCd, displayParams: { details: '[[10]]', defaultProps: `{"valueWidth": 50}`}},
+  layout: [{ component: LayoutCd, displayParams: { details: '[[10]]', defaultProps: `{"valueWidth": 50}` } }],
   // tableName: 'CustomerSUmmaryView',
   structure: {
     useEStatements: { dataDD: BooleanDD },
     eAccountsTable: { dataDD: EAccountsSummaryTableDD },
-    balancesAndMonthlyCost: { dataDD: { ...BalancesAndMonthlyCostDD,  resolver: 'balancesAndMonthlyCostResolver', sample: [ 1000 ] } },
+    balancesAndMonthlyCost: { dataDD: { ...BalancesAndMonthlyCostDD, resolver: 'balancesAndMonthlyCostResolver', sample: [ 1000 ] } },
     createPlan: { dataDD: CreatePlanDD }
   }
 }

@@ -132,7 +132,7 @@ function toReactParam ( [ name, value ]: [ string, any ] ): [ string, string ] {
 }
 
 function makeParams<B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G>, params: TSParams, errorPrefix: string, path: string[], optEnum: NameAnd<String> | undefined,
-                            display: DisplayCompD, definingParams: DisplayParamDD | undefined, displayParams: ComponentDisplayParams|undefined, validations: Validations ) {
+                            display: DisplayCompD, definingParams: DisplayParamDD | undefined, displayParams: ComponentDisplayParams | undefined, validations: Validations ) {
   const processOneParam = processParam ( mainPage, page, params, errorPrefix, display )
   const dataDDParams: [ string, string ][] = definingParams ? Object.entries ( definingParams )
     .map ( ( [ name, value ] ) => { return [ name, processOneParam ( name, value ) ]; } ) : []
@@ -173,7 +173,7 @@ export function createOneReact<B, G> ( mainPage: MainPageD<B, G>, params: TSPara
   if ( name === undefined ) throw Error ( errorPrefix + " cannot find the name of the display component. Check it is a dataD or similar" )
   const validate = isPrimDd ( dataDD ) && dataDD.validate ? dataDD.validate : {};
   const fullDisplayParams = makeParams ( mainPage, pageD, params, errorPrefix, path,
-    isPrimDd ( dataDD )? dataDD.enum: undefined, display, dataDD.displayParams, displayParams, validate );
+    isPrimDd ( dataDD ) ? dataDD.enum : undefined, display, dataDD.displayParams, displayParams, validate );
 
   const displayParamsString = fullDisplayParams.map ( ( [ k, v ] ) => `${k}=${v}` ).join ( " " )
 
@@ -193,12 +193,16 @@ export function createAllReactCalls<B, G> ( mainPage: MainPageD<B, G>, params: T
 }
 
 function makeLayoutPrefixPostFix<B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G>, tsparams: TSParams, errorPrefix: string, path: string[], hasLayout: HasLayout, defaultOpen: string, defaultClose: string ) {
-  if ( hasLayout.layout ) {
-    const { component, displayParams } = hasLayout.layout
-    const params = makeParams ( mainPage, page, tsparams, errorPrefix, path, undefined, component, displayParams, {}, {} )
-    const layoutPrefixString = `<${component.name} ${params.map ( ( [ n, v ] ) => `${n}=${v}` ).join ( ' ' )}>`
-    const layoutPostfixString = `</${component.name}>`
-    return { layoutPrefixString, layoutPostfixString };
+  const layouts = toArray ( hasLayout.layout )
+
+  if ( layouts.length > 0 ) {
+    return layouts.reduce ( ( acc, layout ) => {
+      const { component, displayParams } = layout
+      const params = makeParams ( mainPage, page, tsparams, errorPrefix, path, undefined, component, displayParams, {}, {} )
+      const layoutPrefixString = `<${component.name} ${params.map ( ( [ n, v ] ) => `${n}=${v}` ).join ( ' ' )}>`
+      const layoutPostfixString = `</${component.name}>`
+      return { layoutPrefixString: acc.layoutPrefixString + layoutPrefixString, layoutPostfixString: layoutPostfixString + acc.layoutPostfixString };
+    }, { layoutPrefixString: '', layoutPostfixString: '' } )
   } else return { layoutPrefixString: defaultOpen, layoutPostfixString: defaultClose }
 }
 
@@ -351,7 +355,7 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
     `import {${domainName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..', mainP, p, params.domainsFile )}'; ` ] : [] )
   const modalRenderImports = pages.flatMap ( p => (isModalPage ( p ) && !p.display.dataDD.display) ? [
     `import {${componentName ( p.display.dataDD )}} from '${modalImportFromFileName ( '..', mainP, p, params.renderFile )}'` ] : [] )
-  const pageLayoutImports = pages.flatMap ( p => p.layout ? [ `import { ${p.layout.component.name} } from '${p.layout.component.import}';` ] : [] )
+  const pageLayoutImports = pages.flatMap ( p => toArray ( p.layout ) ).map ( layout => `import { ${layout.component.name} } from '${layout.component.import}';` )
   const guardImports: string[] = pages.flatMap ( p => Object.values ( safeObject ( p.guards ) ).flatMap ( g => safeArray ( makeGuard[ g.condition ]?.imports ) ) )
   const allImports = unique ( [ ...imports,
       ...modalDomainImports,
@@ -371,7 +375,7 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
 export function makeComponentImports<B, G> ( ps: PageD<B, G>[] ): string[] {
   let dataDs = sortedEntries ( dataDsIn ( ps ) );
   let allItemsWithDisplay: SimpleDisplayComp[] = dataDs.flatMap ( ( [ d, n ] ) => isDataDd ( n ) ? sortedEntries ( n.structure ).map ( a => a[ 1 ].dataDD ) : [] ).filter ( d => d.display ).map ( d => d.display );
-  let allLayouts: SimpleDisplayComp[] = dataDs.flatMap ( ( [ n, dataD ] ) => dataD.layout ? [ dataD.layout.component ] : [] )
+  let allLayouts: SimpleDisplayComp[] = dataDs.flatMap ( ( [ n, dataD ] ) => toArray ( dataD.layout ).map ( layout => layout.component ) )
   let fromPageDisplay: SimpleDisplayComp[] = ps.flatMap ( p => p.display.dataDD.display ? [ p.display.dataDD.display ] : [] )
   return unique ( [ ...allItemsWithDisplay, ...fromPageDisplay, ...allLayouts ], d => `${d.import}/${d.name}` ).map ( d => `import { ${d.name} } from '${d.import}';` )
 }
