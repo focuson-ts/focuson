@@ -10,10 +10,10 @@ export const enabledByDataD: ExampleDataD = {
   description: "",
   guards: {
     yes: { condition: 'equals', path: 'dropdown', value: '"Y"', message: 'Select Yes to enable' },
-    no: { condition: 'equals', path: 'dropdown', value: '"N"', message: 'Select No to enable' },
-    yesOrNo: {condition: 'or', conditions: ['yes', 'no']},
+    no: { condition: 'not', cond: 'yes' },
+    yesOrNo: { condition: 'or', conditions: [ 'yes', 'no' ] },
     stringEqualsTextArea: { condition: 'a=b', aPath: 'string', bPath: 'textArea', message: 'The string has to equal the text area' },
-    and: {condition: 'and', conditions: ['yes', 'stringEqualsTextArea' ]}
+    and: { condition: 'and', conditions: [ 'yes', 'stringEqualsTextArea' ] }
   },
   layout: { component: WithTextLayoutCD, displayParams: { text: 'Some <b>Exciting</b> text {dropdown}' } },
   structure: {
