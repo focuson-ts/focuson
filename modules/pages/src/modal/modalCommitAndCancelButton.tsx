@@ -39,10 +39,10 @@ function canClosePages<S, Context extends PageSelectionContext<S>> ( id, state: 
   return result;
 }
 
-export function openConfirmWindow<S, Context extends ModalContext<S>> ( confirm: ConfirmProps, action: ConfirmActions, changeOnClose: ModalChangeCommands[], state: LensState<S, any, Context>, component: string, id: string, event: SetJsonReasonEvent ) {
+export function openConfirmWindow<S, Context extends ModalContext<S>> ( confirm: ConfirmProps, action: ConfirmActions, changeOnClose: ModalChangeCommands[], state: LensState<S, any, Context>, component: string, id: string, event: SetJsonReasonEvent, rest?: RestCommand) {
   const { pageName } = confirm
   const realPageName = pageName ? pageName : 'confirm'
-  const ps: PageSelection = { pageName: realPageName, focusOn: '~', changeOnClose, arbitraryParams: { ...confirm, action}, time: state.context.dateFn (), pageMode: 'view' }
+  const ps: PageSelection = { pageName: realPageName, focusOn: '~', changeOnClose, arbitraryParams: { ...confirm, action}, time: state.context.dateFn (), pageMode: 'view', rest }
   const openTx: Transform<S, any> = [ state.context.pageSelectionL, applyPageOps ( 'popup', ps ) ]
   state.massTransform ( reasonFor ( component, event, id ) ) ( openTx )
 }
@@ -129,7 +129,7 @@ export function findClosePageTxs<S, C extends PageSelectionContext<S> & HasRestC
 
 export interface ModalContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasTagHolderL<S>, HasDataFn {}
 
-function closeOnePageTxs<S, Context extends ModalContext<S>> ( errorPrefix: string, state: LensState<S, any, Context>, change: ModalChangeCommands[] ): Transform<S, any>[] {
+export function closeOnePageTxs<S, Context extends ModalContext<S>> ( errorPrefix: string, state: LensState<S, any, Context>, change: ModalChangeCommands[] ): Transform<S, any>[] {
   const { pageSelectionL } = state.context
   const pageToClose = currentPageSelectionTail ( state )
   const txs = findClosePageTxs ( errorPrefix, state, pageToClose, -1, toArray ( change ) )

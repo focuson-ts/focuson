@@ -5,6 +5,7 @@ import { restDetailsName } from "../codegen/names";
 import { EnabledBy, enabledByString } from "./enabledBy";
 import { ButtonWithControl } from "./allButtons";
 import { CopyResultCommand, DeleteCommand, MessageCommand, RestChangeCommands } from "@focuson/rest";
+import { ConfirmWindow } from "@focuson/pages";
 
 
 function findFullOnSuccess ( onSuccess: RestChangeCommands[], copyDetails: RequiredCopyDetails[], deletes: string[], messages: string[] ) {
@@ -30,7 +31,7 @@ function makeRestButton<B extends RestButtonInPage<G>, G> (): ButtonCreator<Rest
           ...optT ( 'validate', validate ),
           ...optT ( 'buttonType', buttonType ),
           ...optT ( 'onSuccess', changeOnSuccess ),
-          ...optT ( 'on404', on404? toArray(on404): undefined ),
+          ...optT ( 'on404', on404 ? toArray ( on404 ) : undefined ),
           ...opt ( 'rest', restDetailsName ( mainPage, restName, rest.rest ) ),
           ...optT ( 'confirm', confirm ) ] ),
         ' />' ]
@@ -49,7 +50,7 @@ export interface RestButtonInPage<G> extends EnabledBy {
   control: 'RestButton';
   restName: string;
   action: RestAction;
-  confirm?: boolean | string;
+  confirm?: boolean | string | ConfirmWindow;
   result?: RestResult;
   validate?: boolean;
   text?: string;
@@ -58,6 +59,5 @@ export interface RestButtonInPage<G> extends EnabledBy {
   messageOnSuccess?: string,
   onSuccess?: RestChangeCommands | RestChangeCommands[],
   on404?: RestChangeCommands | RestChangeCommands[],
-
 }
 

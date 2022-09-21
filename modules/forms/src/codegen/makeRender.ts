@@ -132,7 +132,7 @@ function toReactParam ( [ name, value ]: [ string, any ] ): [ string, string ] {
 }
 
 function makeParams<B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G>, params: TSParams, errorPrefix: string, path: string[], optEnum: NameAnd<String> | undefined,
-                            display: DisplayCompD, definingParams: DisplayParamDD | undefined, displayParams: ComponentDisplayParams, validations: Validations ) {
+                            display: DisplayCompD, definingParams: DisplayParamDD | undefined, displayParams: ComponentDisplayParams|undefined, validations: Validations ) {
   const processOneParam = processParam ( mainPage, page, params, errorPrefix, display )
   const dataDDParams: [ string, string ][] = definingParams ? Object.entries ( definingParams )
     .map ( ( [ name, value ] ) => { return [ name, processOneParam ( name, value ) ]; } ) : []

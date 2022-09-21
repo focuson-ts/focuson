@@ -20,6 +20,7 @@ export interface LabelAndInputProps<S, T, Context> extends CommonStateProps<S, T
   noLabel?: boolean;
   enabledBy?: string[][];
   placeholder?: string;
+  className?: string
   onBlur?: ( e: any ) => void
 }
 
@@ -41,7 +42,8 @@ export const LabelAndTInput = <T extends any, P> ( tProps: TransformerProps<T> )
     const input = Input<S, T, P> ( tProps )<LabelAndInputProps<S, T, Context> & P, Context> ( props );
     const buttonClasses = props.buttons && props.buttons.length > 0 ? [ 'inputAndButtons' ] : []
     const checkboxClasses = isCheckboxProps ( tProps ) ? [ 'checkbox-container' ] : []
-    const allClasses = [ ...buttonClasses, ...checkboxClasses ];
+    const classNameFromProps = props.className? [props.className]:[]
+    const allClasses = [ ...buttonClasses, ...checkboxClasses ,, classNameFromProps];
     const classes = allClasses.length > 0 ? allClasses.join ( ' ' ) : ''
 
     return <div className={`labelValueButton ${props.labelPosition == 'Horizontal' ? 'd-flex-inline' : ''}`}> {props.noLabel ? '' : label}

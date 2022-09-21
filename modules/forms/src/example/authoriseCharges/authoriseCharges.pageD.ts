@@ -61,7 +61,7 @@ export function ViewChargesPage ( c: AuthoriseCustomisation ): ExampleModalPage 
         copy: { from: '~/authorisedCharges/fromApi/editingData' },
         mode: 'view', focusOn: '~/summaryOfCharges'
       },
-      save: { control: 'RestButton', restName: 'authorisedCharges', action: 'update', deleteOnSuccess: '#fromApi' },
+      save: { control: 'RestButton', restName: 'authorisedCharges', action: 'update', deleteOnSuccess: '#fromApi', confirm: { type: 'window', confirmText: 'Sure?' } },
     }
   }
 }

@@ -11,7 +11,9 @@ export const enabledByDataD: ExampleDataD = {
   guards: {
     yes: { condition: 'equals', path: 'dropdown', value: '"Y"', message: 'Select Yes to enable' },
     no: { condition: 'equals', path: 'dropdown', value: '"N"', message: 'Select No to enable' },
-    stringEqualsTextArea: { condition: 'a=b', aPath: 'string', bPath: 'textArea', message: 'The string has to equal the text area' }
+    yesOrNo: {condition: 'or', conditions: ['yes', 'no']},
+    stringEqualsTextArea: { condition: 'a=b', aPath: 'string', bPath: 'textArea', message: 'The string has to equal the text area' },
+    and: {condition: 'and', conditions: ['yes', 'stringEqualsTextArea' ]}
   },
   layout: { component: WithTextLayoutCD, displayParams: { text: 'Some <b>Exciting</b> text {dropdown}' } },
   structure: {
@@ -52,7 +54,8 @@ export const enabledByDataD: ExampleDataD = {
     number: { dataDD: { ...NatNumDd, emptyValue: undefined, allowUndefined: true }, displayParams: { enabledBy: 'no', placeholder: 'Number goes here...' } },
     textArea: { dataDD: ManyLineStringDD, displayParams: { enabledBy: [ 'yes' ], maxlength: 200, placeholder: 'Text goes here' } },
     date: { dataDD: DateWithDatePickerDD },
-    stringWhenEqual: { dataDD: StringDD, displayParams: { enabledBy: 'stringEqualsTextArea' } }
+    stringWhenEqual: { dataDD: StringDD, displayParams: { enabledBy: 'stringEqualsTextArea' } },
+    stringWhenAnd: { dataDD: StringDD, displayParams: { enabledBy: 'and' } }
 
   }
 }

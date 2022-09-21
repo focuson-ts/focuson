@@ -1,4 +1,4 @@
-import { findClosePageTxs, ModalContext } from "./modalCommitAndCancelButton";
+import { closeOnePageTxs, findClosePageTxs, ModalContext } from "./modalCommitAndCancelButton";
 import { LensState, reasonFor } from "@focuson/state";
 import { PageSelection, pageSelections, popPage } from "../pageSelection";
 import { Transform } from "@focuson/lens";
@@ -73,8 +73,8 @@ export const makeConfirmCommitWindow = <S, D, C extends ModalContext<S>> ( makeF
       return
     }
     if ( action === 'justclose' ) {
-      const closePages: Transform<S, any> = [ state.context.pageSelectionL, ps => ps.slice ( 0, -1 ) ]
-      state.massTransform ( reasonFor ( 'ConfirmCommitWindow', 'onClick', confirmId ) ) ( closePages )
+      const closePageTxs = closeOnePageTxs( `ConfirmCommitWindow ${id}`, state, [] )
+      state.massTransform ( reasonFor ( 'ConfirmCommitWindow', 'onClick', confirmId ) ) ( ...closePageTxs )
       return
     }
     const closePageTxs = closeTwoPagesTxs ( `ConfirmCommitWindow ${id}`, state, [] )

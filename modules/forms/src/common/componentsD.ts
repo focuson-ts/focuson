@@ -7,7 +7,7 @@ import { LensState } from "@focuson/state";
  *
  * */
 export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' |
-  'fullStateValue' | 'object' | 'json' | 'jsonWithDisplayFn' | 'string[]' | 'path' | 'nameAndPaths' | 'pathValue' | 'objectAndRenderPrefix' | 'guards'
+  'fullStateValue' | 'object' | 'json' | 'jsonWithDisplayFn' | 'string[]' | 'path' | 'nameAndPaths' | 'pathValue' | 'objectAndRenderPrefix' | 'guards' | 'guardAndMessage'
 
 type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum' | 'id' | 'notARealParam' | 'defaultToButtons' | 'defaultToLabel' | 'defaultToParentState' | 'defaultToParentStateIfOnChange'
 
@@ -103,6 +103,7 @@ export const commonParamsWithLabel: DisplayCompParamD = {
   allButtons: { paramType: 'object', needed: 'defaultToButtons' },
   buttons: { paramType: 'string[]', needed: 'no' },
   labelPosition: { paramType: 'string', needed: 'no' },
+  className:{paramType:"string", needed: 'no'}
 }
 
 const onChangeAndParentState: DisplayCompParamD = {

@@ -63,10 +63,10 @@ describe ( 'preTransactionLogger', () => {
   } )
   it ( "should make a log statement when body parameters", () => {
     expect ( preTransactionLogger ( paramsForTest, 'TheResultType', [ inputbodyb, output ] ) ).toEqual ( [
-      "      logger.debug(MessageFormat.format(\"TheResultType: {0},bodyAsJson: {1}\",TheResultType));"
+      "      logger.debug(MessageFormat.format(\"TheResultType: {0},bodyAsJson: {1}\",TheResultType,bodyAsJson));"
     ] )
     expect ( preTransactionLogger ( paramsForTest, 'TheResultType', [ 'a', inputbodyb, 'c', inputbodyd, 'e', output ] ) ).toEqual ( [
-      "      logger.debug(MessageFormat.format(\"TheResultType: {0},a: {1},c: {2},e: {3},bodyAsJson: {4}\",TheResultType,a,c,e));"
+      "      logger.debug(MessageFormat.format(\"TheResultType: {0},a: {1},c: {2},e: {3},bodyAsJson: {4}\",TheResultType,a,c,e,bodyAsJson));"
     ] )
   } )
 

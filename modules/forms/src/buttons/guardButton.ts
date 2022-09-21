@@ -72,17 +72,17 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
   or: {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: AndOrCondition ) =>
-      `const ${guardName ( name )} =  ${guard.conditions.map ( c => c + 'Guard' ).join ( "||" )}`
+      `const ${guardName ( name )} =  ${guard.conditions.map ( c => c + 'Guard.length===0' ).join ( "||" )}`
   },
   and: {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: AndOrCondition ) =>
-      `const ${guardName ( name )} =  ${guard.conditions.map ( c => c + 'Guard' ).join ( "&&" )}`
+      `const ${guardName ( name )} =  ${guard.conditions.map ( c => c + 'Guard.length===0' ).join ( "&&" )}`
   },
   not: {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: NotCondition ) =>
-      `const ${guardName ( name )} =  !${guard.cond}Guard'`
+      `const ${guardName ( name )} =  ${guard.cond}Guard.length>0`
   },
   pageModeIs: {
     imports: [],
