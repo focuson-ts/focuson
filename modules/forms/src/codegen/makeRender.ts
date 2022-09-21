@@ -100,7 +100,11 @@ export const processParam = <B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G
     if ( typeof s !== 'object' ) throw new Error ( `${fullErrorPrefix} needs to be an object of form {name: string,...}. Actually is ${typeof s}, with value ${JSON.stringify ( s )}` )
     return '{{' + Object.entries ( s ).map ( ( [ name, path ] ) => `${name}:${stateQueryForPathsFnParams ( fullErrorPrefix + ` the path is ${s} name is ${name}, path is ${path}`, params, mainPage, mainPage, path )}` ).join ( ',' ) + '}}'
   }
-
+  function processGuardAndMessage () {
+    if ( typeof s !== 'object' ) throw new Error ( `${fullErrorPrefix} needs to be an object of form {guardName1: message1, guardName2: message2}. Actually is ${typeof s}, with value ${JSON.stringify ( s )}` )
+    const guardAndMessages = Object.entries ( s ).map ( ( [ guardName, message ] ) => `[${guardName}Guard,${JSON.stringify ( message )}]` ).join ( ',' )
+    return `{[${guardAndMessages}]}`
+  }
   function processStoreParam () {return `{store}`}
   if ( dcdType.paramType === 'string' ) return processStringParam ()
   if ( dcdType.paramType === 'boolean' ) return processObjectParam ()
@@ -122,6 +126,7 @@ export const processParam = <B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G
     if ( typeof s === 'string' || Array.isArray ( s ) ) return "{[" + toArray<string> ( s ).map ( guardName ).join ( ',' ) + "]}"
     throw Error ( `${fullErrorPrefix} for guards. Could not process ${JSON.stringify ( s )}` )
   }
+  if ( dcdType.paramType === 'guardAndMessage' ) return processGuardAndMessage ()
   throw new Error ( `${fullErrorPrefix} with type ${dcdType.paramType} which can't be processed` )
 };
 

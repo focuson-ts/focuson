@@ -2,7 +2,7 @@ import { ExampleDataD } from "../common";
 import { yesNoDD } from "../SingleOccupation/singleOccupation.dataD";
 import { BooleanDD, DateDD, DateWithDatePickerDD, ManyLineStringDD, NatNumDd, StringDD, YesNoCheckboxDD } from "../../common/dataD";
 import { actionEnums, nextActionDD, reasonDD } from "../onChange/onChange.dataD";
-import { DisplayStringWithLookupCD, WithTextLayoutCD } from "../../common/componentsD";
+import { DisplayStringWithLookupCD, GuardsAndMessageTitleLayoutCD, WithTextLayoutCD } from "../../common/componentsD";
 
 
 export const enabledByDataD: ExampleDataD = {
@@ -15,7 +15,19 @@ export const enabledByDataD: ExampleDataD = {
     stringEqualsTextArea: { condition: 'a=b', aPath: 'string', bPath: 'textArea', message: 'The string has to equal the text area' },
     and: { condition: 'and', conditions: [ 'yes', 'stringEqualsTextArea' ] }
   },
-  layout: [{ component: WithTextLayoutCD, displayParams: { text: 'Some <b>Exciting</b> text {dropdown}' } }],
+  layout: [
+    {
+      component: GuardsAndMessageTitleLayoutCD, displayParams: {
+        messages: {
+          yes: '<b>Yes is valid</b>',
+          no: 'No is valid',
+          yesOrNo: 'Yes or No is valid. dropdown is {dropdown}',
+          stringEqualsTextArea: 'String equals text area',
+          and: 'yes and stringEqualstextArea are both valid'
+        }
+      }
+    },
+    { component: WithTextLayoutCD, displayParams: { text: 'Some <b>Exciting</b> text {dropdown}' } } ],
   structure: {
     dropdown: { dataDD: yesNoDD },
     dropdownWithNull: { dataDD: { ...yesNoDD, emptyValue: null, allowNull: true } },

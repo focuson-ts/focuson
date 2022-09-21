@@ -103,7 +103,7 @@ export const commonParamsWithLabel: DisplayCompParamD = {
   allButtons: { paramType: 'object', needed: 'defaultToButtons' },
   buttons: { paramType: 'string[]', needed: 'no' },
   labelPosition: { paramType: 'string', needed: 'no' },
-  className:{paramType:"string", needed: 'no'}
+  className: { paramType: "string", needed: 'no' }
 }
 
 const onChangeAndParentState: DisplayCompParamD = {
@@ -287,6 +287,15 @@ export const LayoutCd: DisplayCompD = {
   import: "@focuson/form_components",
   name: "Layout"
 }
+export const GuardsAndMessageTitleLayoutCD: DisplayCompD = {
+  name: 'GuardsAndMessageTitleLayout',
+  import: "@focuson/form_components",
+  params: {
+    messages: { paramType: 'guardAndMessage', needed: 'yes' },
+    state: {paramType: 'state', needed: 'defaultToPath'}
+  }
+}
+
 export const TwoElementWithTitleLayoutCD: DisplayCompD = {
   params: { title: { paramType: 'object', needed: 'defaultToLabel' } },
   import: "@focuson/form_components",
@@ -367,7 +376,7 @@ export const LabelAndDropDownWithVaryingContent2CD: DisplayCompD = {
     ...enabledByForInputs,
     selector1: { paramType: 'path', needed: 'yes' },
     selector2: { paramType: 'path', needed: 'yes' },
-    defaultForSelector1: {paramType: 'json', needed: 'no'},
+    defaultForSelector1: { paramType: 'json', needed: 'no' },
     enums: { paramType: 'json', needed: 'yes' },
     pleaseSelect: { paramType: 'string', needed: 'no' },
     size: { paramType: 'object', needed: 'no' },
