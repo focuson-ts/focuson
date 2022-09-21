@@ -76,6 +76,7 @@ const weekEndsOk = <S, C> ( dateRange: DateRange<S, C> ): DateValidation => ( da
 const futureOk = <S, C> ( udi: UsableDateInfo, dateRange: DateRange<S, C> ): DateValidation => {
   const firstValidDate = firstAllowedDate ( udi.today, udi.holidays, dateRange )
   return date => {
+    if ( !date ) return [ `Date is undefined` ]
     if ( isDateRangeInFuture ( dateRange ) ) {
       if ( firstValidDate === undefined ) {
         console.error ( 'error - undefined firstValidDate', udi, dateRange )

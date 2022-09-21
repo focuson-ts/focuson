@@ -19,6 +19,16 @@ const popupJSX = ( p: PageDetailsForCombine, i: number, messagesJSX: JSX.Element
     </div>
   )
 }
+const arbitaryJSX = ( p: PageDetailsForCombine, i: number, messagesJSX: JSX.Element ) => {
+  return (
+    <div id={`page${i}`} className="modalPopup show-modal focus-page" key={i}>
+      <div>
+        {messagesJSX}
+        {p.element}
+      </div>
+    </div>
+  )
+}
 
 const modalPageJSX = ( p: PageDetailsForCombine, i: number, messagesJSX: JSX.Element ) => {
   return (
@@ -72,7 +82,7 @@ export function MyCombined<S extends HasTagHolder & HasSimpleMessages, Context e
               if ( p.pageType === 'ModalPopup' ) return popupJSX ( p, i, messagesJSX )
               if ( p.pageType === 'ModalPage' ) return modalPageJSX ( p, i, messagesJSX )
               if ( p.pageType === 'MainPage' ) return mainPageJSX ( p, i, messagesJSX )
-              if ( p.pageType === 'Arbitrary' ) return popupJSX ( p, i, messagesJSX )
+              if ( p.pageType === 'Arbitrary' ) return arbitaryJSX ( p, i, messagesJSX )
               throw new Error ( `Don't know how to process page type ${p.pageType}\n${JSON.stringify ( p )}` )
             }
           )}

@@ -13,7 +13,6 @@ export interface ConfirmProps {
   messageText?: string
   confirmText?: string;
   cancelText?: string;
-  showCancelButton?: boolean
 }
 export interface ConfirmWindow extends ConfirmProps {
   type: 'window'
@@ -73,7 +72,7 @@ export const makeConfirmCommitWindow = <S, D, C extends ModalContext<S>> ( makeF
       return
     }
     if ( action === 'justclose' ) {
-      const closePageTxs = closeOnePageTxs( `ConfirmCommitWindow ${id}`, state, [] )
+      const closePageTxs = closeOnePageTxs ( `ConfirmCommitWindow ${id}`, state, [] )
       state.massTransform ( reasonFor ( 'ConfirmCommitWindow', 'onClick', confirmId ) ) ( ...closePageTxs )
       return
     }
@@ -90,22 +89,19 @@ export const makeConfirmCommitWindow = <S, D, C extends ModalContext<S>> ( makeF
 export function ConfirmCommitWindow<S, D, C extends ModalContext<S>> () {
   return makeConfirmCommitWindow<S, D, C> ( makerProps => {
     const { confirm, confirmId, cancel, cancelId, closeId, props, state } = makerProps
-    const { id, messageText, confirmText, cancelText, title, className, showCancelButton } = props
+    const { id, messageText, confirmText, cancelText, title, className } = props
     console.log ( 'ConfirmCommitWindow', messageText )
     const realText = messageText ? replaceTextUsingPath ( state, messageText ) : 'Are you sure?'
     const fullCancelText = cancelText ? replaceTextUsingPath ( state, cancelText ) : 'Cancel'
     const fullConfirmText = confirmText ? replaceTextUsingPath ( state, confirmText ) : 'OK'
     return <div id={id} className={className ? className : 'dialog confirm-window'}>
       <span className="sr-only">Start of Dialog Box</span>
-      <div className='header'><a href="#" aria-label='close window' title={fullCancelText} id={closeId} className={'header-close'} onClick={cancel}/>
-        {title && <h3 className='dialog-header'>{replaceTextUsingPath ( state, title )}</h3>}
-      </div>
+      {title && title.length > 0 && <div className='header'>{title && <h3 className='dialog-header'>{replaceTextUsingPath ( state, title )}</h3>}</div>}
       <div className='dialog-text' dangerouslySetInnerHTML={{ __html: realText }}/>
       <div className='dialog-buttons'>
         <button id={confirmId} aria-label='ok' title={fullCancelText} className="button primary-btn" onClick={confirm}>{fullConfirmText}</button>
-        {showCancelButton &&
         <button id={cancelId} aria-label='ok' title={fullCancelText} className="button secondary-btn" onClick={cancel}>{fullCancelText}</button>
-        }
+
       </div>
       <span className="sr-only">End of Dialog Box</span>
     </div>;
