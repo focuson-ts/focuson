@@ -8,7 +8,7 @@ function sum<D extends AuthoriseTableData> ( ds: D[], crOrDr: 'CR' | 'DR' ): num
   return safeArray ( ds ).reduce ( ( acc, v ) => v.type == crOrDr ? acc + Number.parseFloat ( v.amount ) : acc, 0 )
 }
 
-function updateTable<S, D extends AuthoriseTableData, C extends ModalContext<S>> ( s: LensState<S, D[], C>, id: string, update: keyof D, fromValue: string, toValue: string ) {
+function updateTable<S, D extends AuthoriseTableData, C extends ModalContext<S>> ( s: LensState<S, D[], C>, id: string, update: keyof D, fromValue: string, toValue: string ): Transform<S, any>[] {
   // @ts-ignore
   const operatorName = s.main?.CommonIds?.operatorName;
   const rows = s.optJsonOr ( [] )
@@ -31,13 +31,14 @@ function updateTable<S, D extends AuthoriseTableData, C extends ModalContext<S>>
           return newValue;
         } ]
     ] : [] )
-  s.massTransform ( reasonFor ( 'ActionButton', 'onClick', id ) ) ( ...txs )
+  return txs
+  // s.massTransform ( reasonFor ( 'ActionButton', 'onClick', id ) ) ( ...txs )
 }
 
-export function approvePendingFees<S, D extends AuthoriseTableData, C extends ModalContext<S>> ( s: LensState<S, D[], C>, id: string ) {
-  updateTable ( s, id, 'approvedBy', 'PENDING', 'APPROVED' )
+export function approvePendingFees<S, D extends AuthoriseTableData, C extends ModalContext<S>> ( s: LensState<S, D[], C>, id: string ): Transform<S, any>[] {
+ return  updateTable ( s, id, 'approvedBy', 'PENDING', 'APPROVED' )
 }
-export function authoriseApprovedFees<S, D extends AuthoriseTableData, C extends ModalContext<S>> ( s: LensState<S, D[], C>, id: string ) {
-  updateTable ( s, id, 'authorisedBy', 'APPROVED', 'AUTHORISED' )
+export function authoriseApprovedFees<S, D extends AuthoriseTableData, C extends ModalContext<S>> ( s: LensState<S, D[], C>, id: string ) : Transform<S, any>[]{
+  return updateTable ( s, id, 'authorisedBy', 'APPROVED', 'AUTHORISED' )
 
 }

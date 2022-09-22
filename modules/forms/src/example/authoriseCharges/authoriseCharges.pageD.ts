@@ -51,6 +51,8 @@ export function ViewChargesPage ( c: AuthoriseCustomisation ): ExampleModalPage 
       },
       approvePendingFees: {
         control: "ActionButton", path: '#editingData',
+        preCommands: [ { command: 'delete', path: '~/selectedChargeIndex' } ], // no need for pre / post here, it's just to check both are generated
+        postCommands: [ { command: 'delete', path: '~/selectedDateItem' } ],
         // paths: { pathRepeated: '#editingData', otherData: '~/selectedDateItem/dateCreated' },
         text: 'Approve Pending Fees', action: 'approvePendingFees'
       },

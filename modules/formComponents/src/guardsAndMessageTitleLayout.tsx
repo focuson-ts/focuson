@@ -10,5 +10,5 @@ export interface GuardsAndMessageTitleLayoutProps<S, C> extends LensProps<S, any
 export function GuardsAndMessageTitleLayout<S extends any, C extends ModalContext<S>> ( { children, state, messages }: GuardsAndMessageTitleLayoutProps<S, C> ) {
   const validMessages = messages.filter ( ( [ guard, message ] ) => guard.length === 0 )
     .map ( ( [ guard, message ], i ) => <p key={i} dangerouslySetInnerHTML={{ __html: replaceTextUsingPath ( state, message ) }}/> )
-  return validMessages.length > 0 ? <div className='guardandmessages'>{validMessages}{children}</div> : children;
+  return validMessages.length > 0 ? <div className='guardandmessages'>{validMessages}{children}</div> : <>children</>; // what about unique keys?
 }
