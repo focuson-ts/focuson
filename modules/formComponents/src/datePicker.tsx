@@ -62,14 +62,14 @@ export const parseDate = ( prefix: string, format: string ) => ( date: string ):
 type DateValidation = ( date: Date ) => string[]
 
 const holidaysOK = <S, C> ( holidays: Date[], dateRange: DateRange<S, C> ): DateValidation => ( date: Date ): string[] => {
-  if ( dateRange.allowHolidays !== false ) return []
+  if ( dateRange.allowHolidays !== false || !date ) return []
   const found = holidays.find ( h => h.getTime () === date.getTime () )
   if ( found ) return [ 'is a holiday' ]
   return []
 }
 
 const weekEndsOk = <S, C> ( dateRange: DateRange<S, C> ): DateValidation => ( date: Date ): string[] => {
-  if ( dateRange.allowWeekends !== false ) return []
+  if ( dateRange.allowWeekends !== false || !date ) return []
   return [ 0, 6 ].includes ( date.getDay () ) ? [ 'is a weekend' ] : [];
 }
 
@@ -208,9 +208,16 @@ export type DatePickerSelectFn = <S extends any>( id: string, debug: boolean, st
 
 export function defaultDatePickerOnCheck<S extends any> ( id: string, debug: boolean, state: LensState<S, any, any> ) {
   return ( eventName: SetJsonReasonEvent, date: string ) => {
-    if ( debug ) console.log ( 'datePicker.defaultDatePickerOnCheck', id, date, debug )
+    if ( debug ) console.log ( 'datePicker.defaultDatePickerOnCheck', id, 'date', date )
     state.setJson ( date, reasonFor ( 'DatePicker', eventName, id ) )
   };
+}
+function myformat ( e: any, dateFormat: string ) {
+  try {
+    return format ( e, dateFormat );
+  } catch ( e ) {
+    return undefined
+  }
 }
 export function RawDatePicker<S extends any, C extends PageSelectionContext<S>> ( selectFn: DatePickerSelectFn ) {
   return ( props: DatePickerProps<S, C> ) => {
@@ -223,8 +230,8 @@ export function RawDatePicker<S extends any, C extends PageSelectionContext<S>> 
 
     function onChange ( e: any/* probably a date or an array of dates if we are selecting a range (which we aren't)*/ ) {
       try {
-        let formattedDate = e === undefined ? format ( e, dateFormat ) : undefined
-        if ( debug ) console.log ( 'datePicker.onChange', id, e, dateFormat, formattedDate, debug )
+        const formattedDate = e === undefined ? undefined : myformat ( e, dateFormat )
+        if ( debug ) console.log ( 'datePicker.onChange', id, 'e', typeof e, e, 'dateFormat', dateFormat, 'formattedDate', formattedDate )
         selectFn ( id, debug, state ) ( 'onChange', formattedDate )
         // state.setJson ( formattedDate, reasonFor ( 'DatePicker', 'onChange', id ) )
       } catch ( err ) {
