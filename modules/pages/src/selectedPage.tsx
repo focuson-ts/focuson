@@ -115,7 +115,7 @@ export const findOneSelectedPageDetails = <S, T, Context extends ModalContext<S>
 export function findMainPageDetails<S> ( pageSelections: PageSelection[], pageDetails: MultiPageDetails<S, any> ): MainPageDetails<S, any, any, any, any> {
   const firstPage: PageSelection = mainPageFrom ( pageSelections )
   let page0Details: any = pageDetails[ firstPage.pageName ];
-  if ( !isMainPageDetails<S, any, any, any, any> ( page0Details ) ) throw Error ( `Software error:  page ${firstPage.pageName} is not a main page.\nPageSelections: ${JSON.stringify ( pageSelections )}\n\nfirstPage: ${firstPage}` )
+  if ( !isMainPageDetails<S, any, any, any, any> ( page0Details ) ) throw Error ( `Software error:  page ${firstPage.pageName} is not a main page.\nPageSelections: ${JSON.stringify ( pageSelections )}\n\nfirstPage: ${JSON.stringify(firstPage)}\nPage details${page0Details}` )
   return page0Details
 }
 

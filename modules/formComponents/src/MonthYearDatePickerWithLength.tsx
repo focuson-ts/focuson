@@ -76,7 +76,10 @@ export const LabelAndMonthYearLength: <S, Context extends FocusOnContext<S>> ( p
                    state.massTransform ( reasonFor ( 'Input', 'onChange', id ) ) ( ...txs );
                  }
                  const labelAndNumber = LabelAndTInput<number, NumberValidations> ( { ...NumberTransformer, selectFn } )
-                 const propsForLabel: any = { ...props, subtract: undefined, toDate: undefined, fromDate: undefined }
+                 const propsForLabel: any = { ...props }
+                 delete propsForLabel.subtract
+                 delete propsForLabel.toDate
+                 delete propsForLabel.fromDate
                  return labelAndNumber ( propsForLabel )
                }
 
