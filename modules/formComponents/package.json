@@ -14,8 +14,8 @@
   "dependencies": {
     "@types/react-datepicker": "^4.4.1",
     "react-datepicker": "^4.7.0",
-    "@focuson/state": "1.39.20",
-    "@focuson/focuson": "1.39.20"
+    "@focuson/state": "1.39.21",
+    "@focuson/focuson": "1.39.21"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -47,7 +47,7 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "1.39.20",
+  "version": "1.39.21",
   "template": "components",
   "name": "@focuson/form_components",
   "description": "Components that can be used by @focuson/forms",
