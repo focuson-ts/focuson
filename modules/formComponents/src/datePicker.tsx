@@ -204,10 +204,10 @@ export interface DatePickerProps<S, C> extends CommonStateProps<S, string, C>, L
   dateInfo?: LensState<S, DateInfo, C>;
 }
 
-export type DatePickerSelectFn = <S extends any>( id: string, debug: boolean, state: LensState<S, any, any> ) => ( eventName: SetJsonReasonEvent, date: string ) => void
+export type DatePickerSelectFn = <S extends any>( id: string, debug: boolean, state: LensState<S, any, any> ) => ( eventName: SetJsonReasonEvent, date: string |undefined) => void
 
 export function defaultDatePickerOnCheck<S extends any> ( id: string, debug: boolean, state: LensState<S, any, any> ) {
-  return ( eventName: SetJsonReasonEvent, date: string ) => {
+  return ( eventName: SetJsonReasonEvent, date: string|undefined ) => {
     if ( debug ) console.log ( 'datePicker.defaultDatePickerOnCheck', id, 'date', date )
     state.setJson ( date, reasonFor ( 'DatePicker', eventName, id ) )
   };

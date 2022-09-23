@@ -38,7 +38,7 @@ export function MonthYearDatePickerWithLength<S, C extends PageSelectionContext<
   if ( !showMonthYearPicker ) throw new Error ( `The date picker with id ${id} doesn't have 'showMonthYearPicker' set to true` )
 
   function onCheck<S, C extends PageSelectionContext<S>> ( id: string, debug: boolean, state: LensState<S, any, any> ) {
-    return ( eventName: SetJsonReasonEvent, date: string ) => {
+    return ( eventName: SetJsonReasonEvent, date: string|undefined ) => {
       const length = lengthPath.optJsonOr ( 0 )
       if ( debug ) console.log ( 'MonthYearDatePickerWithLength', id, date, 'length', length, )
       const otherDate = addDate ( debug, date, length, subtract )

@@ -106,6 +106,7 @@ export function stateToNameAndUrlAndParamsForState ( state: NameAnd<RestStateDet
   return Object.fromEntries ( Object.entries ( safeObject ( state ) ).map ( ( [ name, { url, params } ] ) => [ name, { url, params: Object.keys ( params ) } ] ) );
 }
 
+type PostProcessMessages = 'InfoToSuccess'
 export interface RestD<G> {
   /** Only used for dedupping when the dataDd is repeated */
   namePrefix?: string;
@@ -126,6 +127,7 @@ export interface RestD<G> {
   mutations?: MutationsForRestAction[];
   resolvers?: NameAnd<PrimaryMutations>;
   tables?: EntityAndWhere;
+  postProcessMessages?: PostProcessMessages
 }
 
 
