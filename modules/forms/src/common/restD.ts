@@ -4,7 +4,7 @@ import { paramsForRestAction } from "../codegen/codegen";
 import { AccessDetails, GuardedMutation, MultipleMutation, MutationDetail, MutationsForRestAction, PrimaryMutationDetail, PrimaryMutations, SelectMutation } from "./resolverD";
 import { MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
 import { allMainPages, MainPageD, PageD, RefD, RestDefnInPageProperties } from "./pageD";
-import { getRestTypeDetails, RestActionDetail, restActionForName, UrlAndParamsForState } from "@focuson/rest";
+import { getRestTypeDetails, InfoToSuccessPostProcessMessage, RestActionDetail, restActionForName, UrlAndParamsForState } from "@focuson/rest";
 import { findChildResolvers, ResolverData } from "../codegen/makeJavaFetchersInterface";
 
 
@@ -106,7 +106,8 @@ export function stateToNameAndUrlAndParamsForState ( state: NameAnd<RestStateDet
   return Object.fromEntries ( Object.entries ( safeObject ( state ) ).map ( ( [ name, { url, params } ] ) => [ name, { url, params: Object.keys ( params ) } ] ) );
 }
 
-type PostProcessMessages = 'InfoToSuccess'
+
+type PostProcessMessages = InfoToSuccessPostProcessMessage
 export interface RestD<G> {
   /** Only used for dedupping when the dataDd is repeated */
   namePrefix?: string;
@@ -127,7 +128,7 @@ export interface RestD<G> {
   mutations?: MutationsForRestAction[];
   resolvers?: NameAnd<PrimaryMutations>;
   tables?: EntityAndWhere;
-  postProcessMessages?: PostProcessMessages
+  postProcessMessages?: PostProcessMessages[]
 }
 
 

@@ -1,10 +1,11 @@
-import { OneRestDetails, RestCommand, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson/rest";
+import { infoToSuccessMessagesPostProcessor, OneRestDetails, RestCommand, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson/rest";
 import { createSimpleMessage, RestAction, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson/utils";
 import { AllFetcherUsingRestConfig, defaultPageSelectionAndRestCommandsContext, FocusOnConfig, FocusOnContext, FocusOnDebug, HasRestCount, processRestsAndFetchers, restCommandsFromFetchers, restCountL, traceL } from "@focuson/focuson";
 import { TagHolder } from "@focuson/template";
 import { Lenses, NameAndLens, Optional } from "@focuson/lens";
 import { MultiPageDetails, PageSelection, simpleMessagesL, simpleMessagesPageConfig } from "@focuson/pages";
 import React from "react";
+import { justInfoToSuccessMessagesPostProcessor } from "@focuson/rest/src/messages";
 
 
 interface NewFetcherDomain {
@@ -66,7 +67,9 @@ const oneRestDetails: OneRestDetails<StateForNewFetcherTests, NewFetcherDomain, 
     [ createSimpleMessage ( 'error', `Cannot connect. ${JSON.stringify ( body )}`, testDateFn () ) ] :
     [ createSimpleMessage ( 'info', `${status}/${JSON.stringify ( body )}`, testDateFn () ) ],
   url: "/api/address?{query}",
-  states: {}
+  states: {},
+  messagePostProcessors: justInfoToSuccessMessagesPostProcessor (),
+  postProcessors: [ 'infoToSuccess' ]
 }
 const restDetails: RestDetails<StateForNewFetcherTests, SimpleMessage> = {
   someRestName: oneRestDetails
@@ -76,7 +79,7 @@ const restDetails: RestDetails<StateForNewFetcherTests, SimpleMessage> = {
 function fetchFn ( a: any, b: any ): Promise<[ number, number ]> {
   return Promise.resolve ( [ 200, 123 ] )
 }
-function config (mockJwt: boolean): FocusOnConfig<StateForNewFetcherTests, FocusOnContext<StateForNewFetcherTests>, SimpleMessage> {
+function config ( mockJwt: boolean ): FocusOnConfig<StateForNewFetcherTests, FocusOnContext<StateForNewFetcherTests>, SimpleMessage> {
   return {
     fetchFn: fetchFn,
     mockJwt,
@@ -96,7 +99,7 @@ function config (mockJwt: boolean): FocusOnConfig<StateForNewFetcherTests, Focus
     restCountL: restCountL ()
   }
 }
-const someConfig = config (true)
+const someConfig = config ( true )
 
 
 const pathToLens = ( s: StateForNewFetcherTests ) => ( path: string ): Optional<StateForNewFetcherTests, any> => {
@@ -114,7 +117,7 @@ describe ( "test setup for new fetcher", () => {
         "I.focus?(messages)",
         [
           {
-            "level": "info",
+            "level": "success",
             "msg": "200/123",
             "time": "timeForTest"
           }
@@ -148,7 +151,7 @@ describe ( "restCommandsFromFetchers should create a rest command when needed", 
         "comment": "Fetcher",
         "changeOnSuccess": [],
         "name": "someRestName",
-        on404:[],
+        on404: [],
         "restAction": "get",
         "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "333" ] }
       }
@@ -157,33 +160,33 @@ describe ( "restCommandsFromFetchers should create a rest command when needed", 
   it ( "not populated tags defined and same - should load", () => {
     expect ( restCommandsFromFetchers ( someConfig.tagHolderL, someConfig.newFetchers, someConfig.restDetails, 'pageName',
       { ...empty, tags: { pageName_someTag: [ '111', '222' ] }, ids: { id1: 111, id2: 222 } } ) ).toEqual ( [
-      { "comment": "Fetcher", "changeOnSuccess": [], "name": "someRestName",on404:[], "restAction": "get", "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] } }
+      { "comment": "Fetcher", "changeOnSuccess": [], "name": "someRestName", on404: [], "restAction": "get", "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] } }
     ] )
   } )
   it ( " populated tags not defined  - should load", () => {
     expect ( restCommandsFromFetchers ( someConfig.tagHolderL, someConfig.newFetchers, someConfig.restDetails, 'pageName',
       { ...empty, ids: { id1: 111, id2: 222 }, data: { a: 123 } } ) ).toEqual ( [
-      { "comment": "Fetcher", "changeOnSuccess": [], "name": "someRestName", on404:[],"restAction": "get", "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] } }
+      { "comment": "Fetcher", "changeOnSuccess": [], "name": "someRestName", on404: [], "restAction": "get", "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] } }
     ] )
   } )
 } )
 
 describe ( "processRestsAndFetchers", () => {
   it ( "should load if fetcher needs it", async () => {
-    const [ actual ] = await processRestsAndFetchers ( config (true),
+    const [ actual ] = await processRestsAndFetchers ( config ( true ),
       defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {}, newFetchers, restDetails, testDateFn ) ) ( [] ) (
       () => ({ ...empty, ids: { id1: 111, id2: 222 } })
     )
 
     expect ( actual.restCommand ).toEqual ( {
-      name: 'someRestName',on404:[], restAction: 'get', comment: 'Fetcher', "changeOnSuccess": [],
+      name: 'someRestName', on404: [], restAction: 'get', comment: 'Fetcher', "changeOnSuccess": [],
       "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] }
     } )
     expect ( actual.status ).toEqual ( 200 )
     const txs = actual.txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( empty ) ) ] )
     expect ( txs ).toEqual ( [
       [ "I.focus?(messages)",
-        [ { "level": "info", "msg": "200/123", "time": "timeForTest" } ] ],
+        [ { "level": "success", "msg": "200/123", "time": "timeForTest" } ] ],
       [ "I.focus?(data).chain(I.focus?(a))", 123 ],
       [ "I.focus?(tags).focusOn(pageName_someTag)", [ "111", "222" ] ]
     ] )
@@ -191,34 +194,34 @@ describe ( "processRestsAndFetchers", () => {
 
   } )
   it ( "should load and record trace if fetcher needs it and recordTrace is on", async () => {
-    const [ actual ] = await processRestsAndFetchers ( config (true),
+    const [ actual ] = await processRestsAndFetchers ( config ( true ),
       defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {}, newFetchers, restDetails, testDateFn ) ) ( [] ) (
       () => ({ ...empty, ids: { id1: 111, id2: 222 }, debug: { recordTrace: true } })
     )
 
     expect ( actual.restCommand ).toEqual ( {
-      name: 'someRestName',on404:[], restAction: 'get', comment: 'Fetcher', "changeOnSuccess": [],
+      name: 'someRestName', on404: [], restAction: 'get', comment: 'Fetcher', "changeOnSuccess": [],
       "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] }
     } )
     expect ( actual.status ).toEqual ( 200 )
     const txs = actual.txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( empty ) ) ] )
     expect ( txs ).toEqual ( [
-      [ "I.focus?(messages)", [ { "level": "info", "msg": "200/123", "time": "timeForTest" } ] ],
+      [ "I.focus?(messages)", [ { "level": "success", "msg": "200/123", "time": "timeForTest" } ] ],
       [ "I.focus?(data).chain(I.focus?(a))", 123 ],
       [ "I.focus?(trace)",
         [ {
           "lensTxs": [
-            [ "I.focus?(messages)", [ { "level": "info", "msg": "200/123", "time": "timeForTest" } ] ],
+            [ "I.focus?(messages)", [ { "level": "success", "msg": "200/123", "time": "timeForTest" } ] ],
             [ "I.focus?(data).chain(I.focus?(a))", 123 ],
           ],
-          "restCommand": { "comment": "Fetcher", "changeOnSuccess": [], "name": "someRestName",on404:[], "restAction": "get", "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] } }
+          "restCommand": { "comment": "Fetcher", "changeOnSuccess": [], "name": "someRestName", on404: [], "restAction": "get", "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] } }
         } ]
       ],
       [ "I.focus?(tags).focusOn(pageName_someTag)", [ "111", "222" ] ]
     ] )
   } )
   it ( "should not load if fetcher doesn't needs it", async () => {
-    const actual = await processRestsAndFetchers ( config (true),
+    const actual = await processRestsAndFetchers ( config ( true ),
       defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {}, newFetchers, restDetails, testDateFn ) ) ( [] ) (
       () => empty
     )

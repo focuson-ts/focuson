@@ -3,8 +3,8 @@ import { HasPostCommand, HasPostCommandLens } from "@focuson/poster";
 import { FetcherTree, loadTree } from "@focuson/fetcher";
 import { lensState, LensState } from "@focuson/state";
 import { identityOptics, Lenses, massTransform, NameAndLens, Optional, Transform } from "@focuson/lens";
-import { DateFn, defaultDateFn, errorMonad, FetchFn, HasDataFn, HasSimpleMessages, RestAction, safeArray, safeString, SimpleMessage, SimpleMessageLevel, stringToSimpleMsg } from "@focuson/utils";
-import { HasRestCommandL, HasRestCommands, ModalProcessorsConfig, rest, RestCommand, RestCommandAndTxs, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson/rest";
+import { DateFn, defaultDateFn, errorMonad, FetchFn, HasDataFn, HasSimpleMessages, NameAnd, RestAction, safeArray, safeString, SimpleMessage, SimpleMessageLevel, stringToSimpleMsg } from "@focuson/utils";
+import { HasMessagesPostProcessor, HasRestCommandL, HasRestCommands, ModalProcessorsConfig, rest, RestCommand, RestCommandAndTxs, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson/rest";
 import { HasTagHolder, TagHolder } from "@focuson/template";
 import { AllFetcherUsingRestConfig, restCommandsFromFetchers } from "./tagFetcherUsingRest";
 import { FocusOnDebug } from "./debug";
@@ -46,7 +46,10 @@ export interface HasFetchersAndRest<S, MSGs> {
 export interface HasGetCurrentMain<S> {
   currentState<D, C> ( state: LensState<S, any, C> ): LensState<S, D, C>
 }
-export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasPathToLens<S>, HasFetchersAndRest<S, SimpleMessage>, HasDataFn, HasGetCurrentMain<S> {
+
+
+export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasPathToLens<S>,
+  HasFetchersAndRest<S, SimpleMessage>, HasDataFn, HasGetCurrentMain<S>, HasMessagesPostProcessor<SimpleMessage> {
   commonIds: NameAndLens<S>;
 }
 export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSelection & HasRestCommands & HasSimpleMessages & HasTagHolder>
@@ -66,7 +69,8 @@ export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSele
     tagHolderL: Lenses.identity<S> ().focusQuery ( 'tags' ),
     newFetchers,
     restDetails,
-    currentState<D, C> ( state: LensState<S, D, C> ) {return state} // default that may replaced by the redux code in store.ts
+    currentState<D, C> ( state: LensState<S, D, C> ) {return state}, // default that may replaced by the redux code in store.ts,
+    messagePostProcessor:{}
   }
 }
 
@@ -82,7 +86,7 @@ export interface FocusOnConfig<S, Context, MSGs> extends HasFetchersAndRest<S, M
   postMutate: ( s: S ) => Promise<S>,
   /** A last ditch error handler  */
   onError: ( s: S, e: any ) => S,
-  stringToMsg: ( msg: string , level?: SimpleMessageLevel) => MSGs,
+  stringToMsg: ( msg: string, level?: SimpleMessageLevel ) => MSGs,
 
   /** The lens to the current selected page */
   pageL: Optional<S, PageSelection[]>,

@@ -2,6 +2,7 @@ import { createSimpleMessage, FetchFn, HasSimpleMessages, insertBefore, isRestSt
 import { HasRestCommands, massFetch, OneRestDetails, rest, RestCommand, RestDetails, restL, restReq, RestToTransformProps } from "./rest";
 import { identityOptics, lensBuilder, Lenses, NameAndLens, Optional, parsePath } from "@focuson/lens";
 import { CopyResultCommand, DeleteCommand } from "./changeCommands";
+import { justInfoToSuccessMessagesPostProcessor } from "./messages";
 
 interface HasFullDomainForTest {
   fullDomain?: FullDomainForTest
@@ -51,7 +52,9 @@ function oneRestDetails ( cd: NameAndLens<RestStateForTest>, fdd: NameAndLens<Fu
     url: "/some/url/{token}?{query}",
     states: {
       newState: { url: "/some/new/state/{token}?{query}", params: [ 'token', 'id' ] }
-    }
+    },
+    messagePostProcessors: justInfoToSuccessMessagesPostProcessor (),
+    postProcessors: [ 'infoToSuccess' ]
   }
 }
 const restDetails: RestDetails<RestStateForTest, SimpleMessage> = {
@@ -157,12 +160,12 @@ describe ( "rest", () => {
         "idFromFullDomain": "someId"
       },
       "messages": [
-        { "level": "info", "msg": "200/\"from/some/url/someToken/updateWithoutFetch?token=someToken&nontoken=nontoken\"", "time": "timeForTest" },
-        { "level": "info", "msg": "200/\"from/some/url/someToken/update?token=someToken&nontoken=nontoken&id=someId\"", "time": "timeForTest" },
+        { "level": "success", "msg": "200/\"from/some/url/someToken/updateWithoutFetch?token=someToken&nontoken=nontoken\"", "time": "timeForTest" },
+        { "level": "success", "msg": "200/\"from/some/url/someToken/update?token=someToken&nontoken=nontoken&id=someId\"", "time": "timeForTest" },
         { "level": "error", "msg": "Cannot connect. \"deleteWentWrong\"", "time": "timeForTest" },
-        { "level": "info", "msg": "200/\"from/some/url/someToken/createWithoutFetch?token=someToken&nontoken=nontoken\"", "time": "timeForTest" },
-        { "level": "info", "msg": "200/\"from/some/url/someToken/create?token=someToken&nontoken=nontoken\"", "time": "timeForTest" },
-        { "level": "info", "msg": "200/\"from/some/url/someToken/get?token=someToken&nontoken=nontoken&id=someId\"", "time": "timeForTest" }
+        { "level": "success", "msg": "200/\"from/some/url/someToken/createWithoutFetch?token=someToken&nontoken=nontoken\"", "time": "timeForTest" },
+        { "level": "success", "msg": "200/\"from/some/url/someToken/create?token=someToken&nontoken=nontoken\"", "time": "timeForTest" },
+        { "level": "success", "msg": "200/\"from/some/url/someToken/get?token=someToken&nontoken=nontoken&id=someId\"", "time": "timeForTest" }
       ],
       "restCommands": [],
       "token": "someToken"
@@ -186,7 +189,7 @@ describe ( "rest", () => {
         "lensTxs": [
           [
             "I.focus?(messages)",
-            [ { "level": "info", "msg": "200/\"from/some/url/someToken/get?token=someToken&nontoken=nontoken&id=someId\"", "time": "timeForTest" } ] ],
+            [ { "level": "success", "msg": "200/\"from/some/url/someToken/get?token=someToken&nontoken=nontoken&id=someId\"", "time": "timeForTest" } ] ],
           [
             "I.focus?(fullDomain).chain(I.focus?(fromApi))",
             "Extracted[200].from/some/url/someToken/get?token=someToken&nontoken=nontoken&id=someId"
@@ -201,7 +204,7 @@ describe ( "rest", () => {
         "lensTxs": [
           [
             "I.focus?(messages)",
-            [ { "level": "info", "msg": "200/\"from/some/url/someToken/create?token=someToken&nontoken=nontoken\"", "time": "timeForTest" } ] ],
+            [ { "level": "success", "msg": "200/\"from/some/url/someToken/create?token=someToken&nontoken=nontoken\"", "time": "timeForTest" } ] ],
           [
             "I.focus?(fullDomain).chain(I.focus?(fromApi))",
             "Extracted[200].from/some/url/someToken/create?token=someToken&nontoken=nontoken"
@@ -216,7 +219,7 @@ describe ( "rest", () => {
         "lensTxs": [
           [
             "I.focus?(messages)",
-            [ { "level": "info", "msg": "200/\"from/some/url/someToken/createWithoutFetch?token=someToken&nontoken=nontoken\"", "time": "timeForTest" } ] ]
+            [ { "level": "success", "msg": "200/\"from/some/url/someToken/createWithoutFetch?token=someToken&nontoken=nontoken\"", "time": "timeForTest" } ] ]
         ],
         "restCommand": {
           "name": "one",
@@ -238,7 +241,7 @@ describe ( "rest", () => {
         "lensTxs": [
           [
             "I.focus?(messages)",
-            [ { "level": "info", "msg": "200/\"from/some/url/someToken/update?token=someToken&nontoken=nontoken&id=someId\"", "time": "timeForTest" } ] ],
+            [ { "level": "success", "msg": "200/\"from/some/url/someToken/update?token=someToken&nontoken=nontoken&id=someId\"", "time": "timeForTest" } ] ],
           [
             "I.focus?(fullDomain).chain(I.focus?(fromApi))",
             "Extracted[200].from/some/url/someToken/update?token=someToken&nontoken=nontoken&id=someId"
@@ -251,7 +254,7 @@ describe ( "rest", () => {
       },
       {
         "lensTxs": [
-          [ "I.focus?(messages)", [ { "level": "info", "msg": "200/\"from/some/url/someToken/updateWithoutFetch?token=someToken&nontoken=nontoken\"", "time": "timeForTest" } ] ]
+          [ "I.focus?(messages)", [ { "level": "success", "msg": "200/\"from/some/url/someToken/updateWithoutFetch?token=someToken&nontoken=nontoken\"", "time": "timeForTest" } ] ]
         ],
         "restCommand": {
           "name": "one",
@@ -272,7 +275,7 @@ describe ( "rest", () => {
       },
       "messages": [
         {
-          "level": "info",
+          "level": "success",
           "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"",
           "time": "timeForTest"
         }
@@ -300,7 +303,7 @@ describe ( "rest", () => {
       },
       "messages": [
         {
-          "level": "info",
+          "level": "success",
           "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"",
           "time": "timeForTest"
         }
@@ -321,7 +324,7 @@ describe ( "rest", () => {
       },
       "messages": [
         {
-          "level": "info",
+          "level": "success",
           "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"",
           "time": "timeForTest"
         }
@@ -341,7 +344,7 @@ describe ( "rest", () => {
         "fromApi": "someData",
         "idFromFullDomain": "someId"
       },
-      "messages": [ { "level": "info", "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"", "time": "timeForTest" } ],
+      "messages": [ { "level": "success", "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"", "time": "timeForTest" } ],
       "restCommands": [],
       "somewhere": "Extracted[200].from/some/new/state/someToken/newState?token=someToken&id=someId",
       "token": "someToken"
@@ -364,7 +367,7 @@ describe ( "deprecated rest commands", () => {
       },
       "messages": [
         {
-          "level": "info",
+          "level": "success",
           "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"",
           "time": "timeForTest"
         }
@@ -384,7 +387,7 @@ describe ( "deprecated rest commands", () => {
       },
       "messages": [
         {
-          "level": "info",
+          "level": "success",
           "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"",
           "time": "timeForTest"
         }
@@ -403,7 +406,7 @@ describe ( "deprecated rest commands", () => {
         "fromApi": "someData",
         "idFromFullDomain": "someId"
       },
-      "messages": [ { "level": "info", "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"", "time": "timeForTest" } ],
+      "messages": [ { "level": "success", "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"", "time": "timeForTest" } ],
       "restCommands": [],
       "somewhere": "Extracted[200].from/some/new/state/someToken/newState?token=someToken&id=someId",
       "token": "someToken"

@@ -70,7 +70,8 @@ const context: Context = {
   dateFn: testDateFn,
   restDetails: {},
   tagHolderL: Lenses.identity<ModalButtonStateForTest> ().focusQuery ( 'tags' ),
-  currentState<D, C> ( state: LensState<ModalButtonStateForTest, any, C> ): LensState<ModalButtonStateForTest, D, C> {return state}
+  currentState<D, C> ( state: LensState<ModalButtonStateForTest, any, C> ): LensState<ModalButtonStateForTest, D, C> {return state},
+  messagePostProcessor:{}
 }
 
 function displayAndGetButton ( s: ModalButtonStateForTest, setMain: ( s: ModalButtonStateForTest ) => void, fn: ( s: LensState<ModalButtonStateForTest, PageData, Context> ) => JSX.Element ) {

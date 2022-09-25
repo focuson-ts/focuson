@@ -13,6 +13,8 @@ import { HasTagHolderL } from "@focuson/template";
 import { closeTwoPagesTxs, ConfirmActions, ConfirmProps, ConfirmWindow, isConfirmWindow } from "./confirmWindow";
 import { wrapWithErrors } from "../errors";
 
+export interface ModalContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasTagHolderL<S>, HasDataFn {}
+
 
 export const confirmIt = <S, C extends PageSelectionContext<S>> ( state: LensState<S, any, C>, c: boolean | string | undefined ) => {
   if ( c === undefined || c === false ) return true
@@ -39,19 +41,22 @@ function canClosePages<S, Context extends PageSelectionContext<S>> ( id, state: 
   return result;
 }
 
-export function openConfirmWindow<S, Context extends ModalContext<S>> ( confirm: ConfirmProps, action: ConfirmActions, changeOnClose: ModalChangeCommands[], state: LensState<S, any, Context>, component: string, id: string, event: SetJsonReasonEvent, rest?: RestCommand) {
+export function openConfirmWindowTxs<S, Context extends ModalContext<S>> ( confirm: ConfirmProps, action: ConfirmActions, changeOnClose: ModalChangeCommands[], state: LensState<S, any, Context>, component: string, id: string, event: SetJsonReasonEvent, rest?: RestCommand ): Transform<S, any>[] {
   const { pageName } = confirm
   const realPageName = pageName ? pageName : 'confirm'
-  const ps: PageSelection = { pageName: realPageName, focusOn: '~', changeOnClose, arbitraryParams: { ...confirm, action}, time: state.context.dateFn (), pageMode: 'view', rest }
+  const ps: PageSelection = { pageName: realPageName, focusOn: '~', changeOnClose, arbitraryParams: { ...confirm, action }, time: state.context.dateFn (), pageMode: 'view', rest }
   const openTx: Transform<S, any> = [ state.context.pageSelectionL, applyPageOps ( 'popup', ps ) ]
-  state.massTransform ( reasonFor ( component, event, id ) ) ( openTx )
+  return [ openTx ]
 }
 
+export function openConfirmWindow<S, Context extends ModalContext<S>> ( confirm: ConfirmProps, action: ConfirmActions, changeOnClose: ModalChangeCommands[], state: LensState<S, any, Context>, component: string, id: string, event: SetJsonReasonEvent, rest?: RestCommand ) {
+  state.massTransform ( reasonFor ( component, event, id ) ) ( ...openConfirmWindowTxs ( confirm, action, changeOnClose, state, component, id, event, rest ) )
+}
 
 export function ModalCancelButton<S, Context extends ModalContext<S>> ( { id, state, text, buttonType, confirm, enabledBy, closeTwoWindowsNotJustOne }: ModalCommitCancelButtonProps<S, Context> ) {
   let onClick = () => {
     if ( isConfirmWindow ( confirm ) ) {
-      openConfirmWindow ( confirm, 'cancel',[], state, 'ModalCancelButton', id, 'onClick' );
+      openConfirmWindow ( confirm, 'cancel', [], state, 'ModalCancelButton', id, 'onClick' );
       return
     }
     if ( confirmIt ( state, confirm ) )
@@ -127,7 +132,6 @@ export function findClosePageTxs<S, C extends PageSelectionContext<S> & HasRestC
   return [ ...restTransformers, ...copyOnCloseTxs, ...findSetLengthOnClose ( pageToClose, state.main, toPathTolens ), ...changeTxs ]
 }
 
-export interface ModalContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasTagHolderL<S>, HasDataFn {}
 
 export function closeOnePageTxs<S, Context extends ModalContext<S>> ( errorPrefix: string, state: LensState<S, any, Context>, change: ModalChangeCommands[] ): Transform<S, any>[] {
   const { pageSelectionL } = state.context
@@ -144,7 +148,7 @@ export function ModalCommitButton<S, Context extends ModalContext<S>> ( c: Modal
     const realvalidate = validate === undefined ? true : validate
     if ( realvalidate && hasValidationErrorAndReport ( id, state, dateFn ) ) return
     if ( isConfirmWindow ( confirm ) ) {
-      openConfirmWindow ( confirm,'confirm', toArray ( c.change ), state, 'ModalCommitButton', id, 'onClick' );
+      openConfirmWindow ( confirm, 'confirm', toArray ( c.change ), state, 'ModalCommitButton', id, 'onClick' );
       return
     }
     if ( !confirmIt ( state, confirm ) ) return

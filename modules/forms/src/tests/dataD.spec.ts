@@ -25,17 +25,17 @@ describe ( "dataDD", () => {
       [ ...acc, path.join ( "," ) + "-data-" + p.name + (oneDataDD?.displayParams ? JSON.stringify ( oneDataDD?.displayParams ) : "") + start ],
   };
   it ( "should have a foldDataDD", () => {
-    expect ( foldDataDD<string[], AllGuards> ( EAccountsSummaryDD, [], [], [], folder ) ).toEqual ( [
+    expect ( foldDataDD<string[], AllGuards> ( EAccountsSummaryDD, [], [], [], folder ).map(s => s.replace(/"/g,"'")) ).toEqual ( [
       "-data-EAccountsSummarytrue",
       "useEStatements-prim-Boolean",
       "eAccountsTable-rep-EAccountsSummaryTabletrue",
       "eAccountsTable-data-EAccountSummarytrue",
-      "eAccountsTable,accountId-prim-AccountId{\"label\":\"Account Id\"}",
+      "eAccountsTable,accountId-prim-AccountId{'label':'Account Id','className':'accountIdClazz'}",
       "eAccountsTable,displayType-prim-EAccountDisplayType",
-      "eAccountsTable,description-prim-OneLineString",
+      "eAccountsTable,description-prim-OneLineString{'className':'descriptionClazz'}",
       "eAccountsTable,virtualBankSeq-prim-OneLineString",
-      "eAccountsTable,total-prim-Money",
-      "eAccountsTable,frequency-prim-OneLineString{\"label\":\"Frequency/Amount\"}",
+      "eAccountsTable,total-prim-Money{'className':'moneyClazz'}",
+      "eAccountsTable,frequency-prim-OneLineString{'label':'Frequency/Amount'}",
       "eAccountsTable-data-EAccountSummaryfalse",
       "eAccountsTable-rep-EAccountsSummaryTablefalse",
       "balancesAndMonthlyCost-data-BalancesAndMonthlyCosttrue",
@@ -44,8 +44,8 @@ describe ( "dataDD", () => {
       "balancesAndMonthlyCost,currentAccountBalance-prim-Money",
       "balancesAndMonthlyCost-data-BalancesAndMonthlyCostfalse",
       "createPlan-data-CreatePlantrue",
-      "createPlan,createPlanStart-prim-Date{\"label\":\"Create Start\",\"dateFormat\":\"yyyy-MM-dd\"}",
-      "createPlan,createPlanDate-prim-Date{\"ariaLabel\":\"The Create Plan Date\"}",
+      "createPlan,createPlanStart-prim-Date{'label':'Create Start','dateFormat':'yyyy-MM-dd'}",
+      "createPlan,createPlanDate-prim-Date{'ariaLabel':'The Create Plan Date'}",
       "createPlan,createPlanEnd-prim-Date",
       "createPlan-data-CreatePlanfalse",
       "-data-EAccountsSummaryfalse"

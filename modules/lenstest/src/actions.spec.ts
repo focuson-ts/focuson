@@ -1,6 +1,7 @@
 import { AuthoriseTableData } from "@focuson/form_components";
 import { lensState, LensState } from "@focuson/state";
 import { approvePendingFees, authoriseApprovedFees } from "../../forms/src/actions";
+import { displayTransformsInState } from "@focuson/lens";
 
 const pending: AuthoriseTableData = { status: 'PENDING', type: 'CR', amount: '1.00' }
 const pendingHeld: AuthoriseTableData = { status: 'PENDING', hold: true, type: 'CR', amount: '1.00' }
@@ -20,20 +21,29 @@ describe ( "actions", () => {
 
   it ( "approvePending should update pendings if they are not held", () => {
     var remembered: any = {}
-    approvePendingFees ( state ( m => remembered = m ) ( pending, pending, pendingHeld, pendingHeld, approved, approvedHeld, authorised, authorisedHeld ), 'someId' )
-    expect ( remembered.data ).toEqual ( [
-      { "approvedBy": "Phil", "status": "APPROVED", type: 'CR', amount: '1.00' },
-      { "approvedBy": "Phil", "status": "APPROVED", type: 'CR', amount: '1.00' },
-      pendingHeld, pendingHeld,
-      approved, approvedHeld, authorised, authorisedHeld
+    const start: LensState<Holder, AuthoriseTableData[], any> = state ( m => remembered = m ) ( pending, pending, pendingHeld, pendingHeld, approved, approvedHeld, authorised, authorisedHeld );
+    expect ( displayTransformsInState ( start.main, approvePendingFees ( start, 'someId' ) ) ).toEqual ( [
+      {
+        "opt": ".focus?(data).chain([0])",
+        "value": { "amount": "1.00", "approvedBy": "Phil", "status": "APPROVED", "type": "CR" }
+      },
+      {
+        "opt": ".focus?(data).chain([1])",
+        "value": { "amount": "1.00", "approvedBy": "Phil", "status": "APPROVED", "type": "CR" }
+      }
     ] )
+    expect ( remembered ).toEqual ( {} )
   } )
 
   it ( "authoriseApprovedFees should update approved if they are not held", () => {
     var remembered: any = {}
-    authoriseApprovedFees ( state ( m => remembered = m ) ( pending, pending, pendingHeld, pendingHeld, approved, approvedHeld, authorised, authorisedHeld ), 'someId' )
-    expect ( remembered.data ).toEqual ( [
-      pending, pending, pendingHeld, pendingHeld, { "authorisedBy": "Phil", status: 'AUTHORISED', type: 'CR', amount: '1.00' }, approvedHeld, authorised, authorisedHeld
+    const start = state ( m => remembered = m ) ( pending, pending, pendingHeld, pendingHeld, approved, approvedHeld, authorised, authorisedHeld );
+    expect ( displayTransformsInState ( start.main, authoriseApprovedFees ( start, 'someId' ) ) ).toEqual ( [
+      {
+        "opt": ".focus?(data).chain([4])",
+        "value": { "amount": "1.00", "authorisedBy": "Phil", "status": "AUTHORISED", "type": "CR" }
+      }
     ] )
+    expect ( remembered ).toEqual ( {} )
   } )
 } )

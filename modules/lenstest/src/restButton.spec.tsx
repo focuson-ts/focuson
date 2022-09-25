@@ -9,7 +9,6 @@ import { FocusOnContext } from "@focuson/focuson";
 import { identityOptics, Lenses } from "@focuson/lens";
 import { RestButton } from "@focuson/form_components";
 import { HasTagHolder } from "@focuson/template";
-import { ModalButtonStateForTest } from "./modalButton.integration.spec";
 
 enzymeSetup ()
 
@@ -18,14 +17,14 @@ interface PageData {
   b?: string;
 }
 
-export interface RestButtonStateForTest extends HasPageSelection, HasRestCommands , HasTagHolder{
+export interface RestButtonStateForTest extends HasPageSelection, HasRestCommands, HasTagHolder {
   messages: SimpleMessage[],
   mainPage?: PageData
 }
 
 const emptyS: RestButtonStateForTest = {
   messages: [],
-  tags:{},
+  tags: {},
   pageSelection: [ { "pageName": "mainPage", "pageMode": "view", time: 'now' } ],
   restCommands: [],
   mainPage: {}
@@ -43,7 +42,8 @@ const context: Context = {
   newFetchers: {},
   restDetails: {},
   tagHolderL: Lenses.identity<RestButtonStateForTest> ().focusQuery ( 'tags' ),
-  currentState<D, C> ( state: LensState<RestButtonStateForTest, any, C> ): LensState<RestButtonStateForTest, D, C> {return state}
+  currentState<D, C> ( state: LensState<RestButtonStateForTest, any, C> ): LensState<RestButtonStateForTest, D, C> {return state},
+  messagePostProcessor: {}
 }
 
 
@@ -60,7 +60,7 @@ describe ( "RestButton", () => {
     expect ( button.html () ).toEqual ( '<button aria-errormessage="someId.error" aria-invalid="false" class="button">someButtonName</button>' )
   } )
   it ( "should place a rest command in the state - simple RestAction", () => {
-    var remembered: any = undefined
+    let remembered: any = undefined
     const button = displayAndGetButton ( emptyS, s => remembered = s, s => <RestButton rest='someRestName' action={'get'} state={s} id='someId'/> )
     button.simulate ( 'click' )
     expect ( remembered ).toEqual ( {
@@ -73,7 +73,7 @@ describe ( "RestButton", () => {
   } )
 
   it ( "should place a rest command in the state - stateChange RestAction", () => {
-    var remembered: any = undefined
+    let remembered: any = undefined
     const button = displayAndGetButton ( emptyS, s => remembered = s, s => <RestButton rest='someRestName' action={{ state: 'newState' }} state={s} id='someId'/> )
     button.simulate ( 'click' )
     expect ( remembered ).toEqual ( {
@@ -85,7 +85,7 @@ describe ( "RestButton", () => {
     } )
   } )
   it ( "should place a rest command in the state - copyOnSuccessAndDeleteOnSuccess", () => {
-    var remembered: any = undefined
+    let remembered: any = undefined
     const button = displayAndGetButton ( emptyS, s => remembered = s, s =>
       <RestButton rest='someRestName' action={{ state: 'newState' }} state={s} id='someId'
                   onSuccess={[

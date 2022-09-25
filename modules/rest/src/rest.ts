@@ -2,6 +2,7 @@ import { reqFor, Tags, UrlConfig } from "@focuson/template";
 import { beforeAfterSeparator, FetchFn, isRestStateChange, NameAnd, RequiredCopyDetails, RestAction, RestStateChange, safeArray, safeObject, sortedEntries, toArray } from "@focuson/utils";
 import { identityOptics, lensBuilder, Lenses, massTransform, Optional, parsePath, Transform } from "@focuson/lens";
 import { ChangeCommand, CopyResultCommand, DeleteCommand, MessageCommand, processChangeCommandProcessor, RestAndInputProcessorsConfig, restChangeCommandProcessors, RestChangeCommands } from "./changeCommands";
+import { MessagesPostProcessor, processAllMessageProcessors } from "./messages";
 
 
 export interface RestDebug {
@@ -88,6 +89,8 @@ export interface OneRestDetails<S, FD, D, MSGs> extends UrlConfig<S, FD, D> {
   states?: NameAnd<StateAccessDetails<S>>,
   extractData: ( status: number | undefined, body: any ) => D,
   messages: ( status: number | undefined, body: any ) => MSGs[];//often the returning value will have messages in it. Usually a is of type Domain. When the rest action is Delete there may be no object returned, but might be MSGs
+  messagePostProcessors: MessagesPostProcessor<MSGs>
+  postProcessors: string[]
 }
 
 
@@ -133,8 +136,13 @@ export interface RestResult<S, MSGs, Cargo> {
   result: any
 }
 
+interface RestResultToTxProps {
+
+}
+
 export const restResultToTx = <S, MSGs> ( s: S, messageL: Optional<S, MSGs[]>, extractMsgs: ( status: number | undefined, body: any ) => MSGs[], toPathTolens: ( path: string ) => Optional<S, any>, stringToMsg: ( msg: string ) => MSGs, extractData: ( status: number | undefined, body: any ) => any ) => ( { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): Transform<S, any>[] => {
   const messagesFromBody: MSGs[] = extractMsgs ( status, result )
+  const processedMessages = processAllMessageProcessors ( one.messagePostProcessors, one.postProcessors ) ( messagesFromBody )
   const changeCommands = restCommandToChangeCommands ( stringToMsg ) ( restCommand, status )
   const resultPathToLens = ( s: string ) => parsePath<any> ( s, lensBuilder ( { '': Lenses.identity<any> () }, {} ) )
   const config: RestAndInputProcessorsConfig<S, any, MSGs> = { resultPathToLens, messageL, toPathTolens, stringToMsg, s }
@@ -146,7 +154,7 @@ export const restResultToTx = <S, MSGs> ( s: S, messageL: Optional<S, MSGs[]>, e
   const useResponse = getRestTypeDetails ( restCommand.restAction ).output.needsObj
   const resultTransform: Transform<S, any>[] = useResponse && status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => data ] ] : []
   const on404Transforms: Transform<S, any>[] = status && status == 404 ? processChangeCommandProcessor ( '', processor, toArray ( restCommand.on404 ) ) : []
-  const msgFromBodyTx: Transform<S, any> = [ messageL, old => [ ...messagesFromBody, ...safeArray ( old ) ] ]
+  const msgFromBodyTx: Transform<S, any> = [ messageL, old => [ ...processedMessages, ...safeArray ( old ) ] ]
   let resultTxs: Transform<S, any>[] = [ msgFromBodyTx, ...on404Transforms, ...legacyChangeTxs, ...changeTxs, ...resultTransform ];
   return resultTxs;
 };
@@ -294,7 +302,7 @@ export async function rest<S, MSGS> (
   props: RestToTransformProps<S, MSGS>,
   restL: Optional<S, RestCommand[]>,
   sFn: () => S ): Promise<S> {
-  const commands = restL.getOption ( sFn() )
+  const commands = restL.getOption ( sFn () )
   const restCommandAndTxs: RestCommandAndTxs<S>[] = await restToTransforms ( props, sFn, safeArray ( commands ) )
   const sNow = sFn ()
   // @ts-ignore

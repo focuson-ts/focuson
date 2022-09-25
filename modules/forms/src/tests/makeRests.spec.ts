@@ -25,7 +25,9 @@ describe ( "makeRest", () => {
       "    url: '/api/accountsSummary?{query}',",
       "    states : {",
       "      invalidate: {url: '/api/accountsSummary/invalidate?{query}',params: ['accountId','clientRef','employeeType','dbName']}",
-      "    }",
+      "    },",
+      "    messagePostProcessors: justInfoToSuccessMessagesPostProcessor (),",
+      "    postProcessors:[]",
       "  }",
       "}",
       ""
@@ -50,7 +52,9 @@ describe ( "makeRest", () => {
       "    messages: extractMessages(dateFn),",
       "    url: '/api/createPlan?{query}',",
       "    states : {",
-      "    }",
+      "    },",
+      "    messagePostProcessors: justInfoToSuccessMessagesPostProcessor (),",
+      "    postProcessors:[]",
       "  }",
       "}",
       ""
@@ -76,7 +80,9 @@ describe ( "makeRest", () => {
       "    messages: extractMessages(dateFn),",
       "    url: '/api/repeating?{query}',",
       "    states : {",
-      "    }",
+      "    },",
+      "    messagePostProcessors: justInfoToSuccessMessagesPostProcessor (),",
+      "    postProcessors:[]",
       "  }",
       "}",
       ""

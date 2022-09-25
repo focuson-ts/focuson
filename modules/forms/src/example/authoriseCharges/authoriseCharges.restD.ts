@@ -45,7 +45,8 @@ export function SummaryOfChargeDatesRD ( c: AuthoriseCustomisation ): ExampleRes
     },
     url: `${c.urlPrefix}l/charges/dates?{query}`,
     actions: [ 'get' ],
-    resolvers: {}
+    resolvers: {},
+    postProcessMessages: ['infoToSuccess']
     // getSummaryOfChargesDate:
   }
   const name = `get${c.namePrefix}SummaryOfChargesDate`

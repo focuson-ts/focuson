@@ -16,3 +16,4 @@ describe ( "insertAfter", () => {
     expect ( insertBefore ( "?", "here", "/a/b" ) ).toEqual ( '/a/bhere?' )
   } )
 } )
+
