@@ -111,9 +111,9 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
     writeToFile ( `${tsCode}/${params.pagesFile}.ts`, () => makePages ( params, mainPs, extraPages ), details )
 
 
-    templateFile ( `${tsCode}/index.tsx`, 'templates/index.template.ts', { ...params, pageMode: JSON.stringify ( allMainPages ( allPages )[ 0 ].modes[ 0 ] ), firstPage: allPages[ 0 ].name, fetch: appConfig.fetch, delayBeforeMessagesRemoved: appConfig.delayBeforeMessagesRemoved?appConfig.delayBeforeMessagesRemoved:'undefined',debug: JSON.stringify ( appConfig.debug ) }, directorySpec, details )
+    templateFile ( `${tsCode}/index.tsx`, 'templates/index.template.ts', { ...params, pageMode: JSON.stringify ( allMainPages ( allPages )[ 0 ].modes[ 0 ] ), firstPage: allPages[ 0 ].name, fetch: appConfig.fetch, delayBeforeMessagesRemoved: appConfig.delayBeforeMessagesRemoved ? appConfig.delayBeforeMessagesRemoved : 'undefined', debug: JSON.stringify ( appConfig.debug ) }, directorySpec, details )
     templateFile ( `${tsCode}/store.ts`, 'templates/store.template.ts', { ...params, pageMode: JSON.stringify ( allMainPages ( allPages )[ 0 ].modes[ 0 ] ), firstPage: allPages[ 0 ].name, fetch: appConfig.fetch, debug: JSON.stringify ( appConfig.debug ) }, directorySpec, details )
-    templateFile ( `${tsCode}/config.ts`, 'templates/config.template.ts', { ...params, pageMode: JSON.stringify ( allMainPages ( allPages )[ 0 ].modes[ 0 ] ), firstPage: allPages[ 0 ].name, fetch: appConfig.fetch, debug: JSON.stringify ( appConfig.debug ) }, directorySpec, details )
+    templateFile ( `${tsCode}/config.ts`, 'templates/config.template.ts', { ...params, mockJwt: appConfig.mockJwt !== false, pageMode: JSON.stringify ( allMainPages ( allPages )[ 0 ].modes[ 0 ] ), firstPage: allPages[ 0 ].name, fetch: appConfig.fetch, debug: JSON.stringify ( appConfig.debug ) }, directorySpec, details )
     templateFile ( `${tsCode}/index.package.ts`, 'templates/index.package.ts', params, directorySpec, details )
     templateFile ( `${tsRoot}/package.json`, 'templates/packageTemplate.json',
       { ...params, applicationName: params.applicationName.toLowerCase (), versionNumber: appConfig.versionNumber }, directorySpec, details )
@@ -128,7 +128,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
     function copyTheme ( theme: string ) {
       copyFiles ( tsPublic + `/themes/${theme}`, `templates/raw/ts/public/themes/${theme}`, directorySpec ) ( 'button.css', 'checkbox.css', 'core.css', 'dropdown.css', 'index.css', 'input.css', 'radio.css', 'table.css' )
       copyFiles ( tsPublic + `/themes/${theme}/icons`, `templates/raw/ts/public/themes/${theme}/icons`, directorySpec )
-      ( 'chevron-down.svg', 'close-cross-icon.svg', 'icon-error_medium.svg', 'icon-warning_medium.svg', 'icon-info_medium.svg','icon-success_medium.svg' )
+      ( 'chevron-down.svg', 'close-cross-icon.svg', 'icon-error_medium.svg', 'icon-warning_medium.svg', 'icon-info_medium.svg', 'icon-success_medium.svg' )
     }
     themes.forEach ( copyTheme )
     templateFile ( `${tsPublic}/index.css`, 'templates/raw/ts/public/index.css', params, directorySpec, details )

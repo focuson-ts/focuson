@@ -28,7 +28,7 @@ interface StateForModalButton extends HasPageSelection, HasSimpleMessages, HasRe
 
 const Template: Story<ForModalPage> = ( args: ForModalPage ) =>
   SBookProvider<StateForModalButton, FocusOnContext<StateForModalButton>> ( { pageSelection: [], messages: [], restCommands: [], tags: {} },
-    defaultPageSelectionAndRestCommandsContext<StateForModalButton> ( {}, {}, {}, {}, testDateFn ),
+    defaultPageSelectionAndRestCommandsContext<StateForModalButton> ( {}, {}, {}, {}, testDateFn, true ),
     s => (
       <ModalButton state={s} focusOn={'some/base'}{...args} dateFn={testDateFn}/>
     ) );

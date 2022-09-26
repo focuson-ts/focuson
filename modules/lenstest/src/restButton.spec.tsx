@@ -43,7 +43,8 @@ const context: Context = {
   restDetails: {},
   tagHolderL: Lenses.identity<RestButtonStateForTest> ().focusQuery ( 'tags' ),
   currentState<D, C> ( state: LensState<RestButtonStateForTest, any, C> ): LensState<RestButtonStateForTest, D, C> {return state},
-  messagePostProcessor: {}
+  messagePostProcessor: {},
+  mockJwt: true
 }
 
 

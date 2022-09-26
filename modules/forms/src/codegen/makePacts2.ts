@@ -124,7 +124,7 @@ export function makeFetcherPact<G> ( params: TSParams, page: RefD<G>, restName: 
         `const firstState: FState  = { ...emptyState,debug:{}, pageSelection:[{ pageName: '${page.name}', pageMode: 'view', time: 'now' }], CommonIds: ${JSON.stringify ( makeCommonValueForTest ( errorPrefix, rest, 'get' ) )} }`,
         ...makeLensParamsTransformers ( params, page, restName, defn, 'get', [] ),
         `const withIds = massTransform ( firstState, ...lensTransforms )`,
-        `const restCommands: RestCommand[] = restCommandsFromFetchers ( config.tagHolderL, config.newFetchers, config.restDetails, '${page.name}', withIds )`,
+        `const restCommands: RestCommand[] = restCommandsFromFetchers ( config.tagHolderL, config.newFetchers, config.restDetails, '${page.name}',  withIds )`,
         `expect ( restCommands.length ).toBeGreaterThan(0)`,
         `const restCommand = restCommands.find(rc =>rc.name==='${restDetailsName ( page, restName, rest )}')`,
         `expect ( restCommand?.restAction ).toEqual ('get')`,

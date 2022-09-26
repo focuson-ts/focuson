@@ -71,7 +71,8 @@ const context: Context = {
   restDetails: {},
   tagHolderL: Lenses.identity<ModalButtonStateForTest> ().focusQuery ( 'tags' ),
   currentState<D, C> ( state: LensState<ModalButtonStateForTest, any, C> ): LensState<ModalButtonStateForTest, D, C> {return state},
-  messagePostProcessor:{}
+  messagePostProcessor:{},
+  mockJwt: true
 }
 
 function displayAndGetButton ( s: ModalButtonStateForTest, setMain: ( s: ModalButtonStateForTest ) => void, fn: ( s: LensState<ModalButtonStateForTest, PageData, Context> ) => JSX.Element ) {

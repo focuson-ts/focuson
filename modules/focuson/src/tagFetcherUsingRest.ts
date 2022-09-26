@@ -26,7 +26,7 @@ export const findRestCommands = <S> ( tagHolderL: Optional<S, TagHolder> ) => <F
   const tagL = makeTagLens ( tagHolderL, pageName, tagName )
   let targetLens = fdLens.chain ( dLens );
   const currentTags = tagL.getOption ( s );
-  let tagAndNames = tagOps.tags ( oneRestDetails, 'get' ) ( s );
+  let tagAndNames = tagOps.tags ( oneRestDetails, true, 'get' ) ( s );
   const desiredTags = tagAndNames.map ( ( [ name, tag ] ) => tag )
   const restCommand: RestCommand = { restAction: 'get', name: restName, comment: 'Fetcher', tagNameAndTags: { tagName: `${pageName}_${tagName}`, tags: desiredTags }, changeOnSuccess: f.postFetchCommands, on404: f.on404Commands }
   if ( !areAllDefined ( desiredTags ) ) return [ undefined, tagName, `Undefined tags. ${tagAndNames.map ( ( [ name, tag ] ) => `${name}:${tag}` )}` ]
@@ -42,7 +42,7 @@ export const findRestCommands = <S> ( tagHolderL: Optional<S, TagHolder> ) => <F
   }
   return [ undefined, tagName, 'Tags all the same, and target defined' ];
 };
-const fetcherToRestCommandsAndWhy = <S, FD, D, MSGs> ( tagHolderL: Optional<S, TagHolder>, f: FetcherUsingRestConfig, restDetails: RestDetails<S, MSGs> ) => ( s: S, pageName: string ): [ RestCommand | undefined, string, string ] => {
+const fetcherToRestCommandsAndWhy = <S, FD, D, MSGs> ( tagHolderL: Optional<S, TagHolder>, f: FetcherUsingRestConfig, restDetails: RestDetails<S, MSGs>) => ( s: S, pageName: string ): [ RestCommand | undefined, string, string ] => {
   if ( tagHolderL === null ) throw Error ( `tagHolderL is null` )
   if ( f === null ) throw Error ( `f is null` )
   if ( restDetails === null ) throw Error ( `restDetails is null` )
@@ -52,7 +52,7 @@ const fetcherToRestCommandsAndWhy = <S, FD, D, MSGs> ( tagHolderL: Optional<S, T
   const theseRestDetails = restDetails[ restName ]
   if ( theseRestDetails === undefined )
     throw Error ( `Fetched misconfigured. ${JSON.stringify ( f )}. Legal restNames are ${Object.keys ( restDetails )}` )
-  return findRestCommands ( tagHolderL ) ( theseRestDetails, pageName, f, s );
+  return findRestCommands ( tagHolderL ) ( theseRestDetails, pageName, f,  s );
 }
 
 export function restCommandsAndWhyFromFetchers<S, MSGs> ( tagHolderL: Optional<S, TagHolder>, allF: AllFetcherUsingRestConfig, restDetails: RestDetails<S, MSGs>, pageName: string, s: S ): [ RestCommand | undefined, string, string ][] {
@@ -62,7 +62,7 @@ export function restCommandsAndWhyFromFetchers<S, MSGs> ( tagHolderL: Optional<S
 }
 
 export function restCommandsFromFetchers<S, MSGs> ( tagHolderL: Optional<S, TagHolder>, allF: AllFetcherUsingRestConfig, restDetails: RestDetails<S, MSGs>, pageName: string, s: S ): RestCommand[] {
-  const rcAndWhy = restCommandsAndWhyFromFetchers ( tagHolderL, allF, restDetails, pageName, s )
+  const rcAndWhy = restCommandsAndWhyFromFetchers ( tagHolderL, allF, restDetails, pageName,  s )
   // @ts-ignore
   const debug = s.debug?.tagFetcherDebug
   return rcAndWhy.flatMap ( ( [ rc, tagName, why ] ) => {
@@ -72,7 +72,7 @@ export function restCommandsFromFetchers<S, MSGs> ( tagHolderL: Optional<S, TagH
 }
 
 
-export const transformersForRestForRef = <S, C extends FocusOnContext<S>> ( state: LensState<S, any, C>) =>( refName: string ): Transform<S, RestCommand[]> => {
+export const transformersForRestForRef = <S, C extends FocusOnContext<S>> ( state: LensState<S, any, C> ) => ( refName: string ): Transform<S, RestCommand[]> => {
   const { tagHolderL, newFetchers, restDetails, restL } = state.context
   const restCommands = restCommandsFromFetchers ( tagHolderL, newFetchers, restDetails, refName, state.main );
   return [ restL, rcs => [ ...safeArray ( rcs ), ...restCommands ] ]

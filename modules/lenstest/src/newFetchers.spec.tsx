@@ -172,9 +172,30 @@ describe ( "restCommandsFromFetchers should create a rest command when needed", 
 } )
 
 describe ( "processRestsAndFetchers", () => {
-  it ( "should load if fetcher needs it", async () => {
+  it ( "should load if fetcher needs it - mockJwt true", async () => {
     const [ actual ] = await processRestsAndFetchers ( config ( true ),
-      defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {}, newFetchers, restDetails, testDateFn ) ) ( [] ) (
+      defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {}, newFetchers, restDetails, testDateFn, true ) ) ( [] ) (
+      () => ({ ...empty, ids: { id1: 111, id2: 222 } })
+    )
+
+    expect ( actual.restCommand ).toEqual ( {
+      name: 'someRestName', on404: [], restAction: 'get', comment: 'Fetcher', "changeOnSuccess": [],
+      "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] }
+    } )
+    expect ( actual.status ).toEqual ( 200 )
+    const txs = actual.txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( empty ) ) ] )
+    expect ( txs ).toEqual ( [
+      [ "I.focus?(messages)",
+        [ { "level": "success", "msg": "200/123", "time": "timeForTest" } ] ],
+      [ "I.focus?(data).chain(I.focus?(a))", 123 ],
+      [ "I.focus?(tags).focusOn(pageName_someTag)", [ "111", "222" ] ]
+    ] )
+
+
+  } )
+  it ( "should load if fetcher needs it - mockJwt false", async () => {
+    const [ actual ] = await processRestsAndFetchers ( config ( true ),
+      defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {}, newFetchers, restDetails, testDateFn, false ) ) ( [] ) (
       () => ({ ...empty, ids: { id1: 111, id2: 222 } })
     )
 
@@ -195,7 +216,7 @@ describe ( "processRestsAndFetchers", () => {
   } )
   it ( "should load and record trace if fetcher needs it and recordTrace is on", async () => {
     const [ actual ] = await processRestsAndFetchers ( config ( true ),
-      defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {}, newFetchers, restDetails, testDateFn ) ) ( [] ) (
+      defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {}, newFetchers, restDetails, testDateFn, true ) ) ( [] ) (
       () => ({ ...empty, ids: { id1: 111, id2: 222 }, debug: { recordTrace: true } })
     )
 
@@ -222,7 +243,7 @@ describe ( "processRestsAndFetchers", () => {
   } )
   it ( "should not load if fetcher doesn't needs it", async () => {
     const actual = await processRestsAndFetchers ( config ( true ),
-      defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {}, newFetchers, restDetails, testDateFn ) ) ( [] ) (
+      defaultPageSelectionAndRestCommandsContext<StateForNewFetcherTests> ( pages, {}, newFetchers, restDetails, testDateFn, true ) ) ( [] ) (
       () => empty
     )
     expect ( actual ).toEqual ( [] )

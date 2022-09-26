@@ -3,7 +3,7 @@ import { HasPostCommand, HasPostCommandLens } from "@focuson/poster";
 import { FetcherTree, loadTree } from "@focuson/fetcher";
 import { lensState, LensState } from "@focuson/state";
 import { identityOptics, Lenses, massTransform, NameAndLens, Optional, Transform } from "@focuson/lens";
-import { DateFn, defaultDateFn, errorMonad, FetchFn, HasDataFn, HasSimpleMessages, NameAnd, RestAction, safeArray, safeString, SimpleMessage, SimpleMessageLevel, stringToSimpleMsg } from "@focuson/utils";
+import { DateFn, defaultDateFn, errorMonad, FetchFn, HasDataFn, HasSimpleMessages, RestAction, safeArray, safeString, SimpleMessage, SimpleMessageLevel, stringToSimpleMsg } from "@focuson/utils";
 import { HasMessagesPostProcessor, HasRestCommandL, HasRestCommands, ModalProcessorsConfig, rest, RestCommand, RestCommandAndTxs, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson/rest";
 import { HasTagHolder, TagHolder } from "@focuson/template";
 import { AllFetcherUsingRestConfig, restCommandsFromFetchers } from "./tagFetcherUsingRest";
@@ -47,15 +47,17 @@ export interface HasGetCurrentMain<S> {
   currentState<D, C> ( state: LensState<S, any, C> ): LensState<S, D, C>
 }
 
-
+export interface HasMockJwt {
+  mockJwt: boolean
+}
 export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasPathToLens<S>,
-  HasFetchersAndRest<S, SimpleMessage>, HasDataFn, HasGetCurrentMain<S>, HasMessagesPostProcessor<SimpleMessage> {
+  HasFetchersAndRest<S, SimpleMessage>, HasDataFn, HasGetCurrentMain<S>, HasMessagesPostProcessor<SimpleMessage>, HasMockJwt {
   commonIds: NameAndLens<S>;
 }
 export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSelection & HasRestCommands & HasSimpleMessages & HasTagHolder>
 ( pageDetails: MultiPageDetails<S, FocusOnContext<S>>, commonIds: NameAndLens<S>,
   newFetchers: AllFetcherUsingRestConfig,
-  restDetails: RestDetails<S, SimpleMessage>, dateFn: DateFn ): FocusOnContext<S> {
+  restDetails: RestDetails<S, SimpleMessage>, dateFn: DateFn, mockJwt: boolean ): FocusOnContext<S> {
   const pathToLens: ( s: S ) => ( path: string ) => Optional<S, any> =
           fromPathFromRaw ( pageSelectionlens<S> (), pageDetails )
   // const{restL, tagHolderL, newFetchers} =
@@ -70,7 +72,8 @@ export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSele
     newFetchers,
     restDetails,
     currentState<D, C> ( state: LensState<S, D, C> ) {return state}, // default that may replaced by the redux code in store.ts,
-    messagePostProcessor:{}
+    messagePostProcessor: {},
+    mockJwt
   }
 }
 
@@ -159,7 +162,7 @@ export const processRestsAndFetchers = <S, Context extends FocusOnContext<S>, MS
     const pageName = safeString ( mainPageFrom ( pageSelections ).pageName )
     if ( debug ) console.log ( 'processRestsAndFetchers - pageSelections', pageSelections )
     if ( debug ) console.log ( 'processRestsAndFetchers - pageName', pageName )
-    const fromFetchers = restCommandsFromFetchers ( tagHolderL, newFetchers, restDetails, pageName, s )
+    const fromFetchers = restCommandsFromFetchers ( tagHolderL, newFetchers, restDetails, pageName,  s )
     const allCommands: RestCommand[] = [ ...restCommands, ...fromFetchers ]
     const restProps: RestToTransformProps<S, MSGs> = { fetchFn, mockJwt: config.mockJwt, d: restDetails, pathToLens, messageL, stringToMsg, traceL: traceL (), urlMutatorForRest: restUrlMutator }
     const txs = await restToTransforms ( restProps, sFn, allCommands )

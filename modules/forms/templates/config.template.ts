@@ -9,7 +9,7 @@ import {MyCombined} from '@focuson/form_components';
 
 
 export const context: Context = {
-  ...defaultPageSelectionAndRestCommandsContext<FState> ( pages, commonIds, newFetchers, restDetails, defaultDateFn ),
+  ...defaultPageSelectionAndRestCommandsContext<FState> ( pages, commonIds, newFetchers, restDetails, defaultDateFn , {mockJwt}),
   combine: MyCombined
 }
 export const config: FocusOnConfig<{stateName}, Context, SimpleMessage> = {

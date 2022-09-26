@@ -213,7 +213,7 @@ export function restReq<S, Details extends RestDetails<S, MSGS>, MSGS> ( d: Deta
         console.log ( "restReq-dLens", one.dLens.description, one.dLens );
       }
       const adjustedUrlConfig = makeModifiedUrlConfig ( restAction, one, urlMutatorForRest, fdLens );
-      const request = reqFor ( mockJwt ) ( adjustedUrlConfig, restAction ) ( s ) ( adjustedUrlConfig.url );
+      const request = reqFor ( adjustedUrlConfig, mockJwt, restAction ) ( s ) ( adjustedUrlConfig.url );
       if ( debug ) console.log ( "restReq-req", request )
       return [ command, one, ...request ]
     } catch ( e: any ) {

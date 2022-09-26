@@ -10,7 +10,7 @@ export interface HasTagHolder {
   tags: TagHolder
 }
 export interface HasTagHolderL<S> {
-  tagHolderL: Optional<S,TagHolder>
+  tagHolderL: Optional<S, TagHolder>
 }
 /** The tags are the 'bits of data' that tell us if we need to load something'
  * For example a statement needs a customer id. If the customer id changes then we need to fetch the statement data again
@@ -45,35 +45,35 @@ export interface UrlConfig<S, FD, D> {
   jwtIds: string[]
 }
 
-type TagOpsFn<T> = <S, FD, D>( urlConfig: UrlConfig<S, FD, D>, restAction: RestAction ) => ( m: S ) => T
+type TagOpsFn<T> = <S, FD, D>( urlConfig: UrlConfig<S, FD, D>, includeJwtIds: boolean, restAction: RestAction ) => ( m: S ) => T
 export interface TagOps {
   /** puts the values defined in the urlConfig as tags. */
   tags: TagOpsFn<NamePlusTags>
   /** The lens is to describe where the data comes from (in a update/create) or goes to (get/list) it's not used in the get/list, but having it means that we can simplify the calling code */
-  reqFor: ( mockJwt: boolean ) => TagOpsFn<( url: string ) => [ RequestInfo, RequestInit | undefined ]>
+  reqFor: TagOpsFn<( url: string ) => [ RequestInfo, RequestInit | undefined ]>
 }
 
 
-export const tags: TagOpsFn<[ string, string | undefined ][]> = <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, restAction: RestAction ) => ( s: S ) => {
+export const tags: TagOpsFn<[ string, string | undefined ][]> = <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, includeJwtIds: boolean, restAction: RestAction ) => ( s: S ) => {
   const names = needsId ( restAction ) ? [ ...urlConfig.resourceId, ...urlConfig.ids ] : urlConfig.ids
-  return names.sort ().map ( name => [ name, onePart<S, FD, D> ( urlConfig, { failSilently: true } ) ( s, restAction ) ( name ) ] )
+  return names.sort ().map ( name => [ name, onePart<S, FD, D> ( urlConfig, { failSilently: true, includeJwtIds } ) ( s, restAction ) ( name ) ] )
 }
 
-export function nameToLens<S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, restAction: RestAction ): GetNameFn<S, any> {
+export function nameToLens<S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, includeJwtIds: boolean | undefined, restAction: RestAction ): GetNameFn<S, any> {
   return ( name: string ) => {
     if ( name === 'query' )
-      return { getOption: s => makeAEqualsB ( urlConfig, { failSilently: true } ) ( s, restAction ) }
+      return { getOption: s => makeAEqualsB ( urlConfig, { failSilently: true, includeJwtIds } ) ( s, restAction ) }
     const fromFdd = urlConfig.fdd[ name ]
     if ( fromFdd ) return urlConfig.fdLens.chain ( fromFdd )
     const fromCd = urlConfig.cd[ name ]//local ovrerride common
     if ( fromCd ) return fromCd
-    return { getOption: () => name }
+    return { getOption: () => name }//failed to find it
   }
 }
 
 export const url: TagOpsFn<( urlTemplate: string ) => string> =
-               ( urlConfig, restAction ) => s =>
-                 urlTemplate => expand ( nameToLens ( urlConfig, restAction ) ) ( urlTemplate ) ( s )
+               ( urlConfig, includeJwtIds, restAction ) => s =>
+                 urlTemplate => expand ( nameToLens ( urlConfig, includeJwtIds, restAction ) ) ( urlTemplate ) ( s )
 
 export function methodFor ( r: RestAction ) {
   if ( isRestStateChange ( r ) ) return 'post'
@@ -86,7 +86,7 @@ export function methodFor ( r: RestAction ) {
 }
 
 export const bodyFor: TagOpsFn<RequestInit | undefined> =
-               ( urlConfig, restAction ) => s => {
+               ( urlConfig, includeJwtIds, restAction ) => s => {
                  const method = methodFor ( restAction )
                  if ( restAction === 'get' ) return undefined // || restAction === 'list'
                  if ( restAction === 'delete' ) return { method }
@@ -99,19 +99,21 @@ export const bodyFor: TagOpsFn<RequestInit | undefined> =
                  throw new Error ( `Cannot execute restAction ${restAction}, using the data at [${bodyL.description}] because the data object is empty\n${JSON.stringify ( s )}` )
                }
 
-export const reqFor: ( mockJwt: boolean ) => TagOpsFn<( url: string ) => [ RequestInfo, RequestInit | undefined ]> =
-               mockJwt =>
-                 <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, restAction: RestAction ) => ( s: S ) =>
-                   u => [ url ( urlConfig, restAction ) ( s ) ( u ), bodyFor<S, FD, D> ( urlConfig, restAction ) ( s ) ]
+export const reqFor: TagOpsFn<( url: string ) => [ RequestInfo, RequestInit | undefined ]> =
+               <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, includeJwtIds: boolean, restAction: RestAction ) => ( s: S ) =>
+                 u => [ url ( urlConfig, includeJwtIds, restAction ) ( s ) ( u ), bodyFor<S, FD, D> ( urlConfig, includeJwtIds, restAction ) ( s ) ]
 
 export const tagOps: TagOps = ({ tags, reqFor });
 
-export const makeAEqualsB = <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, { encoder, separator, failSilently }: MakeAEqualsBProps ): ( s: S, restAction: RestAction ) => string => {
+export const makeAEqualsB = <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, { encoder, separator, failSilently, includeJwtIds }: MakeAEqualsBProps ): ( s: S, restAction: RestAction ) => string => {
   const realEncoder = encoder ? encoder : stringify
   const realSeparator = separator ? separator : '&'
   return ( main, restAction ) => {
-    const nameLnFn = nameToLens ( urlConfig, restAction )
-    const names = needsId ( restAction ) ? [ ...urlConfig.ids, ...urlConfig.resourceId ] : urlConfig.ids
+    const nameLnFn = nameToLens ( urlConfig, includeJwtIds, restAction )
+    const rawNames = needsId ( restAction ) ? [ ...urlConfig.ids, ...urlConfig.resourceId ] : urlConfig.ids
+    const jwtIds = urlConfig.jwtIds
+    const names = includeJwtIds === false ? rawNames.filter ( name => !jwtIds.includes ( name ) ) : rawNames
+    console.log ( 'makeAEqualsB', rawNames, jwtIds, names )
     return unique ( names.map ( name => {
         const value = nameLnFn ( name ).getOption ( main )
         if ( value !== undefined || failSilently ) return name + '=' + realEncoder ( value )
@@ -141,6 +143,7 @@ export const onePart = <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, props: MakeA
 export interface MakeAEqualsBProps {
   failSilently?: boolean,
   separator?: string,
+  includeJwtIds?: boolean,
   encoder?: ( s: string | undefined ) => string
 }
 

@@ -44,7 +44,7 @@ const pageDetails: MultiPageDetails<TextForLabelState, FocusOnContext<TextForLab
   a: { config: {}, pageType: 'MainPage', pageFunction: () => <span/>, lens: aL, pageMode: 'edit' }
 }
 const state = lensState ( textForLabelState, s => {}, '',
-  defaultPageSelectionAndRestCommandsContext<TextForLabelState> ( pageDetails, {},{},{},testDateFn ) )
+  defaultPageSelectionAndRestCommandsContext<TextForLabelState> ( pageDetails, {},{},{},testDateFn, true ) )
 
 // const fromPath: ( path: string[], description?: string ) => Optional<TextForLabelState, any> = fromPathFor ( state )
 // let stateabx = state.copyWithLens ( abxL );

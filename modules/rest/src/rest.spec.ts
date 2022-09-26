@@ -88,7 +88,7 @@ describe ( "restReq", () => {
       [
         { "name": "one", "restAction": "update" },
         "/some/url/{token}?{query}",
-        "/some/url/someToken/update?token=someToken&nontoken=nontoken&id=someId",
+        "/some/url/someToken/update?nontoken=nontoken&id=someId",
         { "body": "\"someData\"", "method": "put" }
       ]
     ] )
@@ -115,11 +115,11 @@ describe ( "restReq", () => {
       { restAction: 'update', name: 'one' },
       { restAction: { state: 'newState' }, name: 'one' } ], restMutatator, populatedState );
     expect ( results.map ( a => [ a[ 2 ], a[ 3 ] ] ) ).toEqual ( [
-        [ "/some/url/someToken/get?token=someToken&nontoken=nontoken&id=someId", undefined ],
-        [ "/some/url/someToken/create?token=someToken&nontoken=nontoken", { "body": "\"someData\"", "method": "post" } ],
-        [ "/some/url/someToken/delete?token=someToken&nontoken=nontoken&id=someId", { "method": "delete" } ],
-        [ "/some/url/someToken/update?token=someToken&nontoken=nontoken&id=someId", { "body": "\"someData\"", "method": "put" } ],
-        [ "/some/new/state/someToken/newState?token=someToken&id=someId", { "body": "\"someData\"", "method": "post" } ]
+        [ "/some/url/someToken/get?nontoken=nontoken&id=someId", undefined ],
+        [ "/some/url/someToken/create?nontoken=nontoken", { "body": "\"someData\"", "method": "post" } ],
+        [ "/some/url/someToken/delete?nontoken=nontoken&id=someId", { "method": "delete" } ],
+        [ "/some/url/someToken/update?nontoken=nontoken&id=someId", { "body": "\"someData\"", "method": "put" } ],
+        [ "/some/new/state/someToken/newState?id=someId", { "body": "\"someData\"", "method": "post" } ]
       ]
     )
   } )
@@ -143,10 +143,37 @@ describe ( "massFetch", () => {
 const pathToLens: ( s: RestStateForTest ) => ( path: string ) => Optional<RestStateForTest, any> = ( unused ) => path => parsePath ( path, lensBuilder<RestStateForTest> ( { '/': Lenses.identity () }, {} ) )
 const msgFn = stringToSimpleMsg ( () => 'now', 'info' );
 
-const props: RestToTransformProps<RestStateForTest, SimpleMessage> = { fetchFn: mockFetch, mockJwt: false, d: restDetails, urlMutatorForRest: restMutatator, pathToLens, messageL: simpleMessageL, stringToMsg: msgFn, traceL: traceL () };
+const propsJwtFalse: RestToTransformProps<RestStateForTest, SimpleMessage> = { fetchFn: mockFetch, mockJwt: false, d: restDetails, urlMutatorForRest: restMutatator, pathToLens, messageL: simpleMessageL, stringToMsg: msgFn, traceL: traceL () };
+const propsJwtTrue: RestToTransformProps<RestStateForTest, SimpleMessage> = { ...propsJwtFalse, mockJwt: true };
 describe ( "rest", () => {
-  it ( "should fetch the results and put them into the state, removing the rest commands", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage> ( props, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+  it ( "should fetch the results and put them into the state, removing the rest commands mockJwt false", async () => {
+    const result = await rest<RestStateForTest, SimpleMessage> ( propsJwtFalse, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+      { restAction: 'get', name: 'one' },
+      { restAction: 'create', name: 'one' },
+      { restAction: 'createWithoutFetch', name: 'one' },
+      { restAction: 'delete', name: 'one' },
+      { restAction: 'update', name: 'one' },
+      { restAction: 'updateWithoutFetch', name: 'one' },
+    ) );
+    expect ( result ).toEqual ( {
+      "fullDomain": {
+        "fromApi": "Extracted[200].from/some/url/someToken/update?nontoken=nontoken&id=someId",
+        "idFromFullDomain": "someId"
+      },
+      "messages": [
+        { "level": "success", "msg": "200/\"from/some/url/someToken/updateWithoutFetch?nontoken=nontoken\"", "time": "timeForTest" },
+        { "level": "success", "msg": "200/\"from/some/url/someToken/update?nontoken=nontoken&id=someId\"", "time": "timeForTest" },
+        { "level": "error", "msg": "Cannot connect. \"deleteWentWrong\"", "time": "timeForTest" },
+        { "level": "success", "msg": "200/\"from/some/url/someToken/createWithoutFetch?nontoken=nontoken\"", "time": "timeForTest" },
+        { "level": "success", "msg": "200/\"from/some/url/someToken/create?nontoken=nontoken\"", "time": "timeForTest" },
+        { "level": "success", "msg": "200/\"from/some/url/someToken/get?nontoken=nontoken&id=someId\"", "time": "timeForTest" }
+      ],
+      "restCommands": [],
+      "token": "someToken"
+    } )
+  } )
+  it ( "should fetch the results and put them into the state, removing the rest commands mockJwt false", async () => {
+    const result = await rest<RestStateForTest, SimpleMessage> ( propsJwtTrue, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
       { restAction: 'get', name: 'one' },
       { restAction: 'create', name: 'one' },
       { restAction: 'createWithoutFetch', name: 'one' },
@@ -173,7 +200,7 @@ describe ( "rest", () => {
   } )
 
   it ( "should fetch the results and put them into the state, removing the rest commands and record trace if debug set", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage> ( props, restL (), withRestCommand ( { ...emptyRestStateWithTrace, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+    const result = await rest<RestStateForTest, SimpleMessage> ( propsJwtFalse, restL (), withRestCommand ( { ...emptyRestStateWithTrace, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
       { restAction: 'get', name: 'one' },
       { restAction: 'create', name: 'one' },
       { restAction: 'createWithoutFetch', name: 'one' },
@@ -189,10 +216,17 @@ describe ( "rest", () => {
         "lensTxs": [
           [
             "I.focus?(messages)",
-            [ { "level": "success", "msg": "200/\"from/some/url/someToken/get?token=someToken&nontoken=nontoken&id=someId\"", "time": "timeForTest" } ] ],
+            [
+              {
+                "level": "success",
+                "msg": "200/\"from/some/url/someToken/get?nontoken=nontoken&id=someId\"",
+                "time": "timeForTest"
+              }
+            ]
+          ],
           [
             "I.focus?(fullDomain).chain(I.focus?(fromApi))",
-            "Extracted[200].from/some/url/someToken/get?token=someToken&nontoken=nontoken&id=someId"
+            "Extracted[200].from/some/url/someToken/get?nontoken=nontoken&id=someId"
           ]
         ],
         "restCommand": {
@@ -204,10 +238,17 @@ describe ( "rest", () => {
         "lensTxs": [
           [
             "I.focus?(messages)",
-            [ { "level": "success", "msg": "200/\"from/some/url/someToken/create?token=someToken&nontoken=nontoken\"", "time": "timeForTest" } ] ],
+            [
+              {
+                "level": "success",
+                "msg": "200/\"from/some/url/someToken/create?nontoken=nontoken\"",
+                "time": "timeForTest"
+              }
+            ]
+          ],
           [
             "I.focus?(fullDomain).chain(I.focus?(fromApi))",
-            "Extracted[200].from/some/url/someToken/create?token=someToken&nontoken=nontoken"
+            "Extracted[200].from/some/url/someToken/create?nontoken=nontoken"
           ]
         ],
         "restCommand": {
@@ -219,7 +260,14 @@ describe ( "rest", () => {
         "lensTxs": [
           [
             "I.focus?(messages)",
-            [ { "level": "success", "msg": "200/\"from/some/url/someToken/createWithoutFetch?token=someToken&nontoken=nontoken\"", "time": "timeForTest" } ] ]
+            [
+              {
+                "level": "success",
+                "msg": "200/\"from/some/url/someToken/createWithoutFetch?nontoken=nontoken\"",
+                "time": "timeForTest"
+              }
+            ]
+          ]
         ],
         "restCommand": {
           "name": "one",
@@ -230,7 +278,14 @@ describe ( "rest", () => {
         "lensTxs": [
           [
             "I.focus?(messages)",
-            [ { "level": "error", "msg": "Cannot connect. \"deleteWentWrong\"", "time": "timeForTest" } ] ]
+            [
+              {
+                "level": "error",
+                "msg": "Cannot connect. \"deleteWentWrong\"",
+                "time": "timeForTest"
+              }
+            ]
+          ]
         ],
         "restCommand": {
           "name": "one",
@@ -241,10 +296,17 @@ describe ( "rest", () => {
         "lensTxs": [
           [
             "I.focus?(messages)",
-            [ { "level": "success", "msg": "200/\"from/some/url/someToken/update?token=someToken&nontoken=nontoken&id=someId\"", "time": "timeForTest" } ] ],
+            [
+              {
+                "level": "success",
+                "msg": "200/\"from/some/url/someToken/update?nontoken=nontoken&id=someId\"",
+                "time": "timeForTest"
+              }
+            ]
+          ],
           [
             "I.focus?(fullDomain).chain(I.focus?(fromApi))",
-            "Extracted[200].from/some/url/someToken/update?token=someToken&nontoken=nontoken&id=someId"
+            "Extracted[200].from/some/url/someToken/update?nontoken=nontoken&id=someId"
           ]
         ],
         "restCommand": {
@@ -254,7 +316,16 @@ describe ( "rest", () => {
       },
       {
         "lensTxs": [
-          [ "I.focus?(messages)", [ { "level": "success", "msg": "200/\"from/some/url/someToken/updateWithoutFetch?token=someToken&nontoken=nontoken\"", "time": "timeForTest" } ] ]
+          [
+            "I.focus?(messages)",
+            [
+              {
+                "level": "success",
+                "msg": "200/\"from/some/url/someToken/updateWithoutFetch?nontoken=nontoken\"",
+                "time": "timeForTest"
+              }
+            ]
+          ]
         ],
         "restCommand": {
           "name": "one",
@@ -265,7 +336,7 @@ describe ( "rest", () => {
   } )
 
   it ( "should process state changes without changing the domain object", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage> ( props, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+    const result = await rest<RestStateForTest, SimpleMessage> ( propsJwtFalse, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
       { restAction: { state: 'newState' }, name: 'one' }
     ) );
     expect ( result ).toEqual ( {
@@ -276,7 +347,7 @@ describe ( "rest", () => {
       "messages": [
         {
           "level": "success",
-          "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"",
+          "msg": "200/\"from/some/new/state/someToken/newState?id=someId\"",
           "time": "timeForTest"
         }
       ],
@@ -286,14 +357,14 @@ describe ( "rest", () => {
   } )
 
   it ( "should throw error with illegal state", async () => {
-    await expect ( rest<RestStateForTest, SimpleMessage> ( props, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+    await expect ( rest<RestStateForTest, SimpleMessage> ( propsJwtFalse, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
       { restAction: { state: 'illegalState' }, name: 'one' }
     ) ) ).rejects.toThrow ( 'Illegal state [illegalState] requested. Legal values are [newState]' )
   } )
 
   it ( "should delete items specified in the 'delete on success' - single item", async () => {
     const deleteCommand: DeleteCommand = { command: 'delete', path: '/token' };
-    const result = await rest<RestStateForTest, SimpleMessage> ( props, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+    const result = await rest<RestStateForTest, SimpleMessage> ( propsJwtFalse, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
       { restAction: { state: 'newState' }, name: 'one', changeOnSuccess: [ deleteCommand ] }
     ) );
     expect ( result ).toEqual ( {
@@ -304,7 +375,7 @@ describe ( "rest", () => {
       "messages": [
         {
           "level": "success",
-          "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"",
+          "msg": "200/\"from/some/new/state/someToken/newState?id=someId\"",
           "time": "timeForTest"
         }
       ],
@@ -314,7 +385,7 @@ describe ( "rest", () => {
   } )
   it ( "should delete items specified in the 'delete on success' - multiple item", async () => {
     const deleteCommands: DeleteCommand[] = [ { command: 'delete', path: '/token' }, { command: "delete", path: '/fullDomain/idFromFullDomain' } ];
-    const result = await rest<RestStateForTest, SimpleMessage> ( props, restL (),
+    const result = await rest<RestStateForTest, SimpleMessage> ( propsJwtFalse, restL (),
       withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
         { restAction: { state: 'newState' }, name: 'one', changeOnSuccess: deleteCommands }
       ) );
@@ -325,7 +396,7 @@ describe ( "rest", () => {
       "messages": [
         {
           "level": "success",
-          "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"",
+          "msg": "200/\"from/some/new/state/someToken/newState?id=someId\"",
           "time": "timeForTest"
         }
       ],
@@ -335,7 +406,7 @@ describe ( "rest", () => {
   } )
   it ( "should copy items specified in the 'copyOnSuccess", async () => {
     const copyCommand: CopyResultCommand = { command: 'copyResult', from: '', to: '/somewhere' }
-    const result = await rest<RestStateForTest, SimpleMessage> ( props, restL (),
+    const result = await rest<RestStateForTest, SimpleMessage> ( propsJwtFalse, restL (),
       withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
         { restAction: { state: 'newState' }, name: 'one', changeOnSuccess: [ copyCommand ] }
       ) );
@@ -344,9 +415,9 @@ describe ( "rest", () => {
         "fromApi": "someData",
         "idFromFullDomain": "someId"
       },
-      "messages": [ { "level": "success", "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"", "time": "timeForTest" } ],
+      "messages": [ { "level": "success", "msg": "200/\"from/some/new/state/someToken/newState?id=someId\"", "time": "timeForTest" } ],
       "restCommands": [],
-      "somewhere": "Extracted[200].from/some/new/state/someToken/newState?token=someToken&id=someId",
+      "somewhere": "Extracted[200].from/some/new/state/someToken/newState?id=someId",
       "token": "someToken"
     } )
 
@@ -356,7 +427,7 @@ describe ( "rest", () => {
 describe ( "deprecated rest commands", () => {
 
   it ( "should delete items specified in the 'delete on success' - single item", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage> ( props, restL (),
+    const result = await rest<RestStateForTest, SimpleMessage> ( propsJwtFalse, restL (),
       withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
         { restAction: { state: 'newState' }, name: 'one', deleteOnSuccess: '/token' }
       ) );
@@ -368,7 +439,7 @@ describe ( "deprecated rest commands", () => {
       "messages": [
         {
           "level": "success",
-          "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"",
+          "msg": "200/\"from/some/new/state/someToken/newState?id=someId\"",
           "time": "timeForTest"
         }
       ],
@@ -377,7 +448,7 @@ describe ( "deprecated rest commands", () => {
 
   } )
   it ( "should delete items specified in the 'delete on success' - multiple item", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage> ( props, restL (),
+    const result = await rest<RestStateForTest, SimpleMessage> ( propsJwtFalse, restL (),
       withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
         { restAction: { state: 'newState' }, name: 'one', deleteOnSuccess: [ '/token', '/fullDomain/idFromFullDomain' ] }
       ) );
@@ -388,7 +459,7 @@ describe ( "deprecated rest commands", () => {
       "messages": [
         {
           "level": "success",
-          "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"",
+          "msg": "200/\"from/some/new/state/someToken/newState?id=someId\"",
           "time": "timeForTest"
         }
       ],
@@ -397,7 +468,7 @@ describe ( "deprecated rest commands", () => {
 
   } )
   it ( "should copy items specified in the 'copyOnSuccess", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage> ( props, restL (),
+    const result = await rest<RestStateForTest, SimpleMessage> ( propsJwtFalse, restL (),
       withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
         { restAction: { state: 'newState' }, name: 'one', copyOnSuccess: [ { from: '', to: '/somewhere' } ] }
       ) );
@@ -406,9 +477,9 @@ describe ( "deprecated rest commands", () => {
         "fromApi": "someData",
         "idFromFullDomain": "someId"
       },
-      "messages": [ { "level": "success", "msg": "200/\"from/some/new/state/someToken/newState?token=someToken&id=someId\"", "time": "timeForTest" } ],
+      "messages": [ { "level": "success", "msg": "200/\"from/some/new/state/someToken/newState?id=someId\"", "time": "timeForTest" } ],
       "restCommands": [],
-      "somewhere": "Extracted[200].from/some/new/state/someToken/newState?token=someToken&id=someId",
+      "somewhere": "Extracted[200].from/some/new/state/someToken/newState?id=someId",
       "token": "someToken"
     } )
 

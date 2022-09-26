@@ -70,4 +70,4 @@ export const pageDetails: MultiPageDetails<PageSpecState, ContextForTest> = {
 }
 export type PageDetails = typeof pageDetails
 
-export const context: ContextForTest = defaultPageSelectionAndRestCommandsContext<PageSpecState> ( pageDetails, {}, {}, {} ,testDateFn)
+export const context: ContextForTest = defaultPageSelectionAndRestCommandsContext<PageSpecState> ( pageDetails, {}, {}, {} ,testDateFn, true)

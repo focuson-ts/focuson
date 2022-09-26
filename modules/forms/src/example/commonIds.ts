@@ -2,13 +2,13 @@ import { CommonLensRestParam, IntParam, RestParams, StringParam } from "../commo
 import { NameAnd } from "@focuson/utils";
 
 export const allCommonIds = {
-  brandRef: { ...IntParam, commonLens: 'brandRef', testValue: 10 },
+  brandRef: { ...IntParam, commonLens: 'brandRef', testValue: 10},
   applRef: { ...IntParam, commonLens: 'applRef', testValue: 22 },
-  clientRef: { ...IntParam, commonLens: 'clientRef', testValue: 333, annotation: '@RequestHeader @RequestParam' },
+  clientRef: { ...IntParam, commonLens: 'clientRef', testValue: 333 },
   accountId: { ...IntParam, commonLens: 'accountId', testValue: 44444444 },
   vbAcountSeq: { ...IntParam, commonLens: 'vbAcountSeq', testValue: 55555 },
-  employeeId: { ...IntParam, commonLens: 'employeeId', testValue: 666666 },
-  employeeType: { ...StringParam, commonLens: 'employeeType', testValue: 'basic', annotation: '@RequestHeader @RequestParam' },
+  employeeId: { ...IntParam, commonLens: 'employeeId', testValue: 666666, inJwtToken: true },
+  employeeType: { ...StringParam, commonLens: 'employeeType', testValue: 'basic', annotation: '@RequestHeader @RequestParam', inJwtToken: true },
   dbName: { ...StringParam, commonLens: 'dbName', testValue: 'mock' },
   today: { ...StringParam, commonLens: 'today', testValue: '29/07/2022' },
   operatorName: { ...StringParam, commonLens: 'operatorName', testValue: 'Phil' }

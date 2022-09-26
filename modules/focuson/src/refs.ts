@@ -18,7 +18,7 @@ export function refsToRestCommands<S, MSGs> ( tagHolder: Optional<S, TagHolder>,
 }
 
 export function refsToTxs<S, MSGs> ( traceL: Optional<S, any[]>, tagHolder: Optional<S, TagHolder>, rests: Optional<S, RestCommand[]>, restDetails: RestDetails<S, MSGs>, fs: AllFetcherUsingRestConfig, refNames: string[], s: S ): Transform<S, any>[] {
-  const restCommandsAndWhy: [ (RestCommand | undefined), string, string ][] = refsToRestCommands ( tagHolder, restDetails, fs, refNames, s )
+  const restCommandsAndWhy: [ (RestCommand | undefined), string, string ][] = refsToRestCommands ( tagHolder, restDetails, fs, refNames,  s )
   // @ts-ignore
   const debug = s.debug?.reduxDebug
   const restCommands: RestCommand [] = restCommandsAndWhy.flatMap ( rAw => rAw[ 0 ] ? [ rAw[ 0 ] ] : [] )
@@ -31,7 +31,7 @@ export function refsToTxs<S, MSGs> ( traceL: Optional<S, any[]>, tagHolder: Opti
   return [ ...restTxs, ...traceTxs ]
 }
 
-export function addRestCommandsAndTraceFromRefs<S, C extends FocusOnContext<S>, MSGs> ( traceL: Optional<S, any[]>, c: C, s: S, refNames: string[] ): Transform<S, any>[] {
+export function addRestCommandsAndTraceFromRefs<S, C extends FocusOnContext<S>, MSGs> ( traceL: Optional<S, any[]>, c: C,s: S, refNames: string[] ): Transform<S, any>[] {
   const { restDetails, tagHolderL, restL, newFetchers } = c
   return refsToTxs ( traceL, tagHolderL, restL, restDetails, newFetchers, refNames, s )
 }

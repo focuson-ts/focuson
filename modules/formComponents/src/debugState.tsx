@@ -268,7 +268,7 @@ function Fetchers<S, C extends FocusOnContext<S>> ( { state }: LensProps<S, any,
         const tagName = `${page.pageName}_${f.tagName}`
         const theseTags = tagsInState?.[ tagName ]
         const { tags } = tagOps
-        const desiredTags = tags ( rest, 'get' ) ( state.main );
+        const desiredTags = tags ( rest, true, 'get' ) ( state.main );
         let json = state.copyWithLens ( rest.fdLens ).chainLens ( rest.dLens ).optJson ();
         return <div key={i}><h3>Rest {f.restName} </h3>
           <dl>

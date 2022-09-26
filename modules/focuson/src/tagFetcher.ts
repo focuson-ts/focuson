@@ -138,7 +138,7 @@ export function tagFetcher<S, Full, T, MSGS> ( stf: SpecificTagFetcherProps<S, F
       // @ts-ignore
       const debug = s.debug?.tagFetcherDebug
       const currentTags = tagL.getOption ( s );
-      let tagAndNames = tagOps.tags ( stf, 'get' ) ( s );
+      let tagAndNames = tagOps.tags ( stf, true, 'get' ) ( s ); //it's false because we want all the tags.
       const desiredTags = tagAndNames.map ( ( [ name, tag ] ) => tag )
       if ( !areAllDefined ( desiredTags ) ) return [ `Undefined tags. ${tagAndNames.map ( ( [ name, tag ] ) => `${name}:${tag}` )}` ]
       let tagsDifferent = !arraysEqual ( desiredTags, currentTags );
@@ -154,10 +154,10 @@ export function tagFetcher<S, Full, T, MSGS> ( stf: SpecificTagFetcherProps<S, F
     load ( s: S ) {
       // @ts-ignore
       const debug = s.debug?.tagFetcherDebug
-      const tagAndNames = tagOps.tags ( stf, 'get' ) ( s );
+      const tagAndNames = tagOps.tags ( stf, true, 'get' ) ( s );
       const desiredTags = tagAndNames.map ( ( [ name, tag ] ) => tag )
       if ( !areAllDefined ( desiredTags ) ) throw partialFnUsageError ( result, s );
-      const req = tagOps.reqFor ( mockJwt ) ( stf, 'get' ) ( s ) ( stf.url );
+      const req = tagOps.reqFor ( stf, mockJwt, 'get' ) ( s ) ( stf.url );
       if ( !req ) throw partialFnUsageError ( result, s );
       const [ info, init ] = req;
       const mutateForHolder: MutateFn<S, T> = ( state ) => ( status, response ) => {
