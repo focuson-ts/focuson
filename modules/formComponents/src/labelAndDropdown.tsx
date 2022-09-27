@@ -37,7 +37,7 @@ export function LabelAndDropdown<S, T, Context extends ContextForDropdown<S>> ( 
   )
 }
 export function Dropdown<S, T, Context extends ContextForDropdown<S>> ( props: DropdownProps<S, T, Context> ) {
-  const { enums, parentState, state, ariaLabel, id, mode, onChange, specificOnChange, readonly, pleaseSelect, size, required, enabledBy, validationmessage } = props
+  const { enums, parentState, state, ariaLabel, id, mode, onChange, specificOnChange, readonly, pleaseSelect, size, required, enabledBy, validationmessage, regexForChange } = props
   let selected: any = state.optJson ();
   const statementDefined = !(selected === undefined || selected === null);
   if ( statementDefined && typeof selected !== 'string' ) throw new Error ( `Component ${id} has a selected value which isn't a string. It is ${JSON.stringify ( selected, null, 2 )}` )
@@ -46,11 +46,10 @@ export function Dropdown<S, T, Context extends ContextForDropdown<S>> ( props: D
   const cssValidInput = hasValid || required === false ? '' : ' invalid'
   const onChangeEventHandler = ( e: ChangeEvent<HTMLSelectElement> ) => {
     const newValue = e.target.value;
-    state.massTransform ( reasonFor ( 'LabelAndDropdown', 'onChange', id ) ) (
-      [ state.optional, () => newValue ],
+    const changeTxs = regexForChange===undefined || newValue.match ( regexForChange ) !== null ? [
       ...makeInputChangeTxs ( id, parentState, specificOnChange?.[ newValue ] ),
-      ...makeInputChangeTxs ( id, parentState, onChange ),
-    );
+      ...makeInputChangeTxs ( id, parentState, onChange ), ]:[]
+    state.massTransform ( reasonFor ( 'LabelAndDropdown', 'onChange', id ) ) ( [ state.optional, () => newValue ], ...changeTxs );
   }
   return (
     <select className={`select ${cssValidInput}`} value={value} data-validationmessage={validationmessage}

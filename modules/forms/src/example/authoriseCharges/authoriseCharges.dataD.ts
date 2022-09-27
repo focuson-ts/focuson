@@ -32,6 +32,7 @@ export function summaryOfChargesDateTableDD ( c: AuthoriseCustomisation ): Examp
     paged: false,
   }) )
 }
+
 export function summaryOfChargesSearchDD ( c: AuthoriseCustomisation ): ExampleDataD {
   return memoise ( 'summaryOfChargesSearchDD', c.pageName ) ( () => ({
     name: 'SummaryOfChargesSearch',
@@ -136,13 +137,17 @@ export function AuthoriseChargesSummaryDataDD ( c: AuthoriseCustomisation ): Exa
 }
 export function AuthoriseChargesSummaryDD ( c: AuthoriseCustomisation ): ExampleDataD {
   return memoise ( 'AuthoriseChargesSummaryDD', c.pageName ) ( () => ({
-    name: 'AuthoriseChargesSummary',
-    description: 'All the data we see on the main authoriseCharges page',
-    structure: {
-      date: { dataDD: StringDD, displayParams: { buttons: [ 'selectDate' ] } },
-      fromApi: { dataDD: AuthoriseChargesSummaryDataDD ( c ) },
+      name: 'AuthoriseChargesSummary',
+      description: 'All the data we see on the main authoriseCharges page',
+      structure: {
+        date: {
+          dataDD: StringDD,
+          displayParams: { buttons: [ 'selectDate' ], onChange: [ { command: 'message', msg: '0-9' } ], regexForChange: '[0-9]' }
+        },
+        fromApi: { dataDD: AuthoriseChargesSummaryDataDD ( c ) },
+      }
     }
-  }) )
+  ) )
 }
 export function SuspenseAccountLinesDD ( c: AuthoriseCustomisation ): ExampleDataD {
   return memoise ( 'SuspenseAccountLinesDD', c.pageName ) ( () => ({

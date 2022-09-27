@@ -29,6 +29,7 @@ export interface DropDownOnChangeProps<S, Context> extends InputOnChangeProps<S,
 export interface InputOnChangeProps<S, Context> {
   parentState?: LensState<S, any, Context>;
   onChange?: InputChangeCommands | InputChangeCommands[]
+  regexForChange?: string
 }
 export enum ContactTitle {
   X         = '',

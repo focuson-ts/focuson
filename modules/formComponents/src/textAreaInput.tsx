@@ -19,7 +19,7 @@ export interface TextareaProps<S, T, Context> extends CommonStateProps<S, T, Con
 }
 
 export const cleanTextareaProps = <T extends NameAnd<any>> ( p: T ): T => {
-  const result = { ...p }
+  const result: any = { ...p }
 
   delete result.label
   delete result.allButtons
@@ -29,6 +29,8 @@ export const cleanTextareaProps = <T extends NameAnd<any>> ( p: T ): T => {
   delete result.parentState
   delete result.scrollAfter
   delete result.noLabel
+  result['maxlength'] = result['maxlength']
+  delete result.maxlength
   return result
 };
 

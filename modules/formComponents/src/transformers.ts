@@ -2,13 +2,15 @@ import { makeInputChangeTxs } from "./labelAndInput";
 import { FocusOnContext } from "@focuson/focuson";
 import { LensState, reasonFor } from "@focuson/state";
 import { InputChangeCommands } from "@focuson/rest";
+import { disabledFrom } from "@focuson/utils";
 
 
-export type InputSelectFn = <S, T, Context extends FocusOnContext<S>> ( state: LensState<S, T, Context>, id: string, value: T, parentState: LensState<S, any, Context>|undefined, onChange: undefined | InputChangeCommands | InputChangeCommands[] ) => void
+export type InputSelectFn = <S, T, Context extends FocusOnContext<S>> ( state: LensState<S, T, Context>, id: string, value: T, parentState: LensState<S, any, Context> | undefined, onChange: undefined | InputChangeCommands | InputChangeCommands[], changesCanExecute: boolean | undefined ) => void
 
-export const defaultInputSelectFn: InputSelectFn = <S, T, Context extends FocusOnContext<S>> (  state: LensState<S, T, Context>, id: string, value: T, parentState: LensState<S, any, Context>|undefined, onChange: undefined | InputChangeCommands | InputChangeCommands[]  ) =>
-  state.massTransform ( reasonFor ( 'Input', 'onChange', id ) ) ( [ state.optional, () => value ], ...makeInputChangeTxs ( id, parentState, onChange ) );
-
+export const defaultInputSelectFn: InputSelectFn = <S, T, Context extends FocusOnContext<S>> ( state: LensState<S, T, Context>, id: string, value: T, parentState: LensState<S, any, Context> | undefined, onChange: undefined | InputChangeCommands | InputChangeCommands[], changesCanExecute: boolean | undefined ) => {
+  const changeTxs = changesCanExecute ? makeInputChangeTxs ( id, parentState, onChange ) : []
+  return state.massTransform ( reasonFor ( 'Input', 'onChange', id ) ) ( [ state.optional, () => value ], ...changeTxs );
+}
 
 
 export interface StringProps<T> { // T is the type that we are displaying/editing. V is the value expected by the target. boolean if a checkbox, but otherwise a string

@@ -109,6 +109,7 @@ export const commonParamsWithLabel: DisplayCompParamD = {
 const onChangeAndParentState: DisplayCompParamD = {
   onChange: { paramType: 'json', needed: 'no' },
   parentState: { paramType: 'object', needed: 'defaultToParentStateIfOnChange' },
+  regexForChange: {paramType: 'string', needed: 'no'}
 }
 const enabledByForInputs: DisplayCompParamD = {
   enabledBy: { paramType: 'guards', needed: 'no' },

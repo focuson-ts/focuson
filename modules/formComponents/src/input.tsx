@@ -26,6 +26,7 @@ export const cleanInputProps = <T extends NameAnd<any>> ( p: T ): T => {
   delete result.noLabel
   delete result.scrollAfter
   delete result.enabledBy
+  delete result.regexForChange
   return result
 };
 
@@ -37,7 +38,7 @@ export const CheckboxInput = <S, T extends any, P> ( tProps: CheckboxProps<T> ) 
   return <Props extends InputProps<S, T, Context> & P, Context extends FocusOnContext<S>> ( props: Props ) => {
     const { state, mode, id, parentState, onChange, readonly, enabledBy, onBlur } = props
     const onChangeEventHandler = ( e: React.ChangeEvent<HTMLInputElement> ) =>
-      selectFn<S, T, Context> ( state, id, transformer ( e?.target?.checked ), parentState, onChange )
+      selectFn<S, T, Context> ( state, id, transformer ( e?.target?.checked ), parentState, onChange, true )
     return <><input type='checkbox' {...cleanInputProps ( props )}
                     checked={checkbox ( state.optJson () )}
                     disabled={disabledFrom ( enabledBy ) || mode === 'view' || readonly}
@@ -49,14 +50,16 @@ export const CheckboxInput = <S, T extends any, P> ( tProps: CheckboxProps<T> ) 
 }
 export const NonCheckboxInput = <S, T extends any, P> ( tProps: StringProps<T> ) => {
   const { transformer, type, selectFn } = tProps
-  if (typeof selectFn !== 'function') {
-    console.error('selectFn', selectFn)
-    throw new Error(`selectFn must be a function it is ${selectFn}` )
+  if ( typeof selectFn !== 'function' ) {
+    console.error ( 'selectFn', selectFn )
+    throw new Error ( `selectFn must be a function it is ${selectFn}` )
   }
   return <Props extends InputProps<S, T, Context> & P, Context extends FocusOnContext<S>> ( props: Props ) => {
-    const { state, mode, id, parentState, onChange, readonly, enabledBy, onBlur } = props
-    const onChangeEventHandler = ( transformer: ( s: string ) => T, e: React.ChangeEvent<HTMLInputElement> ) =>
-      selectFn<S, T, Context> ( state, id, transformer ( e?.target?.value ), parentState, onChange )
+    const { state, mode, id, parentState, onChange, readonly, enabledBy, onBlur, regexForChange } = props
+    const onChangeEventHandler = ( transformer: ( s: string ) => T, e: React.ChangeEvent<HTMLInputElement> ) => {
+      const value = e?.target?.value;
+      return selectFn<S, T, Context> ( state, id, transformer ( value ), parentState, onChange, regexForChange === undefined ||value.match ( regexForChange ) !== null );
+    }
     const value: T | undefined = tProps.default === undefined ? state.optJson () : state.optJsonOr ( tProps.default );
     return <input className="input" type={type} {...cleanInputProps ( props )}
                   disabled={disabledFrom ( enabledBy )}
