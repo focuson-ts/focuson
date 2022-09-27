@@ -9,7 +9,7 @@ export const enabledByDataD: ExampleDataD = {
   name: 'EnabledBy',
   description: "",
   guards: {
-    yes: { condition: 'equals', path: 'dropdown', value: '"Y"', message: 'Select Yes to enable' },
+    yes: { condition: 'equals', path: 'dropdown', value: '"Y"', ifUndefined: true, message: 'Select Yes to enable' },
     no: { condition: 'not', cond: 'yes' },
     yesOrNo: { condition: 'or', conditions: [ 'yes', 'no' ] },
     stringEqualsTextArea: { condition: 'a=b', aPath: 'string', bPath: 'textArea', message: 'The string has to equal the text area' },

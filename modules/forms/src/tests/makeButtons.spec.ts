@@ -140,7 +140,7 @@ describe ( "makeButtons", () => {
   } )
   it ( "should make guard variables for buttons with guards", () => {
     expect ( makeGuardButtonVariables ( paramsForTest, AllGuardCreator, EnabledByPageD, EnabledByPageD ) ).toEqual ( [
-      "const pageGuardDirectGuard =  state.focusOn('dropdown').optJson() === \"Y\"? []:[\"guard for pageGuardDirect is not valid\"]"
+      "const pageGuardDirectGuard =  applyOrDefault(state.focusOn('dropdown').optJson(), t => t === \"Y\",false)? []:[\"guard for pageGuardDirect is not valid\"]",
     ] )
 
   } )

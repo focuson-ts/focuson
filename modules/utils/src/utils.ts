@@ -39,6 +39,7 @@ export const apply = <T, T1> ( t: T | undefined, fn: ( t: T ) => T1 ): T1 | unde
 export const applyOrDefault = <T, T1> ( t: T | undefined, fn: ( t: T ) => T1, def: T1 ): T1 => t ? fn ( t ) : def;
 export const useOrDefault = <T> ( def: T ) => ( t: T | undefined ): T => t ? t : def;
 
+
 export const or = <T> ( defaultT: () => T ) => ( t: T | undefined ) => t ? t : defaultT ()
 
 export function copyWithFieldSet<T, K extends keyof T> ( t: T, k: K, v: T[K] ) {

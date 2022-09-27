@@ -35,7 +35,12 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
   equals: {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableValueEquals<any> ) =>
-      `const ${guardName ( name )} =  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJson() === ${guard.value}`
+      `const ${guardName ( name )} =  applyOrDefault(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJson(), t => t === ${guard.value},${guard.ifUndefined ? guard.ifUndefined : false})`
+  },
+  notEquals: {
+    imports: [],
+    makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableValueEquals<any> ) =>
+      `const ${guardName ( name )} =  applyOrDefault(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJson(), t => t !== ${JSON.stringify ( guard.value )},${guard.ifUndefined ? guard.ifUndefined : false}))`
   },
   'a<b': {
     imports: [],
@@ -59,11 +64,6 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
       `const ${guardName ( name )} =  safeNumber(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJson(), Number.MIN_VALUE) > ${guard.value}`
   },
 
-  notEquals: {
-    imports: [],
-    makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableValueEquals<any> ) =>
-      `const ${guardName ( name )} =  ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJson() !== ${JSON.stringify ( guard.value )}`
-  },
   fn: {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: FunctionCondition ) =>
@@ -164,6 +164,7 @@ export interface LocalVariableMoreThanZero extends Guard {
 export interface LocalVariableValueEquals<T> extends Guard {
   condition: 'equals' | 'notEquals';
   path: string;
+  ifUndefined?: boolean
   value: T
 }
 
