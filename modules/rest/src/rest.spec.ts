@@ -77,8 +77,12 @@ describe ( "restReq", () => {
       [
         { "name": "one", "restAction": "update" },
         "/some/url/{token}?{query}",
-        "/some/url/someToken/update?token=someToken&nontoken=nontoken&id=someId",
-        { "body": "\"someData\"", "method": "put" }
+        "/some/url/someToken/update?nontoken=nontoken&id=someId",
+        {
+          "body": "\"someData\"",
+          "headers": { "token": "someToken" },
+          "method": "put"
+        }
       ]
     ] )
   } )
@@ -100,12 +104,11 @@ describe ( "restReq", () => {
       { restAction: 'update', name: 'one' },
       { restAction: { state: 'newState' }, name: 'one' } ], restMutatator, populatedState );
     expect ( results.map ( a => [ a[ 2 ], a[ 3 ] ] ) ).toEqual ( [
-        [ "/some/url/someToken/get?token=someToken&nontoken=nontoken&id=someId", undefined ],
-        [ "/some/url/someToken/create?token=someToken&nontoken=nontoken", { "body": "\"someData\"", "method": "post" } ],
-        [ "/some/url/someToken/delete?token=someToken&nontoken=nontoken&id=someId", { "method": "delete" } ],
-        [ "/some/url/someToken/update?token=someToken&nontoken=nontoken&id=someId", { "body": "\"someData\"", "method": "put" } ],
-        [ "/some/new/state/someToken/newState?token=someToken&id=someId", { "body": "\"someData\"", "method": "post" } ]
-      ]
+      [ "/some/url/someToken/get?nontoken=nontoken&id=someId", { "headers": { "token": "someToken" } } ],
+      [ "/some/url/someToken/create?nontoken=nontoken", { "body": "\"someData\"", "headers": { "token": "someToken" }, "method": "post" } ],
+      [ "/some/url/someToken/delete?nontoken=nontoken&id=someId", { "headers": { "token": "someToken" }, "method": "delete" } ],
+      [ "/some/url/someToken/update?nontoken=nontoken&id=someId", { "body": "\"someData\"", "headers": { "token": "someToken" }, "method": "put" } ],
+      [ "/some/new/state/someToken/newState?id=someId", { "body": "\"someData\"", "headers": { "token": "someToken" }, "method": "post" } ] ]
     )
   } )
   it ( "it should turn post commands iinto fetch requests - without mockjwt", () => {
@@ -182,17 +185,14 @@ describe ( "rest", () => {
       { restAction: 'updateWithoutFetch', name: 'one' },
     ) );
     expect ( result ).toEqual ( {
-      "fullDomain": {
-        "fromApi": "Extracted[200].from/some/url/someToken/update?token=someToken&nontoken=nontoken&id=someId",
-        "idFromFullDomain": "someId"
-      },
+      "fullDomain": { "fromApi": "Extracted[200].from/some/url/someToken/update?nontoken=nontoken&id=someId", "idFromFullDomain": "someId" },
       "messages": [
-        { "level": "success", "msg": "200/\"from/some/url/someToken/updateWithoutFetch?token=someToken&nontoken=nontoken\"", "time": "timeForTest" },
-        { "level": "success", "msg": "200/\"from/some/url/someToken/update?token=someToken&nontoken=nontoken&id=someId\"", "time": "timeForTest" },
+        { "level": "success", "msg": "200/\"from/some/url/someToken/updateWithoutFetch?nontoken=nontoken\"", "time": "timeForTest" },
+        { "level": "success", "msg": "200/\"from/some/url/someToken/update?nontoken=nontoken&id=someId\"", "time": "timeForTest" },
         { "level": "error", "msg": "Cannot connect. \"deleteWentWrong\"", "time": "timeForTest" },
-        { "level": "success", "msg": "200/\"from/some/url/someToken/createWithoutFetch?token=someToken&nontoken=nontoken\"", "time": "timeForTest" },
-        { "level": "success", "msg": "200/\"from/some/url/someToken/create?token=someToken&nontoken=nontoken\"", "time": "timeForTest" },
-        { "level": "success", "msg": "200/\"from/some/url/someToken/get?token=someToken&nontoken=nontoken&id=someId\"", "time": "timeForTest" }
+        { "level": "success", "msg": "200/\"from/some/url/someToken/createWithoutFetch?nontoken=nontoken\"", "time": "timeForTest" },
+        { "level": "success", "msg": "200/\"from/some/url/someToken/create?nontoken=nontoken\"", "time": "timeForTest" },
+        { "level": "success", "msg": "200/\"from/some/url/someToken/get?nontoken=nontoken&id=someId\"", "time": "timeForTest" }
       ],
       "restCommands": [],
       "token": "someToken"

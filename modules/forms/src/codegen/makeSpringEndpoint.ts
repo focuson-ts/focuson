@@ -1,4 +1,4 @@
-import {  postFixForEndpoint, RestD, RestParams, stateToNameAndUrlAndParamsForState } from "../common/restD";
+import { isCommonLens, postFixForEndpoint, RestD, RestParams, stateToNameAndUrlAndParamsForState } from "../common/restD";
 import { endPointName, mutationClassName, mutationMethodName, mutationVariableName, queryClassName, queryName, queryPackage, restControllerName, restControllerPackage, sampleName, sqlMapName, sqlMapPackageName, wiringName } from "./names";
 import { JavaWiringParams } from "./config";
 import { actionsEqual, beforeSeparator, isRestStateChange, RestAction, safeArray, safeObject, toArray, unique } from "@focuson/utils";
@@ -15,15 +15,13 @@ function makeCommaIfHaveParams<G> ( errorPrefix: string, r: RestD<G>, restAction
   return params.length === 0 ? '' : ', '
 }
 
-export function makeParamsForJava<G> ( errorPrefix: string, r: RestD<G>, restAction: RestAction ): string {
+export function makeParamsForJava<G> ( errorPrefix: string, r: RestD<G>, restAction: RestAction, forRealEndpoint: boolean ): string {
   const params = paramsForRestAction ( errorPrefix, r, restAction );
   const comma = makeCommaIfHaveParams ( errorPrefix, r, restAction );
   const requestParam = getRestTypeDetails ( restAction ).params.needsObj ? `${comma}@RequestBody String body` : ""
   return params.map ( (( [ name, param ] ) => {
-    // if ( isHeaderLens ( param ) )
-    //   return `${param.annotation ? param.annotation : '@RequestHeader @RequestParam'} ${param.javaType} ${name}`;
-    // else
-      return `${param.annotation ? param.annotation : '@RequestParam'} ${param.javaType} ${name}`;
+    const defaultAnnotation = isCommonLens ( param ) && param.inJwtToken && forRealEndpoint ? '@RequestHeader' : '@RequestParam'
+    return `${param.annotation ? param.annotation : defaultAnnotation} ${param.javaType} ${name}`;
   }) ).join ( ", " ) + requestParam
 }
 function paramsForQuery<G> ( errorPrefix: string, r: RestD<G>, restAction: RestAction ): string {
@@ -137,7 +135,7 @@ function makeEndpoint<G> ( params: JavaWiringParams, p: RefD<G>, restName: strin
   return [
     ...indentList ( endpointAnnotation ( params, p, restName, r, restAction, 'endpoint' ) ),
     `    @${restTypeDetails.annotation}(value="${beforeSeparator ( "?", url )}${postFixForEndpoint ( restAction )}", produces="application/json")`,
-    `    public ResponseEntity ${endPointName ( r, restAction )}(${makeParamsForJava ( errorPrefix, r, restAction )}) throws Exception{`,
+    `    public ResponseEntity ${endPointName ( r, restAction )}(${makeParamsForJava ( errorPrefix, r, restAction, true )}) throws Exception{`,
     ...makeJsonString,
     `         Messages msgs = Transform.msgs();`,
     ...openConnection,
@@ -156,7 +154,7 @@ function makeQueryEndpoint<G> ( params: JavaWiringParams, p: RefD<G>, restName: 
   return [
     ...indentList ( endpointAnnotation ( params, p, restName, r, restAction, 'query' ) ),
     `    @${restTypeDetails.annotation}(value="${beforeSeparator ( "?", url )}${postFixForEndpoint ( restAction )}/query", produces="application/json")`,
-    `    public String query${queryName ( r, restAction )}(${makeParamsForJava ( errorPrefix, r, restAction )}) throws Exception{`,
+    `    public String query${queryName ( r, restAction )}(${makeParamsForJava ( errorPrefix, r, restAction, false )}) throws Exception{`,
     `       return ${queryClassName ( params, r )}.${queryName ( r, restAction )}(${paramsForQuery ( errorPrefix, r, restAction )});`,
     `    }`,
     `` ];

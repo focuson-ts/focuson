@@ -2,8 +2,8 @@ import { CommonLensRestParam, IntParam, RestParams, StringParam } from "../commo
 import { NameAnd } from "@focuson/utils";
 
 export const allCommonIds = {
-  brandRef: { ...IntParam, commonLens: 'brandRef', testValue: 10},
-  applRef: { ...IntParam, commonLens: 'applRef', testValue: 22 },
+  brandRef: { ...IntParam, commonLens: 'brandRef', testValue: 10 },
+  applRef: { ...IntParam, commonLens: 'applRef', testValue: 22, inJwtToken: true },
   clientRef: { ...IntParam, commonLens: 'clientRef', testValue: 333 },
   accountId: { ...IntParam, commonLens: 'accountId', testValue: 44444444 },
   vbAcountSeq: { ...IntParam, commonLens: 'vbAcountSeq', testValue: 55555 },
@@ -16,8 +16,8 @@ export const allCommonIds = {
 
 export const commonIds = fromCommonIds ( "brandRef", "applRef", "clientRef", "accountId" )
 
-export function fromCommonIds ( ...keys: (keyof (typeof allCommonIds))[] ):  NameAnd<CommonLensRestParam<any>> {
-  const result:  NameAnd<CommonLensRestParam<any>> = {}
+export function fromCommonIds ( ...keys: (keyof (typeof allCommonIds))[] ): NameAnd<CommonLensRestParam<any>> {
+  const result: NameAnd<CommonLensRestParam<any>> = {}
   keys.forEach ( key => result[ key ] = allCommonIds[ key ] )
   return result
 }

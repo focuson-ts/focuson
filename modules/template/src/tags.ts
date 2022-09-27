@@ -1,6 +1,6 @@
 import { expand } from "./template";
 import { GetNameFn, NameAndLens, Optional } from "@focuson/lens";
-import { isRestStateChange, RestAction, unique } from "@focuson/utils";
+import { isRestStateChange, NameAnd, RestAction, unique } from "@focuson/utils";
 
 
 export type Tags = (string | undefined)[]
@@ -56,13 +56,13 @@ export interface TagOps {
 
 export const tags: TagOpsFn<[ string, string | undefined ][]> = <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, includeJwtIds: boolean, restAction: RestAction ) => ( s: S ) => {
   const names = needsId ( restAction ) ? [ ...urlConfig.resourceId, ...urlConfig.ids ] : urlConfig.ids
-  return names.sort ().map ( name => [ name, onePart<S, FD, D> ( urlConfig, { failSilently: true, includeJwtIds } ) ( s, restAction ) ( name ) ] )
+  return names.sort ().map ( name => [ name, onePart<S, FD, D> ( urlConfig, { failSilently: true } ) ( s, restAction ) ( name ) ] )
 }
 
-export function nameToLens<S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, includeJwtIds: boolean | undefined, restAction: RestAction ): GetNameFn<S, any> {
+export function nameToLens<S, FD, D> ( urlConfig: UrlConfig<S, FD, D>,  restAction: RestAction ): GetNameFn<S, any> {
   return ( name: string ) => {
     if ( name === 'query' )
-      return { getOption: s => makeAEqualsB ( urlConfig, { failSilently: true, includeJwtIds } ) ( s, restAction ) }
+      return { getOption: s => makeAEqualsB ( urlConfig, { failSilently: true } ) ( s, restAction ) }
     const fromFdd = urlConfig.fdd[ name ]
     if ( fromFdd ) return urlConfig.fdLens.chain ( fromFdd )
     const fromCd = urlConfig.cd[ name ]//local ovrerride common
@@ -71,9 +71,19 @@ export function nameToLens<S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, includeJw
   }
 }
 
+export const headersFor: TagOpsFn<NameAnd<string> | undefined> =
+               ( urlConfig, includeJwtIds, restAction ) => main => {
+                 const jwtIds = urlConfig.jwtIds
+                 if ( includeJwtIds && jwtIds && jwtIds.length > 0 ) {
+                   const n2L = nameToLens ( urlConfig, restAction )
+                   return Object.fromEntries ( jwtIds.map ( jwtId => [ jwtId, n2L ( (jwtId) ).getOption ( main ) ] ) )
+                 }
+                 return undefined
+               }
+
 export const url: TagOpsFn<( urlTemplate: string ) => string> =
                ( urlConfig, includeJwtIds, restAction ) => s =>
-                 urlTemplate => expand ( nameToLens ( urlConfig, includeJwtIds, restAction ) ) ( urlTemplate ) ( s )
+                 urlTemplate => expand ( nameToLens ( urlConfig,  restAction ) ) ( urlTemplate ) ( s )
 
 export function methodFor ( r: RestAction ) {
   if ( isRestStateChange ( r ) ) return 'post'
@@ -85,34 +95,35 @@ export function methodFor ( r: RestAction ) {
 
 }
 
-export const bodyFor: TagOpsFn<RequestInit | undefined> =
+export const bodyAndHeadersFor: TagOpsFn<RequestInit | undefined> =
                ( urlConfig, includeJwtIds, restAction ) => s => {
                  const method = methodFor ( restAction )
-                 if ( restAction === 'get' ) return undefined // || restAction === 'list'
-                 if ( restAction === 'delete' ) return { method }
+                 const headers = headersFor ( urlConfig, includeJwtIds, restAction ) ( s )
+                 if ( restAction === 'get' ) return headers === undefined ? undefined : { headers } // || restAction === 'list'
+                 if ( restAction === 'delete' ) return { method, headers }
                  let bodyL = urlConfig.bodyFrom ? urlConfig.bodyFrom : urlConfig.fdLens.chain ( urlConfig.dLens );
                  const body: any = bodyL.getOption ( s )
                  if ( body ) {
                    console.log ( "made body for ", body )
-                   return { method, body: JSON.stringify ( body ) }
+                   return { method, body: JSON.stringify ( body ), headers }
                  }
                  throw new Error ( `Cannot execute restAction ${restAction}, using the data at [${bodyL.description}] because the data object is empty\n${JSON.stringify ( s )}` )
                }
 
 export const reqFor: TagOpsFn<( url: string ) => [ RequestInfo, RequestInit | undefined ]> =
                <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, includeJwtIds: boolean, restAction: RestAction ) => ( s: S ) =>
-                 u => [ url ( urlConfig, includeJwtIds, restAction ) ( s ) ( u ), bodyFor<S, FD, D> ( urlConfig, includeJwtIds, restAction ) ( s ) ]
+                 u => [ url ( urlConfig, includeJwtIds, restAction ) ( s ) ( u ), bodyAndHeadersFor<S, FD, D> ( urlConfig, includeJwtIds, restAction ) ( s ) ]
 
 export const tagOps: TagOps = ({ tags, reqFor });
 
-export const makeAEqualsB = <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, { encoder, separator, failSilently, includeJwtIds }: MakeAEqualsBProps ): ( s: S, restAction: RestAction ) => string => {
+export const makeAEqualsB = <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, { encoder, separator, failSilently }: MakeAEqualsBProps ): ( s: S, restAction: RestAction ) => string => {
   const realEncoder = encoder ? encoder : stringify
   const realSeparator = separator ? separator : '&'
   return ( main, restAction ) => {
-    const nameLnFn = nameToLens ( urlConfig, includeJwtIds, restAction )
+    const nameLnFn = nameToLens ( urlConfig,  restAction )
     const rawNames = needsId ( restAction ) ? [ ...urlConfig.ids, ...urlConfig.resourceId ] : urlConfig.ids
     const jwtIds = urlConfig.jwtIds
-    const names = includeJwtIds === false ? rawNames.filter ( name => !jwtIds.includes ( name ) ) : rawNames
+    const names =  rawNames.filter ( name => !jwtIds.includes ( name ) )
     console.log ( 'makeAEqualsB', rawNames, jwtIds, names )
     return unique ( names.map ( name => {
         const value = nameLnFn ( name ).getOption ( main )
@@ -143,7 +154,6 @@ export const onePart = <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, props: MakeA
 export interface MakeAEqualsBProps {
   failSilently?: boolean,
   separator?: string,
-  includeJwtIds?: boolean,
   encoder?: ( s: string | undefined ) => string
 }
 

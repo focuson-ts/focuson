@@ -15,7 +15,7 @@ describe ( "makePacts", () => {
       "      [Lenses.identity<FState>().focusQuery('PostCodeMainPage').focusQuery('postcode').focusQuery('search'), () =>\"LW12 4RG\" ]",
       "    ]",
       "    const withIds = massTransform ( firstState, ...lensTransforms )",
-      "    const restCommands: RestCommand[] = restCommandsFromFetchers ( config.tagHolderL, config.newFetchers, config.restDetails, 'PostCodeMainPage', withIds )",
+      "    const restCommands: RestCommand[] = restCommandsFromFetchers ( config.tagHolderL, config.newFetchers, config.restDetails, 'PostCodeMainPage',  withIds )",
       "    expect ( restCommands.length ).toBeGreaterThan(0)",
       "    const restCommand = restCommands.find(rc =>rc.name==='PostCodeMainPage_PostCodeSearchResponseRestDetails')",
       "    expect ( restCommand?.restAction ).toEqual ('get')",

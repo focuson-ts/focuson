@@ -3,7 +3,6 @@ import { createSimpleMessage, testDateFn } from "@focuson/utils";
 import { PageSpecState, SecondPageDomain } from "./page.fixture";
 import { commonTagFetchProps, pageAndTagFetcher, simpleTagFetcher } from "@focuson/focuson";
 import { Fetcher } from "@focuson/fetcher";
-import {  } from "@focuson/template";
 
 function withMessages<T> () {
   return commonTagFetchProps<PageSpecState, T> ( ( s: T, date ) => [ createSimpleMessage ( 'info', `${s}`, date ) ], testDateFn ) ()
@@ -21,7 +20,7 @@ export const simpleFetcherWithMessages: Fetcher<PageSpecState, string> = simpleT
   Lenses.identity<PageSpecState> ().focusQuery ( 'firstPage' ),
   commonLens,
   {},
-  [ 'tag1Id', 'tag2Id' ], [], '/someUrl/{tag1Id}/{tag2Id}/?{query}'
+  [ 'tag1Id', 'tag2Id' ], [] ,[],'/someUrl/{tag1Id}/{tag2Id}/?{query}'
 )
 
 export const stateAndFromApiFetcher: Fetcher<PageSpecState, string> =
@@ -31,7 +30,7 @@ export const stateAndFromApiFetcher: Fetcher<PageSpecState, string> =
                  'secondPage',
                  'tag1',
                  Lenses.identity<PageSpecState> ().focusQuery ( 'secondPage' ),
-                 commonLens, {}, [ 'tag1Id', 'tag2Id' ], [],
+                 commonLens, {}, [ 'tag1Id', 'tag2Id' ], [], [],
                  Lenses.identity<SecondPageDomain> ().focusQuery ( 'fromApi' ),
                  '/someUrl?{query}'
                )

@@ -84,13 +84,14 @@ export function pageAndTagFetcher<S, Full, T, MSGS> (
   cd: NameAndLens<S>, fdd: NameAndLens<Full>,
   ids: string[],
   resourceId: string[],
+  jwtIds: string[],
   dLens: Optional<Full, T>,
   url: string,
   description?: string
 ): Fetcher<S, T> {
   // @ts-ignore ... I don't know how to get the type system to accept this.  I want to say that 'Full' is S[pagename] but doing that makes the usage of this code not as nice.
   // The problem now is that S[pageName] might not be Full
-  const urlConfig: UrlConfig<S, Full, T> = { cd, fdd, ids: ids.map ( s => s.toString () ), resourceId: resourceId.map ( s => s.toString () ), dLens, fdLens }
+  const urlConfig: UrlConfig<S, Full, T> = { cd, fdd, ids: ids.map ( s => s.toString () ), resourceId: resourceId.map ( s => s.toString () ), dLens, fdLens, jwtIds }
 
   const stf: SpecificTagFetcherProps<S, Full, T, MSGS> = { ...ctf, ...urlConfig, url, tagName, pageName, description: description ? description : `pageAndTagFetcher(${pageName},${tagName}})` };
   function selected ( s: S, pageName: any ) {
@@ -110,6 +111,7 @@ export function simpleTagFetcher<S extends HasSimpleMessages, FD> (
   fdLens: Optional<S, FD>,
   cd: NameAndLens<S>, fdd: NameAndLens<FD>,
   ids: string[],
+  jwtIds: string[],
   resourceId: string[],
   url: string,
   description?: string ) {
@@ -118,7 +120,7 @@ export function simpleTagFetcher<S extends HasSimpleMessages, FD> (
     pageName,
     undefined,
     fdLens,
-    cd, fdd, ids, resourceId,
+    cd, fdd, ids, resourceId,jwtIds,
     Lenses.identity (),
     url,
     description )

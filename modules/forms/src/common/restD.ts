@@ -62,6 +62,8 @@ export interface LensRestParam<T> extends ParamPrim<T> {
   annotation?: string;
 }
 
+
+
 export function isCommonLens<T> ( a: AllLensRestParams<T> ): a is CommonLensRestParam<T> {
   // @ts-ignore
   return a.commonLens !== undefined

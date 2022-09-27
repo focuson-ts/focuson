@@ -1,4 +1,4 @@
-import { infoToSuccessMessagesPostProcessor, OneRestDetails, RestCommand, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson/rest";
+import { OneRestDetails, RestCommand, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson/rest";
 import { createSimpleMessage, RestAction, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson/utils";
 import { AllFetcherUsingRestConfig, defaultPageSelectionAndRestCommandsContext, FocusOnConfig, FocusOnContext, FocusOnDebug, HasRestCount, processRestsAndFetchers, restCommandsFromFetchers, restCountL, traceL } from "@focuson/focuson";
 import { TagHolder } from "@focuson/template";
@@ -82,7 +82,6 @@ function fetchFn ( a: any, b: any ): Promise<[ number, number ]> {
 function config ( mockJwt: boolean ): FocusOnConfig<StateForNewFetcherTests, FocusOnContext<StateForNewFetcherTests>, SimpleMessage> {
   return {
     fetchFn: fetchFn,
-    mockJwt,
     messageL: simpleMessagesL (),
     newFetchers: newFetchers,
     onError ( s: StateForNewFetcherTests, e: any ): StateForNewFetcherTests {throw Error ( `on error. ${e}\n${JSON.stringify ( s )}` )},
