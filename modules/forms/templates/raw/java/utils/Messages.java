@@ -50,6 +50,9 @@ public class Messages {
     }
 
     public void error(String s) {
-        if (s != null && s.length() > 0) error.add(s);
+        if (s != null && s.length() > 0) {
+            error.add(s);
+            throw new FocusonBadRequest400Exception(this);
+        }
     }
 }

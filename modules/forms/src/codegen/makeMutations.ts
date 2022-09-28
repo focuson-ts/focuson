@@ -1,17 +1,15 @@
 import { RefD } from "../common/pageD";
 import { NameAnd, safeObject, toArray, unique } from "@focuson/utils";
 import { JavaWiringParams } from "./config";
-import { mutationClassName, mutationDetailsName, mutationMethodName, sqlMapFileName } from "./names";
+import { mutationClassName, mutationDetailsName, mutationMethodName } from "./names";
 import { AllLensRestParams, RestD } from "../common/restD";
 import { indentList } from "./codegen";
-import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutoSqlResolver, AutowiredMutationParam, displayParam, getMakeMock, getMessagesForSuccessAndFailure, importForTubles, InputMutationParam, isAutoSqlResolver, isBodyMutationParam, isInputParam, isMessageMutation, isMultipleMutation, isMutationThatIsaList, isOutputParam, isSelectMutationThatIsAList, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, paramNamePathOrValue, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlFunctionMutation, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
+import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutoSqlResolver, AutowiredMutationParam, displayParam, getMakeMock, getMessagesForSuccessAndFailure, importForTubles, InputMutationParam, isAutoSqlResolver, isBodyMutationParam, isInputParam, isManualMutation, isMessageMutation, isMultipleMutation, isMutationThatIsaList, isOutputParam, isSelectMutationThatIsAList, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, paramNamePathOrValue, PrimaryMutationDetail, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlFunctionMutation, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
 import { applyToTemplate } from "@focuson/template";
 import { restActionForName } from "@focuson/rest";
 import { outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint";
 import { isRepeatingDd, Pattern } from "../common/dataD";
-import { getAllParamsForDbFetcher, getDataFromRS } from "./makeDBFetchers";
-import { findSqlLinkDataFromRootAndDataD, findSqlRoot, makeMapsForRest, walkSqlRoots } from "./makeSqlFromEntities";
-import { writeToFile } from "@focuson/files";
+import { getDataFromRS } from "./makeDBFetchers";
 
 
 export const setObjectFor = ( errorPrefix: string ) => ( m: MutationParam, i: number ): string => {
@@ -74,8 +72,8 @@ export function makeMutationResolverReturnStatementForList ( m: MutationDetail, 
   throw new Error ( `Cannot makeMutationResolverReturnStatment for ${index} ${JSON.stringify ( m )}` )
 
 }
-export function makeMutationResolverReturnStatement ( m: ManualMutation, outputs: OutputMutationParam[] ): string {
-  if ( m.throwsException ) return '//No return statement because it throws an exception'
+export function makeMutationResolverReturnStatement ( m: PrimaryMutationDetail, outputs: OutputMutationParam[] ): string {
+  if ( isManualMutation ( m ) && m.throwsException ) return '//No return statement because it throws an exception'
   if ( outputs.length === 0 ) return `return;`
   if ( outputs.length === 1 ) return `return ${outputs[ 0 ].name};`
   return `return new Tuple${outputs.length}<${outputs.map ( o => o.javaType ).join ( "," )}>(${outputs.map ( x => x.name ).join ( ',' )});`
@@ -239,7 +237,7 @@ export function mutationCodeForSqlMapCalls<G> ( params: JavaWiringParams, errorP
           ...getFromResultSetIntoVariables ( errorPrefix, 'rs', paramsA ),
           ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ),
         ],
-        makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ),
+        makeMutationResolverReturnStatement ( m, allOutputParams ( paramsA ) ) ),
       ]
     ) ) ),
     `  }}`,
@@ -301,7 +299,7 @@ export function mutationCodeForFunctionCalls<G> ( params: JavaWiringParams, erro
           ...getFromStatement ( errorPrefix, 's', paramsA ),
           ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ),
         ],
-        makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ) ) ) ),
+        makeMutationResolverReturnStatement ( m, allOutputParams ( paramsA ) ) ) ) ) ),
     `    }}`
   ];
 }
@@ -321,7 +319,7 @@ export function mutationCodeForStoredProcedureCalls<G> ( params: JavaWiringParam
           ...getFromStatement ( errorPrefix, 's', paramsA ),
           ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ) ],
         ) ) ) ],
-      [ makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ), '}' ] ),
+      [ makeMutationResolverReturnStatement ( m, allOutputParams ( paramsA ) ), '}' ] ),
     `  }`,
   ]
 }
@@ -355,7 +353,7 @@ export function mutationCodeForCase<G> ( errorPrefix: string, p: RefD<G>, r: Res
     [ `if (${[ 'true', ...gm.guard ].join ( ' && ' )}){`,
       ...mutationCodeForOne ( errorPrefix, p, r, name, gm, i, includeMockIf, indexPrefix + index ),
       `// If you have a compilation error here: do the output params match the output params in the 'case'?`,
-      makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ),
+      makeMutationResolverReturnStatement ( m, allOutputParams ( paramsA ) ),
       '}' ] )
   return [
     `//If you have a compiler error in the type here, did you match the types of the output params in your manual code with the declared types in the .restD?`,

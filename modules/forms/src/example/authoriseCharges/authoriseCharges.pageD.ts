@@ -54,9 +54,10 @@ export function ViewChargesPage ( c: AuthoriseCustomisation ): ExampleModalPage 
         preCommands: [ { command: 'delete', path: '~/selectedChargeIndex' } ], // no need for pre / post here, it's just to check both are generated
         postCommands: [ { command: 'delete', path: '~/selectedDateItem' } ],
         // paths: { pathRepeated: '#editingData', otherData: '~/selectedDateItem/dateCreated' },
-        text: 'Approve Pending Fees', action: 'approvePendingFees'
+        text: 'Approve Pending Fees', action: 'approvePendingFees',
+        buttonType: 'primary'
       },
-      authoriseApprovedFees: { control: "ActionButton", path: '#editingData', text: 'Authorise Approved Fees', action: 'authoriseApprovedFees' },
+      authoriseApprovedFees: { control: "ActionButton", path: '#editingData', text: 'Authorise Approved Fees', action: 'authoriseApprovedFees', buttonType: 'secondary' },
       summary: {
         enabledBy: 'hasSomeData',
         control: 'ModalButton', modal: SummaryOfChargesPage ( c ),
