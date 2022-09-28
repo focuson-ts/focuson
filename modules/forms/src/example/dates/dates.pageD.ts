@@ -1,5 +1,6 @@
 import { ExampleMainPage } from "../common";
 import { datesDataD } from "./dates.dataD";
+import { datesRestD } from "./dates.restD";
 
 
 export const DatesPageD: ExampleMainPage = {
@@ -8,11 +9,14 @@ export const DatesPageD: ExampleMainPage = {
   domain: {
     dates: { dataDD: datesDataD }
   },
-  rest: {},
+  rest: {
+    notUsed: {rest: datesRestD, targetFromPath: "~/dates"}
+  },
   guards: {},
   initialValue: 'empty',
   modals: [], modes: [ 'edit' ],
   buttons: {
-    validateButton: {control: "ValidationButton"}
+    validateButton: { control: "ValidationButton" },
+    exampleButtonWithValidation: { control: 'RestButton', validate: true, restName: 'notUsed', action: 'get' }
   }
 }

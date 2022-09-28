@@ -95,7 +95,7 @@ export function LabelAndDateInput<S, T, Context extends FocusOnContext<S>> ( pro
                   minDate={minDate}
                   highlightDates={datesToExcludeAsDateType}
                   readOnly={mode === 'view' || readonly}
-                  className={error ? "red-border" : ""}
+                  // className={error ? "red-border" : ""}
                   closeOnScroll={true}
                   onChangeRaw={( e ) => handleChangeRaw ( e )}
                   placeholderText="Select a date"/>

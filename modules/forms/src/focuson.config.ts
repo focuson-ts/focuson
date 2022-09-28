@@ -27,7 +27,7 @@ import { CreditAC, DirectDebitAC } from "./example/authoriseCharges/authoriseCha
 import { modalPagePD } from "./example/modalPages/modalPages.pageD";
 import { resolversRefD } from "./example/resolvers/resolvers.refD";
 
-export const generatedRefs: ExampleRefD[] = [ dateInfoRefD ( dateRefconfig ) , resolversRefD]
+export const generatedRefs: ExampleRefD[] = [ dateInfoRefD ( { ... dateRefconfig, urlPrefix: "/api/focuson"} ) , resolversRefD]
 
 export const generatedPages: ExampleMainPage[] = [
   ButtonsPageD,

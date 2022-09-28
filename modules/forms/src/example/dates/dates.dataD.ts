@@ -5,7 +5,8 @@ import { LayoutCd } from "../../common/componentsD";
 export const datesDataD: ExampleDataD = {
   name: 'Dates',
   description: "",
-  layout: { component: LayoutCd, displayParams: { details: '[[6,5]]', title: 'Some Title {empty}', rightHandTitle: 'Some Right Hand Title {empty}' } },
+  layout: { component: LayoutCd, displayParams: { details: '[[8,8]]', title: 'Some Title {empty}', rightHandTitle: 'Some Right Hand Title {empty}' } },
+  // layout: { component: LayoutCd, displayParams: { details: '[[1]]', title: 'Some Title {empty}', rightHandTitle: 'Some Right Hand Title {empty}' } },
   structure: {
     empty: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified' } },
     emptyAndReadonly: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified - readonly', readonly: true } },

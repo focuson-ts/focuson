@@ -1,4 +1,4 @@
-import { NameAnd, safeArray } from "@focuson/utils";
+import { NameAnd, safeArray, safeString } from "@focuson/utils";
 import { CommonStateProps, LabelAlignment } from "./common";
 import { format, parse } from 'date-fns';
 import { LensState, reasonFor, SetJsonReasonEvent } from "@focuson/state";
@@ -6,6 +6,7 @@ import { PageSelectionContext } from "@focuson/pages";
 import { Label } from "./label";
 import { makeButtons } from "./makeButtons";
 import ReactDatePicker from "react-datepicker";
+import { useEffect, useRef } from "react";
 
 
 type DateFormat = string//'dd-MM/yyyy' | 'yyyy/MM/dd'
@@ -251,21 +252,20 @@ export function RawDatePicker<S extends any, C extends PageSelectionContext<S>> 
     }
     const value = state.optJson ();
     function findErrorsFrom ( value: string | undefined ): string[] {
-      if ( !value ) return required !== false&& ! readonly ? [ `Date is required` ] : []
+      if ( !value ) return required !== false && !readonly ? [ `Date is required` ] : []
       const valueAsDate = parseDate ( `Date[${id}]`, dateFormat ) ( value )
       if ( Array.isArray ( valueAsDate ) ) return valueAsDate
-      return dateAcceptor ( valueAsDate )
+      const result = dateAcceptor ( valueAsDate );
+      return result
     }
     const errorFromValue = findErrorsFrom ( value )
+    const dateError = errorFromValue.length > 0 ? errorFromValue.join ( ", " ) : undefined
     if ( debug ) console.log ( 'datePicker', id, 'value', value, 'date', date, 'errorFromValue', errorFromValue )
     let error = selectedDateErrors.length > 0;
-    // const ref=useRef<any>(null)
-
-    return <div className={`labelAndDate ${props.labelPosition == 'Horizontal' ? 'd-flex-inline' : ''}`}>
+    return <div data-error={dateError} className={`labelAndDate ${props.labelPosition == 'Horizontal' ? 'd-flex-inline' : ''}`}>
       <Label state={state} htmlFor={name} label={label}/>
       <div className={`${props.buttons && props.buttons.length > 0 ? 'inputAndButtons' : ''} `}>
         <ReactDatePicker id={id}
-          // customInputRef={ref}
                          dateFormat={dateFormat}
                          todayButton='Today'
                          openToDate={scrollToDate}
@@ -275,7 +275,7 @@ export function RawDatePicker<S extends any, C extends PageSelectionContext<S>> 
                          showMonthYearPicker={showMonthYearPicker}
                          highlightDates={holidays}
                          readOnly={mode === 'view' || readonly}
-                         className={error ? "red-border" : ""}
+                         className={dateError ? "red-border" : ""}
                          closeOnScroll={true}
                          onChangeRaw={onChangeRaw}
                          value={error ? value : undefined} // whats going on here? Well the value is read as a date. And the date picker might change it

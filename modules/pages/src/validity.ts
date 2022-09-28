@@ -1,5 +1,5 @@
 import { focusPageClassName } from "./PageTemplate";
-import { createSimpleMessage, DateFn, safeArray } from "@focuson/utils";
+import { createSimpleMessage, DateFn, safeArray, safeString } from "@focuson/utils";
 import { LensState, reasonFor } from "@focuson/state";
 import { HasSimpleMessageL } from "./simpleMessage";
 import React, { useEffect, useRef } from "react";
@@ -33,11 +33,12 @@ export const getRefForValidateLogicToButton = <S> ( state: LensState<S, any, any
 };
 
 export function findValidityForInput ( thisPage: Element, debug: boolean ): [ string, string, boolean ][] {
-  const inputs = thisPage?.getElementsByTagName ( "input" )
+  const parents = thisPage?.getElementsByClassName ( 'labelValueButton' )
   const result: [ string, string, boolean ][] = []
-  if ( inputs ) {
-    for ( var i = 0; i < inputs.length; i++ ) {
-      const child = inputs[ i ];
+  if ( parents ) {
+    for ( var i = 0; i < parents.length; i++ ) {
+      const inputs = parents.item ( i )?.getElementsByTagName ( "input" )
+      const child = inputs.item ( 0 );
       const id = child.getAttribute ( 'id' );
       const labelForValidation = child.getAttribute ( 'data-validationmessage' )
       const recordedId = id ? id : "noIdForThisElement"
@@ -51,7 +52,7 @@ export function findValidityForInput ( thisPage: Element, debug: boolean ): [ st
   return result
 }
 export function findValidityForDate ( thisPage: Element, debug: boolean ): [ string, string, boolean ][] {
-  const datePickers = thisPage?.getElementsByClassName ( "react-datepicker-wrapper" )
+  const datePickers = thisPage?.getElementsByClassName ( "labelAndDate" )
   const result: [ string, string, boolean ][] = []
   if ( datePickers ) {
     for ( var i = 0; i < datePickers.length; i++ ) {
@@ -62,8 +63,12 @@ export function findValidityForDate ( thisPage: Element, debug: boolean ): [ str
       const child = datePicker.getElementsByTagName ( 'input' )?.[ 0 ]
       const id = child.getAttribute ( 'id' );
       const recordedId = id ? id : "noIdForThisElement"
-      const validity = isDateError || child.checkValidity ();
-       console.log ( 'findValidityForDate: ', id, validity )
+      // console.log ( `child.isDateError`, id, dateError, isDateError )
+      // console.log ( `child.setCustomValidity ( ${dateError} )` )
+      child.setCustomValidity ( isDateError ? dateError : '' )
+
+      const validity = child.checkValidity ();
+      if ( debug ) console.log ( 'findValidityForDate: ', id, validity, child.validity, child.checkValidity () )
       result.push ( [ recordedId, labelForValidation ? labelForValidation : id, validity ] )
     }
   }

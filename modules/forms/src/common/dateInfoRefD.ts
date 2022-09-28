@@ -45,7 +45,10 @@ export function dateInfoRefD<G> ( d: DateRefConfiguration ): RefD<G> {
   const commonDataRefD: RefD<G> = {
     name: "CommonData",
     refGroups: 'once',
-    commonParams: { jurisdiction: { ...StringParam, commonLens: 'jurisdiction', testValue: 'GB' } },
+    commonParams: {
+      jurisdiction: { ...StringParam, commonLens: 'jurisdiction', testValue: 'GB' },
+      browserNow: { ...StringParam, commonLens: 'browserNowAtStart', testValue: '' }
+    },
     domain: {
       dates: { dataDD: timeDataD }
     },
