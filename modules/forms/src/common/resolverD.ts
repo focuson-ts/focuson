@@ -165,7 +165,9 @@ export interface ManualMutation {
   params: MutationParamForManual | MutationParamForManual[]
   name?: string;
   makeMock?: boolean
-  code: string | string[]
+  code: string | string[];
+  throwsException?: boolean
+
 }
 export function isManualMutation ( m: MutationDetail ): m is ManualMutation {
   const a: any = m

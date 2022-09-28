@@ -192,6 +192,7 @@ export function makeResolvers<G> ( params: JavaWiringParams, ref: RefD<G>, restN
     `import ${params.thePackage}.${params.utilsPackage}.LoggedDataSource;`,
     `import ${params.thePackage}.${params.utilsPackage}.Messages;`,
     `import ${params.thePackage}.${params.utilsPackage}.FocusonNotFound404Exception;`,
+    `import ${params.thePackage}.${params.utilsPackage}.FocusonBadRequest400Exception;`,
     `import static ${params.thePackage}.${params.utilsPackage}.GraphQlUtils.getData;`,
     `import ${params.thePackage}.${params.utilsPackage}.DateFormatter;`,
     `import ${params.thePackage}.${params.utilsPackage}.IOGNL;`,

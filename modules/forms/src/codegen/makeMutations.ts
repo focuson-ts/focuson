@@ -74,7 +74,8 @@ export function makeMutationResolverReturnStatementForList ( m: MutationDetail, 
   throw new Error ( `Cannot makeMutationResolverReturnStatment for ${index} ${JSON.stringify ( m )}` )
 
 }
-export function makeMutationResolverReturnStatement ( outputs: OutputMutationParam[] ): string {
+export function makeMutationResolverReturnStatement ( m: ManualMutation, outputs: OutputMutationParam[] ): string {
+  if ( m.throwsException ) return '//No return statement because it throws an exception'
   if ( outputs.length === 0 ) return `return;`
   if ( outputs.length === 1 ) return `return ${outputs[ 0 ].name};`
   return `return new Tuple${outputs.length}<${outputs.map ( o => o.javaType ).join ( "," )}>(${outputs.map ( x => x.name ).join ( ',' )});`
@@ -332,7 +333,7 @@ export function mutationCodeForManual<G> ( errorPrefix: string, p: RefD<G>, r: R
     `//If you have a compilation error because of a 'cannot resolve symbol' you may need to add the class to the 'imports'`,
     ...makeMethodDecl ( errorPrefix, paramsA, javaTypeForOutput ( paramsA ), r, name, m, index ),
     ...commonIfDbNameBlock ( r, paramsA, name, m, index, includeMockIf ),
-    ...indentList ( indentList ( indentList ( [ ...toArray ( m.code ), makeMutationResolverReturnStatement ( allOutputParams ( paramsA ) ) ] ) ) ),
+    ...indentList ( indentList ( indentList ( [ ...toArray ( m.code ), makeMutationResolverReturnStatement ( m, allOutputParams ( paramsA ) ) ] ) ) ),
     `  }`,
   ];
 }
@@ -440,6 +441,7 @@ export function makeMutations<G> ( params: JavaWiringParams, ref: RefD<G>, restN
     'import org.springframework.beans.factory.annotation.Autowired;',
     ``,
     `import ${params.thePackage}.${params.utilsPackage}.FocusonNotFound404Exception;`,
+    `import ${params.thePackage}.${params.utilsPackage}.FocusonBadRequest400Exception;`,
     `import ${params.thePackage}.${params.utilsPackage}.DateFormatter;`,
     `import org.slf4j.Logger;`,
     `import org.slf4j.LoggerFactory;`,
