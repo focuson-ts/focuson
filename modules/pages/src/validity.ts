@@ -32,19 +32,38 @@ export const getRefForValidateLogicToButton = <S> ( state: LensState<S, any, any
   return ref
 };
 
-
 export function findValidityForInput ( thisPage: Element, debug: boolean ): [ string, string, boolean ][] {
   const inputs = thisPage?.getElementsByTagName ( "input" )
   const result: [ string, string, boolean ][] = []
   if ( inputs ) {
     for ( var i = 0; i < inputs.length; i++ ) {
       const child = inputs[ i ];
-      let id = child.getAttribute ( 'id' );
-      let labelForValidation = child.getAttribute ( 'data-validationmessage' )
-      let recordedId = id ? id : "noIdForThisElement"
-
-      let validity = child.checkValidity ();
+      const id = child.getAttribute ( 'id' );
+      const labelForValidation = child.getAttribute ( 'data-validationmessage' )
+      const recordedId = id ? id : "noIdForThisElement"
+      const clazz = child.className
+      const error = clazz?.includes ( 'invalid' )
+      const validity = error !== undefined || child.checkValidity ();
       if ( debug ) console.log ( 'findValidityForInput: ', id, validity )
+      result.push ( [ recordedId, labelForValidation ? labelForValidation : id, validity ] )
+    }
+  }
+  return result
+}
+export function findValidityForDate ( thisPage: Element, debug: boolean ): [ string, string, boolean ][] {
+  const datePickers = thisPage?.getElementsByClassName ( "react-datepicker-wrapper" )
+  const result: [ string, string, boolean ][] = []
+  if ( datePickers ) {
+    for ( var i = 0; i < datePickers.length; i++ ) {
+      const datePicker = datePickers[ i ];
+      const labelForValidation = datePicker.getAttribute ( 'data-validationmessage' )
+      const dateError = datePicker.getAttribute ( 'data-error' )
+      const isDateError = dateError && dateError.length > 0
+      const child = datePicker.getElementsByTagName ( 'input' )?.[ 0 ]
+      const id = child.getAttribute ( 'id' );
+      const recordedId = id ? id : "noIdForThisElement"
+      const validity = isDateError || child.checkValidity ();
+       console.log ( 'findValidityForDate: ', id, validity )
       result.push ( [ recordedId, labelForValidation ? labelForValidation : id, validity ] )
     }
   }
@@ -96,6 +115,7 @@ export function findValidityDetails ( pageHolderClass: string, debug: boolean ):
   if ( !thisPage ) return []
   return [ ...findValidityForInput ( thisPage, debug ),
     ...findValidityForSelect ( thisPage, debug ),
+    ...findValidityForDate ( thisPage, debug ),
     ...findValidityForRadio ( thisPage, debug ) ]
 }
 

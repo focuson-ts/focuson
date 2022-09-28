@@ -1,7 +1,6 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
-import { BooleanDD, DateDD, DateDDMMYYY_DD, MoneyDD, StringDD, stringPrimDD, StringPrimitiveDD } from "../../common/dataD";
+import { BooleanDD, DateDD, DateWithDatePickerDD, MoneyDD, StringDD, stringPrimDD, StringPrimitiveDD } from "../../common/dataD";
 import { ConfirmChangesToAnyCD, LabelAndDropDownCD, LabelAndDropDownFromDataCD, LabelAndRadioCD, LayoutCd, TableWithVaryingOrderCD } from "../../common/componentsD";
-import { ConfirmChangesToAny } from "@focuson/form_components";
 
 export const PaymentTypeDd: StringPrimitiveDD = {
   ...stringPrimDD,
@@ -45,7 +44,7 @@ export const SummaryOfPaymentsLineDD: ExampleDataD = {
     sterlingAmount: { dataDD: MoneyDD, sample: [ 123, 2345, 5654 ] },
     currencyAmount: { dataDD: MoneyDD, sample: [ 222, 333, 444 ] },
     amtInWords: { dataDD: StringDD, sample: [ 'one hundred', 'two hundred', 'three hundred' ] },
-    forActionOn: { dataDD: DateDDMMYYY_DD, sample: [ '5/12/2021', '6/12/2022' ], },
+    forActionOn: { dataDD: DateWithDatePickerDD, sample: [ '5/12/2021', '6/12/2022' ], },
     dateCreated: { dataDD: DateDD },
     status: { dataDD: StringDD, sample: [ 'cancel', 'paid', '' ] },
   }
@@ -172,7 +171,7 @@ export const PaymentDD: ExampleDataD = {
     paymentType: { dataDD: PaymentTypeDd },
     nameOfPayee: { dataDD: StringDD, sample: [ 'Bob', 'Phil', 'Andrew' ] },
     amount: { dataDD: amountDD },
-    forActionOn: { dataDD: DateDDMMYYY_DD, sample: [ '5/12/2021', '6/12/2022' ] },
+    forActionOn: { dataDD: DateWithDatePickerDD, sample: [ '5/12/2021', '6/12/2022' ] },
     chargeDetails: { dataDD: ChargeDetailsDD },
     chapsDetails: { dataDD: ChapDetailsDD, guard: { paymentType: [ 'c' ] } },
     expressDetails: { dataDD: ExpressDetailsDD, guard: { paymentType: [ 'e' ] } }

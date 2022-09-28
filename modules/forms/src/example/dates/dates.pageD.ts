@@ -12,5 +12,7 @@ export const DatesPageD: ExampleMainPage = {
   guards: {},
   initialValue: 'empty',
   modals: [], modes: [ 'edit' ],
-  buttons: {}
+  buttons: {
+    validateButton: {control: "ValidationButton"}
+  }
 }

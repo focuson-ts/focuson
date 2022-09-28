@@ -92,6 +92,10 @@ describe ( "acceptDate", () => {
       expect ( accept ( new Date ( "2022/11/7" ) ) ).toEqual ( [] ) //today
       expect ( accept ( new Date ( "2022/12/1" ) ) ).toEqual ( [ 'is in the future' ] )
       expect ( accept ( new Date ( "2022/10/3" ) ) ).toEqual ( [] )
+      // @ts-ignore
+      expect ( accept ( undefined ) ).toEqual ( [] )
+      // @ts-ignore
+      expect ( accept ( null ) ).toEqual ( [] )
     } )
   } )
   describe ( "weekendsOK", () => {
@@ -112,6 +116,15 @@ describe ( "acceptDate", () => {
       expect ( accept ( new Date ( "2022/11/7" ) ) ).toEqual ( [] ) //today
       expect ( accept ( new Date ( "2022/11/12" ) ) ).toEqual ( [] )
       expect ( accept ( new Date ( "2022/11/8" ) ) ).toEqual ( [] )
+    } )
+    it ( "should handle non dates", () => {
+      const accept = acceptDateForTest ( 'GB', okDateInfo, { type: 'future', allowWeekends: undefined } );
+      expect ( accept ( new Date ( "2022/11/7" ) ) ).toEqual ( [] ) //today
+      // @ts-ignore
+      expect ( accept ( undefined ) ).toEqual ( [] )
+      // @ts-ignore
+      expect ( accept ( null ) ).toEqual ( [] )
+
     } )
   } )
 } )
@@ -251,8 +264,8 @@ describe ( "DatePicker", () => {
       "<div class='labelAndDate '><label class='input-label'>someLabel</label><div class=' '><div class='react-datepicker-wrapper'><div class='react-datepicker__input-container'><input type='text' id='someId' placeholder='Select a date' class='' value=''></div></div></div></div>" )
   } )
 
-  it ("should handled required property", () =>{
-    fail()
-  })
+  it ( "should handled required property", () => {
+    fail ()
+  } )
 
 } )

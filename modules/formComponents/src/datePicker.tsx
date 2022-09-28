@@ -76,8 +76,7 @@ const weekEndsOk = <S, C> ( dateRange: DateRange<S, C> ): DateValidation => ( da
 const futureOk = <S, C> ( udi: UsableDateInfo, dateRange: DateRange<S, C> ): DateValidation => {
   const firstValidDate = firstAllowedDate ( udi.today, udi.holidays, dateRange )
   return date => {
-    if ( !date ) return [ `Date is undefined` ]
-    if ( isDateRangeInFuture ( dateRange ) ) {
+    if ( date && isDateRangeInFuture ( dateRange ) ) {
       if ( firstValidDate === undefined ) {
         console.error ( 'error - undefined firstValidDate', udi, dateRange )
         throw Error ( `Cannot work out if date is in future because firstValidDate is undefined` )
@@ -87,7 +86,7 @@ const futureOk = <S, C> ( udi: UsableDateInfo, dateRange: DateRange<S, C> ): Dat
   };
 }
 const pastOk = <S, C> ( dateRange: DateRange<S, C>, today: Date ): DateValidation => date => {
-  if ( isDateRangeInPast ( dateRange ) ) {
+  if ( date && isDateRangeInPast ( dateRange ) ) {
     return date.getTime () <= today.getTime () ? [] : [ `is in the future` ]
   } else return []
 }
@@ -161,6 +160,7 @@ export function acceptDateForTest<S, C> ( jurisdiction: string | undefined, date
 }
 
 interface InfoTheDatePickerNeeds {
+  dateAcceptor: ( d: Date ) => string[]
   dateFilter: ( d: Date ) => boolean;
   holidays: Date[];
   defaultDate: Date | undefined;
@@ -170,7 +170,9 @@ export function calcInfoTheDatePickerNeeds<S, C> ( id: string, jurisdiction: str
   const actualDateRange: DateRange<S, C> = dateRange ? dateRange : {}
   const usableInfo = validateDateInfo ( dateInfo, jurisdiction, actualDateRange )
   if ( Array.isArray ( usableInfo ) ) throw  new Error ( `Problem in dateInfo\n${JSON.stringify ( usableInfo )}` )
-  let result = {
+  const dateAcceptor = acceptDate ( usableInfo, actualDateRange )
+  let result: InfoTheDatePickerNeeds = {
+    dateAcceptor,
     dateFilter: noErrorsBooleanFn ( acceptDate ( usableInfo, actualDateRange ) ),
     defaultDate: usableInfo.firstValidDate ? usableInfo.firstValidDate : usableInfo.today,
     holidays: usableInfo.holidays
@@ -204,10 +206,10 @@ export interface DatePickerProps<S, C> extends CommonStateProps<S, string, C>, L
   dateInfo?: LensState<S, DateInfo, C>;
 }
 
-export type DatePickerSelectFn = <S extends any>( id: string, debug: boolean, state: LensState<S, any, any> ) => ( eventName: SetJsonReasonEvent, date: string |undefined) => void
+export type DatePickerSelectFn = <S extends any>( id: string, debug: boolean, state: LensState<S, any, any> ) => ( eventName: SetJsonReasonEvent, date: string | undefined ) => void
 
 export function defaultDatePickerOnCheck<S extends any> ( id: string, debug: boolean, state: LensState<S, any, any> ) {
-  return ( eventName: SetJsonReasonEvent, date: string|undefined ) => {
+  return ( eventName: SetJsonReasonEvent, date: string | undefined ) => {
     if ( debug ) console.log ( 'datePicker.defaultDatePickerOnCheck', id, 'date', date )
     state.setJson ( date, reasonFor ( 'DatePicker', eventName, id ) )
   };
@@ -221,11 +223,11 @@ function myformat ( e: any, dateFormat: string ) {
 }
 export function RawDatePicker<S extends any, C extends PageSelectionContext<S>> ( selectFn: DatePickerSelectFn ) {
   return ( props: DatePickerProps<S, C> ) => {
-    const { state, jurisdiction, dateInfo, dateRange, name, label, id, mode, readonly, dateFormat, showMonthYearPicker } = props
+    const { state, jurisdiction, dateInfo, dateRange, name, label, id, mode, readonly, dateFormat, showMonthYearPicker, required } = props
     const main: any = state.main
     const debug = main?.debug?.dateDebug
 
-    const { defaultDate, dateFilter, holidays } = calcInfoTheDatePickerNeeds ( id, jurisdiction?.optJson (), dateInfo?.optJson (), dateFormat, dateRange, debug )
+    const { defaultDate, dateFilter, holidays, dateAcceptor } = calcInfoTheDatePickerNeeds ( id, jurisdiction?.optJson (), dateInfo?.optJson (), dateFormat, dateRange, debug )
     const { date, selectedDateErrors, scrollToDate } = selectedDate ( state, dateFormat, defaultDate )
 
     function onChange ( e: any/* probably a date or an array of dates if we are selecting a range (which we aren't)*/ ) {
@@ -247,8 +249,15 @@ export function RawDatePicker<S extends any, C extends PageSelectionContext<S>> 
         selectFn ( id, debug, state ) ( 'changeRaw', value )
       }
     }
-    let value = state.optJson ();
-    if ( debug ) console.log ( 'datePicker', id, 'value', value, 'date', date )
+    const value = state.optJson ();
+    function findErrorsFrom ( value: string | undefined ): string[] {
+      if ( !value ) return required !== false&& ! readonly ? [ `Date is required` ] : []
+      const valueAsDate = parseDate ( `Date[${id}]`, dateFormat ) ( value )
+      if ( Array.isArray ( valueAsDate ) ) return valueAsDate
+      return dateAcceptor ( valueAsDate )
+    }
+    const errorFromValue = findErrorsFrom ( value )
+    if ( debug ) console.log ( 'datePicker', id, 'value', value, 'date', date, 'errorFromValue', errorFromValue )
     let error = selectedDateErrors.length > 0;
     // const ref=useRef<any>(null)
 
