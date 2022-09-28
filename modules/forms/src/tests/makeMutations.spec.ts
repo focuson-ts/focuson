@@ -2,7 +2,7 @@ import { getFromResultSetIntoVariables, getFromStatement, makeMutationResolverRe
 import { paramsForTest } from "./paramsForTest";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
-import { InputMutationParam, IntegerMutationParam, MutationParam, NullMutationParam, OutputForManualParam, OutputForSqlMutationParam, OutputForStoredProcMutationParam, StringMutationParam } from "../common/resolverD";
+import { InputMutationParam, IntegerMutationParam, ManualMutation, MutationParam, NullMutationParam, OutputForManualParam, OutputForSqlMutationParam, OutputForStoredProcMutationParam, PrimaryMutationDetail, StringMutationParam } from "../common/resolverD";
 import { fromCommonIds } from "../example/commonIds";
 import { safeArray, safeObject } from "@focuson/utils";
 import { PaymentsPageD } from "../example/payments/payments.pageD";
@@ -148,14 +148,22 @@ describe ( "mockReturnStatement", () => {
   } )
 } )
 describe ( "returnStatement", () => {
+  // @ts-ignore
+  const pretendsToBeMutationDetail: PrimaryMutationDetail = {}
+  // @ts-ignore
+  const manualMutationWithThrowsException: ManualMutation = { type: "manual",throwsException: true }
+
+  it ( "returns empty string if manual with throwsException", () => {
+    expect ( makeMutationResolverReturnStatement ( manualMutationWithThrowsException, [] ) ).toEqual ( '//No return statement because it throws an exception' )
+  } )
   it ( "void if no MPs", () => {
-    expect ( makeMutationResolverReturnStatement ( [] ) ).toEqual ( 'return;' )
+    expect ( makeMutationResolverReturnStatement ( pretendsToBeMutationDetail, [] ) ).toEqual ( 'return;' )
   } )
   it ( "the javatype if one MP", () => {
-    expect ( makeMutationResolverReturnStatement ( [ spOutputMP, ] ) ).toEqual ( 'return someNameSP;' )
+    expect ( makeMutationResolverReturnStatement ( pretendsToBeMutationDetail, [ spOutputMP, ] ) ).toEqual ( 'return someNameSP;' )
   } )
   it ( "A tuple if many MPs", () => {
-    expect ( makeMutationResolverReturnStatement ( [ spOutputMP, sqlOutputMP, manOutputMp ] ) ).toEqual (
+    expect ( makeMutationResolverReturnStatement ( pretendsToBeMutationDetail, [ spOutputMP, sqlOutputMP, manOutputMp ] ) ).toEqual (
       'return new Tuple3<String,String,Integer>(someNameSP,someNameSql,someNameMan);' )
   } )
 } )
@@ -195,6 +203,7 @@ describe ( "makeMutations", () => {
       "import org.springframework.beans.factory.annotation.Autowired;",
       "",
       "import focuson.data.utils.FocusonNotFound404Exception;",
+      "import focuson.data.utils.FocusonBadRequest400Exception;",
       "import focuson.data.utils.DateFormatter;",
       "import org.slf4j.Logger;",
       "import org.slf4j.LoggerFactory;",
@@ -252,6 +261,7 @@ describe ( "makeMutations", () => {
       "import org.springframework.beans.factory.annotation.Autowired;",
       "",
       "import focuson.data.utils.FocusonNotFound404Exception;",
+      "import focuson.data.utils.FocusonBadRequest400Exception;",
       "import focuson.data.utils.DateFormatter;",
       "import org.slf4j.Logger;",
       "import org.slf4j.LoggerFactory;",
@@ -396,6 +406,7 @@ describe ( "makeMutations", () => {
       "import org.springframework.beans.factory.annotation.Autowired;",
       "",
       "import focuson.data.utils.FocusonNotFound404Exception;",
+      "import focuson.data.utils.FocusonBadRequest400Exception;",
       "import focuson.data.utils.DateFormatter;",
       "import org.slf4j.Logger;",
       "import org.slf4j.LoggerFactory;",
@@ -444,6 +455,7 @@ describe ( "makeMutations", () => {
       "import org.springframework.beans.factory.annotation.Autowired;",
       "",
       "import focuson.data.utils.FocusonNotFound404Exception;",
+      "import focuson.data.utils.FocusonBadRequest400Exception;",
       "import focuson.data.utils.DateFormatter;",
       "import org.slf4j.Logger;",
       "import org.slf4j.LoggerFactory;",

@@ -18,8 +18,6 @@ import { SummaryOfChargeDatesRD } from "../example/authoriseCharges/authoriseCha
 import { DirectDebitAC } from "../example/authoriseCharges/authoriseCharges.customise";
 
 describe ( "makeResolvers", () => {
-
-
   it ( "should make resolvers", () => {
     expect ( makeResolvers ( paramsForTest, ChequeCreditbooksPD, 'chequeCreditBooks', chequeCreditBooksRestD,
       'get', safeObject ( chequeCreditBooksRestD.resolvers ).getChequeCreditbooks,
@@ -50,6 +48,7 @@ describe ( "makeResolvers", () => {
       "import focuson.data.utils.LoggedDataSource;",
       "import focuson.data.utils.Messages;",
       "import focuson.data.utils.FocusonNotFound404Exception;",
+      "import focuson.data.utils.FocusonBadRequest400Exception;",
       "import static focuson.data.utils.GraphQlUtils.getData;",
       "import focuson.data.utils.DateFormatter;",
       "import focuson.data.utils.IOGNL;",
@@ -162,6 +161,7 @@ describe ( "makeResolvers", () => {
       "import focuson.data.utils.LoggedDataSource;",
       "import focuson.data.utils.Messages;",
       "import focuson.data.utils.FocusonNotFound404Exception;",
+      "import focuson.data.utils.FocusonBadRequest400Exception;",
       "import static focuson.data.utils.GraphQlUtils.getData;",
       "import focuson.data.utils.DateFormatter;",
       "import focuson.data.utils.IOGNL;",
@@ -236,6 +236,7 @@ describe ( "makeResolvers", () => {
       "import focuson.data.utils.LoggedDataSource;",
       "import focuson.data.utils.Messages;",
       "import focuson.data.utils.FocusonNotFound404Exception;",
+      "import focuson.data.utils.FocusonBadRequest400Exception;",
       "import static focuson.data.utils.GraphQlUtils.getData;",
       "import focuson.data.utils.DateFormatter;",
       "import focuson.data.utils.IOGNL;",
@@ -299,7 +300,7 @@ describe ( "makeResolvers", () => {
       "",
       "public String dbName() {return IFetcher.db; }",
       "}"
-    ])
+    ] )
   } )
 
   it ( "should make resolvers for a sql list resolvers", () => {
@@ -331,6 +332,7 @@ describe ( "makeResolvers", () => {
       "import focuson.data.utils.LoggedDataSource;",
       "import focuson.data.utils.Messages;",
       "import focuson.data.utils.FocusonNotFound404Exception;",
+      "import focuson.data.utils.FocusonBadRequest400Exception;",
       "import static focuson.data.utils.GraphQlUtils.getData;",
       "import focuson.data.utils.DateFormatter;",
       "import focuson.data.utils.IOGNL;",
@@ -422,6 +424,7 @@ describe ( "makeResolvers", () => {
       "import focuson.data.utils.LoggedDataSource;",
       "import focuson.data.utils.Messages;",
       "import focuson.data.utils.FocusonNotFound404Exception;",
+      "import focuson.data.utils.FocusonBadRequest400Exception;",
       "import static focuson.data.utils.GraphQlUtils.getData;",
       "import focuson.data.utils.DateFormatter;",
       "import focuson.data.utils.IOGNL;",
@@ -500,6 +503,7 @@ describe ( "makeResolvers", () => {
       "import focuson.data.utils.LoggedDataSource;",
       "import focuson.data.utils.Messages;",
       "import focuson.data.utils.FocusonNotFound404Exception;",
+      "import focuson.data.utils.FocusonBadRequest400Exception;",
       "import static focuson.data.utils.GraphQlUtils.getData;",
       "import focuson.data.utils.DateFormatter;",
       "import focuson.data.utils.IOGNL;",
@@ -530,6 +534,6 @@ describe ( "makeResolvers", () => {
       "",
       "public String dbName() {return IFetcher.db; }",
       "}"
-    ])
+    ] )
   } )
 } )

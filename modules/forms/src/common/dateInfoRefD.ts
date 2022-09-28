@@ -47,7 +47,7 @@ export function dateInfoRefD<G> ( d: DateRefConfiguration ): RefD<G> {
     refGroups: 'once',
     commonParams: {
       jurisdiction: { ...StringParam, commonLens: 'jurisdiction', testValue: 'GB' },
-      browserNow: { ...StringParam, commonLens: 'browserNowAtStart', testValue: '' }
+      // browserNow: { ...StringParam, commonLens: 'browserNowAtStart', testValue: '' }
     },
     domain: {
       dates: { dataDD: timeDataD }

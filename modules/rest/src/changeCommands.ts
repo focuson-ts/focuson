@@ -121,6 +121,7 @@ export type ModalChangeCommands = CommonCommands | CopyCommand
 export type NewPageChangeCommands = CommonCommands | CopyCommand | DeletePageTagsCommand
 export type InputChangeCommands = CommonCommands | StrictCopyCommand
 export type CommandButtonChangeCommands = CommonCommands | StrictCopyCommand
+export type ConfirmWindowChangeCommands = CommonCommands | StrictCopyCommand
 
 
 export interface DeleteMessageStrictCopySetProcessorsConfig<S, MSGs> {
@@ -190,5 +191,13 @@ export const commandButtonCommandProcessors = <S, MSGs> ( config: InputProcessor
     deleteMessageSetProcessors ( config ),
     strictCopyCommandProcessor ( toPathTolens, toPathTolens ) ( s ) );
 };
+
+export const confirmWindowCommandProcessors = <S, MSGs> ( config: InputProcessorsConfig<S, MSGs> ) => ( s: S ) => {
+  const { toPathTolens } = config
+  return composeChangeCommandProcessors (
+    deleteMessageSetProcessors ( config ),
+    strictCopyCommandProcessor ( toPathTolens, toPathTolens ) ( s ) );
+};
+
 
 

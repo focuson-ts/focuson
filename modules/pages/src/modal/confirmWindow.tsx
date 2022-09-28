@@ -4,7 +4,7 @@ import { PageSelection, pageSelections, popPage } from "../pageSelection";
 import { Transform } from "@focuson/lens";
 import { DisplayArbitraryPageFn } from "../pageConfig";
 import { replaceTextUsingPath } from "../replace";
-import { ModalChangeCommands } from "@focuson/rest";
+import { CommandButtonChangeCommands, ConfirmWindowChangeCommands, ModalChangeCommands } from "@focuson/rest";
 
 export interface ConfirmProps {
   pageName?: string;
@@ -13,7 +13,9 @@ export interface ConfirmProps {
   messageText?: string
   confirmText?: string;
   cancelText?: string;
-  showCancelButton?: boolean
+  showCancelButton?: boolean;
+  confirmActions?: ConfirmWindowChangeCommands | ConfirmWindowChangeCommands[]
+  cancelActions?: ConfirmWindowChangeCommands | ConfirmWindowChangeCommands[]
 }
 export interface ConfirmWindow extends ConfirmProps {
   type: 'window'
