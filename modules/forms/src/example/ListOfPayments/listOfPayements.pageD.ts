@@ -127,8 +127,8 @@ export const ListOfPaymentsPagePD: ExampleMainPage = {
     authorisedToSend: { condition: 'or', conditions: [ 'sendingToUser', 'authorisedByUser' ] }
   },
   buttons: {
-    prev: { control: 'ListPrevButton', list: '~/display', value: '~/selected' },
-    next: { control: 'ListNextButton', list: '~/display', value: '~/selected' },
+    prev: { control: 'ListPrevButton', list: '~/display', value: '~/selected', buttonType: 'primary' },
+    next: { control: 'ListNextButton', list: '~/display', value: '~/selected' , buttonType: 'primary'},
     add: addButton,
     edit: editButton,
     print: {
