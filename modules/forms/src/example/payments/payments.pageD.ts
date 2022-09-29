@@ -3,6 +3,7 @@ import { PaymentDD, PaymentsLaunchDD, SummaryOfPaymentsLineDD, ValidatedPayeeDet
 import { currencyListDD, currencyRD, newPaymentsRD, summaryOfPreviousPaymentsRD, ValidatePayeeRD } from "./payments.restD";
 import { NatNumDd } from "../../common/dataD";
 import { nothingDD } from "../../common/commonDataDs";
+import { FState } from "exampleapp/src/common";
 
 // export const ChargeDetailsPD: ExampleModalPage = {
 //   pageType: 'ModalPopup',
@@ -47,6 +48,7 @@ export const EditPaymentsPD: ExampleModalPage = {
   }
 }
 export const PaymentsPageD: ExampleMainPage = {
+  title: 'Payment {#isChaps}',
   name: 'Payments',
   pageType: 'MainPage',
   modes: [ 'edit' ],
@@ -71,12 +73,20 @@ export const PaymentsPageD: ExampleMainPage = {
   },
   variables: {
     amount: {
-      constructedBy: 'code', code: `id =>{
+      constructedBy: 'code',imports: [`import {optional} from '@focuson/lens'`],  code: `id =>{
     const amountL = id.focusQuery ( 'Payments' ).focusQuery ( 'summary' ).focusQuery ( 'payment' ).focusQuery ( 'amount' )
     const sterlingL = amountL.focusQuery ( 'sterlingAmount' )
     const currencyL = amountL.focusQuery ( 'currencyAmount' )
     return Lenses.condition ( sterlingL, ( sterling ) => sterling != 0, sterlingL, currencyL )
 }`
+    },
+    isChaps: {
+      constructedBy: 'code', code: `id => {
+      const paymentType: Optional<FState, string> = id.focusQuery ( 'Payments' ).focusQuery ( 'summary' ).focusQuery ( 'payment' ).focusQuery ( 'paymentType' )
+      const getter = ( s: string ): boolean | undefined => s === 'CHAPS'
+      const setter = ( s: string, b: boolean ): string | undefined => b ? 'CHAPS' : 'EMT'
+      return paymentType.chain ( optional ( getter, setter, paymentType.description + ".toEqualsChaps" ) )
+    }`
     }
   },
   guards: {
