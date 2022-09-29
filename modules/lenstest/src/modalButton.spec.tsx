@@ -1,8 +1,8 @@
 import { LensState, lensState } from "@focuson/state";
 import { mount } from "enzyme";
 
-import { HasPageSelection, HasSimpleMessageL, ModalButton, ModalCommitButton, PageDetailsForCombine, PageSelectionContext, pageSelectionlens, simpleMessagesL } from "@focuson/pages";
-import { Lenses } from "@focuson/lens";
+import { HasPageSelection, HasSimpleMessageL, ModalButton, ModalCommitButton, ModalContext, PageDetailsForCombine, PageSelectionContext, pageSelectionlens, simpleMessagesL } from "@focuson/pages";
+import { Lenses, Optional } from "@focuson/lens";
 import { HasDataFn, SimpleMessage, testDateFn } from "@focuson/utils";
 
 import { HasRestCommandL, HasRestCommands, RestCommand, restL } from "@focuson/rest";
@@ -17,7 +17,7 @@ interface StateForModalButtonTest extends HasPageSelection, HasRestCommands {
   b?: number
   tags?: TagHolder
 }
-type Context = PageSelectionContext<StateForModalButtonTest> & HasSimpleMessageL<StateForModalButtonTest> & HasRestCommandL<StateForModalButtonTest> & HasTagHolderL<StateForModalButtonTest> & HasDataFn
+type Context = ModalContext<StateForModalButtonTest>
 
 const context: Context = {
   simpleMessagesL: simpleMessagesL<StateForModalButtonTest> (),
@@ -29,7 +29,10 @@ const context: Context = {
   },
   restL: restL (),
   dateFn: testDateFn,
-  tagHolderL: Lenses.identity<StateForModalButtonTest> ().focusQuery ( 'tags' )
+  tagHolderL: Lenses.identity<StateForModalButtonTest> ().focusQuery ( 'tags' ),
+  pathToLens: function ( s: StateForModalButtonTest, currentLens?: Optional<StateForModalButtonTest, any> | undefined ): ( path: string ) => Optional<StateForModalButtonTest, any> {
+    throw new Error ( "Function not implemented." );
+  }
 }
 
 let startState: StateForModalButtonTest = { pageSelection: [ { pageName: 'a', pageMode: 'view', time: 'now' } ], messages: [], restCommands: [] };

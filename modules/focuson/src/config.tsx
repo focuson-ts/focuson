@@ -1,4 +1,4 @@
-import { focusPageClassName, fromPathFromRaw, fromPathGivenState, HasPageSelection, HasSimpleMessageL, mainPage, mainPageFrom, MultiPageDetails, PageDetailsForCombine, PageSelection, PageSelectionContext, pageSelectionlens, preMutateForPages, simpleMessagesL } from "@focuson/pages";
+import { focusPageClassName, fromPathFromRaw, fromPathGivenState, HasPageSelection, HasPathToLens, HasSimpleMessageL, mainPage, mainPageFrom, MultiPageDetails, PageDetailsForCombine, PageSelection, PageSelectionContext, pageSelectionlens, preMutateForPages, simpleMessagesL } from "@focuson/pages";
 import { HasPostCommand, HasPostCommandLens } from "@focuson/poster";
 import { FetcherTree, loadTree } from "@focuson/fetcher";
 import { lensState, LensState } from "@focuson/state";
@@ -29,9 +29,7 @@ export function defaultPageSelectionAndPostCommandsContext<S extends HasPageSele
     postCommandsL: Lenses.identity<S> ().focusQuery ( 'postCommands' )
   }
 }
-export interface HasPathToLens<S> {
-  pathToLens: ( s: S, currentLens?: Optional<S, any> ) => ( path: string ) => Optional<S, any>
-}
+
 export interface HasFetchersAndRest<S, MSGs> {
   newFetchers: AllFetcherUsingRestConfig;
   /** The list of all registered posters that can send data to the back end   */

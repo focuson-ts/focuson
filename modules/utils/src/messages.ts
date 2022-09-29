@@ -32,4 +32,4 @@ export function createSimpleMessage ( level: SimpleMessageLevel, msg: string, ti
   return { level, msg, time }
 }
 export const stringToSimpleMsg = ( dateFn: () => string, defaultLevel?: SimpleMessageLevel, ) => ( msg: string, level?: SimpleMessageLevel ): SimpleMessage =>
-  ({ level: level ? level : defaultLevel, msg, time: dateFn () });
+  ({ level: level ? level : defaultLevel?defaultLevel:'info', msg, time: dateFn () });

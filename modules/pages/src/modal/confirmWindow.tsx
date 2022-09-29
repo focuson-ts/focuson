@@ -1,10 +1,11 @@
 import { closeOnePageTxs, findClosePageTxs, ModalContext } from "./modalCommitAndCancelButton";
 import { LensState, reasonFor } from "@focuson/state";
 import { PageSelection, pageSelections, popPage } from "../pageSelection";
-import { Transform } from "@focuson/lens";
+import { lensBuilder, Lenses, parsePath, Transform } from "@focuson/lens";
 import { DisplayArbitraryPageFn } from "../pageConfig";
 import { replaceTextUsingPath } from "../replace";
-import { CommandButtonChangeCommands, ConfirmWindowChangeCommands, ModalChangeCommands } from "@focuson/rest";
+import { CommandButtonChangeCommands, ConfirmWindowChangeCommands, confirmWindowCommandProcessors, ModalChangeCommands, processChangeCommandProcessor, RestAndInputProcessorsConfig, restChangeCommandProcessors } from "@focuson/rest";
+import { SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
 
 export interface ConfirmProps {
   pageName?: string;
@@ -61,6 +62,14 @@ export const makeConfirmCommitWindow = <S, D, C extends ModalContext<S>> ( makeF
   const confirmId = id + '.confirm';
   const cancelId = id + '.cancel';
   const closeId = id + '.close';
+
+  function makeProcessor () {
+    const { simpleMessagesL, pathToLens, dateFn } = state.context
+    const resultPathToLens = ( s: string ) => parsePath<any> ( s, lensBuilder ( { '': Lenses.identity<any> () }, {} ) )
+    const config: RestAndInputProcessorsConfig<S, any, SimpleMessage> = { resultPathToLens, messageL: simpleMessagesL, toPathTolens: resultPathToLens, stringToMsg: stringToSimpleMsg ( dateFn ), s: state.main }
+    const processor = confirmWindowCommandProcessors ( config ) ( state.main );
+    return processor
+  }
   function confirm ( e: any ) {
 
     const ps = pageSelections ( state );
@@ -69,21 +78,25 @@ export const makeConfirmCommitWindow = <S, D, C extends ModalContext<S>> ( makeF
     const thisPage = ps[ ps.length - 1 ]
     const action = thisPage.arbitraryParams.action
     if ( action === undefined ) throw Error ( `Software error in ConfirmCommitWindow, Expected action. ps ${JSON.stringify ( ps )}\n\n${JSON.stringify ( state.main, null, 2 )}` )
+    const commandTxs: Transform<S, any>[] = processChangeCommandProcessor ( `Confirm Window`, makeProcessor (), toArray ( props.confirmActions ) )
     if ( action === 'cancel' ) {
       const closePages: Transform<S, any> = [ state.context.pageSelectionL, ps => ps.slice ( 0, -2 ) ]
-      state.massTransform ( reasonFor ( 'ConfirmCommitWindow', 'onClick', confirmId ) ) ( closePages )
+      state.massTransform ( reasonFor ( 'ConfirmCommitWindow', 'onClick', confirmId ) ) ( closePages, ...commandTxs )
       return
     }
     if ( action === 'justclose' ) {
       const closePageTxs = closeOnePageTxs ( `ConfirmCommitWindow ${id}`, state, [] )
-      state.massTransform ( reasonFor ( 'ConfirmCommitWindow', 'onClick', confirmId ) ) ( ...closePageTxs )
+      state.massTransform ( reasonFor ( 'ConfirmCommitWindow', 'onClick', confirmId ) ) ( ...closePageTxs, ...commandTxs )
       return
     }
     const closePageTxs = closeTwoPagesTxs ( `ConfirmCommitWindow ${id}`, state, [] )
-    state.massTransform ( reasonFor ( 'ConfirmCommitWindow', 'onClick', confirmId ) ) ( ...closePageTxs )
+    state.massTransform ( reasonFor ( 'ConfirmCommitWindow', 'onClick', confirmId ) ) ( ...closePageTxs, ...commandTxs )
   }
 
-  function cancel ( e: any ) { state.massTransform ( reasonFor ( 'ConfirmCommitWindow', 'onClick', cancelId ) ) ( popPage ( state ) );}
+  function cancel ( e: any ) {
+    const commandTxs: Transform<S, any>[] = processChangeCommandProcessor ( `Confirm Window`, makeProcessor (), toArray ( props.cancelActions ) )
+    state.massTransform ( reasonFor ( 'ConfirmCommitWindow', 'onClick', cancelId ) ) ( popPage ( state ), ...commandTxs );
+  }
   const e: JSX.Element = makeFn ( { state, id, props, confirm, confirmId, cancel, cancelId, closeId } )
   return e
 };

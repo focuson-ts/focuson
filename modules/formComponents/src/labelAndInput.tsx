@@ -3,12 +3,12 @@ import { Input, } from "./input";
 import { Label } from "./label";
 import { BooleanTransformer, BooleanYNTransformer, isCheckboxProps, NumberTransformer, StringTransformer, TransformerProps } from "./transformers";
 import { BooleanValidations, defaultDateFn, NameAnd, NumberValidations, SimpleMessage, stringToSimpleMsg, StringValidations, toArray } from "@focuson/utils";
-import { FocusOnContext, HasPathToLens } from "@focuson/focuson";
+import { FocusOnContext } from "@focuson/focuson";
 import { LensState } from "@focuson/state";
 import { Transform } from "@focuson/lens";
 import { InputChangeCommands, inputCommandProcessors, InputProcessorsConfig, processChangeCommandProcessor } from "@focuson/rest";
 import { makeButtons } from "./makeButtons";
-import { HasSimpleMessageL } from "@focuson/pages";
+import { HasPathToLens, HasSimpleMessageL } from "@focuson/pages";
 
 export interface LabelAndInputProps<S, T, Context> extends CommonStateProps<S, T, Context>, LabelAlignment, InputOnChangeProps<S, Context> {
   label?: string;

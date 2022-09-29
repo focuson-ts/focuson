@@ -39,14 +39,16 @@ export function findValidityForInput ( thisPage: Element, debug: boolean ): [ st
     for ( var i = 0; i < parents.length; i++ ) {
       const inputs = parents.item ( i )?.getElementsByTagName ( "input" )
       const child = inputs.item ( 0 );
-      const id = child.getAttribute ( 'id' );
-      const labelForValidation = child.getAttribute ( 'data-validationmessage' )
-      const recordedId = id ? id : "noIdForThisElement"
-      const clazz = child.className
-      const error = clazz?.includes ( 'invalid' )
-      const validity = error !== undefined || child.checkValidity ();
-      if ( debug ) console.log ( 'findValidityForInput: ', id, validity )
-      result.push ( [ recordedId, labelForValidation ? labelForValidation : id, validity ] )
+      if ( child ) {
+        const id = child.getAttribute ( 'id' );
+        const labelForValidation = child.getAttribute ( 'data-validationmessage' )
+        const recordedId = id ? id : "noIdForThisElement"
+        const clazz = child.className
+        const error = clazz?.includes ( 'invalid' )
+        const validity = error !== undefined || child.checkValidity ();
+        if ( debug ) console.log ( 'findValidityForInput: ', id, validity )
+        result.push ( [ recordedId, labelForValidation ? labelForValidation : id, validity ] )
+      }
     }
   }
   return result
