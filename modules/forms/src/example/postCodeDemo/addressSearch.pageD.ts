@@ -11,7 +11,7 @@ export const PostCodeModalPage: ExampleModalPage = {
   modes: [ 'edit' ],
   buttons: {
     cancel: { control: 'ModalCancelButton' , confirm: { type: 'window', title: 'The title for the cancel'  , showCancelButton: false }},
-    commit: { control: 'ModalCommitButton', confirm: { type: 'window', confirmActions: {command: 'message', msg: 'canceling'}, cancelActions: {command: 'message', msg: 'not canceling'}  , showCancelButton: true } }
+    commit: { control: 'ModalCommitButton', confirm: { type: 'window', confirmCommands: {command: 'message', msg: 'canceling'}, cancelCommands: {command: 'message', msg: 'not canceling'}  , showCancelButton: true } }
   },
 
 }

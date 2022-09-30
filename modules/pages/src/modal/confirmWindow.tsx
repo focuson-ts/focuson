@@ -15,8 +15,8 @@ export interface ConfirmProps {
   confirmText?: string;
   cancelText?: string;
   showCancelButton?: boolean;
-  confirmActions?: ConfirmWindowChangeCommands | ConfirmWindowChangeCommands[]
-  cancelActions?: ConfirmWindowChangeCommands | ConfirmWindowChangeCommands[]
+  confirmCommands?: ConfirmWindowChangeCommands | ConfirmWindowChangeCommands[]
+  cancelCommands?: ConfirmWindowChangeCommands | ConfirmWindowChangeCommands[]
 }
 export interface ConfirmWindow extends ConfirmProps {
   type: 'window'
@@ -78,7 +78,7 @@ export const makeConfirmCommitWindow = <S, D, C extends ModalContext<S>> ( makeF
     const thisPage = ps[ ps.length - 1 ]
     const action = thisPage.arbitraryParams.action
     if ( action === undefined ) throw Error ( `Software error in ConfirmCommitWindow, Expected action. ps ${JSON.stringify ( ps )}\n\n${JSON.stringify ( state.main, null, 2 )}` )
-    const commandTxs: Transform<S, any>[] = processChangeCommandProcessor ( `Confirm Window`, makeProcessor (), toArray ( props.confirmActions ) )
+    const commandTxs: Transform<S, any>[] = processChangeCommandProcessor ( `Confirm Window`, makeProcessor (), toArray ( props.confirmCommands ) )
     if ( action === 'cancel' ) {
       const closePages: Transform<S, any> = [ state.context.pageSelectionL, ps => ps.slice ( 0, -2 ) ]
       state.massTransform ( reasonFor ( 'ConfirmCommitWindow', 'onClick', confirmId ) ) ( closePages, ...commandTxs )
@@ -94,7 +94,7 @@ export const makeConfirmCommitWindow = <S, D, C extends ModalContext<S>> ( makeF
   }
 
   function cancel ( e: any ) {
-    const commandTxs: Transform<S, any>[] = processChangeCommandProcessor ( `Confirm Window`, makeProcessor (), toArray ( props.cancelActions ) )
+    const commandTxs: Transform<S, any>[] = processChangeCommandProcessor ( `Confirm Window`, makeProcessor (), toArray ( props.cancelCommands ) )
     state.massTransform ( reasonFor ( 'ConfirmCommitWindow', 'onClick', cancelId ) ) ( popPage ( state ), ...commandTxs );
   }
   const e: JSX.Element = makeFn ( { state, id, props, confirm, confirmId, cancel, cancelId, closeId } )

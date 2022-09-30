@@ -44,11 +44,27 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
   },
 
 
-  'dateCheck': {
+  'before': {
     imports: [ `import {checkDates} from '@focuson/utils'` ],
     makeGuardVariable: ( params, mainP, page, name, guard: ADateB ) =>
-      `const ${guardName ( name )} =  checkDates(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.aPath )}.optJson(), ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.bPath )}.optJson(),'${guard.subCond}')`
+      `const ${guardName ( name )} =  checkDates(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.aPath )}.optJson(), ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.bPath )}.optJson(),'<')`
   },
+  'beforeOrEquals': {
+    imports: [ `import {checkDates} from '@focuson/utils'` ],
+    makeGuardVariable: ( params, mainP, page, name, guard: ADateB ) =>
+      `const ${guardName ( name )} =  checkDates(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.aPath )}.optJson(), ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.bPath )}.optJson(),'<=')`
+  },
+  'afterOrEquals': {
+    imports: [ `import {checkDates} from '@focuson/utils'` ],
+    makeGuardVariable: ( params, mainP, page, name, guard: ADateB ) =>
+      `const ${guardName ( name )} =  checkDates(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.aPath )}.optJson(), ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.bPath )}.optJson(),'>=')`
+  },
+  'after': {
+    imports: [ `import {checkDates} from '@focuson/utils'` ],
+    makeGuardVariable: ( params, mainP, page, name, guard: ADateB ) =>
+      `const ${guardName ( name )} =  checkDates(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.aPath )}.optJson(), ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.bPath )}.optJson(),'>')`
+  },
+
   'a<b': {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: ALessThanB ) =>
@@ -199,8 +215,7 @@ export interface AEqualsB extends Guard {
   bPath: string;
 }
 export interface ADateB extends Guard {
-  condition: 'dateCheck'
-  subCond: '<' | '>' | '<=' | '>='
+  condition:  'before' | 'beforeOrEquals' | 'after' | 'afterOrEquals'
   aPath: string;
   bPath: string;
 }

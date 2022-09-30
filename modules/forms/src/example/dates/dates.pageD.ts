@@ -13,10 +13,10 @@ export const DatesPageD: ExampleMainPage = {
     notUsed: { rest: datesRestD, targetFromPath: "~/dates" }
   },
   guards: {
-    lessThan: { condition: 'dateCheck', aPath: '~/dates/empty', bPath: '~/dates/value', subCond: '<' },
-    moreThan: { condition: 'dateCheck', aPath: '~/dates/empty', bPath: '~/dates/value', subCond: '>' },
-    lessThanEqual: { condition: 'dateCheck', aPath: '~/dates/empty', bPath: '~/dates/value', subCond: '<=' },
-    moreThanEqual: { condition: 'dateCheck', aPath: '~/dates/empty', bPath: '~/dates/value', subCond: '>=' },
+    before: { condition: 'before', aPath: '~/dates/empty', bPath: '~/dates/value'},
+    beforeOrEquals: { condition: 'beforeOrEquals', aPath: '~/dates/empty', bPath: '~/dates/value' },
+    afterOrEquals: { condition: 'afterOrEquals', aPath: '~/dates/empty', bPath: '~/dates/value' },
+    after: { condition: 'after', aPath: '~/dates/empty', bPath: '~/dates/value'},
   },
   initialValue: 'empty',
   modals: [], modes: [ 'edit' ],
