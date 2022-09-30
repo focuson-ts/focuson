@@ -48,7 +48,7 @@ export const EditPaymentsPD: ExampleModalPage = {
   }
 }
 export const PaymentsPageD: ExampleMainPage = {
-  title: 'Payment {#isChaps}',
+  title: 'Payment {#isChaps|Equivalent to| Current amount}',
   name: 'Payments',
   pageType: 'MainPage',
   modes: [ 'edit' ],
@@ -73,7 +73,7 @@ export const PaymentsPageD: ExampleMainPage = {
   },
   variables: {
     amount: {
-      constructedBy: 'code',imports: [`import {optional} from '@focuson/lens'`],  code: `id =>{
+      constructedBy: 'code',  code: `id =>{
     const amountL = id.focusQuery ( 'Payments' ).focusQuery ( 'summary' ).focusQuery ( 'payment' ).focusQuery ( 'amount' )
     const sterlingL = amountL.focusQuery ( 'sterlingAmount' )
     const currencyL = amountL.focusQuery ( 'currencyAmount' )
@@ -81,7 +81,7 @@ export const PaymentsPageD: ExampleMainPage = {
 }`
     },
     isChaps: {
-      constructedBy: 'code', code: `id => {
+      constructedBy: 'code',imports: [`import {optional} from '@focuson/lens'`], code: `id => {
       const paymentType: Optional<FState, string> = id.focusQuery ( 'Payments' ).focusQuery ( 'summary' ).focusQuery ( 'payment' ).focusQuery ( 'paymentType' )
       const getter = ( s: string ): boolean | undefined => s === 'CHAPS'
       const setter = ( s: string, b: boolean ): string | undefined => b ? 'CHAPS' : 'EMT'

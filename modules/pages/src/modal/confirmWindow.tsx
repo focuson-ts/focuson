@@ -66,7 +66,7 @@ export const makeConfirmCommitWindow = <S, D, C extends ModalContext<S>> ( makeF
   function makeProcessor () {
     const { simpleMessagesL, pathToLens, dateFn } = state.context
     const resultPathToLens = ( s: string ) => parsePath<any> ( s, lensBuilder ( { '': Lenses.identity<any> () }, {} ) )
-    const config: RestAndInputProcessorsConfig<S, any, SimpleMessage> = { resultPathToLens, messageL: simpleMessagesL, toPathTolens: resultPathToLens, stringToMsg: stringToSimpleMsg ( dateFn ), s: state.main }
+    const config: RestAndInputProcessorsConfig<S, any, SimpleMessage> = { resultPathToLens, messageL: simpleMessagesL, toPathTolens: resultPathToLens, stringToMsg: stringToSimpleMsg ( dateFn ), s: state.main,dateFn }
     const processor = confirmWindowCommandProcessors ( config ) ( state.main );
     return processor
   }
@@ -115,8 +115,8 @@ export function ConfirmCommitWindow<S, D, C extends ModalContext<S>> () {
       {title && title.length > 0 && <div className='header'>{title && <h3 className='dialog-header'>{replaceTextUsingPath ( state, title )}</h3>}</div>}
       <div className='dialog-text' dangerouslySetInnerHTML={{ __html: realText }}/>
       <div className='dialog-buttons'>
-        <button id={confirmId} aria-label='ok' title={fullCancelText} className="button primary-btn" onClick={confirm}>{fullConfirmText}</button>
-        {showCancelButton !== false && <button id={cancelId} aria-label='ok' title={fullCancelText} className="button secondary-btn" onClick={cancel}>{fullCancelText}</button>}
+        <button id={confirmId} aria-label='ok' title={fullConfirmText} className="button primary-btn" onClick={confirm}>{fullConfirmText}</button>
+        {showCancelButton !== false && <button id={cancelId} aria-label='cancel' title={fullCancelText} className="button secondary-btn" onClick={cancel}>{fullCancelText}</button>}
       </div>
       <span className="sr-only">End of Dialog Box</span>
     </div>;

@@ -88,6 +88,7 @@ function makeModalProcessorsConfig<S, Context extends PageSelectionContext<S> & 
     tagHolderL: state.context.tagHolderL,
     stringToMsg: stringToSimpleMsg ( dateFn, 'info' ),
     fromPathTolens,
+    dateFn,
     toPathTolens,
     defaultL: focusOnL,
     messageL: state.context.simpleMessagesL,

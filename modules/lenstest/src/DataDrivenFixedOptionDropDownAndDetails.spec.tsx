@@ -3,7 +3,7 @@ import { shallow } from "enzyme";
 import { HasRestCommands, restL } from "@focuson/rest";
 import { HasPageSelection, PageDetailsForCombine, PageMode, pageSelectionlens, simpleMessagesL } from "@focuson/pages";
 import { ContextForDropdown, DataDrivenFixedOptionDropDownAndDetails, OneDropDownDetails } from "@focuson/form_components";
-import { HasSimpleMessages, NameAnd } from "@focuson/utils";
+import { HasSimpleMessages, NameAnd, testDateFn } from "@focuson/utils";
 import { enzymeSetup } from "./enzymeAdapterSetup";
 import { Lenses } from "@focuson/lens";
 
@@ -12,6 +12,7 @@ enzymeSetup ()
 type Context = ContextForDropdown <DataDrivenState>
 const context: Context = {
   restL: restL<DataDrivenState> (),
+  dateFn: testDateFn,
   combine: ( state: LensState<DataDrivenState, any, Context>, pages: PageDetailsForCombine[] ): JSX.Element => <div>{pages.map ( p => p.element )}</div>,
   pageSelectionL: pageSelectionlens (),
   simpleMessagesL: simpleMessagesL (),

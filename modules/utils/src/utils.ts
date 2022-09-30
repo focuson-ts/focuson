@@ -1,4 +1,4 @@
-export interface HasDataFn {
+export interface HasDateFn {
   dateFn: DateFn
 }
 export type DateFn = () => string
@@ -34,9 +34,9 @@ export const mapPathPlusInts = ( path: number[], count: number ) => <T> ( fn: ( 
 };
 
 
-export const apply = <T, T1> ( t: T | undefined, fn: ( t: T ) => T1 ): T1 | undefined => t !== undefined? fn ( t ) : undefined;
+export const apply = <T, T1> ( t: T | undefined, fn: ( t: T ) => T1 ): T1 | undefined => t !== undefined ? fn ( t ) : undefined;
 
-export const applyOrDefault = <T, T1> ( t: T | undefined, fn: ( t: T ) => T1, def: T1 ): T1 => t!==undefined ? fn ( t ) : def;
+export const applyOrDefault = <T, T1> ( t: T | undefined, fn: ( t: T ) => T1, def: T1 ): T1 => t !== undefined ? fn ( t ) : def;
 export const useOrDefault = <T> ( def: T ) => ( t: T | undefined ): T => t ? t : def;
 
 
@@ -206,3 +206,31 @@ export function safeFlatten ( s: string[][] | undefined ): string[] {
 }
 export const disabledFrom = ( s?: string[][] ): boolean => safeFlatten ( s ).length > 0;
 
+export type DateCheck = '>' | '<' | '<=' | '>='
+
+//dd/MM/yyyy or dd-MM-yyyy
+export function checkDates ( d1: string | undefined, d2: string | undefined, dateCheck: DateCheck ) {
+  function parseDate ( d: string | undefined ): Date | undefined {
+    if ( !d ) return undefined;
+    const parts = d.replace ( /\//g, '-' ).split ( "-" )
+    if ( parts.length !== 3 ) return undefined
+    parts.forEach ( p => {if ( !p.match ( /^[0-9]*$/ ) ) return undefined } )
+    return new Date ( Number.parseInt ( parts[ 2 ] ), Number.parseInt ( parts[ 1 ] ), Number.parseInt ( parts[ 0 ] ) )
+  }
+  const date1 = parseDate ( d1 )
+  const date2 = parseDate ( d2 )
+  console.log ( 'checkDates', date1, dateCheck, date2 )
+  if ( date1 && date2 ) switch ( dateCheck ) {
+    case "<=":
+      return date1.getTime () <= date2.getTime ()
+    case ">=":
+      return date1.getTime () >= date2.getTime ()
+    case "<":
+      return date1.getTime () < date2.getTime ()
+    case ">":
+      return date1.getTime () > date2.getTime ()
+    default:
+      break
+  }
+  return false
+}

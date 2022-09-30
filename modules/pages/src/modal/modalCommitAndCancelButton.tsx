@@ -1,6 +1,6 @@
 import { applyPageOps, currentPageSelectionTail, fromPathGivenState, mainPage, PageSelection, PageSelectionContext, pageSelections, popPage, popTwoPages } from "../pageSelection";
 import { LensProps, lensState, LensState, reasonFor, SetJsonReasonEvent } from "@focuson/state";
-import { HasDataFn, safeArray, safeString, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
+import { HasDateFn, safeArray, safeString, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
 import { Optional, Transform } from "@focuson/lens";
 import { HasRestCommandL, ModalChangeCommands, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand } from "@focuson/rest";
 import { getRefForValidateLogicToButton, hasValidationErrorAndReport } from "../validity";
@@ -16,7 +16,7 @@ import { wrapWithErrors } from "../errors";
 export interface HasPathToLens<S> {
   pathToLens: ( s: S, currentLens?: Optional<S, any> ) => ( path: string ) => Optional<S, any>
 }
-export interface ModalContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasTagHolderL<S>, HasDataFn, HasPathToLens<S> {}
+export interface ModalContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasTagHolderL<S>, HasDateFn, HasPathToLens<S> {}
 
 
 export const confirmIt = <S, C extends PageSelectionContext<S>> ( state: LensState<S, any, C>, c: boolean | string | undefined ) => {
@@ -98,7 +98,7 @@ function findSetLengthOnClose<S> ( lastPage: PageSelection, main: S, toPathTolen
 /** This finds all transforms except the actual 'close the page'
  * This is because we might be calling it twice in cases like 'modal confirm windows'
  */
-export function findClosePageTxs<S, C extends PageSelectionContext<S> & HasRestCommandL<S> & HasSimpleMessageL<S> & HasTagHolderL<S> & HasDataFn> (
+export function findClosePageTxs<S, C extends PageSelectionContext<S> & HasRestCommandL<S> & HasSimpleMessageL<S> & HasTagHolderL<S> & HasDateFn> (
   errorPrefix: string,
   state: LensState<S, any, C>,
   pageToClose: PageSelection,
@@ -122,6 +122,7 @@ export function findClosePageTxs<S, C extends PageSelectionContext<S> & HasRestC
   const config: ModalProcessorsConfig<S, SimpleMessage> = {
     pageNameFn: ( s: S ) => mainPage ( lensState<S, C> ( s, () => {throw Error ()}, '', state.context ) ).pageName,
     tagHolderL,
+    dateFn,
     stringToMsg: stringToSimpleMsg ( dateFn, 'info' ),
     fromPathTolens,
     toPathTolens,

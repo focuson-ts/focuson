@@ -50,10 +50,11 @@ export function dateInfoRefD<G> ( d: DateRefConfiguration ): RefD<G> {
       // browserNow: { ...StringParam, commonLens: 'browserNowAtStart', testValue: '' }
     },
     domain: {
-      dates: { dataDD: timeDataD }
+      dates: { dataDD: timeDataD },
+      now: { dataDD: StringDD },
     },
     rest: {
-      dates: { rest: dateinfoRestD, targetFromPath: '~/dates', fetcher: true }
+      dates: { rest: dateinfoRestD, targetFromPath: '~/dates', fetcher: true, postFetchCommands: { command: 'timestamp', path: '/CommonData/now' } }
     },
   }
   return commonDataRefD

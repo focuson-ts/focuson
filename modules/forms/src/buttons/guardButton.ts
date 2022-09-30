@@ -9,7 +9,7 @@ import { PageMode } from "@focuson/pages";
 export type AllGuards = LocalVariableGuard | LocalVariableMoreThanZero | LocalVariableLessThanLengthMinusOne |
   LocalVariableValueEquals<any> | LocalVariableDefined | ALessThanB | AEqualsB | BinaryCondition |
   AndOrCondition | NotCondition | PageModeIs | ContainsGuard | NumberAndBooleanCondition | RegexCondition | PageModeCondition | FunctionCondition |
-  ArrayLengthMoreThanZero
+  ArrayLengthMoreThanZero | ADateB
 
 function errorPrefix ( mainP: PageD<any, any>, p: PageD<any, any>, name: string, guard: any ) {
   if ( mainP.name === p.name ) return `MakeGuardVariable for ${p.name} ${name} ${JSON.stringify ( guard )}`
@@ -41,6 +41,13 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableValueEquals<any> ) =>
       `const ${guardName ( name )} =  applyOrDefault(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJson(), t => t !== ${JSON.stringify ( guard.value )},${guard.ifUndefined ? guard.ifUndefined : false}))`
+  },
+
+
+  'dateCheck': {
+    imports: [ `import {checkDates} from '@focuson/utils'` ],
+    makeGuardVariable: ( params, mainP, page, name, guard: ADateB ) =>
+      `const ${guardName ( name )} =  checkDates(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.aPath )}.optJson(), ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.bPath )}.optJson(),'${guard.subCond}')`
   },
   'a<b': {
     imports: [],
@@ -191,6 +198,13 @@ export interface AEqualsB extends Guard {
   aPath: string;
   bPath: string;
 }
+export interface ADateB extends Guard {
+  condition: 'dateCheck'
+  subCond: '<' | '>' | '<=' | '>='
+  aPath: string;
+  bPath: string;
+}
+
 export interface BinaryCondition extends Guard {
   condition: '<#' | '>#'
   path: string;

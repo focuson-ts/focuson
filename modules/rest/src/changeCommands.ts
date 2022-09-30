@@ -1,6 +1,6 @@
 import { Optional, replaceTextFn, Transform } from "@focuson/lens";
 import { TagHolder } from "@focuson/template";
-import { filterObject, SimpleMessageLevel, toArray } from "@focuson/utils";
+import { DateFn, filterObject, SimpleMessageLevel, toArray } from "@focuson/utils";
 
 export interface ChangeCommand {
   command: string
@@ -66,6 +66,18 @@ export const strictCopyCommandProcessor = <S> ( fromPathToLens: ( path: string )
     return fromPathToLens ( c.from ).getOption ( s );
   } ] ] : undefined;
 
+export interface TimeStampCommand extends ChangeCommand {
+  command: 'timestamp',
+  path: string;
+}
+export function isTimeStampCommand ( c: ChangeCommand ): c is TimeStampCommand {
+  const a: any = c;
+  return c && c.command === 'timestamp'
+}
+export const timeStampCommandProcessor = <S> ( pathToLens: ( path: string ) => Optional<S, any>, dateFn: DateFn ): ChangeCommandProcessor<S> =>
+  c => isTimeStampCommand ( c ) ? [ [ pathToLens ( c.path ), () => dateFn () ] ] : undefined
+
+
 export interface MessageCommand extends ChangeCommand {
   command: 'message'
   msg: string;
@@ -80,7 +92,7 @@ export const messageCommandProcessor = <S, MSGs> ( config: DeleteMessageStrictCo
       //@ts-ignore
       const replacer: ( str: string ) => string = str => replaceTextFn<S> ( '', s, toPathTolens, str );
       const res = c.msg.replace ( /{[^}]*}/g, replacer )
-      return [ [ messageL, old => [ stringToMsg ( res,c.level ), ...old ] ] ];
+      return [ [ messageL, old => [ stringToMsg ( res, c.level ), ...old ] ] ];
     }
   }
 }
@@ -115,7 +127,7 @@ export function processChangeCommandProcessor<S> ( errorPrefix: string, p: Chang
   } )
 }
 
-type CommonCommands = DeleteCommand | MessageCommand | SetChangeCommand | DeleteAllMessages
+type CommonCommands = DeleteCommand | MessageCommand | SetChangeCommand | DeleteAllMessages | TimeStampCommand
 export type RestChangeCommands = CommonCommands | CopyResultCommand
 export type ModalChangeCommands = CommonCommands | CopyCommand
 export type NewPageChangeCommands = CommonCommands | CopyCommand | DeletePageTagsCommand
@@ -128,6 +140,7 @@ export interface DeleteMessageStrictCopySetProcessorsConfig<S, MSGs> {
   toPathTolens: ( path: string ) => Optional<S, any>;
   messageL: Optional<S, MSGs[]>;
   stringToMsg: ( s: string, level?: SimpleMessageLevel ) => MSGs;
+  dateFn: DateFn;
   s: S
 }
 export interface DeleteMessageStrictCopySetProcessorsDeleteTagsConfig<S, MSGs> extends DeleteMessageStrictCopySetProcessorsConfig<S, MSGs> {
@@ -147,11 +160,12 @@ export interface ModalProcessorsConfig<S, MSGs> extends DeleteMessageStrictCopyS
 export type  InputProcessorsConfig<S, MSGs> = DeleteMessageStrictCopySetProcessorsConfig<S, MSGs>
 
 export function deleteMessageSetProcessors<S, MSGs> ( config: DeleteMessageStrictCopySetProcessorsConfig<S, MSGs> ): ChangeCommandProcessor<S> {
-  const { toPathTolens, messageL, s } = config
+  const { toPathTolens, messageL, dateFn } = config
   return composeChangeCommandProcessors (
     processDeleteAllMessagesCommand ( messageL ),
     deleteCommandProcessor ( toPathTolens ),
     setCommandProcessor ( toPathTolens ),
+    timeStampCommandProcessor(toPathTolens, dateFn),
     messageCommandProcessor ( config )
   )
 }

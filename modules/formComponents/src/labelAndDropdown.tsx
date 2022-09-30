@@ -1,6 +1,5 @@
-import { disabledFrom, NameAnd, safeObject } from "@focuson/utils";
+import { disabledFrom, HasDateFn, NameAnd, safeObject } from "@focuson/utils";
 import { reasonFor } from "@focuson/state";
-import {  } from "@focuson/focuson";
 import { CommonStateProps, DropDownOnChangeProps, LabelAlignment } from "./common";
 import { Label } from "./label";
 import { makeInputChangeTxs } from "./labelAndInput";
@@ -19,7 +18,7 @@ export interface DropdownProps<S, T, Context> extends CommonStateProps<S, T, Con
   enabledBy?: string[][];
   required?: boolean;
 }
-export type ContextForDropdown<S> = PageSelectionContext<S> & HasRestCommandL<S> & HasSimpleMessageL<S> & HasPathToLens<S>
+export type ContextForDropdown<S> = PageSelectionContext<S> & HasRestCommandL<S> & HasSimpleMessageL<S> & HasPathToLens<S> &HasDateFn
 
 export interface LabelAndDropdownProps<S, T, Context> extends DropdownProps<S, T, Context>, LabelAlignment {
   label: string;

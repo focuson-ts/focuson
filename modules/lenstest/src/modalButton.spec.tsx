@@ -1,12 +1,12 @@
 import { LensState, lensState } from "@focuson/state";
 import { mount } from "enzyme";
 
-import { HasPageSelection, HasSimpleMessageL, ModalButton, ModalCommitButton, ModalContext, PageDetailsForCombine, PageSelectionContext, pageSelectionlens, simpleMessagesL } from "@focuson/pages";
+import { HasPageSelection, ModalButton, ModalCommitButton, ModalContext, PageDetailsForCombine, pageSelectionlens, simpleMessagesL } from "@focuson/pages";
 import { Lenses, Optional } from "@focuson/lens";
-import { HasDataFn, SimpleMessage, testDateFn } from "@focuson/utils";
+import { SimpleMessage, testDateFn } from "@focuson/utils";
 
-import { HasRestCommandL, HasRestCommands, RestCommand, restL } from "@focuson/rest";
-import { HasTagHolderL, TagHolder } from "@focuson/template";
+import { HasRestCommands, RestCommand, restL } from "@focuson/rest";
+import { TagHolder } from "@focuson/template";
 import { enzymeSetup } from "./enzymeAdapterSetup";
 
 enzymeSetup ()

@@ -1,7 +1,8 @@
-import { HasSimpleMessages, safeArray, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson/utils";
-import { CopyCommand, copyCommandProcessor, CopyResultCommand, copyResultCommandProcessor, DeleteCommand, deleteCommandProcessor, DeleteMessageStrictCopySetProcessorsConfig, MessageCommand, messageCommandProcessor, modalCommandProcessors, ModalProcessorsConfig, restChangeCommandProcessors, RestAndInputProcessorsConfig, SetChangeCommand, setCommandProcessor, StrictCopyCommand, strictCopyCommandProcessor, deletePageTagsCommandProcessor, DeletePageTagsCommand } from "./changeCommands";
+import { defaultDateFn, HasSimpleMessages, safeArray, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson/utils";
+import { CopyCommand, copyCommandProcessor, CopyResultCommand, copyResultCommandProcessor, DeleteCommand, deleteCommandProcessor, DeleteMessageStrictCopySetProcessorsConfig, MessageCommand, messageCommandProcessor, modalCommandProcessors, ModalProcessorsConfig, restChangeCommandProcessors, RestAndInputProcessorsConfig, SetChangeCommand, setCommandProcessor, StrictCopyCommand, strictCopyCommandProcessor, deletePageTagsCommandProcessor, DeletePageTagsCommand, TimeStampCommand, confirmWindowCommandProcessors } from "./changeCommands";
 import { displayTransformsInState, lensBuilder, Lenses, parsePath } from "@focuson/lens";
 import { TagHolder } from "@focuson/template";
+
 
 interface abc {
   a: { b?: string, c?: string }
@@ -30,6 +31,7 @@ const froma12Withz: StateForChangeCommands = { messages: [], fromA: { a: { b: "o
 const froma12WithAMessage: StateForChangeCommands = { messages: [ { level: 'error', msg: 'a', time: 'someTime' } ], fromA: { a: { b: "one", c: "two" } } }
 const config: DeleteMessageStrictCopySetProcessorsConfig<StateForChangeCommands, SimpleMessage> = {
   s: empty,
+  dateFn: defaultDateFn,
   toPathTolens, messageL: simpleMessagesL (), stringToMsg: stringToSimpleMsg ( testDateFn, 'info' ),
 }
 const restConfig: RestAndInputProcessorsConfig<StateForChangeCommands, any, SimpleMessage> = {
@@ -37,12 +39,14 @@ const restConfig: RestAndInputProcessorsConfig<StateForChangeCommands, any, Simp
 }
 const modalConfig: ModalProcessorsConfig<StateForChangeCommands, SimpleMessage> = {
   ...config, fromPathTolens, defaultL,
+  dateFn: testDateFn,
   pageNameFn: s => 'somePage',
   tagHolderL: Lenses.identity<StateForChangeCommands> ().focusQuery ( 'tags' )
 }
 const result = { y: 'y', z: { a: { b: 'from', c: 'res' } } }
 const restProcessor = restChangeCommandProcessors ( restConfig )
 const modalProcessor = modalCommandProcessors ( modalConfig )
+const confirmWindowProcessor = confirmWindowCommandProcessors ( modalConfig )
 
 describe ( "delete command", () => {
   const processor = deleteCommandProcessor ( toPathTolens );
@@ -191,13 +195,21 @@ describe ( "copyResultCommandProcessor", () => {
     expect ( processor ( result ) ( { command: 'something' } ) ).toEqual ( undefined )
   } )
   it ( "should copy the result + path to the to + path", () => {
-    expect ( displayTransformsInState ( froma12WithAMessage, safeArray ( processor ( result ) ( command ) ) ) ).toEqual ( expected)
+    expect ( displayTransformsInState ( froma12WithAMessage, safeArray ( processor ( result ) ( command ) ) ) ).toEqual ( expected )
   } )
   it ( "should copy the result + path to the to + path - rest", () => {
-    expect ( displayTransformsInState ( froma12WithAMessage, safeArray ( restProcessor ( result ) ( command ) ) ) ).toEqual (expected)
+    expect ( displayTransformsInState ( froma12WithAMessage, safeArray ( restProcessor ( result ) ( command ) ) ) ).toEqual ( expected )
   } )
 } )
 
+describe ( "timeStampCommandProcessor", () => {
+  it ( "should place the browser time date to the path", () => {
+    const command: TimeStampCommand = { command: 'timestamp', path: '/z/a/b' }
+    expect ( displayTransformsInState ( empty, safeArray ( confirmWindowProcessor ( { messages: [] } ) ( command ) ) ) ).toEqual (
+      [ { "opt": "I.focus?(toA).focus?(z).focus?(a).focus?(b)", "value": "timeForTest" } ] )
+  } )
+
+} )
 describe ( 'rest/modal processors with other commands', () => {
   it ( "should ignore none copyResultCommands", () => {
     expect ( restProcessor ( result ) ( { command: 'something' } ) ).toEqual ( undefined )
