@@ -40,7 +40,7 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
   notEquals: {
     imports: [],
     makeGuardVariable: ( params, mainP, page, name, guard: LocalVariableValueEquals<any> ) =>
-      `const ${guardName ( name )} =  applyOrDefault(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJson(), t => t !== ${JSON.stringify ( guard.value )},${guard.ifUndefined ? guard.ifUndefined : false}))`
+      `const ${guardName ( name )} =  applyOrDefault(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.path )}.optJson(), t => t !== ${JSON.stringify ( guard.value )},${guard.ifUndefined ? guard.ifUndefined : false})`
   },
 
 
