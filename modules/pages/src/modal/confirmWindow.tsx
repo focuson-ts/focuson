@@ -1,6 +1,6 @@
 import { closeOnePageTxs, findClosePageTxs, ModalContext } from "./modalCommitAndCancelButton";
 import { LensState, reasonFor } from "@focuson/state";
-import { PageSelection, pageSelections, popPage } from "../pageSelection";
+import { fromPathGivenState, PageSelection, pageSelections, popPage } from "../pageSelection";
 import { lensBuilder, Lenses, parsePath, Transform } from "@focuson/lens";
 import { DisplayArbitraryPageFn } from "../pageConfig";
 import { replaceTextUsingPath } from "../replace";
@@ -65,8 +65,8 @@ export const makeConfirmCommitWindow = <S, D, C extends ModalContext<S>> ( makeF
 
   function makeProcessor () {
     const { simpleMessagesL, pathToLens, dateFn } = state.context
-    const resultPathToLens = ( s: string ) => parsePath<any> ( s, lensBuilder ( { '': Lenses.identity<any> () }, {} ) )
-    const config: RestAndInputProcessorsConfig<S, any, SimpleMessage> = { resultPathToLens, messageL: simpleMessagesL, toPathTolens: resultPathToLens, stringToMsg: stringToSimpleMsg ( dateFn ), s: state.main,dateFn }
+    const resultPathToLens = fromPathGivenState ( state )
+    const config: RestAndInputProcessorsConfig<S, any, SimpleMessage> = { resultPathToLens, messageL: simpleMessagesL, toPathTolens: resultPathToLens, stringToMsg: stringToSimpleMsg ( dateFn ), s: state.main, dateFn }
     const processor = confirmWindowCommandProcessors ( config ) ( state.main );
     return processor
   }

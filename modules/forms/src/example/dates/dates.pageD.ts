@@ -17,6 +17,7 @@ export const DatesPageD: ExampleMainPage = {
     beforeOrEquals: { condition: 'beforeOrEquals', aPath: '~/dates/empty', bPath: '~/dates/value' },
     afterOrEquals: { condition: 'afterOrEquals', aPath: '~/dates/empty', bPath: '~/dates/value' },
     after: { condition: 'after', aPath: '~/dates/empty', bPath: '~/dates/value'},
+    equals: {condition: 'a=b',aPath: '~/dates/empty', bPath :  '~/dates/value' },
   },
   initialValue: 'empty',
   modals: [], modes: [ 'edit' ],

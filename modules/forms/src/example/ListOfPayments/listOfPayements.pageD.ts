@@ -114,7 +114,7 @@ export const ListOfPaymentsPagePD: ExampleMainPage = {
   },
   guards: {
     canPrint: { condition: 'equals', value: false, path: '~/display[~/selected]/alreadyPrinted', message: 'This record has already been printed' },
-
+    alreadyPrintedNotTrue: { condition: 'notEquals', value: true, path: '~/tempListOfPayments/alreadyPrinted', message: 'alreadyPrinted not true' },
     needsStandingOrders: { condition: '>0 and true', number: '~/currentPayments/standingOrders', boolean: '#currentListOfPayments/standingOrders' },
     needsOpenBankingStandingOrders: { condition: '>0 and true', number: '~/currentPayments/openBankingStandingOrders', boolean: '#currentListOfPayments/openBankingStandingOrders' },
     needsDirectDirects: { condition: '>0 and true', number: '~/currentPayments/directDebits', boolean: '#currentListOfPayments/directDebits' },
