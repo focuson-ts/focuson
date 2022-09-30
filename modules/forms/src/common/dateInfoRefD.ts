@@ -32,6 +32,7 @@ export function dateInfoRefD<G> ( d: DateRefConfiguration ): RefD<G> {
     name: "TimeData",
     structure: {
       today: { dataDD: DateDDMMYYY_DD, sample: [ '01-07-2022' ] },
+      serverNow: {dataDD: StringDD, sample: ['2022-07-01T05:25:32.077Z']},
       holidays: { dataDD: holidayListD },
       dateFormat: { dataDD: StringDD, sample: [ 'dd-MM-yyyy' ] }
     }

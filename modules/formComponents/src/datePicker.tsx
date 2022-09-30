@@ -16,6 +16,7 @@ export interface DatePickerDetails {
 
 export interface DateInfo {
   today: string;
+  serverNow: string;
   holidays: Holidays[];
   dateFormat: string
 }
