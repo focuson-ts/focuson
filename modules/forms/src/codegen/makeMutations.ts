@@ -191,6 +191,10 @@ export function postTransactionLogger ( params: JavaWiringParams, paramsA: Mutat
   const prefixNamesAndIndex = `Duration: {0,number,#.##}, `.concat ( outputParams.map ( ( p, i ) => `${p.name}: {${i + 1}}` ).join ( ", " ) );
   return [ `logger.${debugLevel}(MessageFormat.format("${prefixNamesAndIndex}", (System.nanoTime() - start) / 1000000.0, ${outputParams.map ( p => p.name )}));` ];
 }
+
+export const addOutputParamsToMessages = ( md: MutationDetail ): string[] =>
+  allOutputParams ( parametersFor ( md ) ).filter ( p => p.msgLevel ).map ( p => `msgs.${p.msgLevel}(${p.name});` )
+
 function cleanSql ( sql: string ) {
   return sql.split ( /\n/g ).filter ( s => s.length > 0 ).map ( s => `"${s.trim ()} "` ).join ( "+\n      " )
 }
@@ -236,6 +240,7 @@ export function mutationCodeForSqlMapCalls<G> ( params: JavaWiringParams, errorP
           ...execute,
           ...getFromResultSetIntoVariables ( errorPrefix, 'rs', paramsA ),
           ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ),
+        ...addOutputParamsToMessages ( m ),
         ],
         makeMutationResolverReturnStatement ( m, allOutputParams ( paramsA ) ) ),
       ]
@@ -267,7 +272,8 @@ export function mutationCodeForSqlListCalls<G> ( params: JavaWiringParams, error
         '}',
         ...check404,
         ...messageLine,
-        ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ) ],
+        ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ) ,
+        ...addOutputParamsToMessages ( m )],
       `return result;` )
     ) ) ),
     `  }}`,
@@ -298,6 +304,7 @@ export function mutationCodeForFunctionCalls<G> ( params: JavaWiringParams, erro
 
           ...getFromStatement ( errorPrefix, 's', paramsA ),
           ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ),
+          ...addOutputParamsToMessages ( m ),
         ],
         makeMutationResolverReturnStatement ( m, allOutputParams ( paramsA ) ) ) ) ) ),
     `    }}`
@@ -317,7 +324,9 @@ export function mutationCodeForStoredProcedureCalls<G> ( params: JavaWiringParam
         `      s.execute();`,
         ...indentList ( indentList ( indentList ( [
           ...getFromStatement ( errorPrefix, 's', paramsA ),
-          ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ) ],
+          ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ),
+          ...addOutputParamsToMessages(m)
+          ],
         ) ) ) ],
       [ makeMutationResolverReturnStatement ( m, allOutputParams ( paramsA ) ), '}' ] ),
     `  }`,

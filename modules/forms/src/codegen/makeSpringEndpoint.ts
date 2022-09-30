@@ -69,8 +69,6 @@ export function outputParamsDeclaration ( md: MutationDetail, i: number ): strin
   let ps = allOutputParams ( parametersFor ( md ) );
   return ps.length === 1 ? [] : ps.map ( ( m, pi ) => `${m.javaType} ${m.name} = params${i}.t${pi + 1};` )
 }
-export const addOutputParamsToMessages = ( md: MutationDetail ): string[] =>
-  allOutputParams ( parametersFor ( md ) ).filter ( p => p.msgLevel ).map ( p => `msgs.${p.msgLevel}(${p.name});` )
 
 export function callMutationsCode<G> ( p: RefD<G>, restName: string, r: RestD<G>, restAction: RestAction, dbNameString: string ) {
   const hintString = isRestStateChange ( restAction ) ? ` - if you have a compilation error here check which parameters you defined in {yourRestD}.states[${restAction.state}]` : ''
@@ -81,7 +79,6 @@ export function callMutationsCode<G> ( p: RefD<G>, restName: string, r: RestD<G>
           `${paramsDeclaration ( md, i )}${mutationVariableName ( r, restAction )}.${mutationMethodName ( r, restActionForName ( restAction ), md, '' + i )}(connection,${[ 'msgs',
             dbNameString, ...allInputParamNames ( parametersFor ( md ) ) ].join ( ',' )});`,
           ...outputParamsDeclaration ( md, i ),
-          ...addOutputParamsToMessages ( md )
         ];
     } ) ) )
   return [ `//from ${p.name}.rest[${restName}].mutations[${JSON.stringify ( restAction )}]${hintString}`, ...callMutations ];
