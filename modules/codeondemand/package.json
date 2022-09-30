@@ -15,9 +15,9 @@
     "react": "16.14.0",
     "react-dom": "16.14.0",
     "typescript": "^4.1.5",
-    "@focuson/lens": "1.41.10",
-    "@focuson/nav": "1.41.10",
-    "@focuson/state": "1.41.10"
+    "@focuson/lens": "1.41.11",
+    "@focuson/nav": "1.41.11",
+    "@focuson/state": "1.41.11"
   },
   "description": "This is a project that allows code to be (safely) fetched on demand from a server. The url holding the code is including in the json",
   "devDependencies": {
@@ -58,7 +58,7 @@
     "test:watch": "npm run test -- --watch",
     "storybook": "start-storybook -p 6006 -s public"
   },
-  "version": "1.41.10",
+  "version": "1.41.11",
   "eslintConfig": {
     "extends": [
       "react-app",
