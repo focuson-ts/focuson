@@ -6,5 +6,5 @@ export interface LabelAndFixedNumberProps {
 }
 export function LabelAndFixedNumber ( { id, label, number, className }: LabelAndFixedNumberProps ) {
   const clazz = className ? className : 'input-label'
-  return <div className='labelValueButton'><label className={clazz} htmlFor={id}>{label}</label><input id={id} className='input' readOnly type='number' value={number}/></div>
+  return <div className='labelValueButton'><label className={clazz} htmlFor={id} dangerouslySetInnerHTML={{ __html: label }}/><input id={id} className='input' readOnly type='number' value={number}/></div>
 }
