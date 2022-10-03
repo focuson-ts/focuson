@@ -41,7 +41,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
     fs.mkdirSync ( `${tsCode}`, { recursive: true } )
     fs.mkdirSync ( `${tsScripts}`, { recursive: true } )
     fs.mkdirSync ( `${tsPublic}/themes`, { recursive: true } )
-    fs.mkdirSync ( `${tsPublic}/css`, { recursive: true } )
+    fs.mkdirSync ( `${tsPublic}/css/focuson`, { recursive: true } )
     themes.forEach ( theme => fs.mkdirSync ( `${tsPublic}/themes/${theme}/icons`, { recursive: true } ) )
     fs.mkdirSync ( `${tsStoryBook}`, { recursive: true } )
     templateFile ( tsRoot + "/project.details.json", 'templates/ts.projectDetails.json', {
@@ -132,6 +132,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
     }
     themes.forEach ( copyTheme )
     templateFile ( `${tsPublic}/index.css`, 'templates/raw/ts/public/index.css', params, directorySpec, details )
+    copyFiles ( tsPublic + "/css/focuson", 'templates/raw/ts/public/css/focuson', directorySpec ) ( 'confirm.css', 'datepicker.css', 'debug.css', 'focuson.css', 'notifications.css', 'pages.css', 'storybook.css', 'tags.css' , 'primitives.css')
     templateFile ( `${tsPublic}/confirm.css`, 'templates/raw/ts/public/confirm.css', params, directorySpec, details )
     templateFile ( `${tsPublic}/notifications.css`, 'templates/raw/ts/public/notifications.css', params, directorySpec, details )
     const cssImports = params.cssDirectory && fs.existsSync ( params.cssDirectory ) ? GetFilelistRecursively2 ( params.cssDirectory, 0 )

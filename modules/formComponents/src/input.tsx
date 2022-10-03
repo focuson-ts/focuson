@@ -64,7 +64,7 @@ export const NonCheckboxInput = <S, T extends any, P> ( tProps: StringProps<T> )
     return <input className="input" type={type} {...cleanInputProps ( props )}
                   disabled={disabledFrom ( enabledBy )}
                   onBlur={onBlur}
-                  value={value === undefined || value === null ? undefined : `${value}`}
+                  value={value === undefined || value === null ? '' : `${value}`}
                   readOnly={mode === 'view' || readonly} onChange={( e ) => onChangeEventHandler ( transformer, e )}/>
   }
 }

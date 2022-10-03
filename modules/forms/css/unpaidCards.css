@@ -1,0 +1,11 @@
+input#page1\.unpaidCardOrMisuseItems {
+    width: 100%;
+    margin: 0;
+}
+
+button#page1\.unpaidCardOrMisuseItems\.minus,
+
+button#page1\.unpaidCardOrMisuseItems\.plus {
+    /* padding: 0.38rem; */
+    margin: 0;
+}
