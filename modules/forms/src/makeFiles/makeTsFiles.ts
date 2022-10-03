@@ -132,7 +132,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
       ( 'chevron-down.svg', 'close-cross-icon.svg', 'icon-error_medium.svg', 'icon-warning_medium.svg', 'icon-info_medium.svg', 'icon-success_medium.svg' )
     }
     themes.forEach ( copyTheme )
-    templateFile ( `${tsPublic}/index.css`, 'templates/raw/ts/public/index.css', params, directorySpec, details )
+    // templateFile ( `${tsPublic}/index.css`, 'templates/raw/ts/public/index.css', params, directorySpec, details )
     copyFiles ( tsPublic + "/css/focuson", 'templates/raw/ts/public/css/focuson', directorySpec ) ( 'confirm.css', 'datepicker.css', 'debug.css', 'focuson.css', 'notifications.css', 'pages.css', 'storybook.css', 'tags.css', 'primitives.css' )
     copyFiles ( tsPublic + "/icons/focuson", 'templates/raw/ts/public/icons/focuson', directorySpec ) ( 'chevron-down.svg', 'close-cross-icon.svg', 'icon-error_medium.svg', 'icon-warning_medium.svg', 'icon-info_medium.svg', 'icon-success_medium.svg' )
 

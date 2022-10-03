@@ -18,7 +18,7 @@ const params2: CombinedParams = {
     endpointImports: [],
     focusOnVersion,
     thePackage: 'somepackage.somepostfix.another',
-    theme: 'theme-dark',
+    theme: 'theme-light',
     debugLevel: 'debug',
 };
 generate ( logLevel, directorySpec, devAppConfig, params2,
