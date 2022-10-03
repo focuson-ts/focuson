@@ -42,6 +42,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
     fs.mkdirSync ( `${tsScripts}`, { recursive: true } )
     fs.mkdirSync ( `${tsPublic}/themes`, { recursive: true } )
     fs.mkdirSync ( `${tsPublic}/css/focuson`, { recursive: true } )
+    fs.mkdirSync ( `${tsPublic}/icons/focuson`, { recursive: true } )
     themes.forEach ( theme => fs.mkdirSync ( `${tsPublic}/themes/${theme}/icons`, { recursive: true } ) )
     fs.mkdirSync ( `${tsStoryBook}`, { recursive: true } )
     templateFile ( tsRoot + "/project.details.json", 'templates/ts.projectDetails.json', {
@@ -132,12 +133,14 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
     }
     themes.forEach ( copyTheme )
     templateFile ( `${tsPublic}/index.css`, 'templates/raw/ts/public/index.css', params, directorySpec, details )
-    copyFiles ( tsPublic + "/css/focuson", 'templates/raw/ts/public/css/focuson', directorySpec ) ( 'confirm.css', 'datepicker.css', 'debug.css', 'focuson.css', 'notifications.css', 'pages.css', 'storybook.css', 'tags.css' , 'primitives.css')
-    templateFile ( `${tsPublic}/confirm.css`, 'templates/raw/ts/public/confirm.css', params, directorySpec, details )
+    copyFiles ( tsPublic + "/css/focuson", 'templates/raw/ts/public/css/focuson', directorySpec ) ( 'confirm.css', 'datepicker.css', 'debug.css', 'focuson.css', 'notifications.css', 'pages.css', 'storybook.css', 'tags.css', 'primitives.css' )
+    copyFiles ( tsPublic + "/icons/focuson", 'templates/raw/ts/public/icons/focuson', directorySpec ) ( 'chevron-down.svg', 'close-cross-icon.svg', 'icon-error_medium.svg', 'icon-warning_medium.svg', 'icon-info_medium.svg', 'icon-success_medium.svg' )
+
+    // templateFile ( `${tsPublic}/confirm.css`, 'templates/raw/ts/public/confirm.css', params, directorySpec, details )
     templateFile ( `${tsPublic}/notifications.css`, 'templates/raw/ts/public/notifications.css', params, directorySpec, details )
     const cssImports = params.cssDirectory && fs.existsSync ( params.cssDirectory ) ? GetFilelistRecursively2 ( params.cssDirectory, 0 )
       .filter ( res => !res.isDir && res.file.endsWith ( '.css' ) )
-      .map ( ( { isDir, file } ) => `    <link rel="stylesheet" href="%PUBLIC_URL%/css/${file}" type="text/css">` ).join ( "\n" ) : ''
+      .map ( ( { isDir, file } ) => `    <link rel="stylesheet" href="%PUBLIC_URL%/css/${params.teamName}/${file}" type="text/css">` ).join ( "\n" ) : ''
     templateFile ( `${tsPublic}/index.html`, 'templates/raw/ts/public/index.html', { ...params, cssImports }, directorySpec, details )
 
     if ( fs.existsSync ( 'src/actions.ts' ) )
@@ -145,8 +148,9 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
     else
       copyFile ( tsCode + '/actions.ts', 'templates/actions.ts', directorySpec )
 
+    const customCssDirectory = `${tsPublic}/css/${params.teamName}`;
     if ( params.cssDirectory && fs.existsSync ( params.cssDirectory ) )
-      CopyFilesRecursively ( params.cssDirectory, `${tsPublic}/css`, 0 )
+      CopyFilesRecursively ( params.cssDirectory, customCssDirectory, 0 )
     else
-      console.log ( `Not copying css files in cssDirectory [${params.cssDirectory}]` )
+      console.log ( `Not copying css files in cssDirectory [${customCssDirectory}]` )
   };

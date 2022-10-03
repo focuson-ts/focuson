@@ -17,6 +17,7 @@ const okDateInfo: DateInfo = {
     { date: '15/11/2022', jurisdiction: 'GB' },
     { date: '17/11/2022', jurisdiction: 'I' },
   ],
+  "serverNow": "2022-07-01T05:25:32.077Z",
   today: '7/11/2022',
 }
 const badDateInfo: DateInfo = {
@@ -25,6 +26,7 @@ const badDateInfo: DateInfo = {
     { date: 'bad1', jurisdiction: 'GB' },
     { date: 'bad2', jurisdiction: 'I' },
   ],
+  "serverNow": "2022-07-01T05:25:32.077Z",
   today: '7/11/2022',
 }
 const nov7 = new Date ( '2022/11/7' ).toISOString () // need this so that the tests can run in different places

@@ -1,0 +1,109 @@
+
+:root {
+    --close-cross-icon-height: 16px;
+    --close-cross-icon-width: 16px;
+    --close-cross-icon-margin: 3px;
+    --close-cross-icon-fill: var(--magenta);
+    --close-cross-icon: url(../../icons/focuson/close-cross-icon.svg);
+}
+
+.sr-only {
+    position: absolute;
+    height: 1px;
+    width: 1px;
+    clip: rect(1px 1px 1px 1px);
+    clip: rect(1px, 1px, 1px, 1px);
+    clip-path: polygon(0px 0px, 0px 0px, 0px 0px);
+    -webkit-clip-path: polygon(0px 0px, 0px 0px, 0px 0px);
+    overflow: hidden !important;
+}
+
+.dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /*width: calc(960px * 0.6);*/
+    transform: translate(-50%, -50%);
+    background-color: var(--white);
+    z-index: 400;
+    padding: 32px;
+}
+
+.dialog-header {
+    color: var(--h3-brand-colour);
+    font-size: var(--h3-font-size);
+    margin: 0 0 32px;
+    font-weight: 100;
+}
+
+.dialog-text {
+    margin-bottom: 32px;
+    white-space: pre-wrap;
+    min-width: 500px;
+}
+
+.dialog-buttons {
+    display: flex;
+    flex-direction: row;
+    clear: both;
+    min-height: 50px;
+    width: 100%;
+}
+
+.dialog-buttons .button {
+    margin-left: 0;
+    margin-right: 30px;
+}
+
+.sr-only {
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    top: 0;
+    width: 100%;
+    height: var(--h3-line-height);
+    padding: 0 0 10px 0;
+    position: relative;
+}
+
+.header-title {
+    position: absolute;
+    left: 0;
+    width: auto;
+    height: 100%;
+    color: var(--h3-brand-colour);
+    font-size: var(--h3-font-size);
+    line-height: var(--h3-line-height);
+    font-family: var(--h3-font);
+}
+
+.header-close {
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+    background-image: var(--close-cross-icon);
+    background-repeat: no-repeat;
+    height: var(--close-cross-icon-height);
+    width: var(--close-cross-icon-width);
+    margin-top: var(--close-cross-icon-margin);
+}
+
+.cross-icon {
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+    background-image: var(--close-cross-icon);
+    background-repeat: no-repeat;
+    height: var(--close-cross-icon-height);
+    width: var(--close-cross-icon-width);
+    margin-top: var(--close-cross-icon-margin);
+}
+
