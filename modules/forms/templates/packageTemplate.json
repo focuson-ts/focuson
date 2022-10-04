@@ -13,11 +13,8 @@
   },
   "files":           [
     "dist/",
-    "public/custom/",
-    "public/themes/",
-    "public/index.css",
-    "public/confirm.css",
-    "public/notifications.css"
+    "public/css/",
+    "public/icons"
   ],
   "devDependencies": {
     "@focuson/stories":                   "{focusOnVersion}",
