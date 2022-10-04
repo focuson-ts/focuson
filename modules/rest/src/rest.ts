@@ -110,6 +110,7 @@ export interface RestCommand {
   messageOnSuccess?: string
   changeOnSuccess?: RestChangeCommands[]
   on404?: RestChangeCommands[]
+  onError?: RestChangeCommands[]
 }
 
 export const restCommandToChangeCommands = <MSGs> ( stringToMsg: ( s: string ) => MSGs ) => ( r: RestCommand, status: number | undefined ): ChangeCommand[] => {
@@ -145,7 +146,7 @@ export const restResultToTx = <S, MSGs> ( s: S, messageL: Optional<S, MSGs[]>, e
   const processedMessages = processAllMessageProcessors ( one.messagePostProcessors, one.postProcessors ) ( messagesFromBody )
   const changeCommands = restCommandToChangeCommands ( stringToMsg ) ( restCommand, status )
   const resultPathToLens = ( s: string ) => parsePath<any> ( s, lensBuilder ( { '': Lenses.identity<any> () }, {} ) )
-  const config: RestAndInputProcessorsConfig<S, any, MSGs> = { resultPathToLens, messageL, toPathTolens, stringToMsg, s , dateFn: defaultDateFn}
+  const config: RestAndInputProcessorsConfig<S, any, MSGs> = { resultPathToLens, messageL, toPathTolens, stringToMsg, s, dateFn: defaultDateFn }
   const data = extractData ( status, result );
   const processor = restChangeCommandProcessors ( config ) ( data );
 
@@ -153,9 +154,16 @@ export const restResultToTx = <S, MSGs> ( s: S, messageL: Optional<S, MSGs[]>, e
   const changeTxs = processChangeCommandProcessor ( '', processor, toArray ( restCommand.changeOnSuccess ) )
   const useResponse = getRestTypeDetails ( restCommand.restAction ).output.needsObj
   const resultTransform: Transform<S, any>[] = useResponse && status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => data ] ] : []
-  const on404Transforms: Transform<S, any>[] = status && status == 404 ? processChangeCommandProcessor ( '', processor, toArray ( restCommand.on404 ) ) : []
+  const is404 = status == 404
+  const isError = status && status >= 400 && !is404
+  const on404Transforms: Transform<S, any>[] = is404 ? processChangeCommandProcessor ( '', processor, toArray ( restCommand.on404 ) ) : []
+  const onErrorTransforms: Transform<S, any>[] = isError ? processChangeCommandProcessor ( '', processor, toArray ( restCommand.onError ) ) : []
+  // console.log('rest', restCommand)
+  // console.log('status', status, 'isError', isError, 'is404', is404)
+  // console.log('on404Txs', on404Transforms)
+  // console.log('onErrorTxs', onErrorTransforms)
   const msgFromBodyTx: Transform<S, any> = [ messageL, old => [ ...processedMessages, ...safeArray ( old ) ] ]
-  let resultTxs: Transform<S, any>[] = [ msgFromBodyTx, ...on404Transforms, ...legacyChangeTxs, ...changeTxs, ...resultTransform ];
+  let resultTxs: Transform<S, any>[] = [ msgFromBodyTx, ...on404Transforms, ...onErrorTransforms, ...legacyChangeTxs, ...changeTxs, ...resultTransform ];
   return resultTxs;
 };
 

@@ -14,6 +14,7 @@ export interface FetcherUsingRestConfig {
   restName: string;// OneRestDetails<S, FD, D, MSGs>; // this holds all the ids .. gosh this might be all the config we need...
   postFetchCommands: RestChangeCommands[]
   on404Commands: RestChangeCommands[]
+  onErrorCommands: RestChangeCommands[]
 }
 
 export type  AllFetcherUsingRestConfig = NameAnd<FetcherUsingRestConfig[]>
@@ -28,7 +29,10 @@ export const findRestCommands = <S> ( tagHolderL: Optional<S, TagHolder> ) => <F
   const currentTags = tagL.getOption ( s );
   let tagAndNames = tagOps.tags ( oneRestDetails, true, 'get' ) ( s );
   const desiredTags = tagAndNames.map ( ( [ name, tag ] ) => tag )
-  const restCommand: RestCommand = { restAction: 'get', name: restName, comment: 'Fetcher', tagNameAndTags: { tagName: `${pageName}_${tagName}`, tags: desiredTags }, changeOnSuccess: f.postFetchCommands, on404: f.on404Commands }
+  const restCommand: RestCommand = {
+    restAction: 'get', name: restName, comment: 'Fetcher',
+    tagNameAndTags: { tagName: `${pageName}_${tagName}`, tags: desiredTags },
+    changeOnSuccess: f.postFetchCommands, on404: f.on404Commands , onError: f.onErrorCommands}
   if ( !areAllDefined ( desiredTags ) ) return [ undefined, tagName, `Undefined tags. ${tagAndNames.map ( ( [ name, tag ] ) => `${name}:${tag}` )}` ]
   let tagsDifferent = !arraysEqual ( desiredTags, currentTags );
   let target = targetLens.getOption ( s );

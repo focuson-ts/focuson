@@ -7,9 +7,8 @@ import { allCommonIds, commonIds, fromCommonIds } from "../commonIds";
 export const eAccountsSummaryRestD: RestD<AllGuards> = {
   params: {
     ...commonIds,
-    ...fromCommonIds ( 'dbName' ),
+    ...fromCommonIds ( 'dbName', 'employeeType' ),
     clientRef: { ...IntParam, commonLens: 'clientRef', testValue: 333, main: true },
-    employeeType: allCommonIds.employeeType
   },
   dataDD: EAccountsSummaryDD,
   url: '/api/accountsSummary?{query}', //or maybe accountId={accountId}&customerId={customerId}

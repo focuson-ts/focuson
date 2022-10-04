@@ -15,7 +15,8 @@ export interface RestDefnInPageProperties<G> {
   targetFromPath: string,
   fetcher?: boolean;
   postFetchCommands?: RestChangeCommands | RestChangeCommands[]
-  on404?:  RestChangeCommands | RestChangeCommands[]
+  on404?:  RestChangeCommands | RestChangeCommands[],
+  onError?: RestChangeCommands | RestChangeCommands[]
 }
 export interface RestDefnInPage<G> {
   [ name: string ]: RestDefnInPageProperties<G>

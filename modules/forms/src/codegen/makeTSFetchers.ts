@@ -5,6 +5,7 @@ import { TSParams } from "./config";
 import { addStringToEndOfAllButLast, importsDot, importsDotDot, lensFocusQueryFor, noExtension } from "./codegen";
 import { findIds, isRestLens, LensRestParam } from "../common/restD";
 import { lensFocusQueryWithTildaFromPage } from "./lens";
+import { FetcherUsingRestConfig } from "@focuson/focuson";
 
 
 export const makeFetcherCode = ( params: TSParams ) => <G> ( p: RefD<G> ) => ( restName: string, def: RestDefnInPageProperties<G> ): string[] => {
@@ -92,14 +93,19 @@ export function makeFetchersDataStructure<G> ( params: TSParams, { stateName, va
     `],`,
     'children: []}',
   ]
-
 }
 
 
 export function makeNewFetchersDataStructure<G> ( params: TSParams, ps: RefD<G>[] ) {
   const obj = Object.fromEntries ( ps.map ( p =>
-    [ p.name, sortedEntries ( p.rest ).filter ( t => t[ 1 ].fetcher ).map ( ( [ restName, rdp ] ) =>
-      ({ tagName: rdp.targetFromPath, restName: restDetailsName ( p, restName, rdp.rest ), postFetchCommands: toArray ( rdp.postFetchCommands ) , on404Commands: toArray ( rdp.on404 ) }) ) ] )
+    [ p.name, sortedEntries ( p.rest ).filter ( t => t[ 1 ].fetcher ).map ( ( [ restName, rdp ] ): FetcherUsingRestConfig =>
+      ({
+        tagName: rdp.targetFromPath,
+        restName: restDetailsName ( p, restName, rdp.rest ),
+        postFetchCommands: toArray ( rdp.postFetchCommands ),
+        on404Commands: toArray ( rdp.on404 ),
+        onErrorCommands: toArray ( rdp.onError )
+      }) ) ] )
   )
   return (`export const newFetchers: AllFetcherUsingRestConfig = ` + JSON.stringify ( obj, null, 2 )).split ( "\n" )
 }
