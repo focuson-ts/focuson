@@ -46,7 +46,7 @@ export function SummaryOfChargeDatesRD ( c: AuthoriseCustomisation ): ExampleRes
     url: `${c.urlPrefix}l/charges/dates?{query}`,
     actions: [ 'get' ],
     resolvers: {},
-    postProcessMessages: ['infoToSuccess']
+    postProcessMessages: [ 'infoToSuccess' ]
     // getSummaryOfChargesDate:
   }
   const name = `get${c.namePrefix}SummaryOfChargesDate`
@@ -109,9 +109,13 @@ export function SummaryOfChargeDatesRD ( c: AuthoriseCustomisation ): ExampleRes
               { type: 'output', javaType: 'String', name: 'bob', rsName: 'bob' }
             ], list: true
           },
-          { type: 'sql', schema: onlySchema, sql: 'insert something in audit file', params: 'brandRef' } ]
+          { type: 'sql', schema: onlySchema, sql: 'insert something in audit file', params: 'brandRef' },
+          // { type: 'manual', throwsException: true, code: 'throw new RuntimeException();', params: 'brandRef' },
+          // { type: 'manual', code: 'msgs.info("someMessage");', params: 'brandRef' },
+        ]
       },
-
+      // { guard: [], type: 'manual', throwsException: true, code: 'throw new RuntimeException();', params: 'brandRef' },
+      // { guard: [], type: 'manual', code: 'List<Map<String,Object>> x= Arrays.asList();', params: { type: "output", name: 'x', javaType: 'List<Map<String,Object>>' }, import: 'import java.util.Array;' }
     ]
   }
   return result
@@ -138,7 +142,9 @@ export function operatorEligabilityRD ( c: AuthoriseCustomisation ): ExampleRest
       ], list: true
     },
     {
-      type: 'manual', code: 'Map<String,Object> getOperatorEligability=params0.get(0);', params: [
+      type: 'manual', code: 'Map<String,Object> getOperatorEligability=params0.get(0);',
+
+      params: [
         { type: 'input', name: 'params0', javaType: 'List<Map<String,Object>>' },
         { type: 'output', name: 'getOperatorEligability', javaType: 'Map<String,Object>' }
       ]

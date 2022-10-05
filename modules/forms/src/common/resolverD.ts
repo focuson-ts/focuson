@@ -173,6 +173,10 @@ export function isManualMutation ( m: MutationDetail ): m is ManualMutation {
   const a: any = m
   return m.type === 'manual'
 }
+export function isManualMutationThatThrowsException ( m: MutationDetail ): m is ManualMutation {
+  const a: any = m
+  return m.type === 'manual' && m.throwsException
+}
 
 export interface MultipleMutation {
   type: 'multiple',

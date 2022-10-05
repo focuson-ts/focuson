@@ -4,7 +4,7 @@ import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationDetailsName, mutationMethodName } from "./names";
 import { AllLensRestParams, RestD } from "../common/restD";
 import { indentList } from "./codegen";
-import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutoSqlResolver, AutowiredMutationParam, displayParam, getMakeMock, getMessagesForSuccessAndFailure, importForTubles, InputMutationParam, isAutoSqlResolver, isBodyMutationParam, isInputParam, isManualMutation, isMessageMutation, isMultipleMutation, isMutationThatIsaList, isOutputParam, isSelectMutationThatIsAList, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, paramNamePathOrValue, PrimaryMutationDetail, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlFunctionMutation, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
+import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutoSqlResolver, AutowiredMutationParam, displayParam, getMakeMock, getMessagesForSuccessAndFailure, importForTubles, InputMutationParam, isAutoSqlResolver, isBodyMutationParam, isInputParam, isManualMutation, isManualMutationThatThrowsException, isMessageMutation, isMultipleMutation, isMutationThatIsaList, isOutputParam, isSelectMutationThatIsAList, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, paramNamePathOrValue, PrimaryMutationDetail, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlFunctionMutation, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
 import { applyToTemplate } from "@focuson/template";
 import { restActionForName } from "@focuson/rest";
 import { outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint";
@@ -69,13 +69,20 @@ export function makeMutationResolverReturnStatementForList ( m: MutationDetail, 
     const i = [ ...m.mutations ].reverse ().findIndex ( isMutationThatIsaList )
     if ( i >= 0 ) return `return params${i};`
   }
-  throw new Error ( `Cannot makeMutationResolverReturnStatment for ${index} ${JSON.stringify ( m )}` )
+  if ( isManualMutation ( m ) ) {
+    if ( m.throwsException ) return `return null;//this is because the code above throws an exception`
+    const param = allOutputParams ( toArray ( m.params ) ).filter ( p => p.javaType === 'List<Map<String,Object>>' )
+    if ( param?.length === 1 )
+      return `return ${param[ 0 ].name};//from manual mutation ${JSON.stringify(m)}`
+    else throw new Error ( `The manual mutation did not have a single output param of type List<Map<String,Object>>\nIndex: ${index}\n${JSON.stringify ( m )}` )
+  }
+  throw new Error ( `Cannot makeMutationResolverReturnStatment for [${index}] ${JSON.stringify ( m )}` )
 
 }
 export function makeMutationResolverReturnStatement ( m: PrimaryMutationDetail, outputs: OutputMutationParam[] ): string {
-  if ( isManualMutation ( m ) && m.throwsException ) return '//No return statement because it throws an exception'
+  if ( isManualMutationThatThrowsException ( m ) ) return '//No return statement because it throws an exception'
   if ( outputs.length === 0 ) return `return;`
-  if ( outputs.length === 1 ) return `return ${outputs[ 0 ].name};`
+  if ( outputs.length === 1 ) return `return ${outputs[ 0 ].name};//${JSON.stringify(outputs[0])} from ${JSON.stringify(m)}`
   return `return new Tuple${outputs.length}<${outputs.map ( o => o.javaType ).join ( "," )}>(${outputs.map ( x => x.name ).join ( ',' )});`
 }
 function toStringForMock ( javaType: AllJavaTypes, value: number ) {
@@ -240,7 +247,7 @@ export function mutationCodeForSqlMapCalls<G> ( params: JavaWiringParams, errorP
           ...execute,
           ...getFromResultSetIntoVariables ( errorPrefix, 'rs', paramsA ),
           ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ),
-        ...addOutputParamsToMessages ( m ),
+          ...addOutputParamsToMessages ( m ),
         ],
         makeMutationResolverReturnStatement ( m, allOutputParams ( paramsA ) ) ),
       ]
@@ -272,8 +279,8 @@ export function mutationCodeForSqlListCalls<G> ( params: JavaWiringParams, error
         '}',
         ...check404,
         ...messageLine,
-        ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ) ,
-        ...addOutputParamsToMessages ( m )],
+        ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ),
+        ...addOutputParamsToMessages ( m ) ],
       `return result;` )
     ) ) ),
     `  }}`,
@@ -323,9 +330,9 @@ export function mutationCodeForStoredProcedureCalls<G> ( params: JavaWiringParam
         `      long start = System.nanoTime();`,
         `      s.execute();`,
         ...indentList ( indentList ( indentList ( [
-          ...getFromStatement ( errorPrefix, 's', paramsA ),
-          ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ),
-          ...addOutputParamsToMessages(m)
+            ...getFromStatement ( errorPrefix, 's', paramsA ),
+            ...postTransactionLogger ( params, paramsA, isSqlMutationThatIsAList ( m ) ),
+            ...addOutputParamsToMessages ( m )
           ],
         ) ) ) ],
       [ makeMutationResolverReturnStatement ( m, allOutputParams ( paramsA ) ), '}' ] ),
@@ -453,16 +460,8 @@ export function makeMutations<G> ( params: JavaWiringParams, ref: RefD<G>, restN
     `import org.slf4j.Logger;`,
     `import org.slf4j.LoggerFactory;`,
     `import java.text.MessageFormat;`,
-    `import java.util.Map;`,
-    `import java.util.HashMap;`,
-    `import java.util.ArrayList;`,
-    `import java.util.List;`,
-    `import java.util.Date;`,
-    `import java.sql.CallableStatement;`,
-    `import java.sql.PreparedStatement;`,
-    `import java.sql.ResultSet;`,
-    `import java.sql.Connection;`,
-    `import java.sql.SQLException;`,
+    'import java.util.*;',
+    `import java.sql.*;`,
     `import ${params.thePackage}.${params.utilsPackage}.IOGNL;`,
     `import ${params.thePackage}.${params.utilsPackage}.DateFormatter;`,
     `import ${params.thePackage}.${params.utilsPackage}.Messages;`,

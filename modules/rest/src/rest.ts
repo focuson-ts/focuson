@@ -150,18 +150,14 @@ export const restResultToTx = <S, MSGs> ( s: S, messageL: Optional<S, MSGs[]>, e
   const data = extractData ( status, result );
   const processor = restChangeCommandProcessors ( config ) ( data );
 
-  const legacyChangeTxs: Transform<S, any>[] = processChangeCommandProcessor ( '', processor, changeCommands );
+  const legacyChangeTxs: Transform<S, any>[] = processChangeCommandProcessor ( `Rest for ${JSON.stringify(restCommand)}  changeCommands`, processor, changeCommands );
   const changeTxs = processChangeCommandProcessor ( '', processor, toArray ( restCommand.changeOnSuccess ) )
   const useResponse = getRestTypeDetails ( restCommand.restAction ).output.needsObj
   const resultTransform: Transform<S, any>[] = useResponse && status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => data ] ] : []
   const is404 = status == 404
   const isError = status && status >= 400 && !is404
-  const on404Transforms: Transform<S, any>[] = is404 ? processChangeCommandProcessor ( '', processor, toArray ( restCommand.on404 ) ) : []
-  const onErrorTransforms: Transform<S, any>[] = isError ? processChangeCommandProcessor ( '', processor, toArray ( restCommand.onError ) ) : []
-  // console.log('rest', restCommand)
-  // console.log('status', status, 'isError', isError, 'is404', is404)
-  // console.log('on404Txs', on404Transforms)
-  // console.log('onErrorTxs', onErrorTransforms)
+  const on404Transforms: Transform<S, any>[] = is404 ? processChangeCommandProcessor ( `Rest for ${JSON.stringify(restCommand)} - on404`, processor, toArray ( restCommand.on404 ) ) : []
+  const onErrorTransforms: Transform<S, any>[] = isError ? processChangeCommandProcessor ( `Rest for ${JSON.stringify(restCommand)}  onError`, processor, toArray ( restCommand.onError ) ) : []
   const msgFromBodyTx: Transform<S, any> = [ messageL, old => [ ...processedMessages, ...safeArray ( old ) ] ]
   let resultTxs: Transform<S, any>[] = [ msgFromBodyTx, ...on404Transforms, ...onErrorTransforms, ...legacyChangeTxs, ...changeTxs, ...resultTransform ];
   return resultTxs;

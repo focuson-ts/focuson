@@ -7,8 +7,7 @@
     background: var(--dropdown-container-background);
     border-radius: var(--dropdown-container-border-radius);
     box-shadow: var(--dropdown-container-box-shadow);
-    width: 272px;
-    min-height: 42px;
+
   }
   
   .dropdown-container button {

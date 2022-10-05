@@ -129,7 +129,7 @@ input[type=text],
 input[type=number],
 input[type=date],
 select, textarea.input {
-    width: 49%;
+    width: 99%;
 }
 
 .labelWidth10 label,
@@ -396,6 +396,8 @@ button + div.labelValueButton {
     box-shadow: none;
     width: 100%;
     margin: 0 0 20px 0;
+    min-width: 272px;
+    min-height: 42px;
 }
 
 table.grid {
