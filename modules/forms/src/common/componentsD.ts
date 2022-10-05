@@ -35,15 +35,19 @@ export const commonParams: DisplayCompParamD = {
   ariaLabel: { paramType: 'string', needed: 'no' },
 }
 
+export const validationParams: DisplayCompParamD = {
+  errorMessage: { paramType: 'string', needed: 'no' },
+  required: { paramType: 'boolean', needed: 'no', default: true },
+}
 
 export const stringValidationParams: DisplayCompParamD = {
-  required: { paramType: 'boolean', needed: 'no', default: true },
+  ...validationParams,
   pattern: { paramType: 'string', needed: 'no' },
   minlength: { paramType: 'object', needed: 'no' },
   maxlength: { paramType: 'object', needed: 'no' },
 }
 export const intValidationParams: DisplayCompParamD = {
-  required: { paramType: 'boolean', needed: 'no', default: true },
+  ...validationParams,
   min: { paramType: 'object', needed: 'no' },
   max: { paramType: 'object', needed: 'no' },
   step: { paramType: 'object', needed: 'no' },
@@ -109,7 +113,7 @@ export const commonParamsWithLabel: DisplayCompParamD = {
 const onChangeAndParentState: DisplayCompParamD = {
   onChange: { paramType: 'json', needed: 'no' },
   parentState: { paramType: 'object', needed: 'defaultToParentStateIfOnChange' },
-  regexForChange: {paramType: 'string', needed: 'no'}
+  regexForChange: { paramType: 'string', needed: 'no' }
 }
 const enabledByForInputs: DisplayCompParamD = {
   enabledBy: { paramType: 'guards', needed: 'no' },
@@ -293,7 +297,7 @@ export const GuardsAndMessageTitleLayoutCD: DisplayCompD = {
   import: "@focuson/form_components",
   params: {
     messages: { paramType: 'guardAndMessage', needed: 'yes' },
-    state: {paramType: 'state', needed: 'defaultToPath'}
+    state: { paramType: 'state', needed: 'defaultToPath' }
   }
 }
 
@@ -388,9 +392,11 @@ export const LabelAndTextAreaCD: DisplayCompD = {
   import: '@focuson/form_components',
   name: "LabelAndTextarea",
   params: {
-    ...commonParamsWithLabel, scrollAfter: { paramType: 'string', needed: 'no' },
+    ...validationParams,
+    ...commonParamsWithLabel,
     ...onChangeAndParentState,
     ...enabledByForInputs,
+    scrollAfter: { paramType: 'string', needed: 'no' },
     required: { paramType: 'boolean', needed: 'no', default: true },
     maxlength: { paramType: 'object', needed: 'no' },
     placeholder: { paramType: 'string', needed: 'no' }

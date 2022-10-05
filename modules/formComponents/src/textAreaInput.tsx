@@ -6,6 +6,7 @@ import { CommonStateProps, InputEnabledProps, InputOnChangeProps, LabelAlignment
 import { Label } from './label';
 import { makeInputChangeTxs } from './labelAndInput';
 import { makeButtons } from "./makeButtons";
+import { CustomError, setEdited } from "./CustomError";
 
 export interface TextareaProps<S, T, Context> extends CommonStateProps<S, T, Context>, LabelAlignment, InputOnChangeProps<S, Context> {
   maxlength?: number
@@ -13,6 +14,7 @@ export interface TextareaProps<S, T, Context> extends CommonStateProps<S, T, Con
   defaultValue?: string
   value?: string
   buttons?: string[]
+  errorMessage?: string
   scrollAfter?: string;
   noLabel?: boolean;
   enabledBy?: string[][]
@@ -24,27 +26,30 @@ export const cleanTextareaProps = <T extends NameAnd<any>> ( p: T ): T => {
   delete result.label
   delete result.allButtons
   delete result.state
+  delete result.errorMessage
   delete result.readOnly
   delete result.enabledBy
   delete result.parentState
   delete result.scrollAfter
   delete result.noLabel
-  result['maxlength'] = result['maxlength']
-  delete result.maxlength
+  result[ 'maxlength' ] = result[ 'maxlength' ]
+  delete result.maxLength
   return result
 };
 
 export function TextAreaInput<S, T, Context extends FocusOnContext<S>> ( props: TextareaProps<S, string, Context> ) {
-  const { id, state, mode, readonly, scrollAfter, parentState, onChange, enabledBy } = props
+  const { id, state, mode, readonly, scrollAfter, parentState, onChange, enabledBy,errorMessage } = props
 
   return (
     <textarea
       style={scrollAfter ? { height: scrollAfter, overflow: 'auto' } : undefined}
       {...cleanTextareaProps ( props )}
+      data-errormessage={errorMessage}
       onChange={( e ) => {
+        setEdited ( e?.target )
         state.massTransform ( reasonFor ( 'TextAreaInput', 'onChange', id ) ) ( [ state.optional, () => e.target.value ], ...makeInputChangeTxs ( id, parentState, onChange ) );
       }}
-      readOnly={mode === 'view' || readonly || disabledFrom(enabledBy)}
+      readOnly={mode === 'view' || readonly || disabledFrom ( enabledBy )}
       value={`${state.optJsonOr ( '' )}`}
       className="input"
     />
@@ -66,7 +71,8 @@ export function LabelAndTextarea<S, T, Context extends FocusOnContext<S>> ( prop
     <div className={`labelValueButton ${labelPosition == 'Horizontal' ? 'd-flex-inline' : ''}`}>
       {noLabel ? '' : <Label state={state} htmlFor={id} label={label}/>}
       <div className={`${buttons && buttons.length > 0 ? 'inputAndButtons' : ''}`}>
-        <TextAreaInput  {...props} />{makeButtons ( props )}</div>
+        <TextAreaInput  {...props} />{makeButtons ( props )}  </div>
+      <CustomError id={props.id}/>
     </div>
   );
 }

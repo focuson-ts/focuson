@@ -9,6 +9,7 @@ import { Transform } from "@focuson/lens";
 import { InputChangeCommands, inputCommandProcessors, InputProcessorsConfig, processChangeCommandProcessor } from "@focuson/rest";
 import { makeButtons } from "./makeButtons";
 import { HasPathToLens, HasSimpleMessageL } from "@focuson/pages";
+import { CustomError } from "./CustomError";
 
 export interface LabelAndInputProps<S, T, Context> extends CommonStateProps<S, T, Context>, LabelAlignment, InputOnChangeProps<S, Context> {
   label?: string;
@@ -21,12 +22,13 @@ export interface LabelAndInputProps<S, T, Context> extends CommonStateProps<S, T
   enabledBy?: string[][];
   placeholder?: string;
   className?: string
+  errorMessage?: string
   onBlur?: ( e: any ) => void
 }
 
-export function makeInputChangeTxs<S, C extends HasSimpleMessageL<S> & HasPathToLens<S>& HasDateFn> ( id: string, parentState: LensState<S, any, C> | undefined, change?: InputChangeCommands | InputChangeCommands[] ): Transform<S, any>[] {
+export function makeInputChangeTxs<S, C extends HasSimpleMessageL<S> & HasPathToLens<S> & HasDateFn> ( id: string, parentState: LensState<S, any, C> | undefined, change?: InputChangeCommands | InputChangeCommands[] ): Transform<S, any>[] {
   if ( parentState === undefined ) return []
-  const { simpleMessagesL, pathToLens,dateFn } = parentState.context
+  const { simpleMessagesL, pathToLens, dateFn } = parentState.context
   const config: InputProcessorsConfig<S, SimpleMessage> = {
     dateFn,
     toPathTolens: pathToLens ( parentState.main, parentState.optional ),
@@ -43,12 +45,13 @@ export const LabelAndTInput = <T extends any, P> ( tProps: TransformerProps<T> )
     const input = Input<S, T, P> ( tProps )<LabelAndInputProps<S, T, Context> & P, Context> ( props );
     const buttonClasses = props.buttons && props.buttons.length > 0 ? [ 'inputAndButtons' ] : []
     const checkboxClasses = isCheckboxProps ( tProps ) ? [ 'checkbox-container' ] : []
-    const classNameFromProps = props.className? [props.className]:[]
-    const allClasses = [ ...buttonClasses, ...checkboxClasses , ...classNameFromProps];
+    const classNameFromProps = props.className ? [ props.className ] : []
+    const allClasses = [ ...buttonClasses, ...checkboxClasses, ...classNameFromProps ];
     const classes = allClasses.length > 0 ? allClasses.join ( ' ' ) : ''
 
     return <div className={`labelValueButton ${props.labelPosition == 'Horizontal' ? 'd-flex-inline' : ''}`}> {props.noLabel ? '' : label}
       <div className={`${classes}`}>{input}{makeButtons ( props )}</div>
+      <CustomError id={props.id}/>
     </div>
   }
 

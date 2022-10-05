@@ -1,9 +1,10 @@
 import { CommonStateProps, InputEnabledProps, InputOnChangeProps } from "./common";
-import React from "react";
+
 import { BooleanTransformer, BooleanYNTransformer, CheckboxProps, isCheckboxProps, NumberTransformer, StringProps, StringTransformer, TransformerProps } from "./transformers";
 import { BooleanValidations, disabledFrom, NameAnd, NumberValidations, StringValidations } from "@focuson/utils";
 
 import { FocusOnContext } from "@focuson/focuson";
+import { setEdited } from "./CustomError";
 
 
 export interface InputProps<S, T, Context> extends CommonStateProps<S, T, Context>, InputOnChangeProps<S, Context>, InputEnabledProps {
@@ -11,13 +12,15 @@ export interface InputProps<S, T, Context> extends CommonStateProps<S, T, Contex
   placeholder?: string;
   readonly?: boolean;
   enums?: NameAnd<string>;
-  onBlur?: ( e: any ) => void
+  onBlur?: ( e: any ) => void;
+  errorMessage?: string
 }
 
 export const cleanInputProps = <T extends NameAnd<any>> ( p: T ): T => {
   const result = { ...p, 'data-validationmessage': p.label }
 
   delete result.allButtons
+  delete result.errorMessage
   delete result.state
   delete result.label
   delete result.parentState
@@ -36,18 +39,22 @@ export const Input = <S, T extends any, P> ( tProps: TransformerProps<T> ) => is
 export const CheckboxInput = <S, T extends any, P> ( tProps: CheckboxProps<T> ) => {
   const { transformer, checkbox, selectFn } = tProps
   return <Props extends InputProps<S, T, Context> & P, Context extends FocusOnContext<S>> ( props: Props ) => {
-    const { state, mode, id, parentState, onChange, readonly, enabledBy, onBlur } = props
-    const onChangeEventHandler = ( e: React.ChangeEvent<HTMLInputElement> ) =>
+    const { state, mode, id, parentState, onChange, readonly, enabledBy, onBlur, errorMessage } = props
+    const onChangeEventHandler = ( e: React.ChangeEvent<HTMLInputElement> ) => {
+      setEdited(e?.target)
       selectFn<S, T, Context> ( state, id, transformer ( e?.target?.checked ), parentState, onChange, true )
+    }
     return <><input type='checkbox' {...cleanInputProps ( props )}
                     checked={checkbox ( state.optJson () )}
                     disabled={disabledFrom ( enabledBy ) || mode === 'view' || readonly}
+                    data-errormessage={errorMessage}
                     onBlur={onBlur}
                     onChange={( e ) => onChangeEventHandler ( e )}/>
       <span className="checkmark"></span>
     </>
   }
 }
+
 export const NonCheckboxInput = <S, T extends any, P> ( tProps: StringProps<T> ) => {
   const { transformer, type, selectFn } = tProps
   if ( typeof selectFn !== 'function' ) {
@@ -55,15 +62,17 @@ export const NonCheckboxInput = <S, T extends any, P> ( tProps: StringProps<T> )
     throw new Error ( `selectFn must be a function it is ${selectFn}` )
   }
   return <Props extends InputProps<S, T, Context> & P, Context extends FocusOnContext<S>> ( props: Props ) => {
-    const { state, mode, id, parentState, onChange, readonly, enabledBy, onBlur, regexForChange } = props
+    const { state, mode, id, parentState, onChange, readonly, enabledBy, onBlur, regexForChange, errorMessage } = props
     const onChangeEventHandler = ( transformer: ( s: string ) => T, e: React.ChangeEvent<HTMLInputElement> ) => {
       const value = e?.target?.value;
-      return selectFn<S, T, Context> ( state, id, transformer ( value ), parentState, onChange, regexForChange === undefined ||value.match ( regexForChange ) !== null );
+      setEdited(e?.target)
+      return selectFn<S, T, Context> ( state, id, transformer ( value ), parentState, onChange, regexForChange === undefined || value.match ( regexForChange ) !== null );
     }
     const value: T | undefined = tProps.default === undefined ? state.optJson () : state.optJsonOr ( tProps.default );
     return <input className="input" type={type} {...cleanInputProps ( props )}
                   disabled={disabledFrom ( enabledBy )}
                   onBlur={onBlur}
+                  data-errormessage={errorMessage}
                   value={value === undefined || value === null ? '' : `${value}`}
                   readOnly={mode === 'view' || readonly} onChange={( e ) => onChangeEventHandler ( transformer, e )}/>
   }
