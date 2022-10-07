@@ -51,7 +51,7 @@ export const LabelAndTInput = <T extends any, P> ( tProps: TransformerProps<T> )
 
     return <div className={`labelValueButton ${props.labelPosition == 'Horizontal' ? 'd-flex-inline' : ''}`}> {props.noLabel ? '' : label}
       <div className={`${classes}`}>{input}{makeButtons ( props )}</div>
-      <CustomError id={props.id}/>
+      <CustomError id={props.id} validationMessage={props.errorMessage}/>
     </div>
   }
 

@@ -39,7 +39,7 @@ export const Input = <S, T extends any, P> ( tProps: TransformerProps<T> ) => is
 export const CheckboxInput = <S, T extends any, P> ( tProps: CheckboxProps<T> ) => {
   const { transformer, checkbox, selectFn } = tProps
   return <Props extends InputProps<S, T, Context> & P, Context extends FocusOnContext<S>> ( props: Props ) => {
-    const { state, mode, id, parentState, onChange, readonly, enabledBy, onBlur, errorMessage } = props
+    const { state, mode, id, parentState, onChange, readonly, enabledBy, onBlur } = props
     const onChangeEventHandler = ( e: React.ChangeEvent<HTMLInputElement> ) => {
       setEdited(e?.target)
       selectFn<S, T, Context> ( state, id, transformer ( e?.target?.checked ), parentState, onChange, true )
@@ -47,7 +47,6 @@ export const CheckboxInput = <S, T extends any, P> ( tProps: CheckboxProps<T> ) 
     return <><input type='checkbox' {...cleanInputProps ( props )}
                     checked={checkbox ( state.optJson () )}
                     disabled={disabledFrom ( enabledBy ) || mode === 'view' || readonly}
-                    data-errormessage={errorMessage}
                     onBlur={onBlur}
                     onChange={( e ) => onChangeEventHandler ( e )}/>
       <span className="checkmark"></span>

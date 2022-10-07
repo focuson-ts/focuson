@@ -38,7 +38,7 @@ export const cleanTextareaProps = <T extends NameAnd<any>> ( p: T ): T => {
 };
 
 export function TextAreaInput<S, T, Context extends FocusOnContext<S>> ( props: TextareaProps<S, string, Context> ) {
-  const { id, state, mode, readonly, scrollAfter, parentState, onChange, enabledBy,errorMessage } = props
+  const { id, state, mode, readonly, scrollAfter, parentState, onChange, enabledBy, errorMessage } = props
 
   return (
     <textarea
@@ -65,14 +65,14 @@ export interface LabelAndTextareaProps<S, T, Context> extends TextareaProps<S, T
 }
 
 export function LabelAndTextarea<S, T, Context extends FocusOnContext<S>> ( props: LabelAndTextareaProps<S, string, Context> ) {
-  const { id, label, name, state, labelPosition, buttons, noLabel } = props
+  const { id, label, name, state, labelPosition, buttons, noLabel, errorMessage } = props
 
   return (
     <div className={`labelValueButton ${labelPosition == 'Horizontal' ? 'd-flex-inline' : ''}`}>
       {noLabel ? '' : <Label state={state} htmlFor={id} label={label}/>}
       <div className={`${buttons && buttons.length > 0 ? 'inputAndButtons' : ''}`}>
         <TextAreaInput  {...props} />{makeButtons ( props )}  </div>
-      <CustomError id={props.id}/>
+      <CustomError id={props.id} validationMessage={errorMessage}/>
     </div>
   );
 }

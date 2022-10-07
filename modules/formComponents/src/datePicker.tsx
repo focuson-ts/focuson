@@ -7,6 +7,7 @@ import { Label } from "./label";
 import { makeButtons } from "./makeButtons";
 import ReactDatePicker from "react-datepicker";
 import { useEffect, useRef } from "react";
+import { CustomError, setEdited } from "./CustomError";
 
 
 type DateFormat = string//'dd-MM/yyyy' | 'yyyy/MM/dd'
@@ -58,7 +59,7 @@ export type DateRange<S, C> = DateRangeInPast<S, C> | DateRangeInFuture<S, C> | 
 
 export const parseDate = ( prefix: string, format: string ) => ( date: string ): Date | string[] => {
   let result = parse ( date.replace ( /\//g, '-' ), format.replace ( /\//g, '-' ), new Date () );
-  return isNaN ( result.getTime () ) ? [ `${prefix} Invalid date [${date}]. Use ${format}` ] : result;
+  return isNaN ( result.getTime () ) ? [ `${prefix}Please use date format ${format}` ] : result;
 };
 
 type DateValidation = ( date: Date ) => string[]
@@ -117,8 +118,8 @@ export function validateDateInfo<S, C> ( dateInfo: DateInfo | undefined, targetJ
   const dateFormat = dateInfo.dateFormat;
   const [ holidayErrors, holidays ] = errorsAnd ( safeArray ( dateInfo.holidays ).filter ( h => h.jurisdiction === targetJurisdiction || targetJurisdiction === undefined )
     .map ( ( { date, jurisdiction }, i ) =>
-      parseDate ( `holidays[${i}]`, dateFormat ) ( date ) ) )
-  const [ todayErrors, todayDates ] = errorsAnd ( [ parseDate ( 'today', dateFormat ) ( dateInfo.today ) ] )
+      parseDate ( `holidays[${i}]: `, dateFormat ) ( date ) ) )
+  const [ todayErrors, todayDates ] = errorsAnd ( [ parseDate ( '', dateFormat ) ( dateInfo.today ) ] )
   const errors = [ ...todayErrors, ...holidayErrors ]
   if ( debug ) console.log ( 'validateDateInfo', dateInfo, errors )
   if ( errors.length > 0 ) return errors
@@ -191,7 +192,7 @@ interface SelectedDate {
 function selectedDate<S, C> ( state: LensState<S, string, C>, dateFormat: string, defaultScrollToDate: Date | undefined ): SelectedDate {
   const dateString = state.optJson ()
   if ( dateString === undefined ) return ({ date: undefined, scrollToDate: defaultScrollToDate, selectedDateErrors: [] })
-  const [ selectedDateErrors, date ] = errorsAndT ( parseDate ( `selectedDate`, dateFormat ) ( dateString ) )
+  const [ selectedDateErrors, date ] = errorsAndT ( parseDate ( ``, dateFormat ) ( dateString ) )
   const scrollToDate = date ? date : defaultScrollToDate;
   return { date, scrollToDate, selectedDateErrors }
 }
@@ -236,6 +237,7 @@ export function RawDatePicker<S extends any, C extends PageSelectionContext<S>> 
       try {
         const formattedDate = e === undefined ? undefined : myformat ( e, dateFormat )
         if ( debug ) console.log ( 'datePicker.onChange', id, 'e', typeof e, e, 'dateFormat', dateFormat, 'formattedDate', formattedDate )
+        setEdited ( e?.target )
         selectFn ( id, debug, state ) ( 'onChange', formattedDate )
         // state.setJson ( formattedDate, reasonFor ( 'DatePicker', 'onChange', id ) )
       } catch ( err ) {
@@ -247,6 +249,7 @@ export function RawDatePicker<S extends any, C extends PageSelectionContext<S>> 
     function onChangeRaw ( e: React.FocusEvent<HTMLInputElement> ) {
       const value = e.target?.value;
       if ( value !== undefined ) {
+        setEdited ( e?.target )
         if ( debug ) console.log ( 'datePicker.onChangeRaw', id, value, 'changed', e )
         selectFn ( id, debug, state ) ( 'changeRaw', value )
       }
@@ -254,7 +257,7 @@ export function RawDatePicker<S extends any, C extends PageSelectionContext<S>> 
     const value = state.optJson ();
     function findErrorsFrom ( value: string | undefined ): string[] {
       if ( !value ) return required !== false && !readonly ? [ `Date is required` ] : []
-      const valueAsDate = parseDate ( `Date[${id}]`, dateFormat ) ( value )
+      const valueAsDate = parseDate ( ``, dateFormat ) ( value )
       if ( Array.isArray ( valueAsDate ) ) return valueAsDate
       const result = dateAcceptor ( valueAsDate );
       return result
@@ -262,7 +265,12 @@ export function RawDatePicker<S extends any, C extends PageSelectionContext<S>> 
     const errorFromValue = findErrorsFrom ( value )
     const dateError = errorFromValue.length > 0 ? errorFromValue.join ( ", " ) : undefined
     if ( debug ) console.log ( 'datePicker', id, 'value', value, 'date', date, 'errorFromValue', errorFromValue )
-    let error = selectedDateErrors.length > 0;
+    const error = selectedDateErrors.length > 0 || (dateError !== undefined);
+
+    useEffect ( () => {
+      const current: any = document.getElementById ( id )
+      if ( current?.setCustomValidity ) current.setCustomValidity ( error ? dateError : '' )
+    } )
     return <div data-error={dateError} className={`labelAndDate ${props.labelPosition == 'Horizontal' ? 'd-flex-inline' : ''}`}>
       <Label state={state} htmlFor={name} label={label}/>
       <div className={`${props.buttons && props.buttons.length > 0 ? 'inputAndButtons' : ''} `}>
@@ -283,6 +291,7 @@ export function RawDatePicker<S extends any, C extends PageSelectionContext<S>> 
                          placeholderText="Select a date"/>
         {makeButtons ( props )}
       </div>
+      <CustomError id={props.id} validationMessage={dateError} error={error}/>
     </div>
   };
 }

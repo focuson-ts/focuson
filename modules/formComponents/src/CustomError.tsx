@@ -8,26 +8,27 @@ export const setEdited = ( e: HTMLElement | undefined ) => {
 };
 export interface CustomErrorProps {
   id: string
+  validationMessage?: string
+  error?: boolean
 }
 
-export function CustomError ( { id }: CustomErrorProps ) {
+export function CustomError ( { id, validationMessage, error }: CustomErrorProps ) {
   const ref: any = useRef ();
   useEffect ( () => {
     const errorDiv: any = ref.current
     const component: any = document.getElementById ( id )
-    const dataErrorMessage = component.getAttribute ( 'data-errormessage' )
     const hasBeenEdited = component?.dataset?.[ canHaveErrorMessage ] === 'true'
-    console.log ( 'CustomError - valid', id, component.checkValidity (), dataErrorMessage, hasBeenEdited )
+    const actualError = error === undefined ? component.checkValidity () : error
+    // console.log ( 'CustomError - valid', id, 'actualError', actualError, 'checkValidity', component.checkValidity (), validationMessage, 'hasBeenEdited', hasBeenEdited )
     if ( !hasBeenEdited ) return
-    if ( component.checkValidity () ) {
+    if ( actualError ) {
+      errorDiv.className = 'custom-error'
+      errorDiv.innerHTML = validationMessage ? validationMessage : component.validationMessage
+      errorDiv.hidden = false
+    } else {
       errorDiv.hidden = true
       errorDiv.className = ''
-      return
     }
-    errorDiv.className = 'custom-error'
-    errorDiv.innerHTML = dataErrorMessage ? dataErrorMessage : component.validationMessage
-    errorDiv.hidden = false
-
 
   } )
   return <div ref={ref} id={id + '.error'} hidden={true}/>
