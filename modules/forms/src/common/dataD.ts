@@ -398,6 +398,7 @@ export const MoneyStringDD: StringPrimitiveDD = {
   format: { type: 'Double', pattern: '%.2f' },
   sample: [ '100.23', '200.45', '300.00' ],
   name: 'DisplayMoney',
+  displayParams: {errorMessage: 'Please enter a number with at most 2 decimal places'},
   description: "The primitive representing an amount of the local currency that is represented as a string",
   validate: { pattern: '^[-+]?[0-9]*\\.?[0-9]?[0-9]?$' }
 }

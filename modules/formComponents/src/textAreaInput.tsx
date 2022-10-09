@@ -32,7 +32,7 @@ export const cleanTextareaProps = <T extends NameAnd<any>> ( p: T ): T => {
   delete result.parentState
   delete result.scrollAfter
   delete result.noLabel
-  result[ 'maxlength' ] = result[ 'maxlength' ]
+  result[ 'maxLength' ] = result[ 'maxlength' ]
   delete result.maxLength
   return result
 };
