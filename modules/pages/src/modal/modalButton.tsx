@@ -8,6 +8,7 @@ import { isMainPageDetails, MultiPageDetails } from "../pageConfig";
 import { HasSimpleMessageL } from "../simpleMessage";
 import { HasTagHolderL } from "@focuson/template";
 import { wrapWithErrors } from "../errors";
+import * as Path from "path";
 
 export interface ModalDebug {
   modalDebug?: boolean
@@ -73,23 +74,31 @@ function buttonToChangeCommands<S, Context extends PageSelectionContext<S> & Has
   return result
 }
 
+interface PathToLens<S> {
+  fromPathTolens?: ( path: string ) => Optional<S, any>,
+  toPathTolens?: ( path: string ) => Optional<S, any>
+}
+
 function makeModalProcessorsConfig<S, Context extends PageSelectionContext<S> & HasSimpleMessageL<S> & HasTagHolderL<S>> (
   errorPrefix: string,
   state: LensState<S, any, Context>,
   newPageSelection: PageSelection,
   props: JustModalButtonProps<S, Context> | MainModalButtonProps<S, Context>,
-  dateFn: () => string ): ModalProcessorsConfig<S, SimpleMessage> {
-  const fromPathTolens = fromPathGivenState ( state );
-  const toPathTolens = fromPathGivenState ( state, ps => [ ...ps, newPageSelection ] );
-  const focusOnL = findFocusLFromCurrentState ( errorPrefix, props, fromPathTolens, state.context.pages )
+  dateFn: () => string,
+  pathToLens: PathToLens<S>
+): ModalProcessorsConfig<S, SimpleMessage> {
+
+  const realFromPathTolens: ( path: string ) => Optional<S, any> = pathToLens.fromPathTolens ? pathToLens.fromPathTolens : fromPathGivenState ( state );
+  const realToPathTolens = pathToLens.toPathTolens ? pathToLens.toPathTolens : fromPathGivenState ( state, ps => [ ...ps, newPageSelection ] );
+  const focusOnL = findFocusLFromCurrentState ( errorPrefix, props, realFromPathTolens, state.context.pages )
 
   const config: ModalProcessorsConfig<S, SimpleMessage> = {
     pageNameFn: ( s: S ) => mainPage ( state ).pageName,
     tagHolderL: state.context.tagHolderL,
     stringToMsg: stringToSimpleMsg ( dateFn, 'info' ),
-    fromPathTolens,
+    fromPathTolens: realFromPathTolens,
+    toPathTolens: realToPathTolens,
     dateFn,
-    toPathTolens,
     defaultL: focusOnL,
     messageL: state.context.simpleMessagesL,
     s: state.main
@@ -117,7 +126,7 @@ export function ModalButton<S extends any, Context extends PageSelectionContext<
     };
     if ( debug ) console.log ( `${errorPrefix} newPageSelection`, newPageSelection )
 
-    const config = makeModalProcessorsConfig ( errorPrefix, state, newPageSelection, props, dateFn );
+    const config = makeModalProcessorsConfig ( errorPrefix, state, newPageSelection, props, dateFn, {} );
 
     const copyJustStrings: Transform<S, any>[] = safeArray ( copyJustString ).map (
       ( { from, to, joiner } ) => {
@@ -148,6 +157,6 @@ export function ModalButton<S extends any, Context extends PageSelectionContext<
       ...log ( 'changeTxs', changeTxs ) );
   };
 
-  return wrapWithErrors ( id, enabledBy, [],( props, error ) =>
+  return wrapWithErrors ( id, enabledBy, [], ( props, error ) =>
     <button className={getButtonClassName ( buttonType )} id={id}{...props} disabled={error} onClick={onClick}>{text}</button> )
 }

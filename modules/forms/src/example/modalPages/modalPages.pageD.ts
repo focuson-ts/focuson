@@ -9,10 +9,10 @@ export const modalPage2: ExampleModalPage = {
   display: { dataDD: modalPageDD, target: '~/data' },
   modes: [ 'view', 'edit' ],
   buttons: {
-    commit: { control: "ModalCommitButton" },
-    commit2: { control: 'ModalCommitButton', text: 'commit2', closeTwoWindowsNotJustOne: true },
-    cancel: { control: 'ModalCancelButton' },
-    cancel2: { control: 'ModalCancelButton', text: 'cancel2', closeTwoWindowsNotJustOne: true }
+    commit: { control: "ModalCommitButton" , change: {command: "message", msg: 'commit'}},
+    commit2: { control: 'ModalCommitButton', text: 'commit2', closeTwoWindowsNotJustOne: true, change: {command: "message", msg: 'commit2'} },
+    cancel: { control: 'ModalCancelButton' , change: {command: "message", msg: 'cancel'}},
+    cancel2: { control: 'ModalCancelButton', text: 'cancel2', closeTwoWindowsNotJustOne: true, change: {command: "message", msg: 'cancel2'} },
   }
 }
 export const modalPage1: ExampleModalPage = {

@@ -46,8 +46,8 @@ describe ( "parseDate", () => {
     expect ( date ( parseDate ( 'somePrefix', 'yyyy/MM/dd' ) ( '2022/11/7' ) ).toISOString () ).toEqual ( nov7 )
   } )
   it ( "should handle non dates", () => {
-    expect ( parseDate ( 'somePrefix', 'yyyy/MM/dd' ) ( 'someJunk' ) ).toEqual ( [ 'somePrefix Invalid date [someJunk]. Use yyyy/MM/dd' ] )
-    expect ( parseDate ( 'somePrefix', 'dd/MM/yyyy' ) ( 'someJunk' ) ).toEqual ( [ 'somePrefix Invalid date [someJunk]. Use dd/MM/yyyy' ] )
+    expect ( parseDate ( 'somePrefix', 'yyyy/MM/dd' ) ( 'someJunk' ) ).toEqual ( [ 'somePrefixPlease use date format yyyy/MM/dd' ] )
+    expect ( parseDate ( 'somePrefix', 'dd/MM/yyyy' ) ( 'someJunk' ) ).toEqual ( [ 'somePrefixPlease use date format dd/MM/yyyy' ] )
   } )
 } )
 
@@ -67,13 +67,13 @@ describe ( "validateDateInfo", () => {
   describe ( "should return issues", () => {
     it ( "should report issues with today", () => {
       const [ errors, [ dateInfo ] ] = errorsAnd ( [ validateDateInfo ( { ...okDateInfo, today: 'junk' }, undefined, {} ) ] )
-      expect ( errors ).toEqual ( [ "today Invalid date [junk]. Use dd/MM/yyyy" ] )
+      expect ( errors ).toEqual ( [ "Please use date format dd/MM/yyyy" ] )
     } )
     it ( "should report issues with holidayDates", () => {
       const [ errors, [ dateInfo ] ] = errorsAnd ( [ validateDateInfo ( badDateInfo, undefined, {} ) ] )
       expect ( errors ).toEqual ( [
-        "holidays[0] Invalid date [bad1]. Use dd/MM/yyyy",
-        "holidays[1] Invalid date [bad2]. Use dd/MM/yyyy"
+        "holidays[0]: Please use date format dd/MM/yyyy",
+        "holidays[1]: Please use date format dd/MM/yyyy"
       ] )
     } )
   } )
@@ -266,8 +266,5 @@ describe ( "DatePicker", () => {
       "<div class='labelAndDate '><label class='input-label'>someLabel</label><div class=' '><div class='react-datepicker-wrapper'><div class='react-datepicker__input-container'><input type='text' id='someId' placeholder='Select a date' class='' value=''></div></div></div></div>" )
   } )
 
-  it ( "should handled required property", () => {
-    fail ()
-  } )
 
 } )

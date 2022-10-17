@@ -1,10 +1,10 @@
 import { applyPageOps, currentPageSelectionTail, fromPathGivenState, mainPage, PageSelection, PageSelectionContext, pageSelections, popPage, popTwoPages } from "../pageSelection";
 import { LensProps, lensState, LensState, reasonFor, SetJsonReasonEvent } from "@focuson/state";
 import { HasDateFn, safeArray, safeString, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
-import { Optional, Transform } from "@focuson/lens";
+import { Lenses, Optional, Transform } from "@focuson/lens";
 import { HasRestCommandL, ModalChangeCommands, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand } from "@focuson/rest";
 import { getRefForValidateLogicToButton, hasValidationErrorAndReport } from "../validity";
-import { HasSimpleMessageL } from "../simpleMessage";
+import { HasSimpleMessageL, simpleMessagesL } from "../simpleMessage";
 import { CustomButtonType, getButtonClassName } from "../common";
 import React from "react";
 import { isMainPageDetails } from "../pageConfig";
@@ -32,9 +32,20 @@ interface ModalCommitCancelButtonProps<S, Context> extends LensProps<S, any, Con
   text?: string
   confirm?: string | boolean | ConfirmWindow;
   closeTwoWindowsNotJustOne?: boolean;
-
 }
+
+interface ModalCancelButtonWithoutCommandsProps<S, Context> extends ModalCommitCancelButtonProps<S, Context> {
+  change?: undefined
+}
+interface ModalCancelButtonWithCommandsProps<S, Context> extends ModalCommitCancelButtonProps<S, Context> {
+  confirm?: undefined
+  change: ModalChangeCommands | ModalChangeCommands[];
+}
+
+type ModalCancelButtonProps<S, Context> = ModalCancelButtonWithoutCommandsProps<S, Context> | ModalCancelButtonWithCommandsProps<S, Context>
+
 interface ModalCommitButtonProps<S, C> extends ModalCommitCancelButtonProps<S, C> {
+  confirm?: string | boolean | ConfirmWindow;
   change?: ModalChangeCommands | ModalChangeCommands[];
   validate?: boolean
 }
@@ -56,17 +67,34 @@ export function openConfirmWindow<S, Context extends ModalContext<S>> ( confirm:
   state.massTransform ( reasonFor ( component, event, id ) ) ( ...openConfirmWindowTxs ( confirm, action, changeOnClose, state, component, id, event, rest ) )
 }
 
-export function ModalCancelButton<S, Context extends ModalContext<S>> ( { id, state, text, buttonType, confirm, enabledBy, closeTwoWindowsNotJustOne }: ModalCommitCancelButtonProps<S, Context> ) {
+export function ModalCancelButton<S, Context extends ModalContext<S>> ( { id, state, text, buttonType, confirm, enabledBy, closeTwoWindowsNotJustOne, change }: ModalCancelButtonProps<S, Context> ) {
   let onClick = () => {
     if ( isConfirmWindow ( confirm ) ) {
       openConfirmWindow ( confirm, 'cancel', [], state, 'ModalCancelButton', id, 'onClick' );
       return
     }
-    if ( confirmIt ( state, confirm ) )
+    if ( confirmIt ( state, confirm ) ) {
+      const { dateFn, tagHolderL, simpleMessagesL } = state.context
+      const ps = pageSelections ( state )
+      const toPathTolens = fromPathGivenState ( state, () => ps.slice ( 0, -1 ) );
+      const fromPathTolens = fromPathGivenState ( state, () => ps );
+      const config: ModalProcessorsConfig<S, SimpleMessage> = {
+        pageNameFn: ( s: S ) => mainPage ( lensState<S, Context> ( s, () => {throw Error ()}, '', state.context ) ).pageName,
+        tagHolderL,
+        dateFn,
+        stringToMsg: stringToSimpleMsg ( dateFn, 'info' ),
+        fromPathTolens,
+        toPathTolens,
+        defaultL: Lenses.identity(''),
+        messageL: simpleMessagesL,
+        s: state.main
+      };
+      const changeTxs = change === undefined ? [] : processChangeCommandProcessor ( `CancelButton ${id}`, modalCommandProcessors ( config ) ( state.main ), toArray ( change ) )
       if ( closeTwoWindowsNotJustOne )
-        state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popTwoPages ( state ) );
+        state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popTwoPages ( state ), ...changeTxs );
       else
-        state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popPage ( state ) );
+        state.massTransform ( reasonFor ( 'ModalCancelButton', 'onClick', id ) ) ( popPage ( state ), ...changeTxs );
+    }
   }
   const canClick = canClosePages ( id, state, closeTwoWindowsNotJustOne );
 
@@ -156,6 +184,7 @@ export function ModalCommitButton<S, Context extends ModalContext<S>> ( c: Modal
       return
     }
     if ( !confirmIt ( state, confirm ) ) return
+
     const pageCloseTxs = closeTwoWindowsNotJustOne ?
       closeTwoPagesTxs ( `ModalCommit ${id}`, state, toArray ( change ) ) :
       closeOnePageTxs ( `ModalCommit ${id}`, state, toArray ( change ) );

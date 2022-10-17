@@ -40,7 +40,7 @@ const cd: NameAndLens<StateForNewFetcherTests> = {
 }
 
 const newFetchers: AllFetcherUsingRestConfig = {
-  pageName: [ { tagName: 'someTag', restName: 'someRestName', postFetchCommands: [], on404Commands: [] } ]
+  pageName: [ { tagName: 'someTag', restName: 'someRestName', postFetchCommands: [], on404Commands: [], onErrorCommands: [] } ]
 }
 function MyLoading () {
   return <p>Loading</p>
@@ -151,6 +151,7 @@ describe ( "restCommandsFromFetchers should create a rest command when needed", 
         "changeOnSuccess": [],
         "name": "someRestName",
         on404: [],
+        onError: [],
         "restAction": "get",
         "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "333" ] }
       }
@@ -159,13 +160,13 @@ describe ( "restCommandsFromFetchers should create a rest command when needed", 
   it ( "not populated tags defined and same - should load", () => {
     expect ( restCommandsFromFetchers ( someConfig.tagHolderL, someConfig.newFetchers, someConfig.restDetails, 'pageName',
       { ...empty, tags: { pageName_someTag: [ '111', '222' ] }, ids: { id1: 111, id2: 222 } } ) ).toEqual ( [
-      { "comment": "Fetcher", "changeOnSuccess": [], "name": "someRestName", on404: [], "restAction": "get", "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] } }
+      { "comment": "Fetcher", "changeOnSuccess": [], "name": "someRestName", on404: [], onError: [], "restAction": "get", "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] } }
     ] )
   } )
   it ( " populated tags not defined  - should load", () => {
     expect ( restCommandsFromFetchers ( someConfig.tagHolderL, someConfig.newFetchers, someConfig.restDetails, 'pageName',
       { ...empty, ids: { id1: 111, id2: 222 }, data: { a: 123 } } ) ).toEqual ( [
-      { "comment": "Fetcher", "changeOnSuccess": [], "name": "someRestName", on404: [], "restAction": "get", "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] } }
+      { "comment": "Fetcher", "changeOnSuccess": [], "name": "someRestName", on404: [], onError: [], "restAction": "get", "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] } }
     ] )
   } )
 } )
@@ -178,7 +179,7 @@ describe ( "processRestsAndFetchers", () => {
     )
 
     expect ( actual.restCommand ).toEqual ( {
-      name: 'someRestName', on404: [], restAction: 'get', comment: 'Fetcher', "changeOnSuccess": [],
+      name: 'someRestName', on404: [], onError: [], restAction: 'get', comment: 'Fetcher', "changeOnSuccess": [],
       "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] }
     } )
     expect ( actual.status ).toEqual ( 200 )
@@ -199,7 +200,7 @@ describe ( "processRestsAndFetchers", () => {
     )
 
     expect ( actual.restCommand ).toEqual ( {
-      name: 'someRestName', on404: [], restAction: 'get', comment: 'Fetcher', "changeOnSuccess": [],
+      name: 'someRestName', on404: [], onError: [], restAction: 'get', comment: 'Fetcher', "changeOnSuccess": [],
       "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] }
     } )
     expect ( actual.status ).toEqual ( 200 )
@@ -220,7 +221,7 @@ describe ( "processRestsAndFetchers", () => {
     )
 
     expect ( actual.restCommand ).toEqual ( {
-      name: 'someRestName', on404: [], restAction: 'get', comment: 'Fetcher', "changeOnSuccess": [],
+      name: 'someRestName', on404: [], onError: [], restAction: 'get', comment: 'Fetcher', "changeOnSuccess": [],
       "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] }
     } )
     expect ( actual.status ).toEqual ( 200 )
@@ -234,7 +235,7 @@ describe ( "processRestsAndFetchers", () => {
             [ "I.focus?(messages)", [ { "level": "success", "msg": "200/123", "time": "timeForTest" } ] ],
             [ "I.focus?(data).chain(I.focus?(a))", 123 ],
           ],
-          "restCommand": { "comment": "Fetcher", "changeOnSuccess": [], "name": "someRestName", on404: [], "restAction": "get", "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] } }
+          "restCommand": { "comment": "Fetcher", "changeOnSuccess": [], "name": "someRestName", on404: [], onError: [], "restAction": "get", "tagNameAndTags": { "tagName": "pageName_someTag", "tags": [ "111", "222" ] } }
         } ]
       ],
       [ "I.focus?(tags).focusOn(pageName_someTag)", [ "111", "222" ] ]

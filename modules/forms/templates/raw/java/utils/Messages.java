@@ -55,4 +55,7 @@ public class Messages {
             throw new FocusonBadRequest400Exception(this);
         }
     }
+    public void errorWithoutException(String s) {
+        if (s != null && s.length() > 0) error.add(s);
+    }
 }

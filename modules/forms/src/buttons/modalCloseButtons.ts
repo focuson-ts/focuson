@@ -14,22 +14,20 @@ export interface ModalCommitButtonInPage extends EnabledBy {
   change?: ModalChangeCommands | ModalChangeCommands[];
   text?: string
 }
-export interface ModalCancelButtonInPage extends EnabledBy {
+interface ModalCancelButtonInPageWithConfirm extends EnabledBy {
   control: 'ModalCancelButton';
   text?: string;
   confirm?: boolean | string | ConfirmWindow;
   closeTwoWindowsNotJustOne?: boolean
 }
-// export interface ModalConfirmWindowButtonInPage extends EnabledBy {
-//   control: 'ModalConfirmWindowButton';
-//   enabledBy?: string | string[];
-//   validate?: boolean;
-//   messageText?: string
-//   confirmText?: string;
-//   cancelText?: string;
-//   change?: ModalChangeCommands | ModalChangeCommands[];
-//   text?: string
-// }
+interface ModalCancelButtonInPageWithChange extends EnabledBy {
+  control: 'ModalCancelButton';
+  text?: string;
+  change?: ModalChangeCommands | ModalChangeCommands[];
+  closeTwoWindowsNotJustOne?: boolean
+}
+
+export type ModalCancelButtonInPage = ModalCancelButtonInPageWithConfirm | ModalCancelButtonInPageWithChange
 
 export function makeModalCommitButton<B extends ModalCommitButtonInPage, G> (): ButtonCreator<B, G> {
   return ({
@@ -47,30 +45,13 @@ export function makeModalCommitButton<B extends ModalCommitButtonInPage, G> (): 
     }
   })
 }
-// export function makeModalConfirmWindowButton<B extends ModalConfirmWindowButtonInPage,G>(): ButtonCreator<B,G> {
-//   return ({
-//     import: "@focuson/pages",
-//     makeButton: ( { name, button } ) => {
-//       const id = '{`${id}`.' + button.text ? button.text : name + "}"
-//       return [ [ `<ModalConfirmWindowButton id=${makeIdForButton ( button.text ? button.text : name )} ${enabledByString ( button )}`,
-//         ...opt ( 'text', button.text ),
-//         ...optT ( 'change', button.change ),
-//         ...opt ( 'messageText', button.messageText ),
-//         ...opt ( 'confirmText', button.confirmText ),
-//         ...opt ( 'cancelText', button.cancelText ),
-//         ...opt ( 'buttonType', button.buttonType ? button.buttonType : 'primary' ),
-//         ...optT ( 'validate', button.validate ),
-//         ` state={state} />` ].join ( ' ' ) ];
-//     }
-//   })
-// }
-
 export const makeModalCancelButton: <G> ( imp: string ) => ButtonCreator<ModalCommitButtonInPage, G> = imp => ({
   import: imp,
   makeButton: ( { name, button } ) =>
     [ [ `<${button.control} id=${makeIdForButton ( button.text ? button.text : name )} state={state} ${enabledByString ( button )}`,
       ...opt ( 'text', button.text ),
       ...optT ( 'confirm', button.confirm ),
+      ...optT ( 'change', button.change ),
       ...opt ( 'buttonType', button.buttonType ? button.buttonType : 'secondary' ),
       ...optT ( 'closeTwoWindowsNotJustOne', button.closeTwoWindowsNotJustOne ),
       '/>' ].join ( ' ' ) ]
