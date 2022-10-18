@@ -25,7 +25,7 @@ generate ( logLevel, directorySpec, devAppConfig, params2,
   javaOutputRoot, tsRoot, AllGuardCreator, makeButtons () ) ( generatedPages, generatedRefs )
 
 
-fse.copySync ( '../formComponents/src', tsRoot + "/src/formComponents" )
+// fse.copySync ( '../formComponents/src', tsRoot + "/src/formComponents" )
 fse.copySync ( './src/guardFns.ts', tsRoot + "/src/guardFns.ts" )
 
 

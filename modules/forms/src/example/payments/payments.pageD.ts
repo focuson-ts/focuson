@@ -4,6 +4,7 @@ import { currencyListDD, currencyRD, newPaymentsRD, summaryOfPreviousPaymentsRD,
 import { NatNumDd } from "../../common/dataD";
 import { nothingDD } from "../../common/commonDataDs";
 import { FState } from "exampleapp/src/common";
+import { isDifferentDayOrIsBefore } from "../../guardFns";
 
 // export const ChargeDetailsPD: ExampleModalPage = {
 //   pageType: 'ModalPopup',
@@ -32,8 +33,11 @@ export const EditPaymentsPD: ExampleModalPage = {
   name: 'EditPaymentsModalPage',
   display: { target: '~/onePayment', dataDD: PaymentDD },
   modes: [ 'edit', 'create' ],
+  guards:{
+    isDifferentDayOrIsBefore:{condition: 'fn', path: '', name: `isDifferentDayOrIsBefore(15, 15)`, message: 'It is after 15:15 today and cannot do a same day payment'}
+  },
   buttons: {
-    commit: { control: 'ModalCommitButton', text: 'save' },
+    commit: { control: 'ModalCommitButton', text: 'save' , enabledBy: 'isDifferentDayOrIsBefore'},
     cancel: { control: 'ModalCancelButton', text: 'back', confirm: 'Are you sure?' },
     validate: {
       control: 'ModalButton', modal: ValidatePD, focusOn: '~/nothing', mode: 'view',

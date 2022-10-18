@@ -266,7 +266,7 @@ export function RawDatePicker<S extends any, C extends PageSelectionContext<S>> 
     const dateError = errorFromValue.length > 0 ? errorFromValue.join ( ", " ) : undefined
     if ( debug ) console.log ( 'datePicker', id, 'value', value, 'date', date, 'errorFromValue', errorFromValue )
     const error = selectedDateErrors.length > 0 || (dateError !== undefined);
-
+    //@ts-ignore - because react doesn't understand currying so thinks this isn't being called inside a function component
     useEffect ( () => {
       const current: any = document.getElementById ( id )
       if ( current?.setCustomValidity ) current.setCustomValidity ( error ? dateError : '' )
