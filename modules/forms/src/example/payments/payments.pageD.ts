@@ -73,7 +73,7 @@ export const PaymentsPageD: ExampleMainPage = {
   },
   variables: {
     amount: {
-      constructedBy: 'code',  code: `id =>{
+      constructedBy: 'code', code: `id =>{
     const amountL = id.focusQuery ( 'Payments' ).focusQuery ( 'summary' ).focusQuery ( 'payment' ).focusQuery ( 'amount' )
     const sterlingL = amountL.focusQuery ( 'sterlingAmount' )
     const currencyL = amountL.focusQuery ( 'currencyAmount' )
@@ -81,12 +81,20 @@ export const PaymentsPageD: ExampleMainPage = {
 }`
     },
     isChaps: {
-      constructedBy: 'code',imports: [`import {optional} from '@focuson/lens'`], code: `id => {
+      constructedBy: 'code', imports: [ `import {optional} from '@focuson/lens'` ], code: `id => {
       const paymentType: Optional<FState, string> = id.focusQuery ( 'Payments' ).focusQuery ( 'summary' ).focusQuery ( 'payment' ).focusQuery ( 'paymentType' )
       const getter = ( s: string ): boolean | undefined => s === 'CHAPS'
       const setter = ( s: string, b: boolean ): string | undefined => b ? 'CHAPS' : 'EMT'
       return paymentType.chain ( optional ( getter, setter, paymentType.description + ".toEqualsChaps" ) )
     }`
+    },
+    currency: {
+      constructedBy: 'code', imports: [ `import { CurrencyDomain } from "./Payments.domains";` ],
+      code: `id => {
+    const currencyIdL: Optional<FState, string> = id.focusQuery ( 'Payments' ).focusQuery ( 'summary' ).focusQuery ( 'payment' ).focusQuery ( 'amount' ).focusOn ( 'currency' )
+    const listOfCurrencies: Optional<FState, CurrencyDomain[]> = id.focusQuery ( 'Payments' ).focusQuery ( 'currency' )
+    return Lenses.chainLookupTable ( currencyIdL, listOfCurrencies, 'id', 'currency' )
+  }`
     }
   },
   guards: {

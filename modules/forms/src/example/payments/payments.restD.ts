@@ -131,9 +131,7 @@ export const newPaymentsRD: ExampleRestD = {
 }
 
 
-  export const currencyDD
-:
-ExampleDataD = {
+  export const currencyDD: ExampleDataD = {
   name: 'Currency',
   description: "id and name of the currency ",
   structure: {

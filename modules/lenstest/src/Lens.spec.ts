@@ -1,7 +1,7 @@
 //Copyright (c)2020-2022 Philip Rice. <br />Permission is hereby granted, free of charge, to any person obtaining a copyof this software and associated documentation files (the Software), to dealin the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  <br />The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED AS
-import { identityOptics, Lens, Lenses, transformTwoValues } from "@focuson/lens";
+import { identityOptics, Lens, Lenses, Optional, transformTwoValues } from "@focuson/lens";
 import { a1b2ca3, dragon, Dragon, dragon2, letnstoca, list123, Stomach } from "./LensFixture";
-import { areAllDefined, arraysEqual } from "@focuson/utils";
+import { areAllDefined, arraysEqual, NameAnd } from "@focuson/utils";
 
 
 describe ( "Lens", () => {
@@ -110,6 +110,37 @@ describe ( "Lens", () => {
       }
     )
 
+  } )
+
+  describe ( "lookUp", () => {
+    it ( "should make a lens that maps from id to value, when id and value are object of {[name: string]: value}", () => {
+      type State = { lookup: NameAnd<number>, date: string }
+      const state: State = {
+        lookup: { 'one': 1, 'two': 2 },
+        date: 'one'
+      }
+      const dataL = Lenses.identity<State> ().focusQuery ( 'date' )
+      const lookupL: Optional<State, NameAnd<number>> = Lenses.identity<State> ().focusQuery ( 'lookup' )
+      const l: Optional<State, number> = Lenses.chainLookup ( dataL, lookupL )
+      expect ( l.getOption ( state ) ).toEqual ( 1 )
+      expect ( l.setOption ( state, 2 ) ).toEqual ( { lookup: { 'one': 1, 'two': 2 }, date: 'two' } )
+    } )
+  } )
+
+  describe ( "lookUpTable", () => {
+    it ( "should make a lens that maps from id to value, when id and value are object of {[name: string]: value}", () => {
+      type IdValue = { id: string, value: number }
+      type State = { lookup: IdValue[], date: string }
+      const state: State = {
+        lookup: [ { id: 'one', value: 1 }, { id: 'two', value: 2 } ],
+        date: 'one'
+      }
+      const dataL = Lenses.identity<State> ().focusQuery ( 'date' )
+      const lookupL: Optional<State, IdValue[]> = Lenses.identity<State> ().focusQuery ( 'lookup' )
+      const l: Optional<State, number> = Lenses.chainLookupTable ( dataL, lookupL, 'id', 'value' )
+      expect ( l.getOption ( state ) ).toEqual ( 1 )
+      expect ( l.setOption ( state, 2 ) ).toEqual ( { lookup:  [ { id: 'one', value: 1 }, { id: 'two', value: 2 } ], date: 'two' } )
+    } )
   } )
 
   describe ( "trasnformTwoValues", () => {

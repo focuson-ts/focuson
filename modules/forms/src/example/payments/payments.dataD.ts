@@ -82,7 +82,7 @@ export const amountDD: ExampleDataD = {
   description: '',
   layout: {
     component: ConfirmChangesToAnyCD, displayParams: {
-      confirm: { messageText: 'Are you sure you want {#amount} {~/summary/payment/amount/amountInWords}:', showCancelButton: true },
+      confirm: { messageText: 'Are you sure you want {#currency} {#amount} {~/summary/payment/amount/amountInWords}:', showCancelButton: true },
       useRawMessage: true, layoutDetails: '[[1,1,1], [1]]'
     }
   },

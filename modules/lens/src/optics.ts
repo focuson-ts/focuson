@@ -1,4 +1,4 @@
-import { apply, applyOrDefault, checkIsFunction, copyWithFieldSet, NameAnd, useOrDefault } from "@focuson/utils";
+import { apply, applyOrDefault, checkIsFunction, copyWithFieldSet, NameAnd, or, safeObject, useOrDefault } from "@focuson/utils";
 
 
 export const identityOptics = <State> ( description?: string ): Iso<State, State> => new Iso ( x => x, x => x, description ? description : "I" );
@@ -65,6 +65,7 @@ export class Optional<Main, Child> implements GetOptioner<Main, Child>, SetOptio
       ( m ) => apply ( this.getOption ( m ),
         c => c[ k ] ), ( m, v: Child[K] ) => apply ( this.getOption ( m ), c => this.set ( m, copyWithFieldSet ( c, k, v ) ) ), this.description + ".focusOn(" + k.toString () + ")" )
   }
+
 
   /** Used to focus onto a child that might not be there. If you don't use this, then the type system is likely to complain if you try and carry on focusing. */
   focusQuery<K extends keyof Child, Req extends Required<Child>> ( k: K ): Optional<Main, Req[K]> {
@@ -382,6 +383,34 @@ export class Lenses {
       return lens.set ( f, res )
     }
     return new Lens<From, T> ( getter, setter, description ? description : `${lens.description}.{${name}}` )
+  }
+
+  /** Used to to go from ids to values and back again. Obvious if the mapping isn't one to one there will be loss of data */
+  static chainLookup<Main, V extends string | number | boolean> ( opt: Optional<Main, string>, lookupL: Optional<Main, NameAnd<V>> ): Optional<Main, V> {
+    const getter = ( m: Main ): V => {
+      const table = or ( () => ({}) ) ( lookupL.getOption ( m ) )
+      return table?.[ opt.getOption ( m ) ]
+    }
+    const setter = ( m: Main, value: V ): Main => {
+      const table = Object.entries ( or ( () => ({}) ) ( lookupL.getOption ( m ) ) )
+      const newId = table.find ( ( [ k, v ] ) => v === value )?.[ 0 ]
+      return newId ? opt.setOption ( m, newId ) : undefined
+    }
+    return optional ( getter, setter, `${opt.description}.chainLookup(${lookupL.description})` )
+  }
+  /** Used to to go from ids to values and back again. Obvious if the mapping isn't one to one there will be loss of data */
+  static chainLookupTable<Main, L, K extends keyof L, V extends keyof L> ( opt: Optional<Main, string>, lookupL: Optional<Main, L[]>, idName: K, valueName: V ): Optional<Main, L[V]> {
+    const getter = ( m: Main ): L[V] => {
+      const table = or ( () => ([]) ) ( lookupL.getOption ( m ) )
+      const id = opt.getOption ( m )
+      return table.find ( obj => obj[ idName ] === id )?.[ valueName ]
+    }
+    const setter = ( m: Main, value: L[V] ): Main => {
+      const table = or ( () => ([]) ) ( lookupL.getOption ( m ) )
+      const newId = table.find ( obj => obj[ valueName ] === value )?.[ idName ]
+      return newId ? opt.setOption ( m, newId ) : undefined
+    }
+    return optional ( getter, setter, `${opt.description}.chainLookup(${lookupL.description})` )
   }
 
 
