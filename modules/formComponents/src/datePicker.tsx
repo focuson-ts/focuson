@@ -213,16 +213,16 @@ export interface DatePickerProps<S, C> extends CommonStateProps<S, string, C>, I
 
 export type DatePickerSelectFn = <S extends any, C extends ModalContext<S>>( debug: boolean, props: DatePickerProps<S, C> ) => ( eventName: SetJsonReasonEvent, date: string | undefined ) => void
 
-export const defaultDatePickerWithExtraTxs = <S extends any, C extends ModalContext<S>> ( txs: ( state: LensState<S, any, any> ) => Transform<S, any>[] ) => ( debug: boolean, props: DatePickerProps<S, C> ) =>
+export const defaultDatePickerWithExtraTxs= <S extends any, C extends ModalContext<S>> ( txs: ( props: DatePickerProps<S, C>, value: string|undefined ) => Transform<S, any>[] ) => ( debug: boolean, props: DatePickerProps<S, C> ) =>
   ( eventName: SetJsonReasonEvent, date: string | undefined ) => {
     const { id, state, onChange, parentState, regexForChange } = props
     const {} = state.context
 
     const changeTxs = regexForChange === undefined || (date && date.match ( regexForChange ) !== null) ? makeInputChangeTxs ( id, parentState, onChange ) : []
     if ( debug ) console.log ( 'datePicker.defaultDatePickerOnCheck', id, 'date', date )
-    state.massTransform ( reasonFor ( 'DatePicker', eventName, id ) ) ( [ state.optional, () => date ], ...txs ( state ), ...changeTxs )
+    state.massTransform ( reasonFor ( 'DatePicker', eventName, id ) ) ( [ state.optional, () => date ], ...txs ( props, date ), ...changeTxs )
   };
-export const defaultDatePickerOnCheck = defaultDatePickerWithExtraTxs ( () => [] )
+export const defaultDatePickerOnCheck: DatePickerSelectFn  = defaultDatePickerWithExtraTxs ( () => [] )
 function myformat ( e: any, dateFormat: string ) {
   try {
     return format ( e, dateFormat );

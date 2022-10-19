@@ -219,7 +219,7 @@ export function checkDates ( d1: string | undefined, d2: string | undefined, dat
   }
   const date1 = parseDate ( d1 )
   const date2 = parseDate ( d2 )
-  console.log ( 'checkDates', date1, dateCheck, date2 )
+  // console.log ( 'checkDates', date1, dateCheck, date2 )
   if ( date1 && date2 ) switch ( dateCheck ) {
     case "<=":
       return date1.getTime () <= date2.getTime ()

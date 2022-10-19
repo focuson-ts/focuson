@@ -175,6 +175,15 @@ export const DatePicker2CD: DisplayCompD = {
     placeholder: { paramType: 'string', needed: 'no' }
   }
 }
+export const DatePickerForPaymentsCD: DisplayCompD = {
+  import: "@focuson/form_components", name: "DatePickerForPayments",
+  params: {
+    ...DatePicker2CD.params,
+    pathToToday: { paramType: 'path', needed: 'yes' },
+    hour: { paramType: 'object', needed: 'yes' },
+    minute: { paramType: 'object', needed: 'yes' },
+  }
+}
 export const MonthYearDatePickerWithLengthCD: DisplayCompD = {
   ...DatePicker2CD,
   name: "MonthYearDatePickerWithLength",

@@ -1,4 +1,5 @@
 
+export * from './src/dateutils'
 export * from './src/decamelize'
 export * from './src/fetchfn'
 export * from './src/logging'

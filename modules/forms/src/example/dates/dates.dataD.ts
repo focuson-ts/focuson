@@ -1,6 +1,6 @@
 import { ExampleDataD } from "../common";
 import { DateWithDatePickerDD, LabelAndMonthYearLengthDD, MonthYearFromRangeFromWithDatePickerDD, MonthYearWithDatePickerDD, NatNumDd } from "../../common/dataD";
-import { LayoutCd } from "../../common/componentsD";
+import { DatePickerForPaymentsCD, LayoutCd } from "../../common/componentsD";
 
 export const datesDataD: ExampleDataD = {
   name: 'Dates',
@@ -36,5 +36,11 @@ export const datesDataD: ExampleDataD = {
     length: { dataDD: LabelAndMonthYearLengthDD, displayParams: { fromDate: 'startDate', toDate: 'endDate', subtract: false, onChange: { command: 'message', msg: 'length' } } },
     startDate: { dataDD: MonthYearFromRangeFromWithDatePickerDD, displayParams: { pathToOtherDate: 'endDate', lengthPath: 'length', subtract: false, onChange: { command: 'message', msg: 'startDate' } } },
     endDate: { dataDD: MonthYearFromRangeFromWithDatePickerDD, displayParams: { pathToOtherDate: 'startDate', lengthPath: 'length', subtract: true, onChange: { command: 'message', msg: 'endDate' } } },
+    forPayment: {
+      dataDD: {
+        ...DateWithDatePickerDD, display: DatePickerForPaymentsCD,
+        displayParams: { pathToToday: '/CommonData/dates/today', dateFormat: 'dd/MM/yyyy', hour: 14, minute: 14 }
+      }
+    }
   }
 }
