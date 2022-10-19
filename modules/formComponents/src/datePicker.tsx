@@ -1,13 +1,15 @@
-import { NameAnd, safeArray, safeString } from "@focuson/utils";
-import { CommonStateProps, LabelAlignment } from "./common";
+import { NameAnd, safeArray } from "@focuson/utils";
+import { CommonStateProps, InputOnChangeProps, LabelAlignment } from "./common";
 import { format, parse } from 'date-fns';
 import { LensState, reasonFor, SetJsonReasonEvent } from "@focuson/state";
-import { PageSelectionContext } from "@focuson/pages";
+import { ModalContext } from "@focuson/pages";
 import { Label } from "./label";
 import { makeButtons } from "./makeButtons";
 import ReactDatePicker from "react-datepicker";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { CustomError, setEdited } from "./CustomError";
+import { Transform } from "@focuson/lens";
+import { makeInputChangeTxs } from "./labelAndInput";
 
 
 type DateFormat = string//'dd-MM/yyyy' | 'yyyy/MM/dd'
@@ -197,7 +199,7 @@ function selectedDate<S, C> ( state: LensState<S, string, C>, dateFormat: string
   return { date, scrollToDate, selectedDateErrors }
 }
 
-export interface DatePickerProps<S, C> extends CommonStateProps<S, string, C>, LabelAlignment {
+export interface DatePickerProps<S, C> extends CommonStateProps<S, string, C>, InputOnChangeProps<S, C>, LabelAlignment {
   label: string;
   readonly?: boolean;
   allButtons: NameAnd<JSX.Element>;
@@ -209,14 +211,18 @@ export interface DatePickerProps<S, C> extends CommonStateProps<S, string, C>, L
   dateInfo?: LensState<S, DateInfo, C>;
 }
 
-export type DatePickerSelectFn = <S extends any>( id: string, debug: boolean, state: LensState<S, any, any> ) => ( eventName: SetJsonReasonEvent, date: string | undefined ) => void
+export type DatePickerSelectFn = <S extends any, C extends ModalContext<S>>( debug: boolean, props: DatePickerProps<S, C> ) => ( eventName: SetJsonReasonEvent, date: string | undefined ) => void
 
-export function defaultDatePickerOnCheck<S extends any> ( id: string, debug: boolean, state: LensState<S, any, any> ) {
-  return ( eventName: SetJsonReasonEvent, date: string | undefined ) => {
+export const defaultDatePickerWithExtraTxs = <S extends any, C extends ModalContext<S>> ( txs: ( state: LensState<S, any, any> ) => Transform<S, any>[] ) => ( debug: boolean, props: DatePickerProps<S, C> ) =>
+  ( eventName: SetJsonReasonEvent, date: string | undefined ) => {
+    const { id, state, onChange, parentState, regexForChange } = props
+    const {} = state.context
+
+    const changeTxs = regexForChange === undefined || (date && date.match ( regexForChange ) !== null) ? makeInputChangeTxs ( id, parentState, onChange ) : []
     if ( debug ) console.log ( 'datePicker.defaultDatePickerOnCheck', id, 'date', date )
-    state.setJson ( date, reasonFor ( 'DatePicker', eventName, id ) )
+    state.massTransform ( reasonFor ( 'DatePicker', eventName, id ) ) ( [ state.optional, () => date ], ...txs ( state ), ...changeTxs )
   };
-}
+export const defaultDatePickerOnCheck = defaultDatePickerWithExtraTxs ( () => [] )
 function myformat ( e: any, dateFormat: string ) {
   try {
     return format ( e, dateFormat );
@@ -224,7 +230,7 @@ function myformat ( e: any, dateFormat: string ) {
     return undefined
   }
 }
-export function RawDatePicker<S extends any, C extends PageSelectionContext<S>> ( selectFn: DatePickerSelectFn ) {
+export function RawDatePicker<S extends any, C extends ModalContext<S>> ( selectFn: DatePickerSelectFn ) {
   return ( props: DatePickerProps<S, C> ) => {
     const { state, jurisdiction, dateInfo, dateRange, name, label, id, mode, readonly, dateFormat, showMonthYearPicker, required } = props
     const main: any = state.main
@@ -238,7 +244,7 @@ export function RawDatePicker<S extends any, C extends PageSelectionContext<S>> 
         const formattedDate = e === undefined ? undefined : myformat ( e, dateFormat )
         if ( debug ) console.log ( 'datePicker.onChange', id, 'e', typeof e, e, 'dateFormat', dateFormat, 'formattedDate', formattedDate )
         setEdited ( e?.target )
-        selectFn ( id, debug, state ) ( 'onChange', formattedDate )
+        selectFn ( debug, props ) ( 'onChange', formattedDate )
         // state.setJson ( formattedDate, reasonFor ( 'DatePicker', 'onChange', id ) )
       } catch ( err ) {
         console.error ( "e is", e )
@@ -251,7 +257,7 @@ export function RawDatePicker<S extends any, C extends PageSelectionContext<S>> 
       if ( value !== undefined ) {
         setEdited ( e?.target )
         if ( debug ) console.log ( 'datePicker.onChangeRaw', id, value, 'changed', e )
-        selectFn ( id, debug, state ) ( 'changeRaw', value )
+        selectFn ( debug, props ) ( 'changeRaw', value )
       }
     }
     const value = state.optJson ();
@@ -295,7 +301,9 @@ export function RawDatePicker<S extends any, C extends PageSelectionContext<S>> 
     </div>
   };
 }
-export function DatePicker<S extends any, C extends PageSelectionContext<S>> ( props: DatePickerProps<S, C> ): JSX.Element {
+export function DatePicker<S extends any, C extends ModalContext<S>> ( props: DatePickerProps<S, C> ): JSX.Element {
   const selectFn: DatePickerSelectFn = defaultDatePickerOnCheck;
   return RawDatePicker<S, C> ( selectFn ) ( props );
 }
+
+// export function DatePickerWithExtraTransformations

@@ -1,12 +1,11 @@
 import { LensState, reasonFor, SetJsonReasonEvent } from "@focuson/state";
-import { PageSelectionContext } from "@focuson/pages";
+import { ModalContext } from "@focuson/pages";
 import { DatePickerProps, RawDatePicker } from "./datePicker";
 import { displayTransformsInState, Transform } from "@focuson/lens";
 import { FocusOnContext } from "@focuson/focuson";
 import { LabelAndInputProps, LabelAndTInput, makeInputChangeTxs } from "./labelAndInput";
-import { InputSelectFn, NumberTransformer, StringTransformer } from "./transformers";
-import { BooleanValidations, NumberValidations, StringValidations } from "@focuson/utils";
-import { InputProps } from "./input";
+import { InputSelectFn, NumberTransformer } from "./transformers";
+import { NumberValidations } from "@focuson/utils";
 import { InputChangeCommands } from "@focuson/rest";
 
 
@@ -32,20 +31,23 @@ export function addDate ( debug: boolean, thisDate: string | undefined, length: 
   if ( debug ) console.log ( 'addDate', 'month', month, 'year', year, 'offset', offset, 'withSign', withSign, 'result', date )
   return (date.getMonth () + 1) + "/" + date.getFullYear ()
 }
-export function MonthYearDatePickerWithLength<S, C extends PageSelectionContext<S>> ( props: MonthYearDatePickerWithLengthProps<S, C> ) {
-  const { pathToOtherDate, lengthPath, subtract, state, dateFormat, id, showMonthYearPicker } = props
+export function MonthYearDatePickerWithLength<S, C extends ModalContext<S>> ( props: MonthYearDatePickerWithLengthProps<S, C> ) {
+  const { pathToOtherDate, lengthPath, subtract, dateFormat, id, showMonthYearPicker } = props
   if ( dateFormat !== 'MM-yyyy' ) throw new Error ( `The date picker with id ${id} has a dateformat '${dateFormat}'. It must be MM-yyyy` )
   if ( !showMonthYearPicker ) throw new Error ( `The date picker with id ${id} doesn't have 'showMonthYearPicker' set to true` )
 
-  function onCheck<S, C extends PageSelectionContext<S>> ( id: string, debug: boolean, state: LensState<S, any, any> ) {
-    return ( eventName: SetJsonReasonEvent, date: string|undefined ) => {
+  function onCheck<S, C extends ModalContext<S>> ( debug: boolean, props: DatePickerProps<S, C> ) {
+    return ( eventName: SetJsonReasonEvent, date: string | undefined ) => {
+      const { id, state, regexForChange, parentState, onChange } = props
       const length = lengthPath.optJsonOr ( 0 )
       if ( debug ) console.log ( 'MonthYearDatePickerWithLength', id, date, 'length', length, )
       const otherDate = addDate ( debug, date, length, subtract )
       if ( debug ) console.log ( 'MonthYearDatePickerWithLength', id, date, 'length', length, 'otherDate', otherDate )
+      const changeTxs = regexForChange === undefined || (date && date.match ( regexForChange ) !== null) ? makeInputChangeTxs ( id, parentState, onChange ) : []
       const txs: Transform<any, any>[] = [//There are two S's here. So by anying the first we dodge that compilation problem
         [ state.optional, () => date ],
-        [ pathToOtherDate.optional, () => otherDate ] ]
+        [ pathToOtherDate.optional, () => otherDate ] ,
+        ...changeTxs]
       state.massTransform ( reasonFor ( 'DatePicker', eventName, id ) ) ( ...txs )
     };
   }

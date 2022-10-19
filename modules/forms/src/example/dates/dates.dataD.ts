@@ -8,7 +8,7 @@ export const datesDataD: ExampleDataD = {
   layout: { component: LayoutCd, displayParams: { details: '[[8,8]]', title: 'Some Title {empty}', rightHandTitle: 'Some Right Hand Title {empty}' } },
   // layout: { component: LayoutCd, displayParams: { details: '[[1]]', title: 'Some Title {empty}', rightHandTitle: 'Some Right Hand Title {empty}' } },
   structure: {
-    empty: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified' } },
+    empty: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified', onChange: { command: 'message', msg: 'empty' } } },
     emptyAndReadonly: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified - readonly', readonly: true } },
     emptyAndNotRequired: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified - required false', required: false } },
     value: { dataDD: { ...DateWithDatePickerDD, emptyValue: '6/7/2022' }, displayParams: { label: 'Specified 6/7/2022' } },
@@ -33,8 +33,8 @@ export const datesDataD: ExampleDataD = {
         dateRange: { type: 'future', allowWeekends: false, allowHolidays: true, minWorkingDaysBefore: 5 }
       }
     },
-    length: { dataDD: LabelAndMonthYearLengthDD, displayParams: { fromDate: 'startDate', toDate: 'endDate', subtract: false } },
-    startDate: { dataDD: MonthYearFromRangeFromWithDatePickerDD, displayParams: { pathToOtherDate: 'endDate', lengthPath: 'length', subtract: false } },
-    endDate: { dataDD: MonthYearFromRangeFromWithDatePickerDD, displayParams: { pathToOtherDate: 'startDate', lengthPath: 'length', subtract: true } },
+    length: { dataDD: LabelAndMonthYearLengthDD, displayParams: { fromDate: 'startDate', toDate: 'endDate', subtract: false, onChange: { command: 'message', msg: 'length' } } },
+    startDate: { dataDD: MonthYearFromRangeFromWithDatePickerDD, displayParams: { pathToOtherDate: 'endDate', lengthPath: 'length', subtract: false, onChange: { command: 'message', msg: 'startDate' } } },
+    endDate: { dataDD: MonthYearFromRangeFromWithDatePickerDD, displayParams: { pathToOtherDate: 'startDate', lengthPath: 'length', subtract: true, onChange: { command: 'message', msg: 'endDate' } } },
   }
 }

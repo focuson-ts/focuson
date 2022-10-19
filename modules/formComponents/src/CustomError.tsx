@@ -23,9 +23,14 @@ export function CustomError ( { id, validationMessage, error }: CustomErrorProps
     if ( !hasBeenEdited ) return
     if ( actualError ) {
       errorDiv.className = 'custom-error'
-      errorDiv.innerHTML = validationMessage ? validationMessage : component.validationMessage
+      const msg = validationMessage ? validationMessage : component.validationMessage;
+      errorDiv.innerHTML = msg
+      // component.setCustomValidity(msg)
+      // component.reportValidity()
       errorDiv.hidden = false
     } else {
+      // component.setCustomValidity('')
+      // component.reportValidity()
       errorDiv.hidden = true
       errorDiv.className = ''
     }

@@ -6,7 +6,7 @@ import java.sql.Date;
 
 public class DateFormatter {
     public static java.sql.Date parseDate(String format, String input) {
-        if (input == null) return null;
+        if (input == null || input.equalsIgnoreCase("null")) return null;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
         try {
             return new java.sql.Date(simpleDateFormat.parse(input).getTime());

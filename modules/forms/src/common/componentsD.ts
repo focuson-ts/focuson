@@ -165,6 +165,7 @@ export const DatePicker2CD: DisplayCompD = {
   import: "@focuson/form_components", name: "DatePicker",
   params: {
     ...commonParamsWithLabel,
+    ...specificOnChangeAndParentState,
     required: { paramType: 'boolean', needed: 'no' },
     dateFormat: { paramType: 'string', needed: 'no' },
     dateRange: { paramType: 'json', needed: 'no' },
