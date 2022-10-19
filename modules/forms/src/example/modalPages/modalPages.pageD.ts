@@ -9,10 +9,12 @@ export const modalPage2: ExampleModalPage = {
   display: { dataDD: modalPageDD, target: '~/data' },
   modes: [ 'view', 'edit' ],
   buttons: {
-    commit: { control: "ModalCommitButton" , change: {command: "message", msg: 'commit'}},
-    commit2: { control: 'ModalCommitButton', text: 'commit2', closeTwoWindowsNotJustOne: true, change: {command: "message", msg: 'commit2'} },
-    cancel: { control: 'ModalCancelButton' , change: {command: "message", msg: 'cancel'}},
-    cancel2: { control: 'ModalCancelButton', text: 'cancel2', closeTwoWindowsNotJustOne: true, change: {command: "message", msg: 'cancel2'} },
+    commit: { control: "ModalCommitButton", change: { command: "message", msg: 'commit' } },
+    commit2: { control: 'ModalCommitButton', text: 'commit2', closeTwoWindowsNotJustOne: true, change: { command: "message", msg: 'commit2' } },
+    commitWithConfirm: { control: "ModalCommitButton",text: 'commitWithConfirm', confirm: { type: 'window', confirmText: 'Sure?', confirmCommands: { command: 'set', path: '~/action', value: 'commit' }, cancelCommands: { command: 'set', path: '~/action', value: 'cancel' } } },
+    cancel: { control: 'ModalCancelButton', change: { command: "message", msg: 'cancel' } },
+    cancel2: { control: 'ModalCancelButton', text: 'cancel2', closeTwoWindowsNotJustOne: true, change: { command: "message", msg: 'cancel2' } },
+    cancelWithConfirm: { control: "ModalCancelButton", text: 'cancelWithConfirm', confirm: { type: 'window', confirmText: 'Sure?', confirmCommands: { command: 'set', path: '~/action', value: 'commit' }, cancelCommands: { command: 'set', path: '~/action', value: 'cancel' } } },
   }
 }
 export const modalPage1: ExampleModalPage = {
@@ -35,7 +37,7 @@ export const modalPage1: ExampleModalPage = {
 export const modalPagePD: ExampleMainPage = {
   name: "ModalPages",
   display: { dataDD: modalPageDD, target: '~/data' },
-  domain: { data: { dataDD: modalPageDD } },
+  domain: { data: { dataDD: modalPageDD }, action: { dataDD: StringDD } },
   modals: [ { modal: modalPage1 }, { modal: modalPage2 } ],
   initialValue: 'empty',
   modes: [ 'view', 'edit' ],
