@@ -151,7 +151,7 @@ describe ( "returnStatement", () => {
   // @ts-ignore
   const pretendsToBeMutationDetail: PrimaryMutationDetail = {}
   // @ts-ignore
-  const manualMutationWithThrowsException: ManualMutation = { type: "manual",throwsException: true }
+  const manualMutationWithThrowsException: ManualMutation = { type: "manual", throwsException: true }
 
   it ( "returns empty string if manual with throwsException", () => {
     expect ( makeMutationResolverReturnStatement ( manualMutationWithThrowsException, [] ) ).toEqual ( '//No return statement because it throws an exception' )
@@ -160,7 +160,7 @@ describe ( "returnStatement", () => {
     expect ( makeMutationResolverReturnStatement ( pretendsToBeMutationDetail, [] ) ).toEqual ( 'return;' )
   } )
   it ( "the javatype if one MP", () => {
-    expect ( makeMutationResolverReturnStatement ( pretendsToBeMutationDetail, [ spOutputMP, ] ) ).toEqual ( 'return someNameSP;' )
+    expect ( makeMutationResolverReturnStatement ( pretendsToBeMutationDetail, [ spOutputMP, ] ) ).toEqual ( 'return someNameSP;//{"type":"output","javaType":"String","name":"someNameSP","sqlType":"someSqlType"} from {}' )
   } )
   it ( "A tuple if many MPs", () => {
     expect ( makeMutationResolverReturnStatement ( pretendsToBeMutationDetail, [ spOutputMP, sqlOutputMP, manOutputMp ] ) ).toEqual (
@@ -182,7 +182,7 @@ describe ( "sql functions", () => {
       "            s.execute();",
       "      Integer accountType = s.getInt(1);",
       "      logger.debug(MessageFormat.format('Duration: {0,number,#.##}, accountType: {1}', (System.nanoTime() - start) / 1000000.0, accountType));",
-      "      return accountType;",
+      "      return accountType;//{'type':'output','name':'accountType','javaType':'Integer','sqlType':'INTEGER'} from {'type':'sqlFunction','name':'getAccountType','package':'b00','schema':{'name':'TheSchema'},'params':[{'type':'output','name':'accountType','javaType':'Integer','sqlType':'INTEGER'}]}",
       "    }}"
     ] )
   } )
@@ -208,16 +208,8 @@ describe ( "makeMutations", () => {
       "import org.slf4j.Logger;",
       "import org.slf4j.LoggerFactory;",
       "import java.text.MessageFormat;",
-      "import java.util.Map;",
-      "import java.util.HashMap;",
-      "import java.util.ArrayList;",
-      "import java.util.List;",
-      "import java.util.Date;",
-      "import java.sql.CallableStatement;",
-      "import java.sql.PreparedStatement;",
-      "import java.sql.ResultSet;",
-      "import java.sql.Connection;",
-      "import java.sql.SQLException;",
+      "import java.util.*;",
+      "import java.sql.*;",
       "import focuson.data.utils.IOGNL;",
       "import focuson.data.utils.DateFormatter;",
       "import focuson.data.utils.Messages;",
@@ -266,16 +258,8 @@ describe ( "makeMutations", () => {
       "import org.slf4j.Logger;",
       "import org.slf4j.LoggerFactory;",
       "import java.text.MessageFormat;",
-      "import java.util.Map;",
-      "import java.util.HashMap;",
-      "import java.util.ArrayList;",
-      "import java.util.List;",
-      "import java.util.Date;",
-      "import java.sql.CallableStatement;",
-      "import java.sql.PreparedStatement;",
-      "import java.sql.ResultSet;",
-      "import java.sql.Connection;",
-      "import java.sql.SQLException;",
+      "import java.util.*;",
+      "import java.sql.*;",
       "import focuson.data.utils.IOGNL;",
       "import focuson.data.utils.DateFormatter;",
       "import focuson.data.utils.Messages;",
@@ -411,16 +395,8 @@ describe ( "makeMutations", () => {
       "import org.slf4j.Logger;",
       "import org.slf4j.LoggerFactory;",
       "import java.text.MessageFormat;",
-      "import java.util.Map;",
-      "import java.util.HashMap;",
-      "import java.util.ArrayList;",
-      "import java.util.List;",
-      "import java.util.Date;",
-      "import java.sql.CallableStatement;",
-      "import java.sql.PreparedStatement;",
-      "import java.sql.ResultSet;",
-      "import java.sql.Connection;",
-      "import java.sql.SQLException;",
+      "import java.util.*;",
+      "import java.sql.*;",
       "import focuson.data.utils.IOGNL;",
       "import focuson.data.utils.DateFormatter;",
       "import focuson.data.utils.Messages;",
@@ -436,7 +412,7 @@ describe ( "makeMutations", () => {
       "//If you have a compilation error because of a 'cannot resolve symbol' you may need to add the class to the 'imports'",
       "    public String ValidatedPayeeDetails_state_validate_undefined0(Connection connection, Messages msgs, Object dbName) throws SQLException {",
       "      String payeeStatus= \"SUCCEEDED!!!!!\";",
-      "      return payeeStatus;",
+      "      return payeeStatus;//{\"type\":\"output\",\"name\":\"payeeStatus\",\"javaType\":\"String\"} from {\"type\":\"manual\",\"code\":\"String payeeStatus= \\\"SUCCEEDED!!!!!\\\";\",\"makeMock\":false,\"params\":[{\"type\":\"output\",\"name\":\"payeeStatus\",\"javaType\":\"String\"}]}",
       "  }",
       "",
       "}"
@@ -460,16 +436,8 @@ describe ( "makeMutations", () => {
       "import org.slf4j.Logger;",
       "import org.slf4j.LoggerFactory;",
       "import java.text.MessageFormat;",
-      "import java.util.Map;",
-      "import java.util.HashMap;",
-      "import java.util.ArrayList;",
-      "import java.util.List;",
-      "import java.util.Date;",
-      "import java.sql.CallableStatement;",
-      "import java.sql.PreparedStatement;",
-      "import java.sql.ResultSet;",
-      "import java.sql.Connection;",
-      "import java.sql.SQLException;",
+      "import java.util.*;",
+      "import java.sql.*;",
       "import focuson.data.utils.IOGNL;",
       "import focuson.data.utils.DateFormatter;",
       "import focuson.data.utils.Messages;",

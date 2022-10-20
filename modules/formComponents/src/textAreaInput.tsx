@@ -32,18 +32,19 @@ export const cleanTextareaProps = <T extends NameAnd<any>> ( p: T ): T => {
   delete result.parentState
   delete result.scrollAfter
   delete result.noLabel
-  result[ 'maxLength' ] = result[ 'maxlength' ]
   delete result.maxLength
+  delete result.maxlength
   return result
 };
 
 export function TextAreaInput<S, T, Context extends FocusOnContext<S>> ( props: TextareaProps<S, string, Context> ) {
-  const { id, state, mode, readonly, scrollAfter, parentState, onChange, enabledBy, errorMessage } = props
+  const { id, state, mode, readonly, scrollAfter, parentState, onChange, enabledBy, errorMessage , maxlength} = props
 
   return (
     <textarea
       style={scrollAfter ? { height: scrollAfter, overflow: 'auto' } : undefined}
       {...cleanTextareaProps ( props )}
+      maxLength={maxlength}
       data-errormessage={errorMessage}
       onChange={( e ) => {
         setEdited ( e?.target )

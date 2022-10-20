@@ -1,10 +1,11 @@
 import { acceptDateForTest, DateInfo, DatePicker, DateRange, errorsAnd, firstAllowedDate, MyCombined, parseDate, validateDateInfo } from "@focuson/form_components";
 import { lensState } from "@focuson/state";
 import { mount } from "enzyme";
-import { HasPageSelection, PageSelectionContext, pageSelectionlens } from "@focuson/pages";
+import { HasPageSelection, ModalContext, PageSelectionContext, pageSelectionlens } from "@focuson/pages";
 import { HasTagHolder } from "@focuson/template";
 import { HasSimpleMessages } from "@focuson/utils";
 import { enzymeSetup } from "./enzymeAdapterSetup";
+import { HasEnvironment } from "@focuson/focuson";
 
 enzymeSetup ()
 const dateFormat = 'dd/MM/yyyy'
@@ -228,13 +229,14 @@ describe ( "holidaysOk", () => {
   } )
 } )
 
-type Context = PageSelectionContext<StateForDatePicker>
+type Context = ModalContext<StateForDatePicker>
+// @ts-ignore
 const context: Context = {
   combine: MyCombined,
   pageSelectionL: pageSelectionlens<StateForDatePicker> (),
   pages: {}
 }
-interface StateForDatePicker extends HasTagHolder, HasSimpleMessages, HasPageSelection {
+interface StateForDatePicker extends HasTagHolder, HasSimpleMessages, HasPageSelection, HasEnvironment {
   dateInfo?: DateInfo;
   theDate?: string;
   jurisdiction?: string;

@@ -33,8 +33,8 @@ export interface FocusOnMassTxsAction<S> {
 function isFocusOnMassTxsAction<S> ( f: any ): f is FocusOnMassTxsAction<S> {
   return f.type === 'massTxs'
 }
-export const {teamName}Reducer: any = <BigState, S> ( rootLens: Lens<BigState, S> ) => ( state: BigState, action: any ) => {
-  if ( state === undefined ) return start
+export const {teamName}Reducer: any = <BigState, S> ( rootLens: Lens<BigState, S>, showDebugButton?: boolean ) => ( state: BigState, action: any ) => {
+  if ( state === undefined ) return {...start, environment:  {showDebugButton}}
   // @ts-ignore
   const debug = rootLens.get ( state )?.debug?.reduxDebug === true
   if ( debug ) console.log ( ' {teamName}Reducer-action', action )

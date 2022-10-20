@@ -27,5 +27,5 @@ store.subscribe ( () => {
 } )
 
 console.log ( "dispatching" )
-store.dispatch ( { type: 'setMain', s: start, team: '{teamName}' } )
+store.dispatch ( { type: 'SomeUnImportantCommandToStartThingsOff' } )
 console.log ( "dispatched" )

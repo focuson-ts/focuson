@@ -2,8 +2,8 @@ import { findThisPageElement, firstTimeHappened, focusPageClassName, PageDetails
 import { LensState } from "@focuson/state";
 import { Messages } from "./messages";
 import { HasTagHolder } from "@focuson/template";
-import { HasSimpleMessages, SimpleMessage } from "@focuson/utils";
-import { FocusOnContext } from "@focuson/focuson";
+import { HasSimpleMessages } from "@focuson/utils";
+import { FocusOnContext, HasEnvironment } from "@focuson/focuson";
 import { DebugState } from "./debugState";
 import { lastIndexOf } from "./common";
 import { useEffect } from "react";
@@ -51,7 +51,7 @@ const mainPageJSX = ( p: PageDetailsForCombine, i: number, messagesJSX: JSX.Elem
   )
 }
 
-export function MyCombined<S extends HasTagHolder & HasSimpleMessages, Context extends FocusOnContext<S>> ( state: LensState<S, any, Context>, pages: PageDetailsForCombine[] ): JSX.Element {
+export function MyCombined<S extends HasTagHolder & HasSimpleMessages & HasEnvironment, Context extends FocusOnContext<S>> ( state: LensState<S, any, Context>, pages: PageDetailsForCombine[] ): JSX.Element {
 
   if ( firstTimeHappened ) {
     useEffect ( () => {
@@ -63,7 +63,7 @@ export function MyCombined<S extends HasTagHolder & HasSimpleMessages, Context e
         const item = inputs.item ( 0 );
         if ( item ) {
           item.focus ( { preventScroll: false } )
-          item.select()
+          item.select ()
         }
       }
     } )
@@ -71,6 +71,8 @@ export function MyCombined<S extends HasTagHolder & HasSimpleMessages, Context e
   const lastIndexOfMainOrModalPage = lastIndexOf ( pages, p => p.pageType === 'MainPage' || p.pageType === 'ModalPage' )
   const clippedPages = pages.slice ( lastIndexOfMainOrModalPage )
   const pagesToShow = clippedPages.length === 0 ? pages : clippedPages // this occurs when we have a mainpop at the beginning
+  const showDebug = state.main.environment?.showDebugButton !== false
+  console.log ( 'My Combined', 'State', state.main, 'showDebug', showDebug )
   return <>
     <div id='container' className='combine'>
       <div className='glassPane'>
@@ -87,7 +89,7 @@ export function MyCombined<S extends HasTagHolder & HasSimpleMessages, Context e
             }
           )}
       </div>
-      <DebugState state={state}/>
+      {showDebug && <DebugState state={state}/>}
     </div>
   </>
 }

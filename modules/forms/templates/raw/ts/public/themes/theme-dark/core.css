@@ -121,7 +121,7 @@
     --lookup-input-font-size: 1rem;
 
     --dropdown-container-padding: 0;
-    --dropdown-container-margin: 2px 0 0 0;
+    --dropdown-container-margin: 0 0 20px 0;
     --dropdown-container-line-height: 1.5;
     --dropdown-container-background: var(--white);
     --dropdown-container-border-radius: 0;

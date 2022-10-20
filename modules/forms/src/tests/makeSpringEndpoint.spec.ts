@@ -130,7 +130,7 @@ describe ( "makeSpringEndpoint", () => {
       "  EAccountsSummary_state_invalidateMutation __state_invalidateMutation;",
       "  @EndPointAnnotation()",
       "    @GetMapping(value=\"/api/accountsSummary\", produces=\"application/json\")",
-      "    public ResponseEntity getEAccountsSummary(@RequestParam int accountId, @RequestHeader int applRef, @RequestParam int brandRef, @RequestParam int clientRef, @RequestParam String dbName, @RequestHeader @RequestParam String employeeType) throws Exception{",
+      "    public ResponseEntity getEAccountsSummary(@RequestParam int accountId, @RequestHeader int applRef, @RequestParam int brandRef, @RequestParam int clientRef, @RequestParam String dbName, @RequestHeader String employeeType) throws Exception{",
       "         Messages msgs = Transform.msgs();",
       "        //from EAccountsSummary.rest[eAccountsSummary].mutations[\"get\"]",
       "          return Transform.result(graphQL.get(dbName),EAccountsSummaryQueries.getEAccountsSummary(accountId, applRef, brandRef, clientRef, dbName, employeeType), \"getEAccountsSummary\", msgs);",
@@ -138,7 +138,7 @@ describe ( "makeSpringEndpoint", () => {
       "",
       "  @EndPointAnnotation()",
       "    @PostMapping(value=\"/api/accountsSummary/invalidate\", produces=\"application/json\")",
-      "    public ResponseEntity state_invalidateEAccountsSummary(@RequestParam int accountId, @RequestParam int clientRef, @RequestParam String dbName, @RequestHeader @RequestParam String employeeType, @RequestBody String body) throws Exception{",
+      "    public ResponseEntity state_invalidateEAccountsSummary(@RequestParam int accountId, @RequestParam int clientRef, @RequestParam String dbName, @RequestHeader String employeeType, @RequestBody String body) throws Exception{",
       "         Map<String,Object> bodyAsJson = new ObjectMapper().readValue(body, Map.class);",
       "         Messages msgs = Transform.msgs();",
       "        Connection connection = dataSource.getConnection(getClass());",
@@ -153,13 +153,13 @@ describe ( "makeSpringEndpoint", () => {
       "",
       "  @EndPointAnnotation()",
       "    @GetMapping(value=\"/api/accountsSummary/query\", produces=\"application/json\")",
-      "    public String querygetEAccountsSummary(@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestParam int clientRef, @RequestParam String dbName, @RequestHeader @RequestParam String employeeType) throws Exception{",
+      "    public String querygetEAccountsSummary(@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestParam int clientRef, @RequestParam String dbName, @RequestParam String employeeType) throws Exception{",
       "       return EAccountsSummaryQueries.getEAccountsSummary(accountId, applRef, brandRef, clientRef, dbName, employeeType);",
       "    }",
       "",
       "  @EndPointAnnotation()",
       "    @PostMapping(value=\"/api/accountsSummary/invalidate/query\", produces=\"application/json\")",
-      "    public String querystate_invalidateEAccountsSummary(@RequestParam int accountId, @RequestParam int clientRef, @RequestParam String dbName, @RequestHeader @RequestParam String employeeType, @RequestBody String body) throws Exception{",
+      "    public String querystate_invalidateEAccountsSummary(@RequestParam int accountId, @RequestParam int clientRef, @RequestParam String dbName, @RequestParam String employeeType, @RequestBody String body) throws Exception{",
       "       return EAccountsSummaryQueries.state_invalidateEAccountsSummary(accountId, clientRef, dbName, employeeType,   Transform.removeQuoteFromProperties(body, Map.class));",
       "    }",
       "",
@@ -169,7 +169,7 @@ describe ( "makeSpringEndpoint", () => {
       "      return new ObjectMapper().writeValueAsString( Sample.sampleEAccountsSummary0);",
       "    }",
       "  }"
-    ] )
+    ])
   } )
   it ( "should make a second endpoint for a res", () => {
     expect ( makeSpringEndpointsFor ( paramsForTest, EAccountsSummaryPD, 'createPlanRestD', createPlanRestD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([

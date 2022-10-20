@@ -61,7 +61,7 @@ export type DateRange<S, C> = DateRangeInPast<S, C> | DateRangeInFuture<S, C> | 
 
 export const parseDate = ( prefix: string, format: string ) => ( date: string ): Date | string[] => {
   let result = parse ( date.replace ( /\//g, '-' ), format.replace ( /\//g, '-' ), new Date () );
-  return isNaN ( result.getTime () ) ? [ `${prefix}Please use date format ${format}` ] : result;
+  return isNaN ( result.getTime () ) ? [ `${prefix}Please use date format ${format.toLowerCase()}` ] : result;
 };
 
 type DateValidation = ( date: Date ) => string[]

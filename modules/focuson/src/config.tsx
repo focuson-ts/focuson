@@ -48,6 +48,13 @@ export interface HasGetCurrentMain<S> {
 export interface HasMockJwt {
   mockJwt: boolean
 }
+
+export interface Environment {
+  showDebugButton?: boolean;
+}
+export interface HasEnvironment {
+  environment?: Environment
+}
 export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasPathToLens<S>,
   HasFetchersAndRest<S, SimpleMessage>, HasDateFn, HasGetCurrentMain<S>, HasMessagesPostProcessor<SimpleMessage>, HasMockJwt {
   commonIds: NameAndLens<S>;
@@ -158,7 +165,7 @@ export const processRestsAndFetchers = <S, Context extends FocusOnContext<S>, MS
     const pageName = safeString ( mainPageFrom ( pageSelections ).pageName )
     if ( debug ) console.log ( 'processRestsAndFetchers - pageSelections', pageSelections )
     if ( debug ) console.log ( 'processRestsAndFetchers - pageName', pageName )
-    const fromFetchers = restCommandsFromFetchers ( tagHolderL, newFetchers, restDetails, pageName,  s )
+    const fromFetchers = restCommandsFromFetchers ( tagHolderL, newFetchers, restDetails, pageName, s )
     const allCommands: RestCommand[] = [ ...restCommands, ...fromFetchers ]
     const restProps: RestToTransformProps<S, MSGs> = { fetchFn, mockJwt, d: restDetails, pathToLens, messageL, stringToMsg, traceL: traceL (), urlMutatorForRest: restUrlMutator }
     const txs = await restToTransforms ( restProps, sFn, allCommands )
