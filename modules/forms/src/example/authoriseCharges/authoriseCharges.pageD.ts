@@ -57,7 +57,7 @@ export function ViewChargesPage ( c: AuthoriseCustomisation ): ExampleModalPage 
         text: 'Approve Pending Fees', action: 'approvePendingFees',
         buttonType: 'primary'
       },
-      authoriseApprovedFees: { control: "ActionButton", path: '#editingData', text: 'Authorise Approved Fees', action: 'authoriseApprovedFees', buttonType: 'secondary' },
+      authoriseApprovedFees: { control: "ActionButton", path: '#editingData', text: 'Authorise Approved Fees', action: 'authoriseApprovedFees', buttonType: 'secondary', needsHistory: true },
       summary: {
         enabledBy: 'hasSomeData',
         control: 'ModalButton', modal: SummaryOfChargesPage ( c ),

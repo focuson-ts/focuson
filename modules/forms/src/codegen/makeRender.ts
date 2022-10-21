@@ -4,7 +4,7 @@ import { dataDsIn, isMainPage, isModalPage, MainPageD, PageD } from "../common/p
 
 import { decamelize, NameAnd, safeArray, safeObject, sortedEntries, toArray, unique, unsortedEntries, Validations } from "@focuson/utils";
 import { componentName, domainName, domainsFileName, emptyFileName, guardName, modalImportFromFileName, modalPageComponentName, optionalsFileName, optionalsName, pageComponentName, pageDomainName } from "./names";
-import { addButtonsFromVariables, MakeButton, makeButtonsVariable, makeGuardButtonVariables } from "./makeButtons";
+import { addButtonsFromVariables, allControlButtonsOnPage, hasNeedsHistory, MakeButton, makeButtonsVariable, makeGuardButtonVariables } from "./makeButtons";
 import { focusOnFor, indentList, noExtension } from "./codegen";
 import { TSParams } from "./config";
 import { ButtonD } from "../buttons/allButtons";
@@ -214,6 +214,10 @@ function makeLayoutPrefixPostFix<B, G> ( mainPage: MainPageD<B, G>, page: PageD<
 export function defaultGuardMessage ( name: string ) {
   return `${name} is not valid`;
 }
+export function makeUseHistory<B extends ButtonD,G>(makeButton: MakeButton<G>,p: PageD<B, G>){
+  return hasNeedsHistory ( makeButton, p ) ? [ `const h = useHistory; const history=h?h():undefined` ] :[]
+
+}
 export function makeGuardVariables<B, G extends GuardWithCondition> ( hasGuards: HasGuards<G>, makeGuard: MakeGuard<G>, params: TSParams, mainP: MainPageD<B, G>, page: PageD<B, G> ): string[] {
   if ( hasGuards.guards === undefined ) return []
   let guards = unsortedEntries ( hasGuards.guards ).map ( ( [ name, guard ] ) => {
@@ -287,6 +291,7 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
     `     ( state, d, mode, index ) => {`,
     ...(indentList ( indentList ( indentList ( indentList ( indentList ( [
       'const id=`page${index}`;',
+      ...makeUseHistory(makeButtons,pageD),
       ...guards,
       ...makeGuardButtonVariables ( params, makeGuard, mainP, pageD ),
       ...makeButtonsVariable ( params, makeGuard, makeButtons, mainP, pageD ),
@@ -312,6 +317,7 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
     `( fullState, state , full, d, mode, index) => {`,
     ...indentList ( makeGuardButtonVariables ( params, makeGuard, pageD, pageD ) ),
     'const id=`page${index}`;',
+    ...makeUseHistory(makeButtons,pageD),
     ...indentList ( guards ),
     ...indentList ( makeButtonsVariable ( params, makeGuard, makeButtons, pageD, pageD ) ),
     '',
@@ -347,7 +353,7 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
     `import { Context, FocusedProps, ${params.stateName}, identityL } from "../${params.commonFile}";`,
     `import { Lenses } from '@focuson/lens';`,
     `import { DisplayGuards, Guard, GuardButton } from "@focuson/form_components";`,
-    `import { defaultDateFn, safeNumber, safeArray, safeString, applyOrDefault} from "@focuson/utils";`,
+    `import { defaultDateFn, safeNumber, safeArray, safeString, applyOrDefault, requireBypassingReactCheck} from "@focuson/utils";`,
     `import * as action from '../actions'`,
     `import { ${optionalsName ( mainP )} } from "${optionalsFileName ( `..`, params, mainP )}";`,
   ]
@@ -373,7 +379,8 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
       ...domainImports,
       ...guardImports ],
     s => s )
-  return [ ...allImports, ...pageComponents, ...dataComponents ]
+  const history = hasNeedsHistory ( makeButton, page ) ? [ `const useHistory = requireBypassingReactCheck('react-router-dom')` ] : []
+  return [ ...allImports, ...history, ...pageComponents, ...dataComponents ]
 }
 
 

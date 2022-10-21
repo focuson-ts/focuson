@@ -1,5 +1,5 @@
 import { MainPageD, PageD } from "../common/pageD";
-import { NameAnd, sortedEntries } from "@focuson/utils";
+import { NameAnd, safeObject, sortedEntries } from "@focuson/utils";
 import { TSParams } from "./config";
 import { ButtonD, ButtonWithControl, isButtonWithControl } from "../buttons/allButtons";
 import { addBrackets, addStringToStartOfFirst, indentList } from "./codegen";
@@ -16,6 +16,7 @@ export interface CreateButtonData<B, G> {
 }
 export interface ButtonCreator<B, G> {
   import: string;
+  needsHistory?: true
   makeButton: ( data: CreateButtonData<B, G> ) => string[];
 }
 export function makeIdForButton ( idSuffix: string ) {return '{`${id}.' + idSuffix + "`}" }
@@ -25,6 +26,18 @@ export interface MakeButton<G> extends NameAnd<ButtonCreator<any, G>> {}
 const makeControlButton = <B, G> ( maker: MakeButton<G> ) => ( params: TSParams ) => ( mainPage: MainPageD<B, G>, parent: PageD<B, G> ) => ( [ name, button ]: [ string, ButtonWithControl ] ): string[] => {
   const createButton = maker[ button.control ]
   return createButton ? createButton.makeButton ( { params, parent, mainPage, name, button } ) : [ `<button>${name} of type ${button.control} cannot be created yet</button>` ]
+}
+
+export function allControlButtonsOnPage<B extends ButtonD, G> ( p: PageD<B, G> ): ButtonWithControl[] {
+  function findControlButton ( [ name, b ]: [ string, B ] ): ButtonWithControl {
+    if ( isButtonWithControl ( b ) ) return b
+    if ( isGuardButton<B, G> ( b ) ) return findControlButton ( [ name, b.guard ] )
+    throw Error ( `Unknown button type on page ${p.name}. Button name ${name}` )
+  }
+  return Object.entries ( p.buttons ).map ( findControlButton )
+}
+export function hasNeedsHistory<B extends ButtonD, G> ( maker: MakeButton<G>, p: PageD<B, G> ): boolean {
+  return allControlButtonsOnPage ( p ).find ( b => maker[ b.control ]?.needsHistory ) !== undefined
 }
 export const makeButtonFrom = <B extends ButtonD, G> ( makeGuard: MakeGuard<G>, maker: MakeButton<G> ) => ( params: TSParams ) => ( mainPage: MainPageD<B, G>, parent: PageD<B, G> ) => ( [ name, button ]: [ string, B ] ): string[] => {
          if ( isButtonWithControl ( button ) )

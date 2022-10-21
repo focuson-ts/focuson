@@ -14,6 +14,7 @@ export const datesDataD: ExampleDataD = {
     value: { dataDD: { ...DateWithDatePickerDD, emptyValue: '6/7/2022' }, displayParams: { label: 'Specified 6/7/2022' } },
     valueDateFormat: { dataDD: { ...DateWithDatePickerDD, emptyValue: '2022/7/5' }, displayParams: { label: 'Specified 2022/7/5 (different date format) ', dateFormat: 'yyyy/MM/dd' } },
     future: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Future', dateRange: { type: 'future' } } },
+    futureNoHolidaysOrWeekends: { dataDD: DateWithDatePickerDD, displayParams: {  dateRange: { type: 'future', allowWeekends: false, allowHolidays: false, } } },
     past: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Past', dateRange: { type: 'past' } } },
     monthYear: { dataDD: { ...MonthYearWithDatePickerDD, emptyValue: '8/2022' } },
     // monthYearPast: { dataDD: { ...MonthYearWithDatePickerDD, emptyValue: '8/2022', dateRange: { type: 'past' } } },
