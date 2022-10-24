@@ -174,6 +174,7 @@ export const accountAndAddressDetailsRD: ExampleRestD = {
   dataDD: AccountDetailsDD,
   url: '/api/payment/accountDetails?{query}',
   actions: [ 'get' ],
+
   resolvers: {
 
     getFullName: {
@@ -186,8 +187,6 @@ export const accountAndAddressDetailsRD: ExampleRestD = {
       ],
       code: `String fullname = title + " " + forename + " " + surname;`,
     },
-
-
   },
   tables: {
     entity: {
