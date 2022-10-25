@@ -3,7 +3,7 @@ import { HasPostCommand, HasPostCommandLens } from "@focuson/poster";
 import { FetcherTree, loadTree } from "@focuson/fetcher";
 import { lensState, LensState } from "@focuson/state";
 import { identityOptics, Lenses, massTransform, NameAndLens, Optional, Transform } from "@focuson/lens";
-import { DateFn, defaultDateFn, errorMonad, FetchFn, HasDateFn, HasSimpleMessages, RestAction, safeArray, safeString, SimpleMessage, SimpleMessageLevel, stringToSimpleMsg } from "@focuson/utils";
+import { DateFn, defaultDateFn, errorMonad, FetchFn, HasDateFn, HasSimpleMessages, NameAnd, RestAction, safeArray, safeString, SimpleMessage, SimpleMessageLevel, stringToSimpleMsg } from "@focuson/utils";
 import { HasMessagesPostProcessor, HasRestCommandL, HasRestCommands, ModalProcessorsConfig, rest, RestCommand, RestCommandAndTxs, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson/rest";
 import { HasTagHolder, TagHolder } from "@focuson/template";
 import { AllFetcherUsingRestConfig, restCommandsFromFetchers } from "./tagFetcherUsingRest";
@@ -55,8 +55,13 @@ export interface Environment {
 export interface HasEnvironment {
   environment?: Environment
 }
+
+export type Dependencies = NameAnd<any>
+export interface HasDependencies{
+  dependencies?: Dependencies
+}
 export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasPathToLens<S>,
-  HasFetchersAndRest<S, SimpleMessage>, HasDateFn, HasGetCurrentMain<S>, HasMessagesPostProcessor<SimpleMessage>, HasMockJwt {
+  HasFetchersAndRest<S, SimpleMessage>, HasDateFn, HasGetCurrentMain<S>, HasMessagesPostProcessor<SimpleMessage>, HasMockJwt,HasDependencies {
   commonIds: NameAndLens<S>;
 }
 export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSelection & HasRestCommands & HasSimpleMessages & HasTagHolder>

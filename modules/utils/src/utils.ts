@@ -236,5 +236,7 @@ export function checkDates ( d1: string | undefined, d2: string | undefined, dat
 }
 
 export function requireBypassingReactCheck ( s: string ): any {
-  try { return require ( s )} catch ( e ) {return undefined}
+  try { return require ( s )} catch ( e ) {
+    console.error(`Tried to require(${s})`, e)
+    return undefined}
 }

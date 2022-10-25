@@ -4,7 +4,7 @@ import { Context, emptyState, FState, identityL } from "./common";
 import { defaultDateFn, errorMonad, errorPromiseMonad, fetchWithDelay, fetchWithPrefix, loggingFetchFn, safeArray, SimpleMessage, stringToSimpleMsg } from "@focuson/utils";
 import { lensState, LensState } from "@focuson/state";
 import { Reducer } from "react";
-import { dispatchRestAndFetchCommands, FocusOnConfig, FocusOnContext, FocusOnDebug, HasFocusOnDebug, restCountL, traceL, makeProcessorsConfig} from "@focuson/focuson";
+import { dispatchRestAndFetchCommands, FocusOnConfig, FocusOnContext, FocusOnDebug, HasFocusOnDebug, restCountL, traceL, makeProcessorsConfig, Dependencies} from "@focuson/focuson";
 import { Lens, Lenses, massTransform, Transform } from "@focuson/lens";
 import { pageSelectionlens, preMutateForPages, simpleMessagesL, removeOldMessages } from "@focuson/pages";
 import { newFetchers } from "./fetchers";
@@ -112,12 +112,12 @@ export const focusOnMiddlewareFor{teamName} = <BigState, S extends HasFocusOnDeb
   // if ( debug ) console.log ( 'focusOnMiddleware - finalResult is ', finalResult );
   // return res;
 };
-export function makeLs<S> ( store: Store<S>, team: string ) {
+export function makeLs<S> ( store: Store<S>, team: string ,dependencies?: Dependencies) {
   function currentState<D,C> ( ls: LensState<S, D, C> ): LensState<S,D,C> {
     const currentMain: any = store.getState ();
     const newMain = currentMain[ team ];
     return ls.copyWithNewMain(newMain)
   }
   let value: any = store.getState ();
-  return lensState ( value[ team ], ( s, reason ) => store.dispatch ( { type: 'setMain', s, team, reason } ), team, { ...context, currentState } )
+  return lensState ( value[ team ], ( s, reason ) => store.dispatch ( { type: 'setMain', s, team, reason } ), team, { ...context, currentState,dependencies } )
 }
