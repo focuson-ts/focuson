@@ -215,7 +215,7 @@ export function defaultGuardMessage ( name: string ) {
   return `${name} is not valid`;
 }
 export function makeUseHistory<B extends ButtonD,G>(makeButton: MakeButton<G>,p: PageD<B, G>){
-  return hasNeedsHistory ( makeButton, p ) ? [ `const h = state.context.dependencies?.history; const history=h?h():undefined` ] :[]
+  return hasNeedsHistory ( makeButton, p ) ? [ `const h = state.context.dependencies?.history; const history=h?h(() =>{}):undefined` ] :[]
 
 }
 export function makeGuardVariables<B, G extends GuardWithCondition> ( hasGuards: HasGuards<G>, makeGuard: MakeGuard<G>, params: TSParams, mainP: MainPageD<B, G>, page: PageD<B, G> ): string[] {

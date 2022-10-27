@@ -48,6 +48,10 @@ export function makePages<B, G> ( params: TSParams, ps: MainPageD<B, G>[], extra
     confirm: {
       imports: [ 'import { ConfirmCommitWindow } from "@focuson/pages";' ],
       text: `pageType: 'Arbitrary', config: simpleMessagesConfig, pageFunction: ConfirmCommitWindow()`
+    },
+    restLoader: {
+      imports: [ 'import { RestLoadWindow } from "@focuson/form_components";'],
+      text: `pageType: 'Arbitrary', config: simpleMessagesConfig, pageFunction: RestLoadWindow`
     }
   }
   const modals = walkModals ( ps );

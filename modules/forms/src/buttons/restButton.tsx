@@ -6,6 +6,7 @@ import { EnabledBy, enabledByString } from "./enabledBy";
 import { ButtonWithControl } from "./allButtons";
 import { CopyResultCommand, DeleteCommand, MessageCommand, RestChangeCommands } from "@focuson/rest";
 import { ConfirmWindow } from "@focuson/pages";
+import { RestLoadWindowProps, RestLoadWindowWithoutRestProps } from "@focuson/form_components";
 
 
 function findFullOnSuccess ( onSuccess: RestChangeCommands[], copyDetails: RequiredCopyDetails[], deletes: string[], messages: string[] ) {
@@ -19,7 +20,7 @@ function makeRestButton<B extends RestButtonInPage<G>, G> (): ButtonCreator<Rest
   return {
     import: '@focuson/form_components',
     makeButton: ( { params, mainPage, parent, name, button } ) => {
-      const { action, confirm, restName, validate, text, deleteOnSuccess, messageOnSuccess, buttonType, copyOnSuccess, onSuccess, on404 } = button
+      const { action, confirm, restName, validate, text, deleteOnSuccess, messageOnSuccess, buttonType, copyOnSuccess, onSuccess, on404,loader } = button
       // if ( !isMainPage ( parent ) ) throw new Error ( 'Currently rest buttons are only valid on main pages' ) //Note: this is just for 'how do we specify them'
       const rest = mainPage.rest[ restName ]
       if ( !rest ) throw new Error ( `Rest button on page ${parent.name} uses restName ${restName} which doesn't exist\n${JSON.stringify ( button )}` )
@@ -29,6 +30,7 @@ function makeRestButton<B extends RestButtonInPage<G>, G> (): ButtonCreator<Rest
           ...opt ( 'name', name ),
           ...optT ( 'action', action ),
           ...optT ( 'validate', validate ),
+          ...optT ( 'loader', loader ),
           ...optT ( 'buttonType', buttonType ),
           ...optT ( 'onSuccess', changeOnSuccess ),
           ...optT ( 'on404', on404 ? toArray ( on404 ) : undefined ),
@@ -51,6 +53,7 @@ export interface RestButtonInPage<G> extends EnabledBy {
   restName: string;
   action: RestAction;
   confirm?: boolean | string | ConfirmWindow;
+  loader?: RestLoadWindowWithoutRestProps
   result?: RestResult;
   validate?: boolean;
   text?: string;

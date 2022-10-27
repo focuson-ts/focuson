@@ -1,149 +1,181 @@
 button {
-  font-family: var(--font-family-main);
+    font-family: var(--font-family-main);
 }
 
 button, .button {
-  position: relative;
-  top: 0;
-  left: 0;
-  background-color: var(--button-default-background-color);
-  border: 1px solid var(--button-default-border);
-  color: var(--button-default-foreground-color);  
-  padding: var(--button-default-inside-padding);
-  margin: var(--button-default-margin);
+    position: relative;
+    top: 0;
+    left: 0;
+    background-color: var(--button-default-background-color);
+    border: 1px solid var(--button-default-border);
+    color: var(--button-default-foreground-color);
+    padding: var(--button-default-inside-padding);
+    margin: var(--button-default-margin);
+    font-family: var(--font-family-main);
+    font-size: var(--button-font-size);
+    line-height: var(--button-line-height);
 }
 
 button:after, .button:after {
-  position: absolute;
-  visibility: visible;
-  opacity: 1;
-  bottom: -5px;
-  left: -1px;
-  right: 0;
-  width: calc(100% - 6px);
-  content: '';
-  -webkit-transition: all 0.18s;
-  -moz-transition: all 0.18s;
-  -o-transition: all 0.18s;
-  transition: all 0.18s;
+    position: absolute;
+    visibility: visible;
+    opacity: 1;
+    bottom: -5px;
+    left: -1px;
+    right: 0;
+    width: calc(100% - 6px);
+    content: '';
+    -webkit-transition: all 0.18s;
+    -moz-transition: all 0.18s;
+    -o-transition: all 0.18s;
+    transition: all 0.18s;
 }
 
 button:hover, .button:hover {
-  top: 2px;
-  left: 2px;
-  transform: scale(0.98);
+    top: 2px;
+    left: 2px;
+    transform: scale(0.98);
 }
 
 button:hover:after, .button:hover:after {
-  visibility: visible;
-  opacity: 1;
-  bottom: 0;
-  border-top: none;
+    visibility: visible;
+    opacity: 1;
+    bottom: 0;
+    border-top: none;
 }
 
 .primary-btn {
-  position: relative;
-  top: 0;
-  left: 0;
-  background-color: var(--button-primary-background-color);
-  border: var(--button-primary-border);
-  color: var(--button-primary-foreground-color);
-  min-width: var(--button-primary-min-width);
-  padding: var(--button-primary-inside-padding);
-  margin: var(--button-primary-margin);
+    position: relative;
+    top: 0;
+    left: 0;
+    background-color: var(--button-primary-background-color);
+    border: var(--button-primary-border);
+    color: var(--button-primary-foreground-color);
+    min-width: var(--button-primary-min-width);
+    padding: var(--button-primary-inside-padding);
+    margin: var(--button-primary-margin);
 }
 
 .primary-btn:after {
-  position: absolute;
-  visibility: visible;
-  opacity: 1;
-  bottom: -4px;
-  left: 0;
-  right: 0;
-  width: calc(100% - 8px);
-  content: '';
-  -webkit-transition: all 0.18s;
-  -moz-transition: all 0.18s;
-  -o-transition: all 0.18s;
-  transition: all 0.18s;
+    position: absolute;
+    visibility: visible;
+    opacity: 1;
+    bottom: -4px;
+    left: 0;
+    right: 0;
+    width: calc(100% - 8px);
+    content: '';
+    -webkit-transition: all 0.18s;
+    -moz-transition: all 0.18s;
+    -o-transition: all 0.18s;
+    transition: all 0.18s;
+    border-right: var(--button-primary-bevel-size) solid transparent;
+    border-top: var(--button-primary-bevel-size) solid var(--button-primary-bevel-colour);
+    border-left: var(--button-primary-bevel-size) solid transparent;
 }
 
 .primary-btn:hover {
-  top: 2px;
-  left: 2px;
-  color: #fff;
-  cursor: pointer;
-  border: none;
-  transform: scale(1.02);
+    top: 4px;
+    left: 4px;
+    padding: 13px 28px 11px;
+    text-decoration: underline !important;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    transform: scale(0.98);
 }
 
 .primary-btn:hover:after {
-  visibility: visible;
-  opacity: 1;
-  bottom: 0;
-  border-top: none;
+    visibility: visible;
+    opacity: 1;
+    bottom: 0;
+    border-top: none;
 }
 
 .primary-btn-disable {
-  cursor: auto;
-  position: relative;
-  top: 0;
-  left: 0;
-  opacity: 0.6;
-  background-color: var(--button-primary-background-color);
-  border: var(--button-primary-border);
-  color: var(--button-primary-foreground-color);
-  min-width: var(--button-primary-min-width);
-  padding: var(--button-primary-inside-padding);
+    cursor: auto;
+    position: relative;
+    top: 0;
+    left: 0;
+    opacity: 0.6;
+    background-color: var(--button-primary-background-color);
+    border: var(--button-primary-border);
+    color: var(--button-primary-foreground-color);
+    min-width: var(--button-primary-min-width);
+    padding: var(--button-primary-inside-padding);
 }
 
 .primary-btn-disable:hover {
-  text-decoration: none !important;
+    text-decoration: none !important;
 }
 
 .secondary-btn {
-  position: relative;
-  top: 0;
-  left: 0;
-  background-color: var(--button-secondary-background-color);
-  border: 1px solid var(--button-secondary-border);
-  color: var(--button-secondary-foreground-color);
-  min-width: var(--button-secondary-min-width);
-  padding: var(--button-secondary-inside-padding);
+    position: relative;
+    top: 0;
+    left: 0;
+    background-color: var(--button-secondary-background-color);
+    border: 1px solid var(--button-secondary-border);
+    color: var(--button-secondary-foreground-color);
+    min-width: var(--button-secondary-min-width);
+    padding: var(--button-secondary-inside-padding);
 }
 
 .secondary-btn:after {
-  position: absolute;
-  visibility: visible;
-  opacity: 1;
-  bottom: -5px;
-  left: -1px;
-  right: 0;
-  width: calc(100% - 6px);
-  content: '';
-  -webkit-transition: all 0.18s;
-  -moz-transition: all 0.18s;
-  -o-transition: all 0.18s;
-  transition: all 0.18s;
+    position: absolute;
+    visibility: visible;
+    opacity: 1;
+    bottom: -5px;
+    left: -1px;
+    right: 0;
+    width: calc(100% - 6px);
+    content: '';
+    -webkit-transition: all 0.18s;
+    -moz-transition: all 0.18s;
+    -o-transition: all 0.18s;
+    transition: all 0.18s;
+    border-right: var(--button-secondary-bevel-size) solid transparent;
+    border-top: var(--button-secondary-bevel-size) solid var(--button-secondary-border);
+    border-left: var(--button-secondary-bevel-size) solid transparent;
 }
 
 .secondary-btn:hover {
-  top: 2px;
-  left: 2px;
-  transform: scale(0.98);
+    transform: scale(0.98);
+    top: 4px;
+    left: 4px;
+    border: 2px solid var(--button-secondary-border);
+    padding: 9px 26px 7px;
+    text-decoration: underline !important;
 }
 
 .secondary-btn:hover:after {
-  visibility: visible;
-  opacity: 1;
-  bottom: 0;
-  border-top: none;
+    visibility: visible;
+    opacity: 1;
+    bottom: 0;
+    border-top: none;
 }
 
 button:disabled, .button:disabled, .primary-btn:disabled, .secondary-btn:disabled {
-  background-color: gainsboro;
-  cursor:not-allowed;
-  transform: none;
-  top: 0;
-  left:0;
+    background-color: gainsboro;
+    cursor: not-allowed;
+    transform: none;
+    top: 0;
+    left: 0;
+}
+
+button[disabled]:hover {
+    padding: var(--button-secondary-inside-padding);
+    cursor: not-allowed;
+    text-decoration: none !important;
+}
+
+button[disabled]:after {
+    border: none
+}
+
+.secondary-btn[disabled]:hover {
+    border: 1px solid var(--button-secondary-border);
+}
+
+.primary-btn[disabled]:hover {
+    border: 1px solid var(--button-primary-border);
 }
