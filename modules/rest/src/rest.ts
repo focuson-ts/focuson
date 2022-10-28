@@ -1,8 +1,9 @@
 import { reqFor, Tags, UrlConfig } from "@focuson/template";
 import { beforeAfterSeparator, defaultDateFn, FetchFn, isRestStateChange, NameAnd, RequiredCopyDetails, RestAction, RestStateChange, safeArray, safeObject, sortedEntries, toArray } from "@focuson/utils";
 import { identityOptics, lensBuilder, Lenses, massTransform, Optional, parsePath, Transform } from "@focuson/lens";
-import { ChangeCommand, CopyResultCommand, DeleteCommand, MessageCommand, processChangeCommandProcessor, RestAndInputProcessorsConfig, restChangeCommandProcessors, RestChangeCommands } from "./changeCommands";
+import { ChangeCommand, CopyResultCommand, DeleteCommand, MessageCommand, processChangeCommandProcessor, PageSelectionForDeleteRestWindowCommand, RestAndInputProcessorsConfig, restChangeCommandProcessors, RestChangeCommands } from "./changeCommands";
 import { MessagesPostProcessor, processAllMessageProcessors } from "./messages";
+
 
 
 export interface RestDebug {
@@ -141,30 +142,31 @@ interface RestResultToTxProps {
 
 }
 
-export const restResultToTx = <S, MSGs> ( s: S, messageL: Optional<S, MSGs[]>, extractMsgs: ( status: number | undefined, body: any ) => MSGs[], toPathTolens: ( path: string ) => Optional<S, any>, stringToMsg: ( msg: string ) => MSGs, extractData: ( status: number | undefined, body: any ) => any ) => ( { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): Transform<S, any>[] => {
+export const restResultToTx = <S, MSGs> ( s: S, messageL: Optional<S, MSGs[]>, pageL: Optional<S, PageSelectionForDeleteRestWindowCommand[]>, extractMsgs: ( status: number | undefined, body: any ) => MSGs[], toPathTolens: ( path: string ) => Optional<S, any>, stringToMsg: ( msg: string ) => MSGs, extractData: ( status: number | undefined, body: any ) => any ) => ( { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): Transform<S, any>[] => {
   const messagesFromBody: MSGs[] = extractMsgs ( status, result )
   const processedMessages = processAllMessageProcessors ( one.messagePostProcessors, one.postProcessors ) ( messagesFromBody )
   const changeCommands = restCommandToChangeCommands ( stringToMsg ) ( restCommand, status )
+
   const resultPathToLens = ( s: string ) => parsePath<any> ( s, lensBuilder ( { '': Lenses.identity<any> () }, {} ) )
-  const config: RestAndInputProcessorsConfig<S, any, MSGs> = { resultPathToLens, messageL, toPathTolens, stringToMsg, s, dateFn: defaultDateFn }
+  const config: RestAndInputProcessorsConfig<S, any, MSGs> = { resultPathToLens, messageL, pageL, toPathTolens, stringToMsg, s, dateFn: defaultDateFn }
   const data = extractData ( status, result );
   const processor = restChangeCommandProcessors ( config ) ( data );
 
-  const legacyChangeTxs: Transform<S, any>[] = processChangeCommandProcessor ( `Rest for ${JSON.stringify(restCommand)}  changeCommands`, processor, changeCommands );
+  const legacyChangeTxs: Transform<S, any>[] = processChangeCommandProcessor ( `Rest for ${JSON.stringify ( restCommand )}  changeCommands`, processor, changeCommands );
   const changeTxs = processChangeCommandProcessor ( '', processor, toArray ( restCommand.changeOnSuccess ) )
   const useResponse = getRestTypeDetails ( restCommand.restAction ).output.needsObj
   const resultTransform: Transform<S, any>[] = useResponse && status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => data ] ] : []
   const is404 = status == 404
   const isError = status && status >= 400 && !is404
-  const on404Transforms: Transform<S, any>[] = is404 ? processChangeCommandProcessor ( `Rest for ${JSON.stringify(restCommand)} - on404`, processor, toArray ( restCommand.on404 ) ) : []
-  const onErrorTransforms: Transform<S, any>[] = isError ? processChangeCommandProcessor ( `Rest for ${JSON.stringify(restCommand)}  onError`, processor, toArray ( restCommand.onError ) ) : []
+  const on404Transforms: Transform<S, any>[] = is404 ? processChangeCommandProcessor ( `Rest for ${JSON.stringify ( restCommand )} - on404`, processor, toArray ( restCommand.on404 ) ) : []
+  const onErrorTransforms: Transform<S, any>[] = isError ? processChangeCommandProcessor ( `Rest for ${JSON.stringify ( restCommand )}  onError`, processor, toArray ( restCommand.onError ) ) : []
   const msgFromBodyTx: Transform<S, any> = [ messageL, old => [ ...processedMessages, ...safeArray ( old ) ] ]
   let resultTxs: Transform<S, any>[] = [ msgFromBodyTx, ...on404Transforms, ...onErrorTransforms, ...legacyChangeTxs, ...changeTxs, ...resultTransform ];
   return resultTxs;
 };
 
-export const processRestResult = <S, MSGs> ( messageL: Optional<S, MSGs[]>, pathToLens: ( path: string ) => Optional<S, any>, stringToMsg: ( msg: string ) => MSGs ) => ( s: S, { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): S => {
-  const txs: Transform<S, any>[] = restResultToTx<S, MSGs> ( s, messageL, one.messages, pathToLens, stringToMsg, one.extractData ) ( result )
+export const processRestResult = <S, MSGs> ( messageL: Optional<S, MSGs[]>, pageL: Optional<S, PageSelectionForDeleteRestWindowCommand[]>, pathToLens: ( path: string ) => Optional<S, any>, stringToMsg: ( msg: string ) => MSGs ) => ( s: S, { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): S => {
+  const txs: Transform<S, any>[] = restResultToTx<S, MSGs> ( s, messageL, pageL, one.messages, pathToLens, stringToMsg, one.extractData ) ( result )
   return massTransform ( s, ...txs )
 };
 
@@ -253,6 +255,7 @@ export interface RestToTransformProps<S, MSGS> {
   d: RestDetails<S, MSGS>,
   urlMutatorForRest: ( r: RestAction, url: string ) => string,
   pathToLens: ( s: S ) => ( path: string ) => Optional<S, any>,
+  pageL: Optional<S, PageSelectionForDeleteRestWindowCommand[]>
   messageL: Optional<S, MSGS[]>,
   traceL: Optional<S, any[]>,
   stringToMsg: ( msg: string ) => MSGS,
@@ -275,7 +278,7 @@ export async function restToTransforms<S, MSGS> (
   const tracing = startS.debug?.recordTrace
   if ( debug ) console.log ( "rest-commands", commands )
   if ( commands.length == 0 ) return Promise.resolve ( [] )
-  const { d, urlMutatorForRest, pathToLens, stringToMsg, messageL, fetchFn, traceL } = props
+  const { d, urlMutatorForRest, pathToLens, stringToMsg, messageL, fetchFn, traceL, pageL } = props
 
   const requests: [ RestCommand, OneRestDetails<S, any, any, any>, RequestInfo, (RequestInit | undefined) ][] = restReq ( d, props.mockJwt, commands, urlMutatorForRest, startS )
   if ( debug ) console.log ( "rest-requests", requests )
@@ -286,7 +289,7 @@ export async function restToTransforms<S, MSGS> (
   if ( debug ) console.log ( 'results from fetching rest commands', results )
 
   const restCommandAndTxs: RestCommandAndTxs<S>[] = results.map ( res => {
-    const txs: Transform<S, any>[] = restResultToTx ( sAfterFetch, messageL, res.one.messages, toLens, stringToMsg, res.one.extractData ) ( res );
+    const txs: Transform<S, any>[] = restResultToTx ( sAfterFetch, messageL, pageL, res.one.messages, toLens, stringToMsg, res.one.extractData ) ( res );
     const trace: Transform<S, any>[] = tracing ? [ [ traceL, old => [ ...safeArray ( old ), { restCommand: res.restCommand, lensTxs: txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( sAfterFetch ) ) ] ) } ] ] ] : []
     const restAndTxs: RestCommandAndTxs<S> = { ...res, txs: [ ...txs, ...trace ] };
     return restAndTxs

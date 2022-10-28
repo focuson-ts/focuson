@@ -101,6 +101,7 @@ export const ConfirmChangesToAnyCD: DisplayCompD = {
   }
 }
 
+
 export const commonParamsWithLabel: DisplayCompParamD = {
   ...commonParams,
   label: { paramType: 'string', needed: 'defaultToCamelCaseOfName' },
@@ -439,4 +440,14 @@ export const CheckboxAndNumberCD: DisplayCompD = {
     number: { paramType: 'path', needed: 'yes' }
   }
 
+}
+
+export const ExternalComponentCD: DisplayCompD = {
+  import: '@focuson/form_components',
+  name: "ExternalComponent",
+  params: {
+    id: { paramType: 'object', needed: 'id' }, //object because it is calculated
+    state: { paramType: 'state', needed: 'defaultToPath' },
+    nameOfComponentFn: { paramType: 'string', needed: 'yes' }
+  }
 }

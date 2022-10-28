@@ -34,7 +34,7 @@ export const EditPaymentsPD: ExampleModalPage = {
   display: { target: '~/onePayment', dataDD: PaymentDD },
   modes: [ 'edit', 'create' ],
   guards:{
-    isDifferentDayOrIsBefore:{condition: 'fn', path: '', name: `isDifferentDayOrIsBefore(15, 15)`, message: 'It is after 15:15 today and cannot do a same day payment'}
+    isDifferentDayOrIsBefore:{condition: 'fn', path: '~/onePayment/forActionOn', name: `isDifferentDayOrIsBefore(15, 15)`, message: 'It is after 15:15 today and cannot do a same day payment'}
   },
   buttons: {
     commit: { control: 'ModalCommitButton', text: 'save' , enabledBy: 'isDifferentDayOrIsBefore'},

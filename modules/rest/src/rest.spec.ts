@@ -4,6 +4,7 @@ import { identityOptics, lensBuilder, Lenses, NameAndLens, Optional, parsePath }
 import { CopyResultCommand, DeleteCommand } from "./changeCommands";
 import { justInfoToSuccessMessagesPostProcessor } from "./messages";
 
+
 interface HasFullDomainForTest {
   fullDomain?: FullDomainForTest
 }
@@ -12,6 +13,7 @@ interface FullDomainForTest {
   idFromFullDomain?: string;
 }
 interface RestStateForTest extends HasSimpleMessages, HasRestCommands, HasFullDomainForTest {
+  pageSelection: [],
   token?: string;
   debug?: { recordTrace?: boolean }
 }
@@ -22,7 +24,7 @@ export function traceL<S> (): Optional<S, any> {
 const simpleMessageL = identityOptics<RestStateForTest> ().focusQuery ( 'messages' )
 
 const emptyRestState: RestStateForTest = {
-  messages: [], restCommands: [],
+  messages: [], restCommands: [], pageSelection: [],
   token: 'someToken',
   fullDomain: {}
 }
@@ -146,7 +148,12 @@ describe ( "massFetch", () => {
 const pathToLens: ( s: RestStateForTest ) => ( path: string ) => Optional<RestStateForTest, any> = ( unused ) => path => parsePath ( path, lensBuilder<RestStateForTest> ( { '/': Lenses.identity () }, {} ) )
 const msgFn = stringToSimpleMsg ( () => 'now', 'info' );
 
-const propsJwtFalse: RestToTransformProps<RestStateForTest, SimpleMessage> = { fetchFn: mockFetch, mockJwt: false, d: restDetails, urlMutatorForRest: restMutatator, pathToLens, messageL: simpleMessageL, stringToMsg: msgFn, traceL: traceL () };
+const propsJwtFalse: RestToTransformProps<RestStateForTest, SimpleMessage> = {
+  fetchFn: mockFetch, mockJwt: false, d: restDetails, urlMutatorForRest: restMutatator, pathToLens,
+  messageL: simpleMessageL,
+  pageL: identityOptics<RestStateForTest> ().focusQuery ( 'pageSelection' ),
+  stringToMsg: msgFn, traceL: traceL ()
+};
 const propsJwtTrue: RestToTransformProps<RestStateForTest, SimpleMessage> = { ...propsJwtFalse, mockJwt: true };
 describe ( "rest", () => {
   it ( "should fetch the results and put them into the state, removing the rest commands mockJwt false", async () => {

@@ -1,9 +1,9 @@
-import { OneRestDetails, RestCommand, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson/rest";
+import { OneRestDetails, PageSelectionForDeleteRestWindowCommand, RestCommand, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson/rest";
 import { createSimpleMessage, RestAction, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson/utils";
 import { AllFetcherUsingRestConfig, defaultPageSelectionAndRestCommandsContext, FocusOnConfig, FocusOnContext, FocusOnDebug, HasRestCount, processRestsAndFetchers, restCommandsFromFetchers, restCountL, traceL } from "@focuson/focuson";
 import { TagHolder } from "@focuson/template";
-import { Lenses, NameAndLens, Optional } from "@focuson/lens";
-import { MultiPageDetails, PageSelection, simpleMessagesL, simpleMessagesPageConfig } from "@focuson/pages";
+import { identityOptics, Lenses, NameAndLens, Optional } from "@focuson/lens";
+import { MultiPageDetails, PageSelection, pageSelectionlens, simpleMessagesL, simpleMessagesPageConfig } from "@focuson/pages";
 import React from "react";
 import { justInfoToSuccessMessagesPostProcessor } from "@focuson/rest/src/messages";
 
@@ -106,7 +106,13 @@ const pathToLens = ( s: StateForNewFetcherTests ) => ( path: string ): Optional<
 }
 describe ( "test setup for new fetcher", () => {
   it ( "just check the rest works ", async () => {
-    const props: RestToTransformProps<StateForNewFetcherTests, SimpleMessage> = { fetchFn, mockJwt: true, d: restDetails, urlMutatorForRest: someConfig.restUrlMutator, pathToLens, messageL: someConfig.messageL, traceL: traceL (), stringToMsg: someConfig.stringToMsg }
+    const pageL = identityOptics<StateForNewFetcherTests> ().focusQuery ( 'pageSelection' )
+    const props: RestToTransformProps<StateForNewFetcherTests, SimpleMessage> = {
+      fetchFn, mockJwt: true, d: restDetails, urlMutatorForRest: someConfig.restUrlMutator, pathToLens, messageL: someConfig.messageL,
+      // @ts-ignore
+      pageL,
+      traceL: traceL (), stringToMsg: someConfig.stringToMsg
+    }
     const [ actual ] = await restToTransforms<StateForNewFetcherTests, SimpleMessage> ( props, () => empty, [ { name: 'someRestName', restAction: 'get' } ] )
     expect ( actual.restCommand ).toEqual ( { name: 'someRestName', restAction: 'get' } )
     expect ( actual.status ).toEqual ( 200 )

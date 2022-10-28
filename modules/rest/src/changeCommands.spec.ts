@@ -1,7 +1,8 @@
 import { defaultDateFn, HasSimpleMessages, safeArray, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson/utils";
 import { CopyCommand, copyCommandProcessor, CopyResultCommand, copyResultCommandProcessor, DeleteCommand, deleteCommandProcessor, DeleteMessageStrictCopySetProcessorsConfig, MessageCommand, messageCommandProcessor, modalCommandProcessors, ModalProcessorsConfig, restChangeCommandProcessors, RestAndInputProcessorsConfig, SetChangeCommand, setCommandProcessor, StrictCopyCommand, strictCopyCommandProcessor, deletePageTagsCommandProcessor, DeletePageTagsCommand, TimeStampCommand, confirmWindowCommandProcessors } from "./changeCommands";
-import { displayTransformsInState, lensBuilder, Lenses, parsePath } from "@focuson/lens";
+import { displayTransformsInState, identityOptics, lensBuilder, Lenses, parsePath } from "@focuson/lens";
 import { TagHolder } from "@focuson/template";
+
 
 
 interface abc {
@@ -12,6 +13,7 @@ interface yz {
   z?: abc
 }
 interface StateForChangeCommands extends HasSimpleMessages {
+  pageSelection: [],
   fromA?: abc,
   toA?: abc,
   x?: yz,
@@ -24,18 +26,18 @@ const resultPathToLens = ( p: string ) => parsePath ( p, lensBuilder (
 // @ts-ignore
   { '/': Lenses.identity<yz> ( 'resultPath' ) }, {} ) )
 const defaultL = Lenses.identity<StateForChangeCommands> ( 'default' ).focusQuery ( 'x' ).focusQuery ( 'z' ).focusQuery ( 'a' )
-const empty: StateForChangeCommands = { messages: [] }
-const froma12: StateForChangeCommands = { messages: [], fromA: { a: { b: "one", c: "two" } } }
-const froma12Withz: StateForChangeCommands = { messages: [], fromA: { a: { b: "one", c: "two" } }, x: { z: { a: { b: 'from', c: 'default' } } } }
+const empty: StateForChangeCommands = { messages: [], pageSelection: [] }
+const froma12: StateForChangeCommands = { ...empty, fromA: { a: { b: "one", c: "two" } } }
+const froma12Withz: StateForChangeCommands = { ...empty, fromA: { a: { b: "one", c: "two" } }, x: { z: { a: { b: 'from', c: 'default' } } } }
 
-const froma12WithAMessage: StateForChangeCommands = { messages: [ { level: 'error', msg: 'a', time: 'someTime' } ], fromA: { a: { b: "one", c: "two" } } }
+const froma12WithAMessage: StateForChangeCommands = { ...empty, messages: [ { level: 'error', msg: 'a', time: 'someTime' } ], fromA: { a: { b: "one", c: "two" } } }
 const config: DeleteMessageStrictCopySetProcessorsConfig<StateForChangeCommands, SimpleMessage> = {
   s: empty,
   dateFn: defaultDateFn,
   toPathTolens, messageL: simpleMessagesL (), stringToMsg: stringToSimpleMsg ( testDateFn, 'info' ),
 }
 const restConfig: RestAndInputProcessorsConfig<StateForChangeCommands, any, SimpleMessage> = {
-  ...config, resultPathToLens
+  ...config, resultPathToLens, pageL: identityOptics<StateForChangeCommands> ().focusQuery ( 'pageSelection' )
 }
 const modalConfig: ModalProcessorsConfig<StateForChangeCommands, SimpleMessage> = {
   ...config, fromPathTolens, defaultL,
@@ -205,7 +207,7 @@ describe ( "copyResultCommandProcessor", () => {
 describe ( "timeStampCommandProcessor", () => {
   it ( "should place the browser time date to the path", () => {
     const command: TimeStampCommand = { command: 'timestamp', path: '/z/a/b' }
-    expect ( displayTransformsInState ( empty, safeArray ( confirmWindowProcessor ( { messages: [] } ) ( command ) ) ) ).toEqual (
+    expect ( displayTransformsInState ( empty, safeArray ( confirmWindowProcessor ( empty ) ( command ) ) ) ).toEqual (
       [ { "opt": "I.focus?(toA).focus?(z).focus?(a).focus?(b)", "value": "timeForTest" } ] )
   } )
 

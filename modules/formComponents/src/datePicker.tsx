@@ -60,8 +60,9 @@ export type DateRange<S, C> = DateRangeInPast<S, C> | DateRangeInFuture<S, C> | 
 
 
 export const parseDate = ( prefix: string, format: string ) => ( date: string ): Date | string[] => {
+  if ( typeof date !== 'string' ) throw new Error ( `${prefix}. parseDate called with non string. Type is ${typeof date}. Value is ${JSON.stringify(date)}` )
   let result = parse ( date.replace ( /\//g, '-' ), format.replace ( /\//g, '-' ), new Date () );
-  return isNaN ( result.getTime () ) ? [ `${prefix}Please use date format ${format.toLowerCase()}` ] : result;
+  return isNaN ( result.getTime () ) ? [ `${prefix}Please use date format ${format.toLowerCase ()}` ] : result;
 };
 
 type DateValidation = ( date: Date ) => string[]
@@ -213,7 +214,7 @@ export interface DatePickerProps<S, C> extends CommonStateProps<S, string, C>, I
 
 export type DatePickerSelectFn = <S extends any, C extends ModalContext<S>>( debug: boolean, props: DatePickerProps<S, C> ) => ( eventName: SetJsonReasonEvent, date: string | undefined ) => void
 
-export const defaultDatePickerWithExtraTxs= <S extends any, C extends ModalContext<S>> ( txs: ( props: DatePickerProps<S, C>, value: string|undefined ) => Transform<S, any>[] ) => ( debug: boolean, props: DatePickerProps<S, C> ) =>
+export const defaultDatePickerWithExtraTxs = <S extends any, C extends ModalContext<S>> ( txs: ( props: DatePickerProps<S, C>, value: string | undefined ) => Transform<S, any>[] ) => ( debug: boolean, props: DatePickerProps<S, C> ) =>
   ( eventName: SetJsonReasonEvent, date: string | undefined ) => {
     const { id, state, onChange, parentState, regexForChange } = props
     const {} = state.context
@@ -222,7 +223,7 @@ export const defaultDatePickerWithExtraTxs= <S extends any, C extends ModalConte
     if ( debug ) console.log ( 'datePicker.defaultDatePickerOnCheck', id, 'date', date )
     state.massTransform ( reasonFor ( 'DatePicker', eventName, id ) ) ( [ state.optional, () => date ], ...txs ( props, date ), ...changeTxs )
   };
-export const defaultDatePickerOnCheck: DatePickerSelectFn  = defaultDatePickerWithExtraTxs ( () => [] )
+export const defaultDatePickerOnCheck: DatePickerSelectFn = defaultDatePickerWithExtraTxs ( () => [] )
 function myformat ( e: any, dateFormat: string ) {
   try {
     return format ( e, dateFormat );

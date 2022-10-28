@@ -21,8 +21,8 @@ export interface RestButtonProps<S, C, MSGs> extends CommonStateProps<S, any, C>
 }
 
 export interface RestLoadWindowWithoutRestProps {
-  msg: string
-  button: string
+  msg?: string
+  button?: string
   className?: string
   onClose?: ModalChangeCommands | ModalChangeCommands[]
 
@@ -34,12 +34,12 @@ export interface RestLoadWindowProps extends RestLoadWindowWithoutRestProps {
 export function RestLoadWindow<S, C extends ModalContext<S>> ( state: LensState<S, any, C>, { msg, button, rest, action, onClose, className }: RestLoadWindowProps ): JSX.Element {
   const id = 'rest.load.window'
   function onClick ( e: any ) {
-    const txs = closeOnePageTxs ( '', state, toArray ( onClose ) )
+    const txs = closeOnePageTxs ( 'RestLoadWindow', state, toArray ( onClose ) )
     state.massTransform ( reasonFor ( 'RestLoadWindow', "onChange", id, JSON.stringify ( { rest, action } ) ) ) ( ...txs )
   }
   return <div className={className ? className : 'dialog confirm-window'}>
-    <p>{msg}</p>
-    <button onClick={onClick}>{button}</button>
+    {msg && <p>{msg}</p>}
+    <button onClick={onClick}>{button ? button : 'close'}</button>
   </div>
 }
 
@@ -66,12 +66,13 @@ export function RestButton<S, C extends ModalContext<S>> ( props: RestButtonProp
     debounceRef.current = now
     const realvalidate = validate === undefined ? true : validate
     if ( realvalidate && hasValidationErrorAndReport ( id, state, dateFn ) ) return
-    const restCommand = { restAction: action, name: rest, changeOnSuccess: onSuccess, on404 };
+    const restCommand: RestCommand = { restAction: action, name: rest, changeOnSuccess: onSuccess, on404 };
+    const realRestCommand: RestCommand = loader ? { ...restCommand, changeOnSuccess: [ ...toArray ( restCommand.changeOnSuccess ), { command: 'deleteRestWindow', rest: restCommand.name, action: restCommand.restAction } ] } : restCommand
     if ( isConfirmWindow ( confirm ) )
-      openConfirmWindow ( confirm, 'justclose', [], state, 'RestButton', id, 'onClick', restCommand )
+      openConfirmWindow ( confirm, 'justclose', [], state, 'RestButton', id, 'onClick', realRestCommand )
     else if ( confirmIt ( state, confirm ) ) {
       const loadWindowTxs = loader ? openRestLoadWindowTxs ( { ...loader, rest, action }, state ) : []
-      const restTx: Transform<S, any> = [ state.context.restL, old => [ ...old, restCommand ] ];
+      const restTx: Transform<S, any> = [ state.context.restL, old => [ ...old, realRestCommand ] ];
       state.massTransform ( reasonFor ( 'RestButton', 'onClick', id ) ) ( restTx, ...loadWindowTxs )
     }
   }

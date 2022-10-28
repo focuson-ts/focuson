@@ -1,10 +1,10 @@
 import { closeOnePageTxs, findClosePageTxs, ModalContext } from "./modalCommitAndCancelButton";
 import { LensState, reasonFor } from "@focuson/state";
 import { fromPathGivenState, PageSelection, pageSelections, popPage } from "../pageSelection";
-import { lensBuilder, Lenses, parsePath, Transform } from "@focuson/lens";
+import { Optional, Transform } from "@focuson/lens";
 import { DisplayArbitraryPageFn } from "../pageConfig";
 import { replaceTextUsingPath } from "../replace";
-import { CommandButtonChangeCommands, ConfirmWindowChangeCommands, confirmWindowCommandProcessors, ModalChangeCommands, processChangeCommandProcessor, RestAndInputProcessorsConfig, restChangeCommandProcessors } from "@focuson/rest";
+import { ConfirmWindowChangeCommands, confirmWindowCommandProcessors, ModalChangeCommands, PageSelectionForDeleteRestWindowCommand, processChangeCommandProcessor, RestAndInputProcessorsConfig } from "@focuson/rest";
 import { SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
 
 export interface ConfirmProps {
@@ -64,9 +64,13 @@ export const makeConfirmCommitWindow = <S, D, C extends ModalContext<S>> ( makeF
   const closeId = id + '.close';
 
   function makeProcessor () {
-    const { simpleMessagesL, pathToLens, dateFn } = state.context
+    const { simpleMessagesL, pathToLens, dateFn, pageSelectionL } = state.context
     const resultPathToLens = fromPathGivenState ( state )
-    const config: RestAndInputProcessorsConfig<S, any, SimpleMessage> = { resultPathToLens, messageL: simpleMessagesL, toPathTolens: resultPathToLens, stringToMsg: stringToSimpleMsg ( dateFn ), s: state.main, dateFn }
+    const pageL:  Optional<S, PageSelectionForDeleteRestWindowCommand[]> = pageSelectionL
+    const config: RestAndInputProcessorsConfig<S, any, SimpleMessage> = {
+      resultPathToLens, messageL: simpleMessagesL, pageL, toPathTolens: resultPathToLens,
+      stringToMsg: stringToSimpleMsg ( dateFn ), s: state.main, dateFn
+    }
     const processor = confirmWindowCommandProcessors ( config ) ( state.main );
     return processor
   }

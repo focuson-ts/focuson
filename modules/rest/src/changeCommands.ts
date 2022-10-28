@@ -1,6 +1,7 @@
 import { Optional, replaceTextFn, Transform } from "@focuson/lens";
 import { TagHolder } from "@focuson/template";
-import { DateFn, filterObject, SimpleMessageLevel, toArray } from "@focuson/utils";
+import { DateFn, filterObject, RestAction, SimpleMessageLevel, toArray } from "@focuson/utils";
+
 
 export interface ChangeCommand {
   command: string
@@ -116,6 +117,38 @@ export interface DeleteAllMessages extends ChangeCommand {
 export const processDeleteAllMessagesCommand = <S, MSGs> ( messageL: Optional<S, MSGs[]> ): ChangeCommandProcessor<S> =>
   ( c: ChangeCommand ) => c.command === 'deleteAllMessages' ? [ [ messageL, old => [] ] ] : undefined;
 
+interface RestAndAction {
+  rest: string,
+  action: RestAction
+}
+export interface PageSelectionForDeleteRestWindowCommand {
+  pageName: string
+  arbitraryParams?: RestAndAction
+}
+export interface DeleteRestWindowCommand extends RestAndAction {
+  command: 'deleteRestWindow',
+  rest: string,
+  action: RestAction
+}
+export function isDeleteRestWindowCommand ( c: ChangeCommand ): c is DeleteRestWindowCommand {
+  return c.command === 'deleteRestWindow'
+}
+function removeLastWindowIfRest ( rest: string, action: RestAction, ps: PageSelectionForDeleteRestWindowCommand[] ) {
+  console.log ( 'removeLastWindowIfRest', rest, action, ps )
+  if ( ps.length > 0 ) {
+    const p = ps[ ps.length - 1 ]
+    console.log ( 'removeLastWindowIfRest - p', p )
+    if ( p.pageName === 'restLoader' && p.arbitraryParams?.rest === rest && p.arbitraryParams?.action.toString () === action.toString () ) {
+      console.log ( 'removeLastWindowIfRest - will do it', ps.slice ( 0, -1 ) )
+      return ps.slice ( 0, -1 )
+    }
+  }
+  return ps
+}
+export const processDeleteRestWindowCommand = <S, MSGs> ( pageL: Optional<S, PageSelectionForDeleteRestWindowCommand[]> ): ChangeCommandProcessor<S> =>
+  ( c: ChangeCommand ) => isDeleteRestWindowCommand ( c ) ? [ [ pageL, old => removeLastWindowIfRest ( c.rest, c.action, old ) ] ] : undefined;
+
+
 export const composeChangeCommandProcessors = <S> ( ...ps: ChangeCommandProcessor<S>[] ): ChangeCommandProcessor<S> =>
   ( c ) => { return ps.reduce<Transform<S, any>[] | undefined> ( ( acc, p ) => acc === undefined ? p ( c ) : acc, undefined ); };
 
@@ -128,7 +161,7 @@ export function processChangeCommandProcessor<S> ( errorPrefix: string, p: Chang
 }
 
 type CommonCommands = DeleteCommand | MessageCommand | SetChangeCommand | DeleteAllMessages | TimeStampCommand
-export type RestChangeCommands = CommonCommands | CopyResultCommand
+export type RestChangeCommands = CommonCommands | CopyResultCommand | DeleteRestWindowCommand
 export type ModalChangeCommands = CommonCommands | CopyCommand
 export type NewPageChangeCommands = CommonCommands | CopyCommand | DeletePageTagsCommand
 export type InputChangeCommands = CommonCommands | StrictCopyCommand
@@ -148,7 +181,8 @@ export interface DeleteMessageStrictCopySetProcessorsDeleteTagsConfig<S, MSGs> e
   pageNameFn: ( s: S ) => string,
 }
 export interface RestAndInputProcessorsConfig<S, Result, MSGs> extends DeleteMessageStrictCopySetProcessorsConfig<S, MSGs> {
-  resultPathToLens: ( path: string ) => Optional<Result, any>,
+  resultPathToLens: ( path: string ) => Optional<Result, any>
+  pageL: Optional<S, PageSelectionForDeleteRestWindowCommand[]>
 }
 export interface HasModalProcessorsConfig<S, MSGS> {
   processorsConfig: ModalProcessorsConfig<S, MSGS>
@@ -165,7 +199,7 @@ export function deleteMessageSetProcessors<S, MSGs> ( config: DeleteMessageStric
     processDeleteAllMessagesCommand ( messageL ),
     deleteCommandProcessor ( toPathTolens ),
     setCommandProcessor ( toPathTolens ),
-    timeStampCommandProcessor(toPathTolens, dateFn),
+    timeStampCommandProcessor ( toPathTolens, dateFn ),
     messageCommandProcessor ( config )
   )
 }
@@ -174,6 +208,7 @@ export const restChangeCommandProcessors = <S, Result, MSGs> ( config: RestAndIn
   ( result: Result ) =>
     composeChangeCommandProcessors (
       deleteMessageSetProcessors ( config ),
+      processDeleteRestWindowCommand ( config.pageL ),
       copyResultCommandProcessor ( config.resultPathToLens, config.toPathTolens ) ( result ) );
 
 export const modalCommandProcessors = <S, MSGs> ( config: ModalProcessorsConfig<S, MSGs> ) => ( s: S ) => {

@@ -4,7 +4,7 @@ import { FetcherTree, loadTree } from "@focuson/fetcher";
 import { lensState, LensState } from "@focuson/state";
 import { identityOptics, Lenses, massTransform, NameAndLens, Optional, Transform } from "@focuson/lens";
 import { DateFn, defaultDateFn, errorMonad, FetchFn, HasDateFn, HasSimpleMessages, NameAnd, RestAction, safeArray, safeString, SimpleMessage, SimpleMessageLevel, stringToSimpleMsg } from "@focuson/utils";
-import { HasMessagesPostProcessor, HasRestCommandL, HasRestCommands, ModalProcessorsConfig, rest, RestCommand, RestCommandAndTxs, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson/rest";
+import { HasMessagesPostProcessor, HasRestCommandL, HasRestCommands, ModalProcessorsConfig, rest, RestAndInputProcessorsConfig, RestCommand, RestCommandAndTxs, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson/rest";
 import { HasTagHolder, TagHolder } from "@focuson/template";
 import { AllFetcherUsingRestConfig, restCommandsFromFetchers } from "./tagFetcherUsingRest";
 import { FocusOnDebug } from "./debug";
@@ -57,11 +57,11 @@ export interface HasEnvironment {
 }
 
 export type Dependencies = NameAnd<any>
-export interface HasDependencies{
+export interface HasDependencies {
   dependencies?: Dependencies
 }
 export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasPathToLens<S>,
-  HasFetchersAndRest<S, SimpleMessage>, HasDateFn, HasGetCurrentMain<S>, HasMessagesPostProcessor<SimpleMessage>, HasMockJwt,HasDependencies {
+  HasFetchersAndRest<S, SimpleMessage>, HasDateFn, HasGetCurrentMain<S>, HasMessagesPostProcessor<SimpleMessage>, HasMockJwt, HasDependencies {
   commonIds: NameAndLens<S>;
 }
 export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSelection & HasRestCommands & HasSimpleMessages & HasTagHolder>
@@ -172,7 +172,7 @@ export const processRestsAndFetchers = <S, Context extends FocusOnContext<S>, MS
     if ( debug ) console.log ( 'processRestsAndFetchers - pageName', pageName )
     const fromFetchers = restCommandsFromFetchers ( tagHolderL, newFetchers, restDetails, pageName, s )
     const allCommands: RestCommand[] = [ ...restCommands, ...fromFetchers ]
-    const restProps: RestToTransformProps<S, MSGs> = { fetchFn, mockJwt, d: restDetails, pathToLens, messageL, stringToMsg, traceL: traceL (), urlMutatorForRest: restUrlMutator }
+    const restProps: RestToTransformProps<S, MSGs> = { fetchFn, mockJwt, d: restDetails, pathToLens, messageL, pageL: context.pageSelectionL, stringToMsg, traceL: traceL (), urlMutatorForRest: restUrlMutator }
     const txs = await restToTransforms ( restProps, sFn, allCommands )
     const result = addTagTxsForFetchers ( config.tagHolderL, txs )
     return result
@@ -226,6 +226,22 @@ export function makeProcessorsConfig<S, Context extends FocusOnContext<S>> ( sta
   }
   return processorsConfig;
 }
+
+export function makeRestProcessorsConfig<S, Context extends FocusOnContext<S>> ( startS: S, context: Context ) {
+  const pathToLens = fromPathGivenState ( lensState ( startS, () => {throw Error ()}, '', context ) )
+  const processorsConfig: RestAndInputProcessorsConfig<S, any, SimpleMessage> = {
+    // pageNameFn: ( s: S ) => mainPage<S, Context> ( lensState ( s, () => {throw Error ()}, '', context ) ).pageName,
+    // tagHolderL: context.tagHolderL,
+    messageL: context.simpleMessagesL,
+    dateFn: context.dateFn,
+    stringToMsg: stringToSimpleMsg ( defaultDateFn, 'info' ),
+    s: startS,
+    toPathTolens: pathToLens,
+    resultPathToLens: pathToLens,
+    pageL: context.pageSelectionL
+  }
+  return processorsConfig;
+}
 export function setJsonWithDispatcherSettingTrace<S, Context extends FocusOnContext<S>> ( config: FocusOnConfig<S, any, SimpleMessage>,
                                                                                           context: Context,
                                                                                           dispatch: FocusonDispatcher<S> ): ( sFn: () => S, reason: any ) => Promise<S> {
@@ -276,7 +292,7 @@ export function setJsonForFocusOn<S, Context extends FocusOnContext<S>> ( config
       const withPreMutate = preMutate ( withDebug )
       const processorsConfig = makeProcessorsConfig ( main, context );
       const firstPageProcesses: S = preMutateForPages<S, Context> ( context, processorsConfig ) ( withPreMutate )
-      const restProps: RestToTransformProps<S, SimpleMessage> = { fetchFn, mockJwt: context.mockJwt, d: restDetails, pathToLens, messageL, stringToMsg, traceL: traceL (), urlMutatorForRest: config.restUrlMutator }
+      const restProps: RestToTransformProps<S, SimpleMessage> = { fetchFn, mockJwt: context.mockJwt, d: restDetails, pathToLens, messageL, pageL: context.pageSelectionL, stringToMsg, traceL: traceL (), urlMutatorForRest: config.restUrlMutator }
       const afterRest = await rest ( restProps, restL, () => firstPageProcesses )
       if ( afterRest ) newStateFn ( afterRest )
       let newMain = await loadTree ( fetchers, afterRest, fetchFn, debug )
