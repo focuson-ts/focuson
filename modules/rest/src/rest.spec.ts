@@ -166,6 +166,7 @@ describe ( "rest", () => {
       { restAction: 'updateWithoutFetch', name: 'one' },
     ) );
     expect ( result ).toEqual ( {
+      ...emptyRestState,
       "fullDomain": {
         "fromApi": "Extracted[200].from/some/url/someToken/update?nontoken=nontoken&id=someId",
         "idFromFullDomain": "someId"
@@ -177,9 +178,7 @@ describe ( "rest", () => {
         { "level": "success", "msg": "200/\"from/some/url/someToken/createWithoutFetch?nontoken=nontoken\"", "time": "timeForTest" },
         { "level": "success", "msg": "200/\"from/some/url/someToken/create?nontoken=nontoken\"", "time": "timeForTest" },
         { "level": "success", "msg": "200/\"from/some/url/someToken/get?nontoken=nontoken&id=someId\"", "time": "timeForTest" }
-      ],
-      "restCommands": [],
-      "token": "someToken"
+      ]
     } )
   } )
   it ( "should fetch the results and put them into the state, removing the rest commands mockJwt false", async () => {
@@ -192,6 +191,7 @@ describe ( "rest", () => {
       { restAction: 'updateWithoutFetch', name: 'one' },
     ) );
     expect ( result ).toEqual ( {
+      ...emptyRestState,
       "fullDomain": { "fromApi": "Extracted[200].from/some/url/someToken/update?nontoken=nontoken&id=someId", "idFromFullDomain": "someId" },
       "messages": [
         { "level": "success", "msg": "200/\"from/some/url/someToken/updateWithoutFetch?nontoken=nontoken\"", "time": "timeForTest" },
@@ -200,9 +200,7 @@ describe ( "rest", () => {
         { "level": "success", "msg": "200/\"from/some/url/someToken/createWithoutFetch?nontoken=nontoken\"", "time": "timeForTest" },
         { "level": "success", "msg": "200/\"from/some/url/someToken/create?nontoken=nontoken\"", "time": "timeForTest" },
         { "level": "success", "msg": "200/\"from/some/url/someToken/get?nontoken=nontoken&id=someId\"", "time": "timeForTest" }
-      ],
-      "restCommands": [],
-      "token": "someToken"
+      ]
     } )
   } )
 
