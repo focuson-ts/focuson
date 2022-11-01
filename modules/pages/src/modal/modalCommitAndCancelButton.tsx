@@ -1,7 +1,7 @@
 import { applyPageOps, currentPageSelectionTail, fromPathGivenState, mainPage, PageSelection, PageSelectionContext, pageSelections, popPage, popTwoPages } from "../pageSelection";
 import { LensProps, lensState, LensState, reasonFor, SetJsonReasonEvent } from "@focuson/state";
 import { HasDateFn, safeArray, safeString, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
-import { Lenses, Optional, Transform } from "@focuson/lens";
+import { displayTransformsInState, Lenses, Optional, Transform } from "@focuson/lens";
 import { HasRestCommandL, ModalChangeCommands, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand } from "@focuson/rest";
 import { getRefForValidateLogicToButton, hasValidationErrorAndReport } from "../validity";
 import { HasSimpleMessageL } from "../simpleMessage";
@@ -175,7 +175,11 @@ export function closeOnePageTxs<S, Context extends ModalContext<S>> ( errorPrefi
   const txs = findClosePageTxs ( errorPrefix, state, pageToClose, -1, toArray ( change ) )
   if ( !txs ) return undefined
   const loaderPages = pageToClose.loader && pageToClose.rest ? [ openRestLoadWindowPageSelection ( { ...pageToClose.loader, rest: pageToClose.rest.name, action: pageToClose.rest.restAction }, state.context.dateFn ) ] : []
-  const pageCloseTx: Transform<S, any> = [ pageSelectionL, ( ps: PageSelection[] ) => [ ...ps.slice ( 0, -1 ), loaderPages ] ]
+  const pageCloseTx: Transform<S, any> = [ pageSelectionL, ( ps: PageSelection[] ) => {
+    const result = [ ...ps.slice ( 0, -1 ), ...loaderPages ];
+    console.log ( 'closeOnePageTxs', ps, loaderPages, result, )
+    return result;
+  } ]
   return [ ...txs, pageCloseTx ];
 }
 
@@ -194,6 +198,7 @@ export function ModalCommitButton<S, Context extends ModalContext<S>> ( c: Modal
     const pageCloseTxs = closeTwoWindowsNotJustOne ?
       closeTwoPagesTxs ( `ModalCommit ${id}`, state, toArray ( change ) ) :
       closeOnePageTxs ( `ModalCommit ${id}`, state, toArray ( change ) );
+    console.log('ModalCommitButton.pageCloseTxs', displayTransformsInState(state.main,pageCloseTxs))
     if ( pageCloseTxs.length > 0 )
       state.massTransform ( reasonFor ( 'ModalCommit', 'onClick', id ) ) ( ...pageCloseTxs )
     else

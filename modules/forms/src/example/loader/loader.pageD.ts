@@ -8,15 +8,30 @@ const loaderDataD: ExampleDataD = {
     someData: { dataDD: StringDD }
   }
 }
-
+export const loaderModalPage2: ExampleModalPage = {
+  display: { dataDD: loaderDataD, target: '~/data' },
+  modes: [ 'view', 'edit' ],
+  name: "LoaderModal2",
+  pageType: 'ModalPopup',
+  buttons: {
+    cancel: { control: 'ModalCancelButton' },
+    commit: { control: 'ModalCommitButton' },
+    commit2: { control: 'ModalCommitButton',text: 'commit2', closeTwoWindowsNotJustOne: true },
+  },
+}
 export const loaderModalPage: ExampleModalPage = {
   display: { dataDD: loaderDataD, target: '~/data' },
   modes: [ 'view', 'edit' ],
   name: "LoaderModal",
   pageType: 'ModalPopup',
   buttons: {
-    cancel: { control: 'ModalCancelButton' },
+    modalWithRest: {
+      control: 'ModalButton', focusOn: '~/data', modal: loaderModalPage2, mode: 'edit',
+      restOnCommit: { restName: 'loader', action: { state: 'demo' }, result: 'nothing' },
+      loader: { msg: 'ModalWithRest2' }
+    },
     commit: { control: 'ModalCommitButton' },
+    cancel: { control: 'ModalCancelButton' },
   },
 }
 export const loaderRestD: ExampleRestD = {
@@ -32,7 +47,7 @@ export const loaderPageD: ExampleMainPage = {
   display: { dataDD: loaderDataD, target: '~/data' },
   modes: [ 'view' ],
   name: "Loader",
-  modals:[{modal: loaderModalPage}],
+  modals:[{modal: loaderModalPage},{modal: loaderModalPage2}],
   pageType: 'MainPage',
   domain: { data: { dataDD: loaderDataD } },
   rest: { loader: { rest: loaderRestD, targetFromPath: '~/data' } },

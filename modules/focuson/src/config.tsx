@@ -212,6 +212,7 @@ export const dispatchRestAndFetchCommands = <S, Context extends FocusOnContext<S
 
 
 export function makeProcessorsConfig<S, Context extends FocusOnContext<S>> ( startS: S, context: Context ) {
+  console.log('MakeProcessorsConfig', startS)
   const pathToLens = fromPathGivenState ( lensState ( startS, () => {throw Error ()}, '', context ) )
   const processorsConfig: ModalProcessorsConfig<S, SimpleMessage> = {
     pageNameFn: ( s: S ) => mainPage<S, Context> ( lensState ( s, () => {throw Error ()}, '', context ) ).pageName,
