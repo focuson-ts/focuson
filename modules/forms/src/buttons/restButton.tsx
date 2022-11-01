@@ -1,12 +1,11 @@
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
-import { decamelize, RequiredCopyDetails, RestAction, RestResult, toArray } from "@focuson/utils";
+import { decamelize, RequiredCopyDetails, RestAction, RestResult, toArray, } from "@focuson/utils";
 import { indentList, opt, optT } from "../codegen/codegen";
 import { restDetailsName } from "../codegen/names";
 import { EnabledBy, enabledByString } from "./enabledBy";
 import { ButtonWithControl } from "./allButtons";
-import { CopyResultCommand, DeleteCommand, MessageCommand, RestChangeCommands } from "@focuson/rest";
-import { ConfirmWindow } from "@focuson/pages";
-import { RestLoadWindowProps, RestLoadWindowWithoutRestProps } from "@focuson/form_components";
+import { CopyResultCommand, DeleteCommand, MessageCommand, RestChangeCommands, } from "@focuson/rest";
+import { ConfirmWindow, RestLoadWindowWithoutRestProps } from "@focuson/pages";
 
 
 function findFullOnSuccess ( onSuccess: RestChangeCommands[], copyDetails: RequiredCopyDetails[], deletes: string[], messages: string[] ) {

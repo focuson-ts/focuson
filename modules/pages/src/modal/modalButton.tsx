@@ -8,7 +8,8 @@ import { isMainPageDetails, MultiPageDetails } from "../pageConfig";
 import { HasSimpleMessageL } from "../simpleMessage";
 import { HasTagHolderL } from "@focuson/template";
 import { wrapWithErrors } from "../errors";
-import * as Path from "path";
+import { RestLoadWindowWithoutRestProps } from "./restLoader";
+
 
 export interface ModalDebug {
   modalDebug?: boolean
@@ -28,6 +29,7 @@ export interface CommonModalButtonProps<S, Context> extends CustomButtonType {
   pageMode: PageMode,
   pageParams?: PageParams;
   rest?: RestCommand,
+  loader?: RestLoadWindowWithoutRestProps
   createEmpty?: any
   change?: ModalChangeCommands | ModalChangeCommands[]
   changeOnClose?: ModalChangeCommands | ModalChangeCommands[]
@@ -110,7 +112,7 @@ function makeModalProcessorsConfig<S, Context extends PageSelectionContext<S> & 
 export function ModalButton<S extends any, Context extends PageSelectionContext<S> & HasSimpleMessageL<S> & HasRestCommandL<S> & HasTagHolderL<S>> ( props: ModalButtonProps<S, Context> ): JSX.Element {
   const {
           id, text, enabledBy, state, copy, copyJustString, pageMode, rest, copyOnClose, createEmpty, change, setToLengthOnClose,
-          createEmptyIfUndefined, pageParams, buttonType, dateFn, changeOnClose, restOnOpen, pageOp
+          createEmptyIfUndefined, pageParams, buttonType, dateFn, changeOnClose, restOnOpen, pageOp, loader
         } = props
 
   const onClick = () => {
@@ -121,7 +123,7 @@ export function ModalButton<S extends any, Context extends PageSelectionContext<
     const focusOn = isModal ( props ) ? props.focusOn : undefined
     const pageName = isModal ( props ) ? props.modal : props.main.toString ()
     const newPageSelection: PageSelection = {
-      pageName, firstTime: true, pageMode, rest, focusOn, copyOnClose, setToLengthOnClose,
+      pageName, firstTime: true, pageMode, rest,loader, focusOn, copyOnClose, setToLengthOnClose,
       pageParams, time: dateFn (), changeOnClose
     };
     if ( debug ) console.log ( `${errorPrefix} newPageSelection`, newPageSelection )

@@ -4,6 +4,8 @@ import { HasMultiPageDetails, isMainPageDetails } from "./pageConfig";
 import { CopyDetails, safeArray, safeObject } from "@focuson/utils";
 import { ModalChangeCommands, RestCommand } from "@focuson/rest";
 import { PageDetailsForCombine } from "./selectedPage";
+import { RestLoadWindowWithoutRestProps } from "./modal/restLoader";
+
 
 
 export type PageMode = 'view' | 'create' | 'edit'
@@ -35,6 +37,7 @@ export interface PageSelection {
   pageMode: PageMode;
   onClose?: PageOnClose;
   rest?: RestCommand;
+  loader?: RestLoadWindowWithoutRestProps
   copyOnClose?: CopyDetails[];
   changeOnClose?: ModalChangeCommands | ModalChangeCommands[];
   focusOn?: string;
@@ -105,6 +108,9 @@ export function popTwoPages<S, Context extends HasPageSelectionLens<S>> ( lensSt
 
 export function currentPageSelection<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context> ): PageSelection[] {
   return safeArray ( state.context.pageSelectionL.getOption ( state.main ) )
+}
+export function currentPageSelectionHead<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context> ): PageSelection {
+  return safeArray ( state.context.pageSelectionL.getOption ( state.main ) )[0]
 }
 export function currentPageSelectionTail<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context> ): PageSelection {
   return pageSelections ( state ).slice ( -1 )?.[ 0 ]

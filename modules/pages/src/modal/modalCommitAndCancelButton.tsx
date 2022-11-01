@@ -4,7 +4,7 @@ import { HasDateFn, safeArray, safeString, SimpleMessage, stringToSimpleMsg, toA
 import { Lenses, Optional, Transform } from "@focuson/lens";
 import { HasRestCommandL, ModalChangeCommands, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand } from "@focuson/rest";
 import { getRefForValidateLogicToButton, hasValidationErrorAndReport } from "../validity";
-import { HasSimpleMessageL, simpleMessagesL } from "../simpleMessage";
+import { HasSimpleMessageL } from "../simpleMessage";
 import { CustomButtonType, getButtonClassName } from "../common";
 import React from "react";
 import { isMainPageDetails } from "../pageConfig";
@@ -12,6 +12,7 @@ import { replaceTextUsingPath } from "../replace";
 import { HasTagHolderL } from "@focuson/template";
 import { closeTwoPagesTxs, ConfirmActions, ConfirmProps, ConfirmWindow, isConfirmWindow } from "./confirmWindow";
 import { wrapWithErrors } from "../errors";
+import { openRestLoadWindowPageSelection, openRestLoadWindowTxs } from "./restLoader";
 
 export interface HasPathToLens<S> {
   pathToLens: ( s: S, currentLens?: Optional<S, any> ) => ( path: string ) => Optional<S, any>
@@ -85,7 +86,7 @@ export function ModalCancelButton<S, Context extends ModalContext<S>> ( { id, st
         stringToMsg: stringToSimpleMsg ( dateFn, 'info' ),
         fromPathTolens,
         toPathTolens,
-        defaultL: Lenses.identity(''),
+        defaultL: Lenses.identity ( '' ),
         messageL: simpleMessagesL,
         s: state.main
       };
@@ -131,10 +132,11 @@ export function findClosePageTxs<S, C extends PageSelectionContext<S> & HasRestC
   state: LensState<S, any, C>,
   pageToClose: PageSelection,
   pageOffset: number, // typically -1 if we are closing the last page. -2 if we are closing the page before that.
-  otherCommands: ModalChangeCommands[] ): Transform<S, any>[] | undefined {
+  otherCommands: ModalChangeCommands[], ): Transform<S, any>[] | undefined {
   const { dateFn, pageSelectionL, restL, tagHolderL, simpleMessagesL } = state.context
   if ( !pageToClose ) return undefined
   const rest = pageToClose?.rest;
+  const loader = pageToClose.loader
   const copyOnClose = pageToClose?.copyOnClose
 
   const toPathTolens = fromPathGivenState ( state, ps => ps.slice ( 0, -1 ) );
@@ -142,7 +144,9 @@ export function findClosePageTxs<S, C extends PageSelectionContext<S> & HasRestC
 
   const focusLensForFrom = findFocusL ( errorPrefix, state, fromPathTolens, ps => pageOffset >= -1 ? ps : ps.slice ( 0, pageOffset + 1 ) )
   const focusLensForTo = findFocusL ( errorPrefix, state, toPathTolens, ps => ps.slice ( 0, pageOffset ) )
-  const restTransformers: Transform<S, any>[] = rest ? [ [ restL, ( ps: RestCommand[] ) => [ ...safeArray ( ps ), rest ] ] ] : []
+
+  const restTransformers: Transform<S, any>[] = rest && !loader ? openRestLoadWindowTxs ( { ...loader, rest: rest.name, action: rest.restAction }, pageSelectionL, dateFn ) : []
+
   const copyOnCloseTxs: Transform<S, any>[] = safeArray ( copyOnClose ).map ( ( { from, to } ) =>
     [ to ? toPathTolens ( to ) : focusLensForTo, () => (from ? fromPathTolens ( from ) : focusLensForFrom).getOption ( state.main ) ] )
 
@@ -170,9 +174,11 @@ export function closeOnePageTxs<S, Context extends ModalContext<S>> ( errorPrefi
   const pageToClose = currentPageSelectionTail ( state )
   const txs = findClosePageTxs ( errorPrefix, state, pageToClose, -1, toArray ( change ) )
   if ( !txs ) return undefined
-  const pageCloseTx: Transform<S, any> = [ pageSelectionL, ( ps: PageSelection[] ) => ps.slice ( 0, -1 ) ]
+  const loaderPages = pageToClose.loader && pageToClose.rest ? [ openRestLoadWindowPageSelection ( { ...pageToClose.loader, rest: pageToClose.rest.name, action: pageToClose.rest.restAction }, state.context.dateFn ) ] : []
+  const pageCloseTx: Transform<S, any> = [ pageSelectionL, ( ps: PageSelection[] ) => [ ...ps.slice ( 0, -1 ), loaderPages ] ]
   return [ ...txs, pageCloseTx ];
 }
+
 export function ModalCommitButton<S, Context extends ModalContext<S>> ( c: ModalCommitButtonProps<S, Context> ) {
   const { id, state, validate, confirm, enabledBy, buttonType, change, text, closeTwoWindowsNotJustOne } = c
   const { dateFn, pageSelectionL } = state.context
