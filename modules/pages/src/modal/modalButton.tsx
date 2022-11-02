@@ -8,7 +8,7 @@ import { isMainPageDetails, MultiPageDetails } from "../pageConfig";
 import { HasSimpleMessageL } from "../simpleMessage";
 import { HasTagHolderL } from "@focuson/template";
 import { wrapWithErrors } from "../errors";
-import { RestLoadWindowWithoutRestProps } from "./restLoader";
+import { RestLoadWindowWithoutRestProps } from "@focuson/rest";
 
 
 export interface ModalDebug {

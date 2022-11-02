@@ -133,20 +133,13 @@ export interface DeleteRestWindowCommand extends RestAndAction {
 export function isDeleteRestWindowCommand ( c: ChangeCommand ): c is DeleteRestWindowCommand {
   return c.command === 'deleteRestWindow'
 }
-function removeLastWindowIfRest ( rest: string, action: RestAction, ps: PageSelectionForDeleteRestWindowCommand[] ) {
-  console.log ( 'removeLastWindowIfRest', rest, action, ps )
-  if ( ps.length > 0 ) {
-    const p = ps[ ps.length - 1 ]
-    console.log ( 'removeLastWindowIfRest - p', p )
-    if ( p.pageName === 'restLoader' && p.arbitraryParams?.rest === rest && p.arbitraryParams?.action.toString () === action.toString () ) {
-      console.log ( 'removeLastWindowIfRest - will do it', ps.slice ( 0, -1 ) )
-      return ps.slice ( 0, -1 )
-    }
-  }
-  return ps
+function deleteRestWindowIfNeeded ( rest: string, action: RestAction, ps: PageSelectionForDeleteRestWindowCommand[] ) {
+  console.log ( 'deleteRestWindowIfNeeded', rest, action, ps )
+  const shouldDelete = ( p: PageSelectionForDeleteRestWindowCommand) => (p.pageName === 'restLoader' && p.arbitraryParams?.rest === rest && p.arbitraryParams?.action.toString () === action.toString ());
+  return ps.filter(p => !shouldDelete(p))
 }
 export const processDeleteRestWindowCommand = <S, MSGs> ( pageL: Optional<S, PageSelectionForDeleteRestWindowCommand[]> ): ChangeCommandProcessor<S> =>
-  ( c: ChangeCommand ) => isDeleteRestWindowCommand ( c ) ? [ [ pageL, old => removeLastWindowIfRest ( c.rest, c.action, old ) ] ] : undefined;
+  ( c: ChangeCommand ) => isDeleteRestWindowCommand ( c ) ? [ [ pageL, old => deleteRestWindowIfNeeded ( c.rest, c.action, old ) ] ] : undefined;
 
 
 export const composeChangeCommandProcessors = <S> ( ...ps: ChangeCommandProcessor<S>[] ): ChangeCommandProcessor<S> =>

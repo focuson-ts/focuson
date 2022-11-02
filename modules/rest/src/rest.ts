@@ -1,8 +1,10 @@
 import { reqFor, Tags, UrlConfig } from "@focuson/template";
 import { beforeAfterSeparator, defaultDateFn, FetchFn, isRestStateChange, NameAnd, RequiredCopyDetails, RestAction, RestStateChange, safeArray, safeObject, sortedEntries, toArray } from "@focuson/utils";
 import { identityOptics, lensBuilder, Lenses, massTransform, Optional, parsePath, Transform } from "@focuson/lens";
-import { ChangeCommand, CopyResultCommand, DeleteCommand, MessageCommand, processChangeCommandProcessor, PageSelectionForDeleteRestWindowCommand, RestAndInputProcessorsConfig, restChangeCommandProcessors, RestChangeCommands } from "./changeCommands";
+import { ChangeCommand, CopyResultCommand, DeleteCommand, MessageCommand, processChangeCommandProcessor, PageSelectionForDeleteRestWindowCommand, RestAndInputProcessorsConfig, restChangeCommandProcessors, RestChangeCommands, ModalChangeCommands } from "./changeCommands";
 import { MessagesPostProcessor, processAllMessageProcessors } from "./messages";
+
+
 
 
 
@@ -260,8 +262,15 @@ export interface RestToTransformProps<S, MSGS> {
   traceL: Optional<S, any[]>,
   stringToMsg: ( msg: string ) => MSGS,
 }
-
-
+export interface RestLoadWindowWithoutRestProps {
+  msg?: string
+  button?: string
+  className?: string
+  onClose?: ModalChangeCommands | ModalChangeCommands[]
+}
+export function addLoaderCommandsIfNeeded ( loader: RestLoadWindowWithoutRestProps, restCommand: RestCommand ) : RestCommand{
+  return loader ? { ...restCommand, changeOnSuccess: [ ...toArray ( restCommand.changeOnSuccess ), { command: 'deleteRestWindow', rest: restCommand.name, action: restCommand.restAction } ] } : restCommand;
+}
 /** Executes all the rest commands returning a list of transformations. It doesn't remove the rest commands from S
  This is valuable over the 'make a new S'for a few reasons:
  * It makes testing the rest logic easier

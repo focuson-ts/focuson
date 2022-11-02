@@ -27,7 +27,7 @@ export const loaderModalPage: ExampleModalPage = {
   buttons: {
     modalWithRest: {
       control: 'ModalButton', focusOn: '~/data', modal: loaderModalPage2, mode: 'edit',
-      restOnCommit: { restName: 'loader', action: { state: 'demo' }, result: 'nothing' },
+      restOnCommit: { restName: 'loader', action: { state: 'demo2' }, result: 'nothing' },
       loader: { msg: 'ModalWithRest2' }
     },
     commit: { control: 'ModalCommitButton' },
@@ -37,10 +37,11 @@ export const loaderModalPage: ExampleModalPage = {
 export const loaderRestD: ExampleRestD = {
   url: '/api/loader?{query}',
   dataDD: loaderDataD,
-  actions: [ { state: 'demo' } ],
+  actions: [ { state: 'demo' }, { state: 'demo2' } ],
   params: {},
   states:{
-    demo:{url: '/api/loader/demo?{query}', params:{}}
+    demo:{url: '/api/loader/demo?{query}', params:{}},
+    demo2:{url: '/api/loader/demo2?{query}', params:{}}
   }
 }
 export const loaderPageD: ExampleMainPage = {

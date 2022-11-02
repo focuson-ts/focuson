@@ -1,14 +1,13 @@
 import { DataD } from "../common/dataD";
-import { CommonRestOnCommit, isMainPage, isRestOnCommitRefresh, MainPageD, ModalPageD, PageD, RestOnCommit } from "../common/pageD";
-import { CopyStringDetails, PageMode, PageOps, PageParams, SetToLengthOnClose ,RestLoadWindowWithoutRestProps} from "@focuson/pages";
+import { CommonRestOnCommit, isRestOnCommitRefresh, MainPageD, ModalPageD, PageD, RestOnCommit } from "../common/pageD";
+import { CopyStringDetails, PageMode, PageOps, PageParams, SetToLengthOnClose } from "@focuson/pages";
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
 import { indentList, opt, optObj, optT } from "../codegen/codegen";
 import { emptyName, modalName, restDetailsName } from "../codegen/names";
 import { EnabledBy, enabledByString } from "./enabledBy";
 import { CopyDetails, decamelize, toArray, toArrayOrUndefined } from "@focuson/utils";
-import { ModalChangeCommands, RestCommand, } from "@focuson/rest";
+import { ModalChangeCommands, RestCommand, RestLoadWindowWithoutRestProps, } from "@focuson/rest";
 import { stateQueryForParams } from "../codegen/lens";
-
 
 
 function restCommandForButton<B, G> ( mainPage: MainPageD<B, G>, parent: PageD<B, G>, rest?: CommonRestOnCommit ): RestCommand {

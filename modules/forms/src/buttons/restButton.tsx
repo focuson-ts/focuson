@@ -4,8 +4,8 @@ import { indentList, opt, optT } from "../codegen/codegen";
 import { restDetailsName } from "../codegen/names";
 import { EnabledBy, enabledByString } from "./enabledBy";
 import { ButtonWithControl } from "./allButtons";
-import { CopyResultCommand, DeleteCommand, MessageCommand, RestChangeCommands, } from "@focuson/rest";
-import { ConfirmWindow, RestLoadWindowWithoutRestProps } from "@focuson/pages";
+import { CopyResultCommand, DeleteCommand, MessageCommand, RestChangeCommands, RestLoadWindowWithoutRestProps, } from "@focuson/rest";
+import { ConfirmWindow, } from "@focuson/pages";
 
 
 function findFullOnSuccess ( onSuccess: RestChangeCommands[], copyDetails: RequiredCopyDetails[], deletes: string[], messages: string[] ) {

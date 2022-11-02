@@ -4,8 +4,8 @@ import { HasMultiPageDetails, isMainPageDetails } from "./pageConfig";
 import { CopyDetails, safeArray, safeObject } from "@focuson/utils";
 import { ModalChangeCommands, RestCommand } from "@focuson/rest";
 import { PageDetailsForCombine } from "./selectedPage";
-import { RestLoadWindowWithoutRestProps } from "./modal/restLoader";
 
+import { RestLoadWindowWithoutRestProps } from "@focuson/rest";
 
 export type PageMode = 'view' | 'create' | 'edit'
 

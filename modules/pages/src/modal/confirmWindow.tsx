@@ -6,7 +6,6 @@ import { DisplayArbitraryPageFn } from "../pageConfig";
 import { replaceTextUsingPath } from "../replace";
 import { ConfirmWindowChangeCommands, confirmWindowCommandProcessors, ModalChangeCommands, PageSelectionForDeleteRestWindowCommand, processChangeCommandProcessor, RestAndInputProcessorsConfig } from "@focuson/rest";
 import { SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
-import { openRestLoadWindowPageSelection } from "./restLoader";
 
 export interface ConfirmProps {
   pageName?: string;
@@ -49,13 +48,11 @@ export const closeTwoPagesTxs = <S, C extends ModalContext<S>> ( errorPrefix: st
   const thisPage = ps[ ps.length - 1 ]
   const thisPagetxs = findClosePageTxs ( errorPrefix, state, thisPage, -1, otherCommands )
   if ( thisPagetxs === undefined ) throw Error ( `${errorPrefix} Software error in ConfirmCommitWindow - this page\n${JSON.stringify ( state.main, null, 2 )}` )
-
   const modalPage = ps[ ps.length - 2 ]
   const modalPageTxs = findClosePageTxs ( errorPrefix, state, modalPage, -2, [] )
   if ( modalPageTxs === undefined ) throw Error ( `${errorPrefix} Software error in ConfirmCommitWindow - last page\n${JSON.stringify ( state.main, null, 2 )}` )
-  const loaderPages = ps.slice ( -2 ).flatMap ( ( ps: PageSelection ) => ps.loader && ps.rest ? [ openRestLoadWindowPageSelection ( { ...ps.loader, rest: ps.rest.name, action: ps.rest.restAction }, state.context.dateFn ) ] : [] )
-  const pageCloseTx: Transform<S, any> = [ state.context.pageSelectionL, ( ps: PageSelection[] ) => [ ...ps.slice ( 0, -2 ), ...loaderPages ] ]
-  return [ pageCloseTx, ...thisPagetxs, ...modalPageTxs ]
+  const pageCloseTx: Transform<S, any> = [ state.context.pageSelectionL, ( ps: PageSelection[] ) => [ ...ps.slice ( 0, -2 ), ...([ ...thisPagetxs.newPages, ...modalPageTxs.newPages ]) ] ]
+  return [ pageCloseTx, ...thisPagetxs.txs, ...modalPageTxs.txs ]
 };
 
 export const makeConfirmCommitWindow = <S, D, C extends ModalContext<S>> ( makeFn: ( makerProps: MakeConfirmCommitWindow<S, C> ) => JSX.Element ): DisplayArbitraryPageFn<S, D, C, ConfirmWindowProps> => ( state: LensState<S, D, C>, props: ConfirmWindowProps ) => {

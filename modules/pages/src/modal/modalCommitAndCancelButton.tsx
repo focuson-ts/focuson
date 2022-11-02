@@ -2,7 +2,7 @@ import { applyPageOps, currentPageSelectionTail, fromPathGivenState, mainPage, P
 import { LensProps, lensState, LensState, reasonFor, SetJsonReasonEvent } from "@focuson/state";
 import { HasDateFn, safeArray, safeString, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
 import { displayTransformsInState, Lenses, Optional, Transform } from "@focuson/lens";
-import { HasRestCommandL, ModalChangeCommands, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand } from "@focuson/rest";
+import { addLoaderCommandsIfNeeded, HasRestCommandL, ModalChangeCommands, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand } from "@focuson/rest";
 import { getRefForValidateLogicToButton, hasValidationErrorAndReport } from "../validity";
 import { HasSimpleMessageL } from "../simpleMessage";
 import { CustomButtonType, getButtonClassName } from "../common";
@@ -124,6 +124,10 @@ function findSetLengthOnClose<S> ( lastPage: PageSelection, main: S, toPathTolen
 }
 
 
+export interface ClosePageTxs<S> {
+  txs: Transform<S, any>[],
+  newPages: PageSelection[]
+}
 /** This finds all transforms except the actual 'close the page'
  * This is because we might be calling it twice in cases like 'modal confirm windows'
  */
@@ -132,7 +136,7 @@ export function findClosePageTxs<S, C extends PageSelectionContext<S> & HasRestC
   state: LensState<S, any, C>,
   pageToClose: PageSelection,
   pageOffset: number, // typically -1 if we are closing the last page. -2 if we are closing the page before that.
-  otherCommands: ModalChangeCommands[], ): Transform<S, any>[] | undefined {
+  otherCommands: ModalChangeCommands[], ): ClosePageTxs<S> | undefined {
   const { dateFn, pageSelectionL, restL, tagHolderL, simpleMessagesL } = state.context
   if ( !pageToClose ) return undefined
   const rest = pageToClose?.rest;
@@ -145,8 +149,8 @@ export function findClosePageTxs<S, C extends PageSelectionContext<S> & HasRestC
   const focusLensForFrom = findFocusL ( errorPrefix, state, fromPathTolens, ps => pageOffset >= -1 ? ps : ps.slice ( 0, pageOffset + 1 ) )
   const focusLensForTo = findFocusL ( errorPrefix, state, toPathTolens, ps => ps.slice ( 0, pageOffset ) )
 
-  const restTransformers: Transform<S, any>[] = rest && !loader ? openRestLoadWindowTxs ( { ...loader, rest: rest.name, action: rest.restAction }, pageSelectionL, dateFn ) : []
-
+  const restCommandTxs: Transform<S, any>[] = rest ? [ [ restL, ( rcs: RestCommand[] ) => [ ...safeArray ( rcs ), addLoaderCommandsIfNeeded ( loader, rest ) ] ] ] : []
+  // const loaderTxs: Transform<S, any>[] = rest && loader ? openRestLoadWindowTxs ( { ...loader, rest: rest.name, action: rest.restAction }, pageSelectionL, dateFn ) : []
   const copyOnCloseTxs: Transform<S, any>[] = safeArray ( copyOnClose ).map ( ( { from, to } ) =>
     [ to ? toPathTolens ( to ) : focusLensForTo, () => (from ? fromPathTolens ( from ) : focusLensForFrom).getOption ( state.main ) ] )
 
@@ -165,19 +169,22 @@ export function findClosePageTxs<S, C extends PageSelectionContext<S> & HasRestC
 
   const changeCommands = [ ...toArray ( pageToClose.changeOnClose ), ...otherCommands ];
   const changeTxs = processChangeCommandProcessor ( errorPrefix, modalCommandProcessors ( config ) ( state.main ), changeCommands )
-  return [ ...restTransformers, ...copyOnCloseTxs, ...findSetLengthOnClose ( pageToClose, state.main, toPathTolens ), ...changeTxs ]
+  return {
+    txs: [ ...restCommandTxs, ...copyOnCloseTxs, ...findSetLengthOnClose ( pageToClose, state.main, toPathTolens ), ...changeTxs ],
+    newPages: rest && loader ? [ openRestLoadWindowPageSelection ( { ...loader, rest: rest.name, action: rest.restAction }, dateFn ) ] : []
+  }
 }
 
 
 export function closeOnePageTxs<S, Context extends ModalContext<S>> ( errorPrefix: string, state: LensState<S, any, Context>, change: ModalChangeCommands[] ): Transform<S, any>[] {
   const { pageSelectionL } = state.context
   const pageToClose = currentPageSelectionTail ( state )
-  const txs = findClosePageTxs ( errorPrefix, state, pageToClose, -1, toArray ( change ) )
-  if ( !txs ) return undefined
-  const loaderPages = pageToClose.loader && pageToClose.rest ? [ openRestLoadWindowPageSelection ( { ...pageToClose.loader, rest: pageToClose.rest.name, action: pageToClose.rest.restAction }, state.context.dateFn ) ] : []
+  const closePageTxs = findClosePageTxs ( errorPrefix, state, pageToClose, -1, toArray ( change ) )
+  if ( !closePageTxs ) return undefined
+  const { txs, newPages } = closePageTxs
   const pageCloseTx: Transform<S, any> = [ pageSelectionL, ( ps: PageSelection[] ) => {
-    const result = [ ...ps.slice ( 0, -1 ), ...loaderPages ];
-    console.log ( 'closeOnePageTxs', ps, loaderPages, result, )
+    const result = [ ...ps.slice ( 0, -1 ), ...newPages ];
+    console.log ( 'closeOnePageTxs', ps, newPages, result, )
     return result;
   } ]
   return [ ...txs, pageCloseTx ];
@@ -198,7 +205,7 @@ export function ModalCommitButton<S, Context extends ModalContext<S>> ( c: Modal
     const pageCloseTxs = closeTwoWindowsNotJustOne ?
       closeTwoPagesTxs ( `ModalCommit ${id}`, state, toArray ( change ) ) :
       closeOnePageTxs ( `ModalCommit ${id}`, state, toArray ( change ) );
-    console.log('ModalCommitButton.pageCloseTxs', displayTransformsInState(state.main,pageCloseTxs))
+    console.log ( 'ModalCommitButton.pageCloseTxs', displayTransformsInState ( state.main, pageCloseTxs ) )
     if ( pageCloseTxs.length > 0 )
       state.massTransform ( reasonFor ( 'ModalCommit', 'onClick', id ) ) ( ...pageCloseTxs )
     else

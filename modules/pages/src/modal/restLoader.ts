@@ -1,15 +1,10 @@
 import { Optional, Transform } from "@focuson/lens";
-import { ModalChangeCommands, RestCommand } from "@focuson/rest";
+import { RestCommand, RestLoadWindowWithoutRestProps } from "@focuson/rest";
 import { applyPageOps, PageSelection } from "../pageSelection";
 import { DateFn, RestAction, safeArray } from "@focuson/utils";
 import { ModalContext } from "./modalCommitAndCancelButton";
 
-export interface RestLoadWindowWithoutRestProps {
-  msg?: string
-  button?: string
-  className?: string
-  onClose?: ModalChangeCommands | ModalChangeCommands[]
-}
+
 export interface RestLoadWindowProps extends RestLoadWindowWithoutRestProps {
   rest: string
   action: RestAction
