@@ -1,10 +1,10 @@
 import { TSParams } from "./config";
 import { RefD } from "../common/pageD";
-import { toArray } from "@focuson/utils";
+import { toArray, unique } from "@focuson/utils";
 import { indentList } from "./codegen";
 
 export function makeRefs<G> ( params: TSParams, refs: RefD<any>[] ): string[] {
-  const allGroups = refs.flatMap ( ref => toArray ( ref.refGroups ) )
+  const allGroups = unique(refs.flatMap ( ref => toArray ( ref.refGroups ) ), g => g)
   return [
     `import { FocusOnContext, transformersForRestForRef } from "@focuson/focuson";`,
     `import { LensState, reasonFor } from "@focuson/state";`,
