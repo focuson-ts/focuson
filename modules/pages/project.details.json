@@ -6,7 +6,6 @@
     "ideify":       true,
     "publish":      true,
     "links":        [
-      "@focuson/lens",
       "@focuson/state",
       "@focuson/fetcher",
       "@focuson/rest"

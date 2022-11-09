@@ -234,6 +234,18 @@ export const DataDrivenFixedOptionDropDownAndDetailsCD: DisplayCompD = {
   }
 }
 
+export const GuardLayoutCD: DisplayCompD = {
+  import: "@focuson/form_components",
+  name: "GuardLayout",
+  params: {
+    state: { paramType: 'state', needed: 'defaultToPath' },
+    guard: { paramType: 'guards', needed: 'yes' },
+    message: { paramType: 'string', needed: 'yes' },
+    className: { paramType: 'string', needed: 'yes' },
+    displayGuardMessages: { paramType: 'boolean', needed: 'no' }
+  }
+}
+
 export const tableParams: DisplayCompParamD = {
   ...commonParams,
   order: { paramType: 'string[]', needed: 'yes' },

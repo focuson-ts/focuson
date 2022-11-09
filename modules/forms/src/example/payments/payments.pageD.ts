@@ -5,6 +5,7 @@ import { NatNumDd } from "../../common/dataD";
 import { nothingDD } from "../../common/commonDataDs";
 import { FState } from "exampleapp/src/common";
 import { isDifferentDayOrIsBefore } from "../../guardFns";
+import { GuardLayoutCD } from "../../common/componentsD";
 
 // export const ChargeDetailsPD: ExampleModalPage = {
 //   pageType: 'ModalPopup',
@@ -75,6 +76,11 @@ export const PaymentsPageD: ExampleMainPage = {
     currency: { rest: currencyRD, targetFromPath: '~/currency', fetcher: true },
     validatePayee: { rest: ValidatePayeeRD, targetFromPath: '~/validatedPayeeDetails' }
   },
+  layout: {
+    component: GuardLayoutCD,
+    displayParams: { guard: 'brandOk', message: 'Does not display when Brand is {/CommonIds/brandRef}', className: 'someClassName', displayGuardMessages: false }
+  },
+
   variables: {
     amount: {
       constructedBy: 'code', code: `id =>{
@@ -102,6 +108,7 @@ export const PaymentsPageD: ExampleMainPage = {
     }
   },
   guards: {
+    brandOk: {condition: "contains", path: '/CommonIds/brandRef', values: ["1","2","3","4","5","6","10"]},
     tableItemSelected: { condition: "isDefined", path: '~/selectedPaymentIndex', message: 'Please select a row to copy (you need to choose EMT or Chaps first)' }
   },
   buttons: {
