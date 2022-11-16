@@ -91,8 +91,9 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
 
       writeToFile ( restFileName ( tsCode, params, mainRef ) + ".ts", () => makeRests ( params, mainRef ) )
 
-      if ( Object.keys ( mainRef.rest ).length > 0 )
-        writeToFile ( pactFileName ( tsCode, params, mainRef ) + ".ts", () => makeAllPactsForPage ( params, mainRef ) )
+
+      // if ( Object.keys ( mainRef.rest ).length > 0 )
+      //   writeToFile ( pactFileName ( tsCode, params, mainRef ) + ".ts", () => makeAllPactsForPage ( params, mainRef ) )
 
       let report = isMainPage<B, G> ( mainRef ) ? makeGuardsReportForPage ( mainRef ).general : [];
       if ( report.length > 0 )

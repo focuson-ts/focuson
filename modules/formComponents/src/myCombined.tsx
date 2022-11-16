@@ -72,7 +72,7 @@ export function MyCombined<S extends HasTagHolder & HasSimpleMessages & HasEnvir
   const clippedPages = pages.slice ( lastIndexOfMainOrModalPage )
   const pagesToShow = clippedPages.length === 0 ? pages : clippedPages // this occurs when we have a mainpop at the beginning
   const showDebug = state.main.environment?.showDebugButton !== false
-  console.log ( 'My Combined', 'State', state.main, 'showDebug', showDebug )
+  // console.log ( 'My Combined', 'State', state.main, 'showDebug', showDebug )
   return <>
     <div id='container' className='combine'>
       <div className='glassPane'>

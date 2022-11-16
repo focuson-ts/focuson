@@ -24,6 +24,7 @@ export interface LabelAndInputProps<S, T, Context> extends CommonStateProps<S, T
   className?: string
   errorMessage?: string
   onBlur?: ( e: any ) => void
+  tabWhenLengthExceeds? : number
 }
 
 export function makeInputChangeTxs<S, C extends HasSimpleMessageL<S> & HasPathToLens<S> & HasDateFn> ( id: string, parentState: LensState<S, any, C> | undefined, change?: InputChangeCommands | InputChangeCommands[] ): Transform<S, any>[] {

@@ -121,10 +121,10 @@ export function mainPageFrom ( ps: PageSelection[] ): PageSelection {
 }
 export function mainPageOrUndefinedFrom ( ps: PageSelection[] ): PageSelection {
   const reversed = [ ...ps ].reverse ();
-  console.log('mainPageOrUndefinedFrom - reverse',reversed)
+  // console.log('mainPageOrUndefinedFrom - reverse',reversed)
   const result = reversed.find ( p => p.focusOn === undefined );
-  console.log('mainPageOrUndefinedFrom',ps)
-  console.log('mainPageOrUndefinedFrom - result',result, Array.isArray(result))
+  // console.log('mainPageOrUndefinedFrom',ps)
+  // console.log('mainPageOrUndefinedFrom - result',result, Array.isArray(result))
   return result
 }
 export function mainPage<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context>, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ): PageSelection {
@@ -135,10 +135,10 @@ export function mainPage<S, Context extends HasPageSelectionLens<S>> ( state: Le
 export function mainPageorUndefined<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context>, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ): PageSelection {
   const realAdjustPages = adjustPages ? adjustPages : ( ps: PageSelection[] ) => ps
   let adjustedPages = realAdjustPages ( pageSelections ( state ) );
-  console.log ( 'mainPageorUndefined -  pageSelections ( state) ',  pageSelections ( state  ))
-  console.log ( 'mainPageorUndefined - adjustedPages', adjustedPages )
+  // console.log ( 'mainPageorUndefined -  pageSelections ( state) ',  pageSelections ( state  ))
+  // console.log ( 'mainPageorUndefined - adjustedPages', adjustedPages )
   const result = mainPageOrUndefinedFrom ( adjustedPages );
-  console.log ( 'mainPageorUndefined - result', result )
+  // console.log ( 'mainPageorUndefined - result', result )
   return result
 }
 
@@ -151,7 +151,7 @@ function firstPageDataLensAndOptionals<S, Context extends PageSelectionContext<S
   let pageSelection = mainPageorUndefined<S, Context> ( state, adjustPages );
   if ( pageSelection === undefined ) return [ undefined, {} ]
   const { pageName, focusOn } = pageSelection
-  console.log ( 'firstPageDataLensAndOptionals', pageSelection, 'pageName', pageName, 'focuson', focusOn )
+  // console.log ( 'firstPageDataLensAndOptionals', pageSelection, 'pageName', pageName, 'focuson', focusOn )
   if ( focusOn !== undefined ) throw Error ( 'Main page should only have a lens not a focusOn' )
   const page = state.context.pages[ pageName ]
   if ( page === undefined ) throw Error ( `Main Page is [${pageName}] and it cannot be found.\nLegal values are ${Object.keys ( state.context.pages )}\n\nState\m${JSON.stringify ( state.main, null, 2 )}` )

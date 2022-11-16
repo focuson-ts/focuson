@@ -3,7 +3,6 @@ import { PaymentDD, PaymentsLaunchDD, SummaryOfPaymentsLineDD, ValidatedPayeeDet
 import { currencyListDD, currencyRD, newPaymentsRD, summaryOfPreviousPaymentsRD, ValidatePayeeRD } from "./payments.restD";
 import { NatNumDd } from "../../common/dataD";
 import { nothingDD } from "../../common/commonDataDs";
-import { FState } from "exampleapp/src/common";
 import { isDifferentDayOrIsBefore } from "../../guardFns";
 import { GuardLayoutCD } from "../../common/componentsD";
 

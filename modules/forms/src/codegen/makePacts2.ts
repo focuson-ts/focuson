@@ -81,7 +81,7 @@ export function makeRestPact<G> ( params: TSParams, page: RefD<G>, restName: str
     `      uponReceiving: 'a rest for ${page.name} ${restName} ${restActionName}',`,
     `      withRequest: {`,
     `         method: '${details.method}',`,
-    `         path:   '${beforeSeparator ( "?", url )}${postFixForEndpoint ( action )}',`,
+    `         path:   '$${postFixForEndpoint ( action )}',`,
     `         query:${JSON.stringify ( paramsValueForTest )},`,
     `         ${requestBodyString},`,
     `      },`,

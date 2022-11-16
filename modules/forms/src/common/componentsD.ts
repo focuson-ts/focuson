@@ -108,7 +108,8 @@ export const commonParamsWithLabel: DisplayCompParamD = {
   allButtons: { paramType: 'object', needed: 'defaultToButtons' },
   buttons: { paramType: 'string[]', needed: 'no' },
   labelPosition: { paramType: 'string', needed: 'no' },
-  className: { paramType: "string", needed: 'no' }
+  className: { paramType: "string", needed: 'no' },
+  tabWhenLengthExceeds: { paramType: "object", needed: 'no' }
 }
 
 const onChangeAndParentState: DisplayCompParamD = {

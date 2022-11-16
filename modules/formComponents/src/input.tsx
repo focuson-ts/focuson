@@ -14,6 +14,7 @@ export interface InputProps<S, T, Context> extends CommonStateProps<S, T, Contex
   enums?: NameAnd<string>;
   onBlur?: ( e: any ) => void;
   errorMessage?: string
+  tabWhenLengthExceeds? : number
 }
 
 export const cleanInputProps = <T extends NameAnd<any>> ( p: T ): T => {
@@ -54,6 +55,20 @@ export const CheckboxInput = <S, T extends any, P> ( tProps: CheckboxProps<T> ) 
   }
 }
 
+function findNextTabStop() {
+  var el = document.activeElement
+  var universe = document.querySelectorAll('input, button, select, textarea, a[href]');
+  var list = Array.prototype.filter.call(universe, function(item) {return item.tabIndex >= "0"});
+  var index = list.indexOf(el);
+  // console.log('findNextTabstop - el',el)
+  // console.log('findNextTabstop - list',list)
+  // console.log('findNextTabstop - index',index)
+  const result = list[index + 1] || list[0];
+  // console.log('findNextTabstop - result',result)
+  return result
+    ;
+}
+
 export const NonCheckboxInput = <S, T extends any, P> ( tProps: StringProps<T> ) => {
   const { transformer, type, selectFn } = tProps
   if ( typeof selectFn !== 'function' ) {
@@ -61,10 +76,14 @@ export const NonCheckboxInput = <S, T extends any, P> ( tProps: StringProps<T> )
     throw new Error ( `selectFn must be a function it is ${selectFn}` )
   }
   return <Props extends InputProps<S, T, Context> & P, Context extends FocusOnContext<S>> ( props: Props ) => {
-    const { state, mode, id, parentState, onChange, readonly, enabledBy, onBlur, regexForChange, errorMessage } = props
+    const { state, mode, id, parentState, onChange, readonly, enabledBy, onBlur, regexForChange, errorMessage ,tabWhenLengthExceeds} = props
     const onChangeEventHandler = ( transformer: ( s: string ) => T, e: React.ChangeEvent<HTMLInputElement> ) => {
       const value = e?.target?.value;
       setEdited(e?.target)
+      if (tabWhenLengthExceeds && value.toString().length>=tabWhenLengthExceeds) {
+        // console.log('focus on next')
+        findNextTabStop().focus()
+      }
       return selectFn<S, T, Context> ( state, id, transformer ( value ), parentState, onChange, regexForChange === undefined || value.match ( regexForChange ) !== null );
     }
     const value: T | undefined = tProps.default === undefined ? state.optJson () : state.optJsonOr ( tProps.default );
