@@ -108,7 +108,7 @@ describe ( "findAllCommonParamsWithSamples", () => {
       "operatorName": "Phil",
       "role": "user",
       "today": "29/07/2022",
-      "vbAcountSeq": 55555
+      "vbAccountSeq": 55555
     } )
   } )
 } )

@@ -6,7 +6,7 @@ export const allCommonIds = {
   applRef: { ...IntParam, commonLens: 'applRef', testValue: 22, inJwtToken: true },
   clientRef: { ...IntParam, commonLens: 'clientRef', testValue: 333 },
   accountId: { ...IntParam, commonLens: 'accountId', testValue: 44444444 },
-  vbAcountSeq: { ...IntParam, commonLens: 'vbAcountSeq', testValue: 55555 },
+  vbAccountSeq: { ...IntParam, commonLens: 'vbAccountSeq', testValue: 55555 },
   employeeId: { ...IntParam, commonLens: 'employeeId', testValue: 666666, inJwtToken: true },
   employeeType: { ...StringParam, commonLens: 'employeeType', testValue: 'basic', inJwtToken: true },
   dbName: { ...StringParam, commonLens: 'dbName', testValue: 'mock' },

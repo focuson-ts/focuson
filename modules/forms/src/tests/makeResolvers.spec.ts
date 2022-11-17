@@ -399,7 +399,7 @@ describe ( "makeResolvers", () => {
       "    return dataFetchingEnvironment -> {",
       "      String dbName =  getData(dataFetchingEnvironment, \"dbName\");",
       "      int accountId =  getData(dataFetchingEnvironment, \"accountId\");",
-      "      int vbAcountSeq =  getData(dataFetchingEnvironment, \"vbAcountSeq\");",
+      "      int vbAccountSeq =  getData(dataFetchingEnvironment, \"vbAccountSeq\");",
       "      int employeeId =  getData(dataFetchingEnvironment, \"employeeId\");",
       "      int clientRef =  getData(dataFetchingEnvironment, \"clientRef\");",
       "      Map<String,Object> paramsFromParent = dataFetchingEnvironment.getSource();",
