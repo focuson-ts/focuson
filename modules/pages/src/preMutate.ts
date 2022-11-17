@@ -26,6 +26,8 @@ function premutateOnePage<S, Context extends PageSelectionContext<S>> ( c: Conte
   if ( !pageSelection ) throw Error ( `software error: Somehow failing to get a page Selection ${i} ${JSON.stringify ( s )}` )
   const { firstTime, pageName, focusOn } = pageSelection
   if ( firstTime ) {
+    console.log('scrolling')
+    document.getElementById('root').scrollIntoView()
     firstTimeHappened = true
     const pageDetails: MultiPageDetails<S, any> = c.pages;
     const details = pageDetails[ pageName ]
