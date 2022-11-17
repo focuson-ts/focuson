@@ -9,7 +9,7 @@ export const allCommonIds = {
   vbAccountSeq: { ...IntParam, commonLens: 'vbAccountSeq', testValue: 55555 },
   employeeId: { ...IntParam, commonLens: 'employeeId', testValue: 666666, inJwtToken: true },
   employeeType: { ...StringParam, commonLens: 'employeeType', testValue: 'basic', inJwtToken: true },
-  dbName: { ...StringParam, commonLens: 'dbName', testValue: 'mock' },
+  dbName: { ...StringParam, commonLens: 'dbName', testValue: 'db' },
   today: { ...StringParam, commonLens: 'today', testValue: '29/07/2022' },
   operatorName: { ...StringParam, commonLens: 'operatorName', testValue: 'Phil' }
 }
