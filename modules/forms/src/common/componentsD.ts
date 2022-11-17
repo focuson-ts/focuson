@@ -174,7 +174,8 @@ export const DatePicker2CD: DisplayCompD = {
     jurisdiction: { paramType: 'path', needed: 'no' },
     dateInfo: { paramType: 'path', needed: 'no' },
     showMonthYearPicker: { paramType: 'boolean', needed: 'no' },
-    placeholder: { paramType: 'string', needed: 'no' }
+    placeholder: { paramType: 'string', needed: 'no' },
+    dateErrorMessage: { paramType: 'json', needed: 'no' },
   }
 }
 export const DatePickerForPaymentsCD: DisplayCompD = {
@@ -267,6 +268,16 @@ export const TableCD: DisplayCompD = {
   import: "@focuson/form_components",   //so that I can write the import statement for the react component
   name: "Table",                        //The name of the react component
   params: tableParams
+}
+export const TableWithHighLightIfOverCD: DisplayCompD = {
+  import: "@focuson/form_components",   //so that I can write the import statement for the react component
+  name: "TableWithHighLightIfOver",                        //The name of the react component
+  params: {
+    ...tableParams,
+    nameOfCellForMinimum: { paramType: 'string', needed: 'yes' },
+    minimumValue: { paramType: 'object', needed: 'yes' },
+    classNameOfHighlight: { paramType: 'string', needed: 'yes' }
+  }
 }
 export const TableWithVaryingOrderCD: DisplayCompD = {
   import: "@focuson/form_components",   //so that I can write the import statement for the react component

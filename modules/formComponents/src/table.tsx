@@ -1,5 +1,5 @@
 import { CommonStateProps } from "./common";
-import { decamelize, findJoiner, makeIntoString, NameAnd, safeArray, safeString } from "@focuson/utils";
+import { decamelize, findJoiner, makeIntoString, NameAnd, numberOrUndefined, safeArray } from "@focuson/utils";
 import { LensState, reasonFor } from "@focuson/state";
 import { Lenses, Transform } from "@focuson/lens";
 import { CSSProperties } from "react";
@@ -25,8 +25,7 @@ export interface TableProps<S, T, Context> extends CommonTableProps<S, T, Contex
 }
 
 export function getValueForTable<T> ( o: keyof T, row: T, joiners: undefined | string | string[] ): any {
-  let result = makeIntoString ( o.toString (), row[ o ], findJoiner ( o.toString (), joiners ) );
-  return result;
+  return makeIntoString ( o.toString (), row[ o ], findJoiner ( o.toString (), joiners ) );
 }
 
 export const transformsForUpdateSelected = <S, T, C> ( copySelectedIndexTo?: LensState<S, number, C>, copySelectedItemTo?: LensState<S, T, C> ) => ( i: number, row: T ): Transform<S, any>[] => {
@@ -37,15 +36,24 @@ export const transformsForUpdateSelected = <S, T, C> ( copySelectedIndexTo?: Len
 
 export function defaultOnClick<S, Context, T> ( props: CommonTableProps<S, T, Context> ) {
   const { id, state, copySelectedIndexTo, copySelectedItemTo } = props
-  const onClick = ( i: number, row: T ) => ( e: any ) => {
+  return ( i: number, row: T ) => ( e: any ) => {
     if ( copySelectedIndexTo || copySelectedItemTo ) {
       const txs = transformsForUpdateSelected ( copySelectedIndexTo, copySelectedItemTo ) ( i, row )
       state.massTransform ( reasonFor ( 'Table', 'onClick', id, `selected row ${i}` ) ) ( ...txs )
     }
-  }
-  return onClick;
+  };
 }
-export type OneRowFn<T> = ( row: T, i: number, selectedClass: string | undefined, rights: string[] | undefined, onClick: ( i: number, row: T ) => ( e: any ) => void ) => JSX.Element
+export type OneRowFn<T> = ( row: T, i: number, classForTr: string | undefined, rights: string[] | undefined, onClick: ( i: number, row: T ) => ( e: any ) => void ) => JSX.Element
+
+export function addClassRowFn<T> ( fn: OneRowFn<T>, classFn: ( t: T ) => string | undefined ): OneRowFn<T> {
+  return ( row, i, classForTr, rights, onClick ) => {
+    const classFromFn = classFn ( row )
+    const realClassForTr = classForTr ? `${classForTr} ${classFromFn}` : classFromFn
+    return fn ( row, i, realClassForTr, rights, onClick )
+  }
+}
+
+
 export type DisplayTitleFn = ( id: string, field: string, i: number ) => JSX.Element
 export const defaultDisplayTitleFn: DisplayTitleFn = ( id, field, i ) => <th key={field} id={`${id}.th[${i}]`}>{decamelize ( field, ' ' )}</th>
 export const rawTable = <S, T, Context extends PageSelectionContext<S>> (
@@ -54,7 +62,7 @@ export const rawTable = <S, T, Context extends PageSelectionContext<S>> (
   oneRow: OneRowFn<T>, displayTitleFn?: DisplayTitleFn ) =>
   ( props: CommonTableProps<S, T, Context> ) => {
     const realDisplayTitleFn = displayTitleFn ? displayTitleFn : defaultDisplayTitleFn
-    const { id, state, copySelectedIndexTo, copySelectedItemTo, joiners, prefixFilter, prefixColumn, maxCount, emptyData, tableTitle, scrollAfter, rights } = props
+    const { id, state, copySelectedIndexTo,  joiners, prefixFilter, prefixColumn, maxCount, emptyData, tableTitle, scrollAfter, rights } = props
     const tbodyScroll: CSSProperties | undefined = scrollAfter ? { height: scrollAfter, overflow: 'auto' } : undefined
     const orderJsx = titles.map ( ( o, i ) => realDisplayTitleFn ( id, o.toString (), i ) )
     const json: T[] = safeArray ( state.optJson () )
@@ -117,3 +125,19 @@ export function StructureTable<S, T, Context extends PageSelectionContext<S>> ( 
   const { id, state, paths } = props
   return rawTable<S, T, Context> ( Object.keys ( paths ), defaultOnClick ( props ), oneRowForStructure ( id, state, paths ) ) ( props )
 }
+
+export interface TableWithHighLightIfOverProps<S, T, Context> extends TableProps<S, T, Context> {
+  nameOfCellForMinimum: keyof T
+  minimumValue: number
+  classNameOfHighlight: string
+}
+export function TableWithHighLightIfOver<S, T, Context extends PageSelectionContext<S>> ( props: TableWithHighLightIfOverProps<S, T, Context> ) {
+  const { id, nameOfCellForMinimum, minimumValue, classNameOfHighlight, order, joiners } = props
+  const oneRow = addClassRowFn ( defaultOneRow ( id, order, joiners ), row => {
+    const value = numberOrUndefined ( row[ nameOfCellForMinimum ] )
+    const shouldHighlight = value && value < minimumValue
+    return shouldHighlight ? classNameOfHighlight : undefined
+  } )
+  return rawTable<S, T, Context> ( order, defaultOnClick ( props ), oneRow ) ( props )
+}
+

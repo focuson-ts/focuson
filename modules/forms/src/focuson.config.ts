@@ -28,10 +28,12 @@ import { modalPagePD } from "./example/modalPages/modalPages.pageD";
 import { resolversRefD } from "./example/resolvers/resolvers.refD";
 import { inputsPageD } from "./example/inputs/inputs.pageD";
 import { loaderPageD } from "./example/loader/loader.pageD";
+import { tablePageD } from "./example/tables/table.pageD";
 
 export const generatedRefs: ExampleRefD[] = [ dateInfoRefD ( { ... dateRefconfig, urlPrefix: "/api/focuson"} ) , resolversRefD]
 
 export const generatedPages: ExampleMainPage[] = [
+  tablePageD,
   loaderPageD,
   inputsPageD,
   ButtonsPageD,

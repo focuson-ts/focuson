@@ -4,6 +4,7 @@ import { safeArray } from "@focuson/utils";
 
 function validateName ( prefix: string, name: string, ) {
   let lc = name.toLowerCase ();
+  if ( name.length===0 ) throw Error ( `${prefix} ${name} has no name!` )
   if ( name[ 0 ] === lc[ 0 ] ) throw Error ( `${prefix} ${name} starts with a lower case letter` )
   if ( name.indexOf ( ' ' ) !== -1 ) throw Error ( `${prefix} '${name}' has a space in it (${name.indexOf ( ' ' )})` )
 

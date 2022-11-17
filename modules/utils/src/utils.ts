@@ -80,6 +80,15 @@ export function safeString ( s: string | undefined | number ): string {
   return ''
 }
 export function safeNumber ( s: number | undefined, defaultValue?: number ): number { return typeof s === 'number' ? s : (defaultValue === undefined ? 0 : defaultValue)}
+export function numberOrUndefined(s: any): number{
+  if (typeof s === 'number') return s
+  if (typeof s === 'string') {
+    try{
+      return Number.parseFloat(s)
+    }catch ( e ){}
+  }
+  return undefined
+}
 export function safePick ( s: string[] | undefined, i: number ) {
   const sa = safeArray ( s )
   return sa.length == 0 ? '' : sa[ i % sa.length ]
