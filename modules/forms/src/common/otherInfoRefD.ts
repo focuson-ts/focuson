@@ -10,7 +10,7 @@ import {
     TableCD
 } from "@focuson/forms";
 import {NameAnd} from "@focuson/utils";
-import {commonIds, fromCommonIds} from "../example/commonIds";
+import {allCommonIds, commonIds, fromCommonIds} from "../example/commonIds";
 
 // This file is a replacement for the dateInfoRefD
 // - but isn't going to work in this project as we are using natwest stuff (sqlList+resolvers)
@@ -26,14 +26,14 @@ export function accountTypeRefD<G> (d: RefConfiguration): RefD<G> {
         description: 'contains account type',
         name: 'VbAccountTypeForRefD',
         structure: {
-            vbAccountType: { dataDD: IntegerDD }
+            vbAccountType: { dataDD: IntegerDD, sample: [ 10, 18 ] }
         }
     }
     const accountTypeRestD: RestD<G> = {
         actions: [ 'get' ],
         dataDD: accountTypeDD,
         params: {
-            dbName: commonIds.dbName,
+            dbName: allCommonIds.dbName,
             ...fromCommonIds('vbAccountSeq')
         },
         url: `${d.urlPrefix}/vbAccountType?{query}`,
@@ -61,14 +61,14 @@ export function jurisdictionRefD<G> ( d: RefConfiguration ): RefD<G> {
         description: 'contains jurisdiction code',
         name: 'JurisdictionCodeForRefD',
         structure: {
-            jurisdictionCode: { dataDD: StringDD }
+            jurisdictionCode: { dataDD: StringDD, sample: [ 'GB', 'I' ] }
         }
     }
     const jurisdictionCodeRestD: RestD<G> = {
         actions: [ 'get' ],
         dataDD: jurisdictionCodeDD,
         params: {
-            dbName: commonIds.dbName,
+            dbName: allCommonIds.dbName,
             ...fromCommonIds('brandRef')
         },
         url: `${d.urlPrefix}/jurisdictionCode?{query}`,
@@ -118,6 +118,7 @@ export function timeDataRefD<G> (d: RefConfiguration ): RefD<G> {
         structure: {
             today: {dataDD: StringDD, sample: ['01-07-2022']},
             serverNow: {dataDD: StringDD, sample: ['2022-07-01T05:25:32.077Z']},
+            // I am currently causing a bug - MockFF_Fetcher value -> Generated a mock version of this returning a "" instead of a mock version of this.
             holidays: {dataDD: {...holidayListD, resolver: 'getHolidays'}},
             dateFormat: {dataDD: StringDD, sample: ['dd-MM-yyyy']}
         }
@@ -126,7 +127,7 @@ export function timeDataRefD<G> (d: RefConfiguration ): RefD<G> {
         actions: ['get'],
         dataDD: timeDataD,
         params: {
-            dbName: commonIds.dbName,
+            dbName: allCommonIds.dbName,
         },
         url: `${d.urlPrefix}/dateInfo?{query}`,
         resolvers: {...d.resolver}
@@ -135,7 +136,7 @@ export function timeDataRefD<G> (d: RefConfiguration ): RefD<G> {
         name: "CommonData",
         refGroups: 'once',
         commonParams: {
-            browserNow: {...StringParam, commonLens: 'browserNowAtStart', testValue: ''}
+            jurisdiction: { ...StringParam, commonLens: 'jurisdiction', testValue: 'GB' },
         },
         domain: {
             dates: {dataDD: timeDataD},
