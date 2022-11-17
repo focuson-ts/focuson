@@ -230,9 +230,12 @@ export function makeDisplayReport<B, G> ( page: PageD<B, G>, info: ReportInfo ):
 export function makeButtonsReport<B extends ButtonD, G extends GuardWithCondition> ( mainP: MainPageD<B, G>, page: PageD<B, G>, info: ReportInfo ): ReportDetails {
   const general = sortedEntries ( page.buttons ).flatMap ( ( [ name, button ] ) => {
     const actualButton = isGuardButton ( button ) ? button.guard : button
+    //@ts-ignore
     const guardedString = isGuardButton ( button ) ? ` guarded by [${button.by.condition}]` : ``
     if ( isModalButtonInPage ( actualButton ) ) return modalButtonData ( actualButton, guardedString )
+    //@ts-ignore
     let raw = `${name.padEnd ( 12 )} ${actualButton.control}${guardedString}`;
+    //@ts-ignore
     if ( actualButton.control === 'ToggleButton' ) return [ `${raw} toggles ${actualButton.value}` ]
     if ( isButtonWithControl ( actualButton ) ) return [ raw ]
     return [ `Unknown button Page ${page.name} Button ${name} ${JSON.stringify ( button )} ` ]
@@ -247,7 +250,9 @@ export function makeButtonsReport<B extends ButtonD, G extends GuardWithConditio
 
   }
   const critical = sortedEntries ( page.buttons ).flatMap ( ( [ name, button ] ) => {
+    //@ts-ignore
     const actualButton: ButtonWithControl = isGuardButton ( button ) ? button.guard : button
+    //@ts-ignore
     if ( isModalButtonInPage ( actualButton ) && actualButton.restOnCommit ) return checkRestIsLegal ( name, actualButton.control, actualButton.restOnCommit.restName, mainP.rest[ actualButton.restOnCommit.restName ]?.rest, actualButton.restOnCommit.action )
     if ( isRestButtonInPage ( actualButton ) ) return checkRestIsLegal ( name, actualButton.control, actualButton.restName, mainP.rest[ actualButton.restName ]?.rest, actualButton.action )
     return []

@@ -8,7 +8,7 @@ import { allCommonIds, fromCommonIds } from "../commonIds";
 import { GuardedStoredProcedureMutation, MutationParamForStoredProc, OutputForSqlMutationParam } from "../../common/resolverD";
 import { StringDD } from "../../common/dataD";
 
-export const PrintRecordHistoryParams: RestParams = fromCommonIds ( 'accountId', 'vbAcountSeq', 'employeeId' )//vbAcountSeq,rbsMtAccount,newBankSeq,employeeId,
+export const PrintRecordHistoryParams: RestParams = fromCommonIds ( 'accountId', 'vbAccountSeq', 'employeeId' )//vbAccountSeq,rbsMtAccount,newBankSeq,employeeId,
 
 export const PrintRecordHistoryRD: ExampleRestD = {
   namePrefix: 'history',
@@ -25,7 +25,7 @@ function ind ( name: string ): MutationParamForStoredProc {
 function bankStuff ( guard: string[], packageName: string ): GuardedStoredProcedureMutation {
   return ({
     guard, type: 'storedProc', package: packageName, name: 'produce_list_of_payments', params: [
-      'vbAcountSeq',
+      'vbAccountSeq',
       'rbsMtAccount',
       'newBankSeq',
       'employeeId',
@@ -42,7 +42,7 @@ function bankStuff ( guard: string[], packageName: string ): GuardedStoredProced
 function nonBankStuff ( guard: string, packageName: string ): GuardedStoredProcedureMutation {
   return ({
     guard: [ guard ], type: 'storedProc', package: packageName, name: 'produce_list_of_payments', params: [
-      'vbAcountSeq',
+      'vbAccountSeq',
       'rbsMtAccount',
       { type: 'null' },
       'employeeId',
@@ -75,7 +75,7 @@ export const PrintRecordRD: ExampleRestD = {
   states: {
     print: {
       url: '/api/print?{query}',
-      params: { ...fromCommonIds ( 'vbAcountSeq', 'employeeId', 'employeeId', 'accountId' ), paymentId: { ...IntParam, lens: '~/display[~/selected]id', testValue: 888, main: true } }
+      params: { ...fromCommonIds ( 'vbAccountSeq', 'employeeId', 'employeeId', 'accountId' ), paymentId: { ...IntParam, lens: '~/display[~/selected]id', testValue: 888, main: true } }
     }
   },
   mutations: [
@@ -105,7 +105,7 @@ export const PrintRecordRD: ExampleRestD = {
         },
         {
           type: 'case', name: 'print',
-          params: [ 'fulfilmentType', 'requestByRole', 'vbAcountSeq', 'rbsMtAccount', 'employeeId',
+          params: [ 'fulfilmentType', 'requestByRole', 'vbAccountSeq', 'rbsMtAccount', 'employeeId',
             { type: 'input', name: 'so_ind', javaType: 'Boolean', format: { type: "Boolean", false: '0', true: '1' } },
             ind ( 'dd_ind' ), ind ( 'bp_ind' ), ind ( 'obso_ind' ), ind ( 'obbp_ind' ), 'sortcode', 'accountNo', 'accountId', 'paymentId', 'newBankSeq' ],
           select: [

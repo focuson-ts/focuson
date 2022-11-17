@@ -142,12 +142,12 @@ describe ( "makeGraphQlSchema", () => {
   it ( "should make sometthing with name prefixes", () => {
     expect ( makeGraphQlSchema ( [PrintRecordHistoryRD, PrintRecordRD,  ] ) ).toEqual ( [
       "type Query{",
-      "  gethistoryPrintRecordItem(accountId: Int!, employeeId: Int!, vbAcountSeq: Int!):[PrintRecordItem]",
+      "  gethistoryPrintRecordItem(accountId: Int!, employeeId: Int!, vbAccountSeq: Int!):[PrintRecordItem]",
       "}",
       "type Mutation{",
-      "  createWithoutFetchsinglePrintRecordItem(accountId: Int!, employeeId: Int!, vbAcountSeq: Int!,obj: PrintRecordItemInp!):Boolean",
-      "  updateWithoutFetchsinglePrintRecordItem(accountId: Int!, employeeId: Int!, paymentId: Int!, vbAcountSeq: Int!,obj: PrintRecordItemInp!):Boolean",
-      "  stateprintsinglePrintRecordItem(accountId: Int!, employeeId: Int!, paymentId: Int!, vbAcountSeq: Int!,obj: PrintRecordItemInp!):Boolean",
+      "  createWithoutFetchsinglePrintRecordItem(accountId: Int!, employeeId: Int!, vbAccountSeq: Int!,obj: PrintRecordItemInp!):Boolean",
+      "  updateWithoutFetchsinglePrintRecordItem(accountId: Int!, employeeId: Int!, paymentId: Int!, vbAccountSeq: Int!,obj: PrintRecordItemInp!):Boolean",
+      "  stateprintsinglePrintRecordItem(accountId: Int!, employeeId: Int!, paymentId: Int!, vbAccountSeq: Int!,obj: PrintRecordItemInp!):Boolean",
       "}",
       "type ListOfPayments{",
       "  standingOrders: Boolean",
