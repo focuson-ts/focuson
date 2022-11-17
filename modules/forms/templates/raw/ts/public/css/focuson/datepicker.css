@@ -187,9 +187,11 @@
 }
 .react-datepicker__navigation--previous {
     left: 2px;
+    margin-left: auto !important;
 }
 .react-datepicker__navigation--next {
     right: 2px;
+    margin-right: auto !important;
 }
 .react-datepicker__navigation--next--with-time:not(.react-datepicker__navigation--next--with-today-button) {
     right: 85px;

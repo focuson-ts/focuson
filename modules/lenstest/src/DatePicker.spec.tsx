@@ -254,12 +254,26 @@ describe ( "holidaysOk", () => {
     expect ( accept ( new Date ( "2022/11/15" ) ) ).toEqual ( [ "is a holiday" ] )
     expect ( accept ( new Date ( "2022/11/17" ) ) ).toEqual ( [] )
   } )
+  it ( "should return an error if 'allowHolidays'is false, and the date is a holiday in the jurisdiction, custom error message", () => {
+    const accept = acceptDateForTest ( 'GB', okDateInfo, { type: 'future', allowHolidays: false },otherDateErrorMessage );
+    expect ( accept ( new Date ( "2022/11/7" ) ) ).toEqual ( [] ) //today
+    expect ( accept ( new Date ( "2022/11/12" ) ) ).toEqual ( [ "holidayMsg" ] )
+    expect ( accept ( new Date ( "2022/11/15" ) ) ).toEqual ( [ "holidayMsg" ] )
+    expect ( accept ( new Date ( "2022/11/17" ) ) ).toEqual ( [] )
+  } )
   it ( "should return an error if 'allowHolidays'is false, and the date is a holiday in any jurisdiction when the jurisdiction is undefined", () => {
     const accept = acceptDateForTest ( undefined, okDateInfo, { type: 'future', allowHolidays: false },defaultDateErrorMessage );
     expect ( accept ( new Date ( "2022/11/7" ) ) ).toEqual ( [] ) //today
     expect ( accept ( new Date ( "2022/11/12" ) ) ).toEqual ( [ "is a holiday" ] )
     expect ( accept ( new Date ( "2022/11/15" ) ) ).toEqual ( [ "is a holiday" ] )
     expect ( accept ( new Date ( "2022/11/17" ) ) ).toEqual ( [ "is a holiday" ] )
+  } )
+  it ( "should return an error if 'allowHolidays'is false, and the date is a holiday in any jurisdiction when the jurisdiction is undefined, custom msg", () => {
+    const accept = acceptDateForTest ( undefined, okDateInfo, { type: 'future', allowHolidays: false },otherDateErrorMessage );
+    expect ( accept ( new Date ( "2022/11/7" ) ) ).toEqual ( [] ) //today
+    expect ( accept ( new Date ( "2022/11/12" ) ) ).toEqual ( [ "holidayMsg" ] )
+    expect ( accept ( new Date ( "2022/11/15" ) ) ).toEqual ( [ "holidayMsg" ] )
+    expect ( accept ( new Date ( "2022/11/17" ) ) ).toEqual ( [ "holidayMsg" ] )
   } )
 } )
 
