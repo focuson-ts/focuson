@@ -59,7 +59,7 @@ function canClosePages<S, Context extends PageSelectionContext<S>> ( id, state: 
 export function openConfirmWindowTxs<S, Context extends ModalContext<S>> ( confirm: ConfirmProps, action: ConfirmActions, changeOnClose: ModalChangeCommands[], state: LensState<S, any, Context>, component: string, id: string, event: SetJsonReasonEvent, rest?: RestCommand ): Transform<S, any>[] {
   const { pageName } = confirm
   const realPageName = pageName ? pageName : 'confirm'
-  const ps: PageSelection = { pageName: realPageName, focusOn: '~', changeOnClose, arbitraryParams: { ...confirm, action }, time: state.context.dateFn (), pageMode: 'view', rest }
+  const ps: PageSelection = { pageName: realPageName, firstTime: true, focusOn: '~', changeOnClose, arbitraryParams: { ...confirm, action }, time: state.context.dateFn (), pageMode: 'view', rest }
   const openTx: Transform<S, any> = [ state.context.pageSelectionL, applyPageOps ( 'popup', ps ) ]
   return [ openTx ]
 }
@@ -184,7 +184,7 @@ export function closeOnePageTxs<S, Context extends ModalContext<S>> ( errorPrefi
   const { txs, newPages } = closePageTxs
   const pageCloseTx: Transform<S, any> = [ pageSelectionL, ( ps: PageSelection[] ) => {
     const result = [ ...ps.slice ( 0, -1 ), ...newPages ];
-    console.log ( 'closeOnePageTxs', ps, newPages, result, )
+    // console.log ( 'closeOnePageTxs', ps, newPages, result, )
     return result;
   } ]
   return [ ...txs, pageCloseTx ];

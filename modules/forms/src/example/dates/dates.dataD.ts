@@ -19,7 +19,7 @@ export const datesDataD: ExampleDataD = {
       dataDD: DateWithDatePickerDD,
       displayParams: {
         dateRange: { type: 'future', allowWeekends: false, allowHolidays: false },
-        dateErrorMessage: {isWeekend: 'forget them weekends... no work allowed!'}
+        dateErrorMessage: { isWeekend: 'forget them weekends... no work allowed!' }
       }
     },
     past: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Past', dateRange: { type: 'past' } } },
@@ -47,7 +47,12 @@ export const datesDataD: ExampleDataD = {
     forPayment: {
       dataDD: {
         ...DateWithDatePickerDD, display: DatePickerForPaymentsCD,
-        displayParams: { pathToToday: '/CommonData/dates/today', dateFormat: 'dd/MM/yyyy', hour: 14, minute: 14 }
+        displayParams: {
+          dateFormat: 'dd/MM/yyyy',
+          pathToToday: '/CommonData/dates/today',
+          warning: { time: '08:15', messageText: "Warning msg", showCancelButton: false },
+          error: { time: '09:15',messageText: "Error msg",showCancelButton: false}
+        }
       }
     }
   }

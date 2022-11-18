@@ -183,8 +183,8 @@ export const DatePickerForPaymentsCD: DisplayCompD = {
   params: {
     ...DatePicker2CD.params,
     pathToToday: { paramType: 'path', needed: 'yes' },
-    hour: { paramType: 'object', needed: 'yes' },
-    minute: { paramType: 'object', needed: 'yes' },
+    warning: { paramType: 'json', needed: 'yes' },
+    error: { paramType: 'json', needed: 'yes' },
   }
 }
 export const MonthYearDatePickerWithLengthCD: DisplayCompD = {
