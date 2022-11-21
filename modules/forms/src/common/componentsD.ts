@@ -1,5 +1,3 @@
-import { LensState } from "@focuson/state";
-
 /** A state is a string[] that means 'turn into a state  'from' the current state
  * A full state is a string[] that means 'turn into a state from the root'.
  * In general 'state' doesn't break encapsulation, pagestate and fullState do. pageState is slightly cleaner becaues the damage doesn't leave the page
@@ -187,14 +185,22 @@ export const DatePickerForPaymentsCD: DisplayCompD = {
     error: { paramType: 'json', needed: 'yes' },
   }
 }
-export const MonthYearDatePickerWithLengthCD: DisplayCompD = {
+export const StartMonthYearDatePickerWithLengthCD: DisplayCompD = {
   ...DatePicker2CD,
-  name: "MonthYearDatePickerWithLength",
+  name: "StartMonthYearDatePickerWithLength",
   params: {
     ...DatePicker2CD.params,
-    pathToOtherDate: { paramType: 'path', needed: 'yes' },
-    lengthPath: { paramType: 'path', needed: 'yes' },
-    subtract: { paramType: 'boolean', needed: 'yes' }
+    endDatePath: { paramType: 'path', needed: 'yes' },
+    lengthPath: { paramType: 'path', needed: 'yes' }
+  }
+}
+export const EndMonthYearDatePickerWithLengthCD: DisplayCompD = {
+  ...DatePicker2CD,
+  name: "EndMonthYearDatePickerWithLength",
+  params: {
+    ...DatePicker2CD.params,
+    startDatePath: { paramType: 'path', needed: 'yes' },
+    lengthPath: { paramType: 'path', needed: 'yes' }
   }
 }
 export const LabelAndMonthYearLengthCD: DisplayCompD = {
@@ -204,7 +210,6 @@ export const LabelAndMonthYearLengthCD: DisplayCompD = {
     ...LabelAndStringInputCD.params,
     fromDate: { paramType: 'path', needed: 'yes' },
     toDate: { paramType: 'path', needed: 'yes' },
-    subtract: { paramType: 'boolean', needed: 'yes' }
   }
 }
 export const LabelAndDropDownFromDataCD: DisplayCompD = {

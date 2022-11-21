@@ -1,6 +1,6 @@
 import { ExampleDataD } from "../common";
-import { DateWithDatePickerDD, LabelAndMonthYearLengthDD, MonthYearFromRangeFromWithDatePickerDD, MonthYearWithDatePickerDD, NatNumDd } from "../../common/dataD";
-import { DatePickerForPaymentsCD, LayoutCd } from "../../common/componentsD";
+import { DateWithDatePickerDD, EndMonthYearFromRangeFromWithDatePickerDD, LabelAndMonthYearLengthDD, MonthYearWithDatePickerDD, StartMonthYearFromRangeFromWithDatePickerDD } from "../../common/dataD";
+import { DatePickerForPaymentsCD, EndMonthYearDatePickerWithLengthCD, LayoutCd, StartMonthYearDatePickerWithLengthCD } from "../../common/componentsD";
 
 export const datesDataD: ExampleDataD = {
   name: 'Dates',
@@ -41,17 +41,18 @@ export const datesDataD: ExampleDataD = {
         dateRange: { type: 'future', allowWeekends: false, allowHolidays: true, minWorkingDaysBefore: 5 }
       }
     },
-    length: { dataDD: LabelAndMonthYearLengthDD, displayParams: { fromDate: 'startDate', toDate: 'endDate', subtract: false, onChange: { command: 'message', msg: 'length' } } },
-    startDate: { dataDD: MonthYearFromRangeFromWithDatePickerDD, displayParams: { pathToOtherDate: 'endDate', lengthPath: 'length', subtract: false, onChange: { command: 'message', msg: 'startDate' } } },
-    endDate: { dataDD: MonthYearFromRangeFromWithDatePickerDD, displayParams: { pathToOtherDate: 'startDate', lengthPath: 'length', subtract: true, onChange: { command: 'message', msg: 'endDate' } } },
+    length: { dataDD: LabelAndMonthYearLengthDD, displayParams: { fromDate: 'startDate', toDate: 'endDate', onChange: { command: 'message', msg: 'length' } } },
+    startDate: { dataDD: StartMonthYearFromRangeFromWithDatePickerDD, displayParams: { endDatePath: 'endDate', lengthPath: 'length', onChange: { command: 'message', msg: 'startDate' } } },
+    endDate: { dataDD: EndMonthYearFromRangeFromWithDatePickerDD, displayParams: { startDatePath: 'startDate', lengthPath: 'length', onChange: { command: 'message', msg: 'endDate' } } },
     forPayment: {
       dataDD: {
         ...DateWithDatePickerDD, display: DatePickerForPaymentsCD,
         displayParams: {
           dateFormat: 'dd/MM/yyyy',
+          dateRange: { type: 'future', allowWeekends: false, allowHolidays: false },
           pathToDateInfo: '/CommonData',
           warning: { time: '11:20', messageText: "Warning msg", showCancelButton: false },
-          error: { time: '11:26',messageText: "Error msg",showCancelButton: false}
+          error: { time: '11:26', messageText: "Error msg", showCancelButton: false }
         }
       }
     }

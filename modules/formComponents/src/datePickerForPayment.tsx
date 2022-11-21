@@ -1,5 +1,5 @@
 import { DatePickerProps, DatePickerSelectFn, defaultDatePickerWithExtraTxs, parseDate, RawDatePicker } from "./datePicker";
-import { after, DateInfo, isBefore, isSameDay, isSameDayUsingServer, timeOnServerinGMT } from "@focuson/utils";
+import { after, isSameDay, timeOnServerinGMT } from "@focuson/utils";
 import { LensState } from "@focuson/state";
 import { ConfirmProps, ModalContext, openConfirmWindowTxs } from "@focuson/pages";
 
@@ -45,6 +45,7 @@ const selectFnForPayments: DatePickerSelectFn = defaultDatePickerWithExtraTxs ( 
 } )
 
 export function DatePickerForPayments<S, C extends ModalContext<S>> ( props: DatePickerForPaymentProps<S, C> ) {
-  return RawDatePicker ( selectFnForPayments ) ( props )
+  const dateInfo = props.pathToDateInfo.focusOn('dates')
+  return RawDatePicker ( selectFnForPayments ) ( {...props, dateInfo} )
 }
 
