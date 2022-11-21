@@ -182,7 +182,7 @@ export const DatePickerForPaymentsCD: DisplayCompD = {
   import: "@focuson/form_components", name: "DatePickerForPayments",
   params: {
     ...DatePicker2CD.params,
-    pathToToday: { paramType: 'path', needed: 'yes' },
+    pathToDateInfo: { paramType: 'path', needed: 'yes' },
     warning: { paramType: 'json', needed: 'yes' },
     error: { paramType: 'json', needed: 'yes' },
   }

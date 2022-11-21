@@ -49,9 +49,9 @@ export const datesDataD: ExampleDataD = {
         ...DateWithDatePickerDD, display: DatePickerForPaymentsCD,
         displayParams: {
           dateFormat: 'dd/MM/yyyy',
-          pathToToday: '/CommonData/dates/today',
-          warning: { time: '08:15', messageText: "Warning msg", showCancelButton: false },
-          error: { time: '09:15',messageText: "Error msg",showCancelButton: false}
+          pathToDateInfo: '/CommonData',
+          warning: { time: '11:20', messageText: "Warning msg", showCancelButton: false },
+          error: { time: '11:26',messageText: "Error msg",showCancelButton: false}
         }
       }
     }
