@@ -94,11 +94,13 @@ export function setEndDate ( sedl: StartEndDateAndLength, endDate: string, debug
   return { ...sedl, endDate }
 
 }
-export function setLength ( sedl: StartEndDateAndLength, length: number, debug?: boolean ): StartEndDateAndLength {
+export function setLength ( sedl: StartEndDateAndLength, length: number|undefined, debug?: boolean ): StartEndDateAndLength {
+  if (!length) //note that 0 is false as well as undefined
+    return {startDate: sedl.startDate}
   if ( sedl.startDate !== undefined )
     return { ...sedl, length, endDate: addDate ( debug, sedl.startDate, length - 1, false ) }
   if ( sedl.endDate !== undefined )
-    return { ...sedl, length, startDate: addDate ( debug, sedl.endDate, length + 1, true ) }
+    return { ...sedl, length, startDate: addDate ( debug, sedl.endDate, length - 1, true ) }
   return { ...sedl, length }
 }
 

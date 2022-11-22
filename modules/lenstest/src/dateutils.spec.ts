@@ -151,13 +151,10 @@ describe ( "startEndDateAndLength", () => {
   } )
   describe ( "setLength", () => {
     it ( "should set the length when everything is undefined", () => {
-      expect ( setLength ( {}, 0 ) ).toEqual ( { length: 0 } )
+      expect ( setLength ( {}, 2 ) ).toEqual ( { length: 2 } )
     } )
     it ( "should set the length when length is already defined", () => {
       expect ( setLength ( { length: 12 }, 2 ) ).toEqual ( { length: 2 } )
-    } )
-    it ( "should set the length when start date is defined ", () => {
-      expect ( setLength ( { startDate: '08-2022' }, 0 ) ).toEqual ( { startDate: '08-2022', length: 0, endDate: '7/2022' } )
     } )
     it ( "should set the length when length is one, and end date is not defined", () => {
       expect ( setLength ( { startDate: '08-2022' }, 1 ) ).toEqual ( { startDate: '08-2022', length: 1, endDate: '8/2022' } )
@@ -166,11 +163,16 @@ describe ( "startEndDateAndLength", () => {
       expect ( setLength ( { startDate: '08-2022' }, 2 ) ).toEqual ( { startDate: '08-2022', length: 2, endDate: '9/2022' } )
     } )
     it ( "should set the length when the start date is undefined and the end date is defined", () => {
-      expect ( setLength ( { endDate: '09-2022' }, 0 ) ).toEqual ( { startDate: '8/2022', length: 0, endDate: '09-2022' } )
+      expect ( setLength ( { endDate: '09-2022' }, 2) ).toEqual ( { startDate: '8/2022', length: 2, endDate: '09-2022' } )
     } )
     it ( "should set the length when the start date is defined and the end date is defined", () => {
       expect ( setLength ( { startDate: '08-2022', length: 2, endDate: '11-2022' }, 1 ) ).toEqual ( { startDate: '08-2022', length: 1, endDate: '8/2022' } )
       expect ( setLength ( { startDate: '08-2022', length: 2, endDate: '11-2022' }, 2 ) ).toEqual ( { startDate: '08-2022', length: 2, endDate: '9/2022' } )
     } )
+    it ("delete the endDate when the length is undefined or zero", () =>{
+      expect ( setLength ( { startDate: '08-2022', length: 2, endDate: '11-2022' }, undefined ) ).toEqual ( { startDate: '08-2022' })
+      expect ( setLength ( { startDate: '08-2022', length: 2, endDate: '11-2022' }, 0 ) ).toEqual ( { startDate: '08-2022'} )
+    })
+
   } )
 } )
