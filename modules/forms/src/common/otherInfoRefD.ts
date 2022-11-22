@@ -56,38 +56,6 @@ export function accountTypeRefD<G> (d: RefConfiguration): RefD<G> {
     }
 }
 
-export function jurisdictionRefD<G> ( d: RefConfiguration ): RefD<G> {
-    const jurisdictionCodeDD: DataD<G> = {
-        description: 'contains jurisdiction code',
-        name: 'JurisdictionCodeForRefD',
-        structure: {
-            jurisdictionCode: { dataDD: StringDD, sample: [ 'GB', 'I' ] }
-        }
-    }
-    const jurisdictionCodeRestD: RestD<G> = {
-        actions: [ 'get' ],
-        dataDD: jurisdictionCodeDD,
-        params: {
-            dbName: allCommonIds.dbName,
-            ...fromCommonIds('brandRef')
-        },
-        url: `${d.urlPrefix}/jurisdictionCode?{query}`,
-        resolvers: { ...d.resolver }
-    }
-    return {
-        name: "JurisdictionCode",
-        refGroups: 'once',
-        domain: {
-            jurisdictionCode: { dataDD: jurisdictionCodeDD },
-        },
-        rest: {
-            jurisdictionCode: { rest: jurisdictionCodeRestD, targetFromPath: '~/jurisdictionCode', fetcher: true,
-                postFetchCommands: { command: 'copyResult', from: 'jurisdictionCode' , to: '/CommonIds/jurisdiction'}
-            },
-        },
-    }
-}
-
 export function timeDataRefD<G> (d: RefConfiguration ): RefD<G> {
     const holidayDataD: DataD<G> = {
         description: "A single holiday in one jurisdiction",
