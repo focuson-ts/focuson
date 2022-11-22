@@ -28,7 +28,8 @@ export const makeRest = <G> ( params: TSParams, p: RefD<G> ) => ( restName: stri
     [ `    //This compilation error is because you used a variable name in the target '${r.targetFromPath}'. Currently that is not supported` ] : []
   const states = safeObject ( r.rest.states )
   const errorPrefix = `${p.name}.rest[${restName}]`;
-  const jwtIds =allParams.filter(([name, f]) => isCommonLens(f) && f.inJwtToken).map(([name,f]) =>name)
+  const jwtIds =allParams.filter(([name, p]) => isCommonLens(p) && p.inJwtToken).map(([name,f]) =>name)
+  const canBeUndefinedIds =allParams.filter(([name, p]) => p.allowUndefined).map(([name,f]) =>name)
   return [
     `//If you have a compilation error because of duplicate names, you need to give a 'namePrefix' to the offending restDs`,
     `export function ${restDetailsName ( p, restName, r.rest )} ( cd: NameAndLens<${params.stateName}>, dateFn: DateFn  ): OneRestDetails<${params.stateName}, ${pageDomain}, ${params.domainsFile}.${domainName ( r.rest.dataDD )}, SimpleMessage> {`,
@@ -44,6 +45,7 @@ export const makeRest = <G> ( params: TSParams, p: RefD<G> ) => ( restName: stri
     `    ids: ${JSON.stringify ( ids )},`,
     `    jwtIds:${JSON.stringify(jwtIds)},`,
     `    resourceId:  ${JSON.stringify ( resourceIds )},`,
+    `    canBeUndefinedIds: ${JSON.stringify ( canBeUndefinedIds )},`,
     `    extractData: ${params.extractData},`,
     `    messages: extractMessages(dateFn),`,
     `    url: "${r.rest.url}",`,

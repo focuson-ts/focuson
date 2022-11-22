@@ -1,6 +1,6 @@
 import { expand } from "./template";
 import { GetNameFn, NameAndLens, Optional } from "@focuson/lens";
-import { isRestStateChange, NameAnd, RestAction, unique } from "@focuson/utils";
+import { isRestStateChange, NameAnd, RestAction, toArray, unique } from "@focuson/utils";
 
 
 export type Tags = (string | undefined)[]
@@ -42,6 +42,7 @@ export interface UrlConfig<S, FD, D> {
   dLens: Optional<FD, D>;
   resourceId: string [];
   ids: string [];
+  canBeUndefinedIds?: string[];
   jwtIds: string[]
 }
 
@@ -59,7 +60,7 @@ export const tags: TagOpsFn<[ string, string | undefined ][]> = <S, FD, D> ( url
   return names.sort ().map ( name => [ name, onePart<S, FD, D> ( urlConfig, { failSilently: true } ) ( s, restAction ) ( name ) ] )
 }
 
-export function nameToLens<S, FD, D> ( urlConfig: UrlConfig<S, FD, D>,  restAction: RestAction ): GetNameFn<S, any> {
+export function nameToLens<S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, restAction: RestAction ): GetNameFn<S, any> {
   return ( name: string ) => {
     if ( name === 'query' )
       return { getOption: s => makeAEqualsB ( urlConfig, { failSilently: true } ) ( s, restAction ) }
@@ -83,7 +84,7 @@ export const headersFor: TagOpsFn<NameAnd<string> | undefined> =
 
 export const url: TagOpsFn<( urlTemplate: string ) => string> =
                ( urlConfig, includeJwtIds, restAction ) => s =>
-                 urlTemplate => expand ( nameToLens ( urlConfig,  restAction ) ) ( urlTemplate ) ( s )
+                 urlTemplate => expand ( nameToLens ( urlConfig, restAction ) ) ( urlTemplate ) ( s )
 
 export function methodFor ( r: RestAction ) {
   if ( isRestStateChange ( r ) ) return 'post'
@@ -120,14 +121,16 @@ export const makeAEqualsB = <S, FD, D> ( urlConfig: UrlConfig<S, FD, D>, { encod
   const realEncoder = encoder ? encoder : stringify
   const realSeparator = separator ? separator : '&'
   return ( main, restAction ) => {
-    const nameLnFn = nameToLens ( urlConfig,  restAction )
+    const nameLnFn = nameToLens ( urlConfig, restAction )
     const rawNames = needsId ( restAction ) ? [ ...urlConfig.ids, ...urlConfig.resourceId ] : urlConfig.ids
     const jwtIds = urlConfig.jwtIds
-    const names =  rawNames.filter ( name => !jwtIds.includes ( name ) )
+    const canBeUndefinedIds = urlConfig.canBeUndefinedIds
+    const names = rawNames.filter ( name => !jwtIds.includes ( name ) )
     console.log ( 'makeAEqualsB', rawNames, jwtIds, names )
-    return unique ( names.map ( name => {
+    return unique ( names.flatMap ( name => {
         const value = nameLnFn ( name ).getOption ( main )
-        if ( value !== undefined || failSilently ) return name + '=' + realEncoder ( value )
+        if ( value === undefined && toArray(canBeUndefinedIds).includes ( name ) ) return []
+        if ( value !== undefined || failSilently ) return [ name + '=' + realEncoder ( value ) ]
         throw new Error ( `Could not find [${name}] in makeAEqualsB. All names are ${names.join ( "." )}` )
       }
     ), t => t ).join ( realSeparator )

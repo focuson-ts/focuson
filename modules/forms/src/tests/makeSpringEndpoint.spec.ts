@@ -8,6 +8,8 @@ import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { paramsForTest } from "./paramsForTest";
 import { IntParam, RestD, StringParam } from "../common/restD";
 import { CreatePlanDD } from "../example/eAccounts/eAccountsSummary.dataD";
+import { operatorEligabilityRD } from "../example/authoriseCharges/authoriseCharges.restD";
+import { DirectDebitAC } from "../example/authoriseCharges/authoriseCharges.customise";
 
 describe ( "endpointAnnotation", () => {
   const rdWithFields = {
@@ -83,6 +85,11 @@ describe ( "makeSpringEndpoint", () => {
     expect ( makeParamsForJava ( 'error', createPlanRestD, 'updateWithoutFetch', true ) ).toEqual ( '@RequestParam int accountId, @RequestHeader int applRef, @RequestParam int brandRef, @RequestParam int clientRef, @RequestParam int createPlanId, @RequestBody String body' )
     expect ( makeParamsForJava ( 'error', createPlanRestD, 'delete', true ) ).toEqual ( '@RequestParam int accountId, @RequestHeader int applRef, @RequestParam int brandRef, @RequestParam int clientRef, @RequestParam int createPlanId' )
   } )
+  it ("makeParamsForJava - real endpoint - optional param", () =>{
+    expect ( makeParamsForJava ( 'error',  operatorEligabilityRD ( DirectDebitAC ), 'get', true ) ).toEqual (
+      '@RequestParam(required=false) String operatorName' )
+
+  })
   it ( "should makeParamsForJava - query endpoint", () => {
     expect ( makeParamsForJava ( 'error', createPlanRestD, 'get', false ) ).toEqual ( '@RequestParam int accountId, @RequestParam int applRef, @RequestParam int brandRef, @RequestParam int clientRef, @RequestParam int createPlanId' )
     // expect ( makeParamsForJava ( createPlanRestD, 'list' ) ).toEqual ( '@RequestParam String accountId, @RequestParam String customerId' )

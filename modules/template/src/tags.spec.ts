@@ -10,7 +10,7 @@ interface TagTestState {
   a?: string | number,
   b?: any,
   child: ChildTagTestState;
-  bodyForParam?: { c: string, d: string }
+  bodyForParam?: { c: string, d?: string }
 }
 const child: ChildTagTestState = {
   c: '3',
@@ -36,7 +36,8 @@ const urlConfig: UrlConfig<TagTestState, ChildTagTestState, string> = {
   fdLens: identityState.focusQuery ( 'child' ),
   dLens: identityOptics<ChildTagTestState> ().focusQuery ( 'data' ),
   ids: [ "aId", "bId", "cId" ],
-  resourceId: [ "dId" ]
+  resourceId: [ "dId" ],
+  canBeUndefinedIds: [ "bId" ]
 }
 
 describe ( "tags", () => {
@@ -116,6 +117,12 @@ describe ( "url", () => {
     it ( "should handle the case when the data is zero and includingJwtTokens is false", () => {
       expect ( url ( urlConfig, false, 'get' ) ( stateWithAzero ) ( '/{dId}?{query}' ).replace ( /"/g, "'" ) ).toEqual ( "/4?bId={'x':1}&dId=4" )
     } )
+    it ( "should not send ids that are undefined if the id is in the canBeUndefinedIds", () => {
+      //the bId is not defined
+      expect ( url ( urlConfig, false, 'get' ) ( { a: '1', child } ) ( '/{dId}?{query}' ).replace ( /"/g, "'" ) ).toEqual (
+        "/4?dId=4" )
+    } )
+
   } )
 
   describe ( "for restAction create", () => {

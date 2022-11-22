@@ -4,8 +4,8 @@ import { DatePickerProps, RawDatePicker } from "./datePicker";
 import { displayTransformsInState, Transform } from "@focuson/lens";
 import { FocusOnContext } from "@focuson/focuson";
 import { LabelAndInputProps, LabelAndTInput, makeInputChangeTxs } from "./labelAndInput";
-import { InputSelectFn, NumberTransformer, StringTransformer } from "./transformers";
-import { addDate, numberOrUndefined, NumberValidations, setEndDate, setLength, setStartDate, StartEndDateAndLength, StringValidations } from "@focuson/utils";
+import { InputSelectFn, StringTransformer } from "./transformers";
+import { numberOrUndefined, setEndDate, setLength, setStartDate, StartEndDateAndLength, StringValidations } from "@focuson/utils";
 import { InputChangeCommands } from "@focuson/rest";
 
 
@@ -22,7 +22,7 @@ export function StartMonthYearDatePickerWithLength<S, C extends ModalContext<S>>
   function onCheck<S, C extends ModalContext<S>> ( debug: boolean, props: DatePickerProps<S, C> ) {
     return ( eventName: SetJsonReasonEvent, date: string | undefined ) => {
       const { id, state, regexForChange, parentState, onChange } = props
-      const length = numberOrUndefined(lengthPath.optJson ())
+      const length = numberOrUndefined(lengthPath.optJson ())?.toString()
       const endDate = endDatePath.optJson ()
       const s: StartEndDateAndLength = { length, endDate }
       const newS = setStartDate ( s, date, debug )
@@ -52,7 +52,7 @@ export function EndMonthYearDatePickerWithLength<S, C extends ModalContext<S>> (
   function onCheck<S, C extends ModalContext<S>> ( debug: boolean, props: DatePickerProps<S, C> ) {
     return ( eventName: SetJsonReasonEvent, date: string | undefined ) => {
       const { id, state, regexForChange, parentState, onChange } = props
-      const length = numberOrUndefined(lengthPath.optJson ())
+      const length = numberOrUndefined(lengthPath.optJson ())?.toString()
       const startDate = startDatePath.optJson ()
       const s: StartEndDateAndLength = { length, startDate }
       const newS = setEndDate( s, date, debug )
@@ -81,7 +81,7 @@ export const LabelAndMonthYearLength: <S, Context extends FocusOnContext<S>> ( p
                    const main: any = state.main
                    const debug = main?.debug?.dateDebug
                    const { fromDate, toDate } = props
-                   const length = numberOrUndefined(value)
+                   const length = numberOrUndefined(value)?.toString()
                    const startS: StartEndDateAndLength = { startDate: fromDate.optJson (), endDate: toDate.optJson () }
                    const newS = setLength ( startS, length, debug )
                    const txs: Transform<any, any>[] = [ //need the any because I don't know how to make the S in Input SelectFn the same the S in LabelAndMonthYearLength

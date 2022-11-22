@@ -21,9 +21,11 @@ export function makeParamsForJava<G> ( errorPrefix: string, r: RestD<G>, restAct
   const requestParam = getRestTypeDetails ( restAction ).params.needsObj ? `${comma}@RequestBody String body` : ""
   return params.map ( (( [ name, param ] ) => {
     const defaultAnnotation = isCommonLens ( param ) && param.inJwtToken && forRealEndpoint ? '@RequestHeader' : '@RequestParam'
-    return `${param.annotation ? param.annotation : defaultAnnotation} ${param.javaType} ${name}`;
+    const required = param.allowUndefined ? `(required=false)` : ''
+    return `${param.annotation ? param.annotation : defaultAnnotation}${required} ${param.javaType} ${name}`;
   }) ).join ( ", " ) + requestParam
 }
+
 function paramsForQuery<G> ( errorPrefix: string, r: RestD<G>, restAction: RestAction ): string {
   const clazz = isRepeatingDd ( r.dataDD ) ? 'List' : 'Map'
   let params = paramsForRestAction ( errorPrefix, r, restAction );

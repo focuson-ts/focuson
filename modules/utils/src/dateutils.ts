@@ -49,7 +49,7 @@ export function timeOnServerinGMT ( browserTime: string, dateInfo: DateInfo ): s
 export interface StartEndDateAndLength {
   startDate?: string
   endDate?: string
-  length?: number
+  length?: string
 }
 export function addDate ( debug: boolean | undefined, thisDate: string | undefined, length: number | undefined, subtract: boolean ) {
   // if ( !thisDate || !thisDate.match ( /^(1[0-2]|0[1-9]|\d)-(20\d{2}|19\d{2}|0(?!0)\d|[1-9]\d)$/ ) )
@@ -67,7 +67,7 @@ export function addDate ( debug: boolean | undefined, thisDate: string | undefin
   return (date.getMonth () + 1) + "/" + date.getFullYear ()
 }
 
-export function calculateLength ( startDate: string, endDate: string, offset: number ): number | undefined {
+export function calculateLength ( startDate: string, endDate: string, offset: number ): string | undefined {
   function dateToMonths ( d: string ) {
     const matcher = d.match ( /^([0-9]*)[-/]([0-9]*)$/ )
     if ( !matcher ) return undefined
@@ -75,12 +75,12 @@ export function calculateLength ( startDate: string, endDate: string, offset: nu
   }
   const end = dateToMonths ( endDate );
   const start = dateToMonths ( startDate );
-  if ( end && start ) return end - start + offset
+  if ( end && start ) return (end - start + offset).toString ()
   return undefined
 }
 export function setStartDate ( sedl: StartEndDateAndLength, startDate: string, debug?: boolean ): StartEndDateAndLength {
   if ( sedl.length !== undefined )
-    return { ...sedl, startDate, endDate: addDate ( debug, startDate, sedl.length - 1, false ) }
+    return { ...sedl, startDate, endDate: addDate ( debug, startDate, Number.parseInt ( sedl.length ) - 1, false ) }
   if ( sedl.endDate !== undefined )
     return { ...sedl, startDate, length: calculateLength ( startDate, sedl.endDate, -1 ) }
   return { ...sedl, startDate }
@@ -88,19 +88,19 @@ export function setStartDate ( sedl: StartEndDateAndLength, startDate: string, d
 
 export function setEndDate ( sedl: StartEndDateAndLength, endDate: string, debug?: boolean ): StartEndDateAndLength {
   if ( sedl.length !== undefined )
-    return { ...sedl, endDate, startDate: addDate ( debug, endDate, sedl.length - 1, true ) }
+    return { ...sedl, endDate, startDate: addDate ( debug, endDate, Number.parseInt ( sedl.length ) - 1, true ) }
   if ( sedl.startDate !== undefined )
     return { ...sedl, endDate, length: calculateLength ( sedl.startDate, endDate, 1 ) }
   return { ...sedl, endDate }
 
 }
-export function setLength ( sedl: StartEndDateAndLength, length: number|undefined, debug?: boolean ): StartEndDateAndLength {
-  if (!length) //note that 0 is false as well as undefined
-    return {startDate: sedl.startDate}
+export function setLength ( sedl: StartEndDateAndLength, length: string | undefined, debug?: boolean ): StartEndDateAndLength {
+  if ( !length || length === '0' )
+    return { startDate: sedl.startDate }
   if ( sedl.startDate !== undefined )
-    return { ...sedl, length, endDate: addDate ( debug, sedl.startDate, length - 1, false ) }
+    return { ...sedl, length, endDate: addDate ( debug, sedl.startDate, Number.parseInt ( length ) - 1, false ) }
   if ( sedl.endDate !== undefined )
-    return { ...sedl, length, startDate: addDate ( debug, sedl.endDate, length - 1, true ) }
+    return { ...sedl, length, startDate: addDate ( debug, sedl.endDate, Number.parseInt ( length ) - 1, true ) }
   return { ...sedl, length }
 }
 

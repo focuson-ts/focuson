@@ -11,7 +11,7 @@ export const allCommonIds = {
   employeeType: { ...StringParam, commonLens: 'employeeType', testValue: 'basic', inJwtToken: true },
   dbName: { ...StringParam, commonLens: 'dbName', testValue: 'mock' },
   today: { ...StringParam, commonLens: 'today', testValue: '29/07/2022' },
-  operatorName: { ...StringParam, commonLens: 'operatorName', testValue: 'Phil' }
+  operatorName: { ...StringParam, commonLens: 'operatorName', testValue: 'Phil', allowUndefined: true }
 }
 
 export const commonIds = fromCommonIds ( "brandRef", "applRef", "clientRef", "accountId" )

@@ -16,27 +16,31 @@ export interface ParamPrim<T> {
   graphQlType: string
   javaParser: string
   typeScriptType: string
+  allowUndefined: boolean;
 }
 export const StringParam: ParamPrim<string> = {
   rsSetter: 'setString',
   javaType: 'String',
   graphQlType: 'String',
   typeScriptType: 'string',
-  javaParser: ''
+  javaParser: '',
+  allowUndefined: false
 }
 export const IntParam: ParamPrim<number> = {
   rsSetter: 'setInt',
   javaType: 'int',
   graphQlType: 'Int',
   typeScriptType: 'number',
-  javaParser: 'Integer.parseInt'
+  javaParser: 'Integer.parseInt',
+  allowUndefined: false
 }
 export const FloatParam: ParamPrim<number> = {
   rsSetter: 'setDouble',
   javaType: 'Double',
   graphQlType: 'Float',
   typeScriptType: 'number',
-  javaParser: 'Double.parseDouble'
+  javaParser: 'Double.parseDouble',
+  allowUndefined: false
 }
 
 
