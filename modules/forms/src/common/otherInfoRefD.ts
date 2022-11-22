@@ -1,16 +1,11 @@
-import {
-    DataD,
-    DateDDMMYYY_DD,
-    IntegerDD, NatNumDd, PrimaryMutations,
-    RefD,
-    RepeatingDataD,
-    RestD,
-    StringDD,
-    StringParam,
-    TableCD
-} from "@focuson/forms";
+
 import {NameAnd} from "@focuson/utils";
 import {allCommonIds, commonIds, fromCommonIds} from "../example/commonIds";
+import { PrimaryMutations } from "./resolverD";
+import { RefD } from "./pageD";
+import { DataD, DateDDMMYYY_DD, IntegerDD, NatNumDd, RepeatingDataD, StringDD } from "./dataD";
+import { RestD, StringParam } from "./restD";
+import { TableCD } from "./componentsD";
 
 // This file is a replacement for the dateInfoRefD
 // - but isn't going to work in this project as we are using natwest stuff (sqlList+resolvers)
@@ -85,7 +80,7 @@ export function timeDataRefD<G> (d: RefConfiguration ): RefD<G> {
         name: "TimeData",
         structure: {
             today: {dataDD: StringDD, sample: ['01-07-2022']},
-            serverNow: {dataDD: StringDD, sample: ['2022-07-01T05:25:32.077Z']},
+            serverNow: {dataDD: StringDD, sample: ['2022-07-01T11:25:32.077Z']},
             serverOffsetHoursFromGMT: { dataDD: NatNumDd, sample: [ 0, 1 ] },
             // I am currently causing a bug - MockFF_Fetcher value -> Generated a mock version of this returning a "" instead of a mock version of this.
             holidays: {dataDD: {...holidayListD, resolver: 'getHolidays'}},

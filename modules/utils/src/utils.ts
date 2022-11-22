@@ -80,7 +80,7 @@ export function safeString ( s: string | undefined | number ): string {
   return ''
 }
 export function safeNumber ( s: number | undefined, defaultValue?: number ): number { return typeof s === 'number' ? s : (defaultValue === undefined ? 0 : defaultValue)}
-export function numberOrUndefined(s: any): number{
+export function numberOrUndefined(s: any): number|undefined{
   if (typeof s === 'number') return isNaN(s)?undefined: s
   if (typeof s === 'string') {
     try{

@@ -227,7 +227,7 @@ export interface DatePickerProps<S, C> extends CommonStateProps<S, string, C>, I
   showMonthYearPicker?: boolean;
   dateRange?: DateRange<S, C>;
   jurisdiction?: LensState<S, string, C>;
-  dateInfo?: LensState<S, DateInfo, C>;
+  dateInfo?: LensState<S, any, C>;
   dateErrorMessage?: DateErrorMessageOptionals
 }
 
