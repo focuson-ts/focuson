@@ -1,7 +1,7 @@
 import {
     DataD,
     DateDDMMYYY_DD,
-    IntegerDD, PrimaryMutations,
+    IntegerDD, NatNumDd, PrimaryMutations,
     RefD,
     RepeatingDataD,
     RestD,
@@ -118,6 +118,7 @@ export function timeDataRefD<G> (d: RefConfiguration ): RefD<G> {
         structure: {
             today: {dataDD: StringDD, sample: ['01-07-2022']},
             serverNow: {dataDD: StringDD, sample: ['2022-07-01T05:25:32.077Z']},
+            serverOffsetHoursFromGMT: { dataDD: NatNumDd, sample: [ 0, 1 ] },
             // I am currently causing a bug - MockFF_Fetcher value -> Generated a mock version of this returning a "" instead of a mock version of this.
             holidays: {dataDD: {...holidayListD, resolver: 'getHolidays'}},
             dateFormat: {dataDD: StringDD, sample: ['dd-MM-yyyy']}

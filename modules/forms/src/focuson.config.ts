@@ -58,7 +58,8 @@ export function timeDataResolver(sqlList: NameAnd<SqlInfo>): NameAnd<PrimaryMuta
     getTimeData: [
       { type: 'sql', name: sqlList.today.name, schema: onlySchema, sql: sqlList.today.sql, params: [
           { type: "output", name: 'today', rsName: 'TODAY', javaType: 'String', format: { pattern: 'dd-MM-yyyy', type: 'Date' } },
-        ] },
+        ]
+      },
       // // Keep me I am very useful for debugging
       // { type: 'manual', name: 'manualToday', code: [
       //   'String today = "20-11-2022";'
@@ -77,12 +78,20 @@ export function timeDataResolver(sqlList: NameAnd<SqlInfo>): NameAnd<PrimaryMuta
           'String serverNow = dateFormat.format(now);'
         ], params: [
           { type: 'output', name: 'serverNow', javaType: 'String' }
-        ] },
+        ]
+      },
       { type: 'manual', name: 'dateFormat', code: [
           'String dateFormat = "dd-MM-yyyy";'
         ], params: [
           { type: 'output', name: 'dateFormat', javaType: 'String' }
-        ] }
+        ]
+      },
+      { type: 'manual', name: 'getServerOffsetFromGMT', code: [
+          'Integer serverOffsetHoursFromGMT = 0;'
+        ], params: [
+          { type: 'output', name: 'serverOffsetHoursFromGMT', javaType: 'Integer' }
+        ]
+      },
     ],
     getHolidays: [
       { type: 'sql', name: sqlList.today.name, schema: onlySchema, sql: sqlList.today.sql, params: [
@@ -109,7 +118,7 @@ export const timeDataConfig: RefConfiguration = {
 
 
 // export const generatedRefs: ExampleRefD[] = [ dateInfoRefD ( { ... dateRefconfig, urlPrefix: "/api/focuson"} ) , resolversRefD]
-export const generatedRefs: ExampleRefD[] = [ accountTypeRefD ( accountTypeConfig ) , timeDataRefD(timeDataConfig), resolversRefD ]
+export const generatedRefs: ExampleRefD[] = [ accountTypeRefD ( accountTypeConfig ) , timeDataRefD( timeDataConfig ), resolversRefD ]
 
 export const generatedPages: ExampleMainPage[] = [
   tablePageD,

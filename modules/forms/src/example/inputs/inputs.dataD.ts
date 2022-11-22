@@ -1,14 +1,23 @@
 import { ExampleDataD } from "../common";
-import { IntegerDD, ManyLineStringDD, MoneyDD, MoneyStringDD, NatNumDd, StringDD } from "../../common/dataD";
+import {
+  IntegerDD,
+  ManyLineStringDD,
+  MoneyDD,
+  MoneyStringDD,
+  NatNumDd,
+  OneLineStringDD,
+  StringDD
+} from "../../common/dataD";
+import {StringInputCD} from "../../common/componentsD";
 
 export const inputsDD: ExampleDataD = {
   name: 'Inputs',
   description: `A load of inputs to allow to check the validity behaviour`,
   structure: {
     natNum: { dataDD: NatNumDd },
-    tab1: {dataDD: {...StringDD, displayParams:{maxlength: 10, tabWhenLengthExceeds: 2}} },
-    tab2: {dataDD: {...StringDD, displayParams:{maxlength: 10, tabWhenLengthExceeds: 2}} },
-    tab3: {dataDD: {...StringDD, displayParams:{maxlength: 10}} },
+    tab1: {dataDD: {...OneLineStringDD, layout: StringInputCD ,displayParams:{maxlength: 10, tabWhenLengthExceeds: 2, label: ''}} },
+    tab2: {dataDD: {...StringDD, layout: StringInputCD, displayParams:{maxlength: 10, tabWhenLengthExceeds: 2}} },
+    tab3: {dataDD: {...StringDD, layout: StringInputCD, displayParams:{maxlength: 10}} },
     integerMax100: { dataDD: IntegerDD, displayParams: { max: 100 } },
     integerMax100WithCustomMessage: { dataDD: IntegerDD, displayParams: { required: true, max: 100, errorMessage: 'Please enter a value < 100' } },
     money: { dataDD: MoneyDD },
