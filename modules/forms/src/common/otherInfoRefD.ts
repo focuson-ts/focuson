@@ -1,10 +1,9 @@
 
 import {NameAnd} from "@focuson/utils";
-import {allCommonIds, commonIds, fromCommonIds} from "../example/commonIds";
 import { PrimaryMutations } from "./resolverD";
 import { RefD } from "./pageD";
 import { DataD, DateDDMMYYY_DD, IntegerDD, NatNumDd, RepeatingDataD, StringDD } from "./dataD";
-import { RestD, StringParam } from "./restD";
+import {RestD, RestParams, StringParam} from "./restD";
 import { TableCD } from "./componentsD";
 
 // This file is a replacement for the dateInfoRefD
@@ -12,6 +11,7 @@ import { TableCD } from "./componentsD";
 
 export interface RefConfiguration {
     urlPrefix: string;
+    params: RestParams;
     resolver?: NameAnd<PrimaryMutations>;
     sql?: Map<string, string>
 }
@@ -27,10 +27,7 @@ export function accountTypeRefD<G> (d: RefConfiguration): RefD<G> {
     const accountTypeRestD: RestD<G> = {
         actions: [ 'get' ],
         dataDD: accountTypeDD,
-        params: {
-            dbName: allCommonIds.dbName,
-            ...fromCommonIds('vbAccountSeq')
-        },
+        params: {...d.params},
         url: `${d.urlPrefix}/vbAccountType?{query}`,
         resolvers: { ...d.resolver }
     }
@@ -90,9 +87,7 @@ export function timeDataRefD<G> (d: RefConfiguration ): RefD<G> {
     const timeDataRestD: RestD<G> = {
         actions: ['get'],
         dataDD: timeDataD,
-        params: {
-            dbName: allCommonIds.dbName,
-        },
+        params: {...d.params},
         url: `${d.urlPrefix}/dateInfo?{query}`,
         resolvers: {...d.resolver}
     }

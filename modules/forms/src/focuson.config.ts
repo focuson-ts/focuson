@@ -22,7 +22,6 @@ import { DatesPageD } from "./example/dates/dates.pageD";
 import { wizardPD } from "./example/wizard/wizard.pageD";
 
 import { ButtonsPageD } from "./example/buttons/buttonsPageD";
-import { dateInfoRefD, dateRefconfig } from "./common/dateInfoRefD";
 import { CreditAC, DirectDebitAC } from "./example/authoriseCharges/authoriseCharges.customise";
 import { modalPagePD } from "./example/modalPages/modalPages.pageD";
 import { resolversRefD } from "./example/resolvers/resolvers.refD";
@@ -33,7 +32,14 @@ import {accountTypeRefD, RefConfiguration, timeDataRefD} from "./common/otherInf
 import {onlySchema} from "./example/database/tableNames";
 import {NameAnd} from "@focuson/utils";
 import {PrimaryMutations} from "./common/resolverD";
+import {RestParams} from "./common/restD";
+import {allCommonIds, fromCommonIds} from "./example/commonIds";
 
+
+export const accountTypeRestParams: RestParams = {
+  dbName: allCommonIds.dbName,
+  ...fromCommonIds('vbAccountSeq')
+}
 export const accountTypeResolver: NameAnd<PrimaryMutations> = {
   getVbAccountTypeForRefD: [
     { type: 'sqlFunction', package: 'B003N_ACCOUNT_OPTIONS', name: 'Get_Account_Type', schema: onlySchema, params: [
@@ -53,6 +59,9 @@ export const sqlList: NameAnd<SqlInfo> = {
   holiday: { name: 'getHolidaysSQL', sql: "SELECT BANKING_HOLIDAY_DATE, JURISDICTION_CODE FROM VPARAM.BANKING_HOLIDAYS WHERE BANKING_HOLIDAY_DATE > ? ORDER BY BANKING_HOLIDAY_DATE DESC" }
 }
 
+export const timeDataRestParams: RestParams = {
+  dbName: allCommonIds.dbName,
+}
 export function timeDataResolver(sqlList: NameAnd<SqlInfo>): NameAnd<PrimaryMutations> {
   return {
     getTimeData: [
@@ -108,11 +117,13 @@ export function timeDataResolver(sqlList: NameAnd<SqlInfo>): NameAnd<PrimaryMuta
 
 export const accountTypeConfig: RefConfiguration = {
   urlPrefix: '/v1/rocket',
+  params: accountTypeRestParams,
   resolver: accountTypeResolver
 }
 
 export const timeDataConfig: RefConfiguration = {
   urlPrefix: '/v1/rocket',
+  params: timeDataRestParams,
   resolver: timeDataResolver(sqlList)
 }
 
