@@ -53,14 +53,19 @@ export const intValidationParams: DisplayCompParamD = {
 export const commonInputParams: DisplayCompParamD = {
   ...commonParams,
 }
+export const commonInputParamsWithTab: DisplayCompParamD = {
+  ...commonParams,
+    tabWhenLengthExceeds: { paramType: "object", needed: 'no' }
+}
+
 export const StringInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "StringInput",
-  params: { ...commonInputParams, ...stringValidationParams }
+  params: { ...commonInputParamsWithTab, ...stringValidationParams   }
 }
 
 export const NumberInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "NumberInput",
-  params: { ...commonInputParams, ...intValidationParams }
+  params: { ...commonInputParamsWithTab, ...intValidationParams}
 }
 
 export const CheckboxInputCD: DisplayCompD = {
