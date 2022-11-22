@@ -1,7 +1,7 @@
 import { ExampleDataD, ExampleRefD, ExampleRestD } from "../common";
 import { StringDD } from "../../common/dataD";
 import { fromCommonIds } from "../commonIds";
-import { OutputForManualParam } from "../../common/resolverD";
+import { GuardedMultipleMutation, OutputForManualParam } from "../../common/resolverD";
 
 const resolverDD: ExampleDataD = {
   description: "",
@@ -35,19 +35,36 @@ export const resolverRestD: ExampleRestD = {
       params: [ 'brandRef', 'clientRef' ],
       select: [
         {
-          guard: [ 'brandRef==3' ], type: "manual", name: 'manual0',
+          guard: [ 'brandRef==3' ], type: "manual", name: 'manual3',
           code: manualCode ( 'output', 5 ),
           params: [ 'brandRef', 'clientRef', ...nOutputParams ( 5, manualOutputParams ( 'output' ) ) ]
         },
         {
+          guard: [ 'brandRef==4' ], type: "manual", name: 'manual4', throwsException: true,
+          code: `throw new RuntimeException();`,
+          params: [ 'brandRef', 'clientRef', ...nOutputParams ( 5, manualOutputParams ( 'output' ) ) ]
+        },
+        {
+          guard: [ 'brandRef==5' ], type: "multiple",
+          mutations: [
+            { type: "message", message: 'some message' },
+            {
+              type: "manual", name: 'manual51', throwsException: true,
+              code: `throw new RuntimeException();`,
+              params: [ 'brandRef', 'clientRef', ...nOutputParams ( 5, manualOutputParams ( 'output' ) ) ]
+            }
+          ],
+          // params: [ 'brandRef', 'clientRef', ...nOutputParams ( 5, manualOutputParams ( 'output' ) ) ]
+        },
+        {
           guard: [], type: "multiple",
           mutations: [
+            { type: "message", message: 'some message' },
             {
               type: "manual", name: 'manual10',
               code: manualCode ( 'output', 10 ),
               params: [ 'brandRef', 'clientRef', ...nOutputParams ( 10, manualOutputParams ( 'output' ) ) ]
             },
-            { type: "message", message: 'some message' },
           ]
         },
       ]

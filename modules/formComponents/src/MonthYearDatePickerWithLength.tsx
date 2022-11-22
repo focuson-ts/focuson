@@ -85,7 +85,7 @@ export const LabelAndMonthYearLength: <S, Context extends FocusOnContext<S>> ( p
                    const startS: StartEndDateAndLength = { startDate: fromDate.optJson (), endDate: toDate.optJson () }
                    const newS = setLength ( startS, length, debug )
                    const txs: Transform<any, any>[] = [ //need the any because I don't know how to make the S in Input SelectFn the same the S in LabelAndMonthYearLength
-                     [ state.optional, () => value ],
+                     [ state.optional, () => length ],
                      [ fromDate.optional, () => newS.startDate ],
                      [ toDate.optional, () => newS.endDate ],
                      ...makeInputChangeTxs ( id, parentState, onChange ) ]
