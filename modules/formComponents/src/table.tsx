@@ -48,7 +48,7 @@ export type OneRowFn<T> = ( row: T, i: number, classForTr: string | undefined, r
 export function addClassRowFn<T> ( fn: OneRowFn<T>, classFn: ( t: T ) => string | undefined ): OneRowFn<T> {
   return ( row, i, classForTr, rights, onClick ) => {
     const classFromFn = classFn ( row )
-    const realClassForTr = classForTr ? `${classForTr} ${classFromFn}` : classFromFn
+    const realClassForTr = classForTr ? `${classForTr} ${classFromFn ? classFromFn : ''}` : classFromFn
     return fn ( row, i, realClassForTr, rights, onClick )
   }
 }
@@ -62,7 +62,7 @@ export const rawTable = <S, T, Context extends PageSelectionContext<S>> (
   oneRow: OneRowFn<T>, displayTitleFn?: DisplayTitleFn ) =>
   ( props: CommonTableProps<S, T, Context> ) => {
     const realDisplayTitleFn = displayTitleFn ? displayTitleFn : defaultDisplayTitleFn
-    const { id, state, copySelectedIndexTo,  joiners, prefixFilter, prefixColumn, maxCount, emptyData, tableTitle, scrollAfter, rights } = props
+    const { id, state, copySelectedIndexTo, joiners, prefixFilter, prefixColumn, maxCount, emptyData, tableTitle, scrollAfter, rights } = props
     const tbodyScroll: CSSProperties | undefined = scrollAfter ? { height: scrollAfter, overflow: 'auto' } : undefined
     const orderJsx = titles.map ( ( o, i ) => realDisplayTitleFn ( id, o.toString (), i ) )
     const json: T[] = safeArray ( state.optJson () )
@@ -135,7 +135,7 @@ export function TableWithHighLightIfOver<S, T, Context extends PageSelectionCont
   const { id, nameOfCellForMinimum, minimumValue, classNameOfHighlight, order, joiners } = props
   const oneRow = addClassRowFn ( defaultOneRow ( id, order, joiners ), row => {
     const value = numberOrUndefined ( row[ nameOfCellForMinimum ] )
-    const shouldHighlight = value && value <= minimumValue
+    const shouldHighlight = value !== undefined && minimumValue !== undefined && value <= minimumValue
     return shouldHighlight ? classNameOfHighlight : undefined
   } )
   return rawTable<S, T, Context> ( order, defaultOnClick ( props ), oneRow ) ( props )
@@ -147,10 +147,10 @@ export interface TableWithHighLightIfOverDataDependantProps<S, T, Context> exten
 }
 export function TableWithHighLightIfOverDataDependant<S, T, Context extends PageSelectionContext<S>> ( props: TableWithHighLightIfOverDataDependantProps<S, T, Context> ) {
   const { id, nameOfCellForMinimum, minimumPath, classNameOfHighlight, order, joiners } = props
-  const minimumValue=minimumPath.optJson()
+  const minimumValue = minimumPath.optJson ()
   const oneRow = addClassRowFn ( defaultOneRow ( id, order, joiners ), row => {
     const value = numberOrUndefined ( row[ nameOfCellForMinimum ] )
-    const shouldHighlight = value && minimumValue && value <= minimumValue
+    const shouldHighlight = value !== undefined && minimumValue !== undefined && value <= minimumValue
     return shouldHighlight ? classNameOfHighlight : undefined
   } )
   return rawTable<S, T, Context> ( order, defaultOnClick ( props ), oneRow ) ( props )
