@@ -3,8 +3,12 @@ import { useEffect, useRef } from "react";
 
 const canHaveErrorMessage = 'edited';
 
-export const setEdited = ( e: HTMLElement | undefined ) => {
-  if ( e ) e.dataset[ canHaveErrorMessage ] = 'true'
+export const setEdited = ( e: HTMLElement | undefined, data: string | undefined ) => {
+  if ( e ) {
+    const validData = data != undefined && data.length > 0
+    console.log ( 'setEdited', data, validData )
+    e.dataset[ canHaveErrorMessage ] = validData ? 'true' : undefined
+  }
 };
 export interface CustomErrorProps {
   id: string
@@ -20,8 +24,7 @@ export function CustomError ( { id, validationMessage, error }: CustomErrorProps
     const hasBeenEdited = component?.dataset?.[ canHaveErrorMessage ] === 'true'
     const actualError = error === undefined ? !component.checkValidity () : error
     // console.log ( 'CustomError - valid', id, 'actualError', actualError, 'checkValidity', component.checkValidity (), validationMessage, 'hasBeenEdited', hasBeenEdited )
-    if ( !hasBeenEdited ) return
-    if ( actualError ) {
+    if ( hasBeenEdited && actualError ) {
       errorDiv.className = 'custom-error'
       const msg = validationMessage ? validationMessage : component.validationMessage;
       errorDiv.innerHTML = msg

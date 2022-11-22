@@ -42,7 +42,7 @@ export const CheckboxInput = <S, T extends any, P> ( tProps: CheckboxProps<T> ) 
   return <Props extends InputProps<S, T, Context> & P, Context extends FocusOnContext<S>> ( props: Props ) => {
     const { state, mode, id, parentState, onChange, readonly, enabledBy, onBlur } = props
     const onChangeEventHandler = ( e: React.ChangeEvent<HTMLInputElement> ) => {
-      setEdited(e?.target)
+      setEdited(e?.target, e?.target?.checked?.toString())
       selectFn<S, T, Context> ( state, id, transformer ( e?.target?.checked ), parentState, onChange, true )
     }
     return <><input type='checkbox' {...cleanInputProps ( props )}
@@ -79,7 +79,7 @@ export const NonCheckboxInput = <S, T extends any, P> ( tProps: StringProps<T> )
     const { state, mode, id, parentState, onChange, readonly, enabledBy, onBlur, regexForChange, errorMessage ,tabWhenLengthExceeds} = props
     const onChangeEventHandler = ( transformer: ( s: string ) => T, e: React.ChangeEvent<HTMLInputElement> ) => {
       const value = e?.target?.value;
-      setEdited(e?.target)
+      setEdited(e?.target, value)
       if (tabWhenLengthExceeds && value.toString().length>=tabWhenLengthExceeds) {
         // console.log('focus on next')
         findNextTabStop().focus()
