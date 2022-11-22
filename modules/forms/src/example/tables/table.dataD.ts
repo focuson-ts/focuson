@@ -1,6 +1,6 @@
 import { ExampleDataD, ExampleRepeatingD } from "../common";
 import { IntegerDD, MoneyStringDD, StringDD } from "../../common/dataD";
-import { TableCD, TableWithHighLightIfOverCD } from "../../common/componentsD";
+import { TableCD, TableWithHighLightIfOverCD, TableWithHighLightIfOverDataDependantCD } from "../../common/componentsD";
 
 export const TableRowDD: ExampleDataD = {
   name: 'TableRow',
@@ -26,7 +26,7 @@ export const TableDisplayDD: ExampleDataD = {
   description: "A few table variants",
   structure: {
     simpleTable: {
-      dataDD: { ...TableRepDD, name: "Table1" , displayParams: { order: [ 'name', 'balance', 'someNumber' ] }},
+      dataDD: { ...TableRepDD, name: "Table1", displayParams: { order: [ 'name', 'balance', 'someNumber' ] } },
     },
     tableWithMinBalance: {
       dataDD: {
@@ -36,7 +36,7 @@ export const TableDisplayDD: ExampleDataD = {
         displayParams: {
           order: [ 'name', 'balance', 'someNumber' ],
           nameOfCellForMinimum: 'balance',
-          minimumValue:200,
+          minimumValue: 200,
           classNameOfHighlight: 'highlight'
         }
       }
@@ -53,7 +53,21 @@ export const TableDisplayDD: ExampleDataD = {
           classNameOfHighlight: 'highlight'
         }
       }
-    }
+    },
+    minValue: { dataDD: IntegerDD },
+    tableWithVaryingMinValueOnBalance: {
+      dataDD: {
+        ...TableRepDD,
+        name: 'Table4',
+        display: TableWithHighLightIfOverDataDependantCD,
+        displayParams: {
+          order: [ 'name', 'balance', 'someNumber' ],
+          nameOfCellForMinimum: 'balance',
+          minimumPath: 'minValue',
+          classNameOfHighlight: 'highlight'
+        }
+      }
+    },
 
   }
 }

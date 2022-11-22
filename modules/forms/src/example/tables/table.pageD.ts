@@ -6,7 +6,7 @@ export const tablePageD: ExampleMainPage = {
   domain: { display: { dataDD: TableDisplayDD } },
   display: { target: '~/display', dataDD: TableDisplayDD },
   modals: [],
-  modes: [ 'view' ],
+  modes: [ 'edit' ],
   initialValue: 'empty',
   name: "TablePage",
   pageType: 'MainPage',

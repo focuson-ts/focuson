@@ -289,6 +289,16 @@ export const TableWithHighLightIfOverCD: DisplayCompD = {
     classNameOfHighlight: { paramType: 'string', needed: 'yes' }
   }
 }
+export const TableWithHighLightIfOverDataDependantCD: DisplayCompD = {
+  import: "@focuson/form_components",   //so that I can write the import statement for the react component
+  name: "TableWithHighLightIfOverDataDependant",                        //The name of the react component
+  params: {
+    ...tableParams,
+    nameOfCellForMinimum: { paramType: 'string', needed: 'yes' },
+    minimumPath: { paramType: 'path', needed: 'yes' },
+    classNameOfHighlight: { paramType: 'string', needed: 'yes' }
+  }
+}
 export const TableWithVaryingOrderCD: DisplayCompD = {
   import: "@focuson/form_components",   //so that I can write the import statement for the react component
   name: "TableWithVaryingOrder",                        //The name of the react component
