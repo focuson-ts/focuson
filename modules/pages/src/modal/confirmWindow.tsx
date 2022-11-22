@@ -108,7 +108,7 @@ export function ConfirmCommitWindow<S, D, C extends ModalContext<S>> () {
   return makeConfirmCommitWindow<S, D, C> ( makerProps => {
     const { confirm, confirmId, cancel, cancelId, closeId, props, state } = makerProps
     const { id, messageText, confirmText, cancelText, title, className, showCancelButton } = props
-    console.log ( 'ConfirmCommitWindow', messageText )
+    // console.log ( 'ConfirmCommitWindow', messageText )
     const realText = messageText ? replaceTextUsingPath ( state, messageText ) : 'Are you sure?'
     const fullCancelText = cancelText ? replaceTextUsingPath ( state, cancelText ) : 'Cancel'
     const fullConfirmText = confirmText ? replaceTextUsingPath ( state, confirmText ) : 'OK'

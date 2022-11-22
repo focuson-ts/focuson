@@ -264,7 +264,7 @@ export function RawDatePicker<S extends any, C extends ModalContext<S>> ( select
       try {
         const formattedDate = e === undefined ? undefined : myformat ( e, dateFormat )
         if ( debug ) console.log ( 'datePicker.onChange', id, 'e', typeof e, e, 'dateFormat', dateFormat, 'formattedDate', formattedDate )
-        setEdited ( e?.target )
+        setEdited ( e?.target, formattedDate )
         selectFn ( debug, props ) ( 'onChange', formattedDate )
         // state.setJson ( formattedDate, reasonFor ( 'DatePicker', 'onChange', id ) )
       } catch ( err ) {
@@ -276,7 +276,7 @@ export function RawDatePicker<S extends any, C extends ModalContext<S>> ( select
     function onChangeRaw ( e: React.FocusEvent<HTMLInputElement> ) {
       const value = e.target?.value;
       if ( value !== undefined ) {
-        setEdited ( e?.target )
+        setEdited ( e?.target , e?.target?.value)
         if ( debug ) console.log ( 'datePicker.onChangeRaw', id, value, 'changed', e )
         selectFn ( debug, props ) ( 'changeRaw', value )
       }

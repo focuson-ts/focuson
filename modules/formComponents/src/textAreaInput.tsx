@@ -38,7 +38,7 @@ export const cleanTextareaProps = <T extends NameAnd<any>> ( p: T ): T => {
 };
 
 export function TextAreaInput<S, T, Context extends FocusOnContext<S>> ( props: TextareaProps<S, string, Context> ) {
-  const { id, state, mode, readonly, scrollAfter, parentState, onChange, enabledBy, errorMessage , maxlength} = props
+  const { id, state, mode, readonly, scrollAfter, parentState, onChange, enabledBy, errorMessage, maxlength } = props
 
   return (
     <textarea
@@ -47,7 +47,7 @@ export function TextAreaInput<S, T, Context extends FocusOnContext<S>> ( props: 
       maxLength={maxlength}
       data-errormessage={errorMessage}
       onChange={( e ) => {
-        setEdited ( e?.target )
+        setEdited ( e?.target, e?.target?.value )
         state.massTransform ( reasonFor ( 'TextAreaInput', 'onChange', id ) ) ( [ state.optional, () => e.target.value ], ...makeInputChangeTxs ( id, parentState, onChange ) );
       }}
       readOnly={mode === 'view' || readonly || disabledFrom ( enabledBy )}

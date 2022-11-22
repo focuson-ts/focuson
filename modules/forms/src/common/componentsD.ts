@@ -1,5 +1,3 @@
-import { LensState } from "@focuson/state";
-
 /** A state is a string[] that means 'turn into a state  'from' the current state
  * A full state is a string[] that means 'turn into a state from the root'.
  * In general 'state' doesn't break encapsulation, pagestate and fullState do. pageState is slightly cleaner becaues the damage doesn't leave the page
@@ -55,14 +53,19 @@ export const intValidationParams: DisplayCompParamD = {
 export const commonInputParams: DisplayCompParamD = {
   ...commonParams,
 }
+export const commonInputParamsWithTab: DisplayCompParamD = {
+  ...commonParams,
+    tabWhenLengthExceeds: { paramType: "object", needed: 'no' }
+}
+
 export const StringInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "StringInput",
-  params: { ...commonInputParams, ...stringValidationParams }
+  params: { ...commonInputParamsWithTab, ...stringValidationParams   }
 }
 
 export const NumberInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "NumberInput",
-  params: { ...commonInputParams, ...intValidationParams }
+  params: { ...commonInputParamsWithTab, ...intValidationParams}
 }
 
 export const CheckboxInputCD: DisplayCompD = {
@@ -182,19 +185,27 @@ export const DatePickerForPaymentsCD: DisplayCompD = {
   import: "@focuson/form_components", name: "DatePickerForPayments",
   params: {
     ...DatePicker2CD.params,
-    pathToToday: { paramType: 'path', needed: 'yes' },
-    hour: { paramType: 'object', needed: 'yes' },
-    minute: { paramType: 'object', needed: 'yes' },
+    pathToDateInfo: { paramType: 'path', needed: 'yes' },
+    warning: { paramType: 'json', needed: 'yes' },
+    error: { paramType: 'json', needed: 'yes' },
   }
 }
-export const MonthYearDatePickerWithLengthCD: DisplayCompD = {
+export const StartMonthYearDatePickerWithLengthCD: DisplayCompD = {
   ...DatePicker2CD,
-  name: "MonthYearDatePickerWithLength",
+  name: "StartMonthYearDatePickerWithLength",
   params: {
     ...DatePicker2CD.params,
-    pathToOtherDate: { paramType: 'path', needed: 'yes' },
-    lengthPath: { paramType: 'path', needed: 'yes' },
-    subtract: { paramType: 'boolean', needed: 'yes' }
+    endDatePath: { paramType: 'path', needed: 'yes' },
+    lengthPath: { paramType: 'path', needed: 'yes' }
+  }
+}
+export const EndMonthYearDatePickerWithLengthCD: DisplayCompD = {
+  ...DatePicker2CD,
+  name: "EndMonthYearDatePickerWithLength",
+  params: {
+    ...DatePicker2CD.params,
+    startDatePath: { paramType: 'path', needed: 'yes' },
+    lengthPath: { paramType: 'path', needed: 'yes' }
   }
 }
 export const LabelAndMonthYearLengthCD: DisplayCompD = {
@@ -204,7 +215,6 @@ export const LabelAndMonthYearLengthCD: DisplayCompD = {
     ...LabelAndStringInputCD.params,
     fromDate: { paramType: 'path', needed: 'yes' },
     toDate: { paramType: 'path', needed: 'yes' },
-    subtract: { paramType: 'boolean', needed: 'yes' }
   }
 }
 export const LabelAndDropDownFromDataCD: DisplayCompD = {
@@ -276,6 +286,16 @@ export const TableWithHighLightIfOverCD: DisplayCompD = {
     ...tableParams,
     nameOfCellForMinimum: { paramType: 'string', needed: 'yes' },
     minimumValue: { paramType: 'object', needed: 'yes' },
+    classNameOfHighlight: { paramType: 'string', needed: 'yes' }
+  }
+}
+export const TableWithHighLightIfOverDataDependantCD: DisplayCompD = {
+  import: "@focuson/form_components",   //so that I can write the import statement for the react component
+  name: "TableWithHighLightIfOverDataDependant",                        //The name of the react component
+  params: {
+    ...tableParams,
+    nameOfCellForMinimum: { paramType: 'string', needed: 'yes' },
+    minimumPath: { paramType: 'path', needed: 'yes' },
     classNameOfHighlight: { paramType: 'string', needed: 'yes' }
   }
 }

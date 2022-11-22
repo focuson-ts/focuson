@@ -1,5 +1,5 @@
 //Common Data Definitions
-import { DatePicker2CD, DisplayCompD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndDropDownCD, LabelAndMonthYearLengthCD, LabelAndNumberInputCD, LabelAndRadioCD, LabelAndStringInputCD, LabelAndTextAreaCD, LabelAndYNCheckboxInputCD, MonthYearDatePickerWithLengthCD, NumberInputCD } from "./componentsD";
+import { DatePicker2CD, DisplayCompD, EndMonthYearDatePickerWithLengthCD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndDropDownCD, LabelAndMonthYearLengthCD, LabelAndNumberInputCD, LabelAndRadioCD, LabelAndStringInputCD, LabelAndTextAreaCD, LabelAndYNCheckboxInputCD, NumberInputCD, StartMonthYearDatePickerWithLengthCD } from "./componentsD";
 import { ComponentDisplayParams } from "../codegen/makeRender";
 import { BooleanValidations, NameAnd, NumberValidations, safeArray, StringValidations } from "@focuson/utils";
 import { Guards } from "../buttons/guardButton";
@@ -470,19 +470,28 @@ export const MonthYearWithDatePickerDD: DatePrimitiveDD = {
   sample: [ "1-10-2022", '01-11-2022', '01-12-2022' ],
 }
 
-export const MonthYearFromRangeFromWithDatePickerDD: DatePrimitiveDD = {
+export const StartMonthYearFromRangeFromWithDatePickerDD: DatePrimitiveDD = {
   ...MonthYearWithDatePickerDD,
   name: 'Date',
-  description: "The primitive representing a date (w/o time)",
-  display: MonthYearDatePickerWithLengthCD,
+  description: "",
+  display: StartMonthYearDatePickerWithLengthCD,
   displayParams: { ...MonthYearWithDatePickerDD.displayParams },
 }
-export const LabelAndMonthYearLengthDD: NumberPrimitiveDD = {
-  ...NatNumDd,
+export const EndMonthYearFromRangeFromWithDatePickerDD: DatePrimitiveDD = {
+  ...MonthYearWithDatePickerDD,
+  name: 'Date',
+  description: "",
+  display: EndMonthYearDatePickerWithLengthCD,
+  displayParams: { ...MonthYearWithDatePickerDD.displayParams },
+}
+export const LabelAndMonthYearLengthDD: StringPrimitiveDD = {
+  ...StringDD,
+  allowUndefined: true,
+  emptyValue: undefined,
   name: 'LabelAndMonthYearLength',
   description: "A range of months",
   display: LabelAndMonthYearLengthCD,
-  displayParams: { ...NatNumDd.displayParams },
+  displayParams: { ...StringDD.displayParams, required: false },
 }
 
 export const DateDDMMYYY_DD: DatePrimitiveDD = {

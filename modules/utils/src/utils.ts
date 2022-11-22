@@ -81,10 +81,11 @@ export function safeString ( s: string | undefined | number ): string {
 }
 export function safeNumber ( s: number | undefined, defaultValue?: number ): number { return typeof s === 'number' ? s : (defaultValue === undefined ? 0 : defaultValue)}
 export function numberOrUndefined(s: any): number{
-  if (typeof s === 'number') return s
+  if (typeof s === 'number') return isNaN(s)?undefined: s
   if (typeof s === 'string') {
     try{
-      return Number.parseFloat(s)
+      const result = Number.parseFloat(s);
+      return isNaN(result)?undefined: result
     }catch ( e ){}
   }
   return undefined
