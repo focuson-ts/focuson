@@ -28,7 +28,7 @@ import { resolversRefD } from "./example/resolvers/resolvers.refD";
 import { inputsPageD } from "./example/inputs/inputs.pageD";
 import { loaderPageD } from "./example/loader/loader.pageD";
 import { tablePageD } from "./example/tables/table.pageD";
-import {accountTypeRefD, RefConfiguration, timeDataRefD} from "./common/otherInfoRefD";
+import {accountTypeRefD, RefConfiguration, timeDataRefD} from "./common/dateInfoRefD";
 import {onlySchema} from "./example/database/tableNames";
 import {NameAnd} from "@focuson/utils";
 import {PrimaryMutations} from "./common/resolverD";

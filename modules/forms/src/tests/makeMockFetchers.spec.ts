@@ -2,7 +2,7 @@ import { makeMockFetcherFor, makeMockFetchersForRest } from "../codegen/makeMock
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { paramsForTest } from "./paramsForTest";
 import { findChildResolvers, ResolverData } from "../codegen/makeJavaFetchersInterface";
-import { timeDataRefD } from "../common/otherInfoRefD";
+import { timeDataRefD } from "../common/dateInfoRefD";
 import { timeDataConfig } from "../focuson.config";
 import { AllGuards } from "../buttons/guardButton";
 
