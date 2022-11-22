@@ -108,8 +108,7 @@ function isCopyResultCommand ( c: ChangeCommand ): c is CopyResultCommand {
 }
 export const copyResultCommandProcessor = <S, Result> ( pathToResultL: ( path: string ) => Optional<Result, any>, toPathToLens: ( path: string ) => Optional<S, any> ) =>
   ( result: Result ): ChangeCommandProcessor<S> =>
-    ( c ) => isCopyResultCommand ( c ) ? [ [ toPathToLens ( c.to ),
-      () => c.from === '' ? result : pathToResultL ( c.from ).getOption ( result ) ] ] : undefined
+    ( c ) => isCopyResultCommand ( c ) ? [ [ toPathToLens ( c.to ), () => c.from === '' ? result : pathToResultL ( c.from ).getOption ( result ) ] ] : undefined
 
 export interface DeleteAllMessages extends ChangeCommand {
   command: 'deleteAllMessages'
@@ -135,8 +134,8 @@ export function isDeleteRestWindowCommand ( c: ChangeCommand ): c is DeleteRestW
 }
 function deleteRestWindowIfNeeded ( rest: string, action: RestAction, ps: PageSelectionForDeleteRestWindowCommand[] ) {
   console.log ( 'deleteRestWindowIfNeeded', rest, action, ps )
-  const shouldDelete = ( p: PageSelectionForDeleteRestWindowCommand) => (p.pageName === 'restLoader' && p.arbitraryParams?.rest === rest && p.arbitraryParams?.action.toString () === action.toString ());
-  return ps.filter(p => !shouldDelete(p))
+  const shouldDelete = ( p: PageSelectionForDeleteRestWindowCommand ) => (p.pageName === 'restLoader' && p.arbitraryParams?.rest === rest && p.arbitraryParams?.action.toString () === action.toString ());
+  return ps.filter ( p => !shouldDelete ( p ) )
 }
 export const processDeleteRestWindowCommand = <S, MSGs> ( pageL: Optional<S, PageSelectionForDeleteRestWindowCommand[]> ): ChangeCommandProcessor<S> =>
   ( c: ChangeCommand ) => isDeleteRestWindowCommand ( c ) ? [ [ pageL, old => deleteRestWindowIfNeeded ( c.rest, c.action, old ) ] ] : undefined;

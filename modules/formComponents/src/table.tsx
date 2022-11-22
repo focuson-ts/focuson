@@ -135,7 +135,7 @@ export function TableWithHighLightIfOver<S, T, Context extends PageSelectionCont
   const { id, nameOfCellForMinimum, minimumValue, classNameOfHighlight, order, joiners } = props
   const oneRow = addClassRowFn ( defaultOneRow ( id, order, joiners ), row => {
     const value = numberOrUndefined ( row[ nameOfCellForMinimum ] )
-    const shouldHighlight = value && value < minimumValue
+    const shouldHighlight = value && value <= minimumValue
     return shouldHighlight ? classNameOfHighlight : undefined
   } )
   return rawTable<S, T, Context> ( order, defaultOnClick ( props ), oneRow ) ( props )
@@ -150,7 +150,7 @@ export function TableWithHighLightIfOverDataDependant<S, T, Context extends Page
   const minimumValue=minimumPath.optJson()
   const oneRow = addClassRowFn ( defaultOneRow ( id, order, joiners ), row => {
     const value = numberOrUndefined ( row[ nameOfCellForMinimum ] )
-    const shouldHighlight = value && minimumValue && value < minimumValue
+    const shouldHighlight = value && minimumValue && value <= minimumValue
     return shouldHighlight ? classNameOfHighlight : undefined
   } )
   return rawTable<S, T, Context> ( order, defaultOnClick ( props ), oneRow ) ( props )
