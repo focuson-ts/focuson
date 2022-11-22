@@ -6,7 +6,7 @@ import { findQueryMutationResolver, ResolverData } from "./makeJavaFetchersInter
 
 export const makeMockFetcherFor = ( params: JavaWiringParams ) => ( rd: ResolverData ): string[] => {
   const { isRoot, samplerName, sample, resolver, needsObjectInOutput, javaType } = rd
-  console.log ( 'resolver data', rd )
+  // console.log ( 'resolver data', rd )
   if ( needsObjectInOutput )
     if ( isRoot || sample.length === 0 )
       return [ ` public DataFetcher<${javaType}> ${resolver}() {  return dataFetchingEnvironment -> ${params.sampleClass}.${samplerName}0;    }` ]
