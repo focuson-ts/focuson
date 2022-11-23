@@ -172,15 +172,30 @@ describe ( "messageCommandProcessor", () => {
 
 describe ( "processOpenPageCommandProcessor", () => {
   const processor = processOpenPageCommandProcessor<StateForChangeCommands, MinimalPageSelection> ( config.pageSelectionL, config.dateFn );
-  const command: OpenPageCommand = { command: 'openPage', page: { pageMode: 'view', pageName: 'somePage', focusOn: 'focusOnThis' } };
+  // const mainCommand: OpenPageCommand = { command: 'openPage', page: { type: 'main', pageMode: 'view', pageName: 'somePage' } };
+  const modalCommand: OpenPageCommand = { command: 'openPage', page: { type: 'modal', pageMode: 'view', pageName: 'somePage', focusOn: 'focusOnThis' } };
   it ( "should ignore none OpenPageCommands", () => {
     expect ( processor ( { command: 'something else' } ) ).toEqual ( undefined )
   } )
-  it ( "should create a page selection ", () => {
-    expect ( displayTransformsInState ( froma12, safeArray ( processor ( command ) ) ) ).toEqual ( [
+  // it ( "should create a page selection for a main page", () => {
+  //   expect ( displayTransformsInState ( froma12, safeArray ( processor ( mainCommand ) ) ) ).toEqual ( [
+  //     {
+  //       "opt": "default.focus?(pageSelection)",
+  //       "value": [ { "firstTime": true, "pageMode": "view", "pageName": "somePage", "time": "timeForTest" } ]
+  //     }
+  //   ] )
+  // } )
+  it ( "should create a page selection for a modal page", () => {
+    expect ( displayTransformsInState ( {
+      ...froma12,
+      pageSelection: [ { pageName: 'mainPageName', pageMode: 'view', time: 'unimportant' } ]
+    }, safeArray ( processor ( modalCommand ) ) ) ).toEqual ( [
       {
         "opt": "default.focus?(pageSelection)",
-        "value": [ { "firstTime": true, "focusOn": "focusOnThis", "pageMode": "view", "pageName": "somePage", "time": "timeForTest" } ]
+        "value": [
+          { "pageMode": "view", "pageName": "mainPageName", "time": "unimportant" },
+          { "firstTime": true, "focusOn": "focusOnThis", "pageMode": "view", "pageName": "mainPageName_somePage", "time": "timeForTest" }
+        ]
       }
     ] )
   } )

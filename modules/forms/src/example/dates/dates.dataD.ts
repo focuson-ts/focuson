@@ -1,6 +1,7 @@
 import { ExampleDataD } from "../common";
-import { DateWithDatePickerDD, EndMonthYearFromRangeFromWithDatePickerDD, LabelAndMonthYearLengthDD, MonthYearWithDatePickerDD, StartMonthYearFromRangeFromWithDatePickerDD } from "../../common/dataD";
+import { DateWithDatePickerDD, EndMonthYearFromRangeFromWithDatePickerDD, LabelAndMonthYearLengthDD, MonthYearWithDatePickerDD, StartMonthYearFromRangeFromWithDatePickerDD, StringDD } from "../../common/dataD";
 import { DatePickerForPaymentsCD, EndMonthYearDatePickerWithLengthCD, LayoutCd, StartMonthYearDatePickerWithLengthCD } from "../../common/componentsD";
+import { PaymentTypeDd } from "../payments/payments.dataD";
 
 export const datesDataD: ExampleDataD = {
   name: 'Dates',
@@ -44,15 +45,26 @@ export const datesDataD: ExampleDataD = {
     length: { dataDD: LabelAndMonthYearLengthDD, displayParams: { fromDate: 'startDate', toDate: 'endDate', onChange: { command: 'message', msg: 'length' } } },
     startDate: { dataDD: StartMonthYearFromRangeFromWithDatePickerDD, displayParams: { endDatePath: 'endDate', lengthPath: 'length', onChange: { command: 'message', msg: 'startDate' } } },
     endDate: { dataDD: EndMonthYearFromRangeFromWithDatePickerDD, displayParams: { startDatePath: 'startDate', lengthPath: 'length', onChange: { command: 'message', msg: 'endDate' } } },
+    paymentType: { dataDD: PaymentTypeDd },
     forPayment: {
       dataDD: {
         ...DateWithDatePickerDD, display: DatePickerForPaymentsCD,
         displayParams: {
           dateFormat: 'dd/MM/yyyy',
+
           dateRange: { type: 'future', allowWeekends: false, allowHolidays: false },
           pathToDateInfo: '/CommonData',
-          warning: { time: '11:20', messageText: "Warning msg", showCancelButton: false },
-          error: { time: '11:26', messageText: "Error msg", showCancelButton: false }
+          paymentType: 'paymentType',
+          messages: {
+            EMT: {
+              warning: { time: '11:20', messageText: "Warning msg for EMT", showCancelButton: false },
+              error: { time: '11:26', messageText: "Error msg for EMT", showCancelButton: false }
+            },
+            CHAPS: {
+              warning: { time: '11:20', messageText: "Warning msg for CHAPs", showCancelButton: false },
+              error: { time: '11:26', messageText: "Error msg for CHAPs", showCancelButton: false }
+            }
+          }
         }
       }
     }

@@ -1,5 +1,5 @@
 import { DatePickerProps, DatePickerSelectFn, defaultDatePickerWithExtraTxs, parseDate, RawDatePicker } from "./datePicker";
-import { after, isSameDay, timeOnServerinGMT } from "@focuson/utils";
+import { after, isSameDay, NameAnd, timeOnServerinGMT } from "@focuson/utils";
 import { LensState } from "@focuson/state";
 import { ConfirmProps, ModalContext, openConfirmWindowTxs } from "@focuson/pages";
 
@@ -7,10 +7,15 @@ interface EventDetails extends ConfirmProps {
   time: string,
 }
 
-interface DatePickerForPaymentProps<S, C> extends DatePickerProps<S, C> {
-  pathToDateInfo: LensState<S, any, C>
+interface WarningErrorEventDetails {
   warning: EventDetails,
   error: EventDetails,
+
+}
+interface DatePickerForPaymentProps<S, C> extends DatePickerProps<S, C> {
+  pathToDateInfo: LensState<S, any, C>
+  paymentType: LensState<S, any, C>
+  messages: NameAnd<WarningErrorEventDetails>
 }
 
 function isDatePickerForPaymentProps<S, C> ( d: DatePickerProps<S, C> ): d is DatePickerForPaymentProps<S, C> {
@@ -19,16 +24,30 @@ function isDatePickerForPaymentProps<S, C> ( d: DatePickerProps<S, C> ): d is Da
 }
 const selectFnForPayments: DatePickerSelectFn = defaultDatePickerWithExtraTxs ( ( props, dateAsString ) => {
   if ( dateAsString && isDatePickerForPaymentProps ( props ) ) {
-    const { id, pathToDateInfo, state, warning, error, dateFormat } = props
-    const { dateFn } = state.context
+    const { id, pathToDateInfo, state, paymentType, dateFormat, messages } = props
     // @ts-ignore
     const dateDebug = state.main?.debug?.dateDebug
+    const { dateFn } = state.context
+
+    const pt = paymentType.optJsonOr ( '' )
+    if ( dateDebug ) console.log ( 'payment typeis', pt )
+    const msgs = messages?.[ pt ]
+    if ( msgs === undefined ) {
+      if ( dateDebug ) console.log ( `Can't find messages for [${pt}]` )
+      return []
+    }
+    const { warning, error } = msgs
+    if ( dateDebug ) console.log ( 'Messages are', pt, msgs )
+    if ( dateDebug ) console.log ( 'warning ', warning, 'error', error )
+
+
     const dateInfo = pathToDateInfo.optJson ()
     const browserNow = dateFn ()
     const valueAsDate = parseDate ( ``, dateFormat ) ( dateAsString )
     const todayAsDate = parseDate ( ``, dateInfo.dates.dateFormat ) ( dateInfo.dates.today )
     if ( dateDebug ) console.log ( 'Datapicker for payments', id, 'valueAsDate', valueAsDate, 'todayAsDate', todayAsDate )
     if ( dateInfo && !Array.isArray ( valueAsDate ) && !Array.isArray ( todayAsDate ) && isSameDay ( valueAsDate, todayAsDate ) ) {
+      console.log('same day', valueAsDate, todayAsDate, isSameDay(valueAsDate, todayAsDate))
       const serverNow = timeOnServerinGMT ( browserNow, dateInfo )
       if ( dateDebug ) console.log ( 'Datapicker for payments', id, 'browserNow', browserNow )
       if ( dateDebug ) console.log ( 'Datapicker for payments', id, 'serverNow', serverNow )
@@ -45,7 +64,7 @@ const selectFnForPayments: DatePickerSelectFn = defaultDatePickerWithExtraTxs ( 
 } )
 
 export function DatePickerForPayments<S, C extends ModalContext<S>> ( props: DatePickerForPaymentProps<S, C> ) {
-  const dateInfo = props.pathToDateInfo.focusOn('dates')
-  return RawDatePicker ( selectFnForPayments ) ( {...props, dateInfo} )
+  const dateInfo = props.pathToDateInfo.focusOn ( 'dates' )
+  return RawDatePicker ( selectFnForPayments ) ( { ...props, dateInfo } )
 }
 

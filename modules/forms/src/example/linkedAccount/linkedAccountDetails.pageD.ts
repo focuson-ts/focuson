@@ -28,7 +28,7 @@ export const CreatePaymentMP: ExampleModalPage = {
       main: OverpaymentMainPage,
       copy: { from: '~/rememberedForTest', to: '~/selectedIndex' },
       copyOnClose: { from: '~/selectedIndex', to: '~/rememberedForTest' },
-    }
+    },
   },
   pageType: 'ModalPopup',
   display: { dataDD: CreatePaymentDD, target: '~/createPayment' },
@@ -70,9 +70,12 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
         { from: '~/display/mandate', to: '~/tempMandate' },
       ],
       deleteOnOpen: '~/selectIndex',
-      copyJustString: [
-        { from: '~/display/mandate/sortCode', to: '~/selectMandateSearch/sortCode', joiner: '-' },
-      ],
+      change:
+        { command: 'copyJustStrings', from: '~/display/mandate/sortCode', to: '~/selectMandateSearch/sortCode', joiner: '-' }
+      ,
+      // copyJustString: [
+      //   { from: '~/display/mandate/sortCode', to: '~/selectMandateSearch/sortCode', joiner: '-' },
+      // ],
       copyOnClose: { from: '~/tempMandate', to: '~/display/mandate' }
     },
     createPayment: {

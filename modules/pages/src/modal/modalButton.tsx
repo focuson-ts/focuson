@@ -34,9 +34,9 @@ export interface CommonModalButtonProps<S, Context> extends CustomButtonType {
   change?: ModalChangeCommands | ModalChangeCommands[]
   changeOnClose?: ModalChangeCommands | ModalChangeCommands[]
   copy?: CopyDetails[],
-  copyJustString?: CopyStringDetails[],
   /** This only exists to allow the generated code to make an object that will give compilation issues if the target of focuson doesn't exist. It isn't used */
   deleteOnOpen?: string[],
+  copyJustString?: CopyStringDetails[],
   copyOnClose?: CopyDetails[],
   setToLengthOnClose?: SetToLengthOnClose,
   createEmptyIfUndefined?: any;

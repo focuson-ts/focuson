@@ -1,4 +1,4 @@
-import { ExampleDataD, ExampleMainPage, ExampleModalPage } from "../common";
+import { ExampleDataD, ExampleMainPage, ExampleModalPage, ExampleRestD } from "../common";
 import { StringDD, YesNoDD, YesNoRadioDD } from "../../common/dataD";
 import { LabelAndRadioCD } from "../../common/componentsD";
 
@@ -23,6 +23,14 @@ export const ModalButtonsModalPageD: ExampleModalPage = {
     back: { control: "ModalCancelButton" }
   }
 }
+
+
+export const ButtonsRestD: ExampleRestD = {
+  actions: [ 'get' ],
+  dataDD: ModalButtonDomain, params: {},
+  url: "/api/buttons"
+
+}
 export const ButtonsPageD: ExampleMainPage = {
   name: 'Buttons',
   pageType: "MainPage",
@@ -35,11 +43,13 @@ export const ButtonsPageD: ExampleMainPage = {
     temp1: { dataDD: ModalButtonDomain },
     temp2: { dataDD: ModalButtonDomain }
   },
-  rest: {},
+  rest: {
+    buttons: { rest: ButtonsRestD, postFetchCommands: [], targetFromPath: "~/display" }
+  },
   buttons: {
     nukeTemp: { control: "DeleteStateButton", path: [ '~/temp1', '~/temp2' ] },
 
-    copyLine1ToLine2: { control: "CommandButton", command: [{ command: 'copy', from: '~/display/line1', to: '~/display/line2' }] },
+    copyLine1ToLine2: { control: "CommandButton", command: [ { command: 'copy', from: '~/display/line1', to: '~/display/line2' } ] },
 
     createEmpty: {
       control: 'ModalButton', focusOn: '~/temp1', modal: ModalButtonsModalPageD, mode: 'create', createEmpty: ModalButtonDomain,
@@ -54,6 +64,19 @@ export const ButtonsPageD: ExampleMainPage = {
       copy: { from: '~/display' },
       copyOnClose: { to: '~/display' }
     },
+    restWithModalPage: {
+      control: 'RestButton', action: 'get', restName: 'buttons', result: 'nothing',
+      validate: false,
+      onSuccess: {command: 'openPage',
+        page: {type: 'modal', pageName: 'ButtonsModalPage', pageMode: 'view', focusOn: '~/display',
+          changeOnClose:{command: 'message', msg: 'Closing Rest With Modal Page'}
+        }}
+    },
+    // restWithDatesMainPage: {
+    //   control: 'RestButton', action: 'get', restName: 'buttons', result: 'nothing',
+    //   validate: false,
+    //   onSuccess: {command: 'openPage', page: {type: 'main', pageName: 'Dates', pageMode: 'view'}}
+    // },
   }
 
 }
