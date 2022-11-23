@@ -17,5 +17,5 @@ export function isRestStateChange ( r: RestAction ): r is RestStateChange {
   return r.state !== undefined
 }
 
-
 export type RestResult = 'refresh' | 'nothing'
+export type PageMode = 'view' | 'create' | 'edit'

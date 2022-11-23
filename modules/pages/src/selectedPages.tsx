@@ -1,6 +1,6 @@
-import { page, PageMode, PageSelectionContext } from "./pageSelection";
+import { page, PageSelectionContext } from "./pageSelection";
 import { LensProps, reasonFor } from "@focuson/state";
-import { DateFn, decamelize } from "@focuson/utils";
+import { DateFn, decamelize, PageMode } from "@focuson/utils";
 
 export interface SelectPageProps<S, Context> extends LensProps<S, any, Context> {
   id?: string

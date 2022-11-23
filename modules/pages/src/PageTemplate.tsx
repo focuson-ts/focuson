@@ -1,6 +1,7 @@
 import { LensProps, LensState } from "@focuson/state";
 import { FocusedPage, TitleDetails } from "./focusedPage";
-import { PageMode } from "./pageSelection";
+import { PageMode } from "@focuson/utils";
+
 
 
 export interface PageTemplateProps<S, D, Context> extends LensProps<S, D, Context> {

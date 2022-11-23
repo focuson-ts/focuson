@@ -1,11 +1,10 @@
-import { NameAndLens, NameAndLensFn, Optional } from "@focuson/lens";
+import { NameAndLensFn, Optional } from "@focuson/lens";
 import { LensProps, LensState } from "@focuson/state";
 import { simpleMessagesLFn } from "./simpleMessage";
 import { FocusedPage } from "./focusedPage";
 import { PageTemplateProps } from "./PageTemplate";
-import { HasSimpleMessages, SimpleMessage } from "@focuson/utils";
-import { PageMode } from "./pageSelection";
-import { InputChangeCommands, ModalChangeCommands, NewPageChangeCommands } from "@focuson/rest";
+import { HasSimpleMessages, PageMode, SimpleMessage } from "@focuson/utils";
+import { ModalChangeCommands, NewPageChangeCommands } from "@focuson/rest";
 
 export interface MultiPageDetails<S, Context> {
   [ name: string ]: OnePageDetails<S, any, any, any, Context>

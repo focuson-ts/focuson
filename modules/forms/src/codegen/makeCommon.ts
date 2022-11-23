@@ -4,13 +4,12 @@ import { addStringToEndOfAllButLast, indentList } from "./codegen";
 import { TSParams } from "./config";
 import { applyToTemplate } from "@focuson/template";
 import { DirectorySpec, loadFile } from "@focuson/files";
-import { AllLensRestParams, CommonLensRestParam, flatMapCommonParams, flatMapParams, isCommonLens,  RestD } from "../common/restD";
-import { NameAnd, sortedEntries, unique } from "@focuson/utils";
-import { PageMode } from "@focuson/pages";
+import { AllLensRestParams, CommonLensRestParam, flatMapCommonParams, flatMapParams, isCommonLens, RestD } from "../common/restD";
+import { NameAnd, PageMode, sortedEntries, unique } from "@focuson/utils";
 import { AppConfig } from "../appConfig";
 
-export function makeFullState<G> ( params: TSParams, pds: RefD< G>[] ): string[] {
-  const hasDomains = addStringToEndOfAllButLast ( ',' ) ( pds .map ( d => hasDomainForPage ( d ) ) )
+export function makeFullState<G> ( params: TSParams, pds: RefD<G>[] ): string[] {
+  const hasDomains = addStringToEndOfAllButLast ( ',' ) ( pds.map ( d => hasDomainForPage ( d ) ) )
   const constant = [ 'HasSimpleMessages', 'HasPageSelection', `Has${params.commonParams}`, 'HasTagHolder', `HasRestCommands`, 'HasFocusOnDebug', 'HasRestCount', 'HasEnvironment' ].join ( ',' )
   return [
     `export interface ${params.stateName} extends ${constant},`,
@@ -35,12 +34,12 @@ export function makePathToLens ( params: TSParams ): string[] {
     `    fromPathFromRaw ( pageSelectionlens<${params.stateName}> (), pages )` ]
 }
 
-export function makeCommon<G> ( appConfig: AppConfig, params: TSParams, pds: RefD< G>[], directorySpec: DirectorySpec ): string[] {
+export function makeCommon<G> ( appConfig: AppConfig, params: TSParams, pds: RefD<G>[], directorySpec: DirectorySpec ): string[] {
   const pageDomainsImport: string[] = pds.map ( p => `import { ${hasDomainForPage ( p )} } from '${domainsFileName ( '.', params, p )}';` )
   let paramsWithSamples = findAllCommonParamsWithSamples ( pds );
   return [
-    `import { fromPathFromRaw, HasPageSelection, PageMode ,PageSelectionContext, pageSelectionlens} from '@focuson/pages'`,
-    `import { defaultDateFn, HasSimpleMessages, SimpleMessage, NameAnd } from '@focuson/utils';`,
+    `import { fromPathFromRaw, HasPageSelection, PageSelectionContext, pageSelectionlens} from '@focuson/pages'`,
+    `import { defaultDateFn, HasSimpleMessages, SimpleMessage, NameAnd, PageMode } from '@focuson/utils';`,
     `import {  OnTagFetchErrorFn } from '@focuson/fetcher';`,
     `import { identityOptics,NameAndLens, Optional } from '@focuson/lens';`,
     `import { HasTagHolder } from '@focuson/template';`,
@@ -79,14 +78,14 @@ export function makeStateWithSelectedPage ( appConfig: AppConfig, params: TSPara
 export interface CommonParamsDetails {
   name: string;
   param: CommonLensRestParam<any>;
-  page: RefD< any>;
+  page: RefD<any>;
   restName?: string
   rest?: RestD<any>;
 }
 const paramToDetails = <B, G> ( page: MainPageD<B, G>, restName?: string, rest?: RestD<G> ) => ( params: NameAnd<AllLensRestParams<any>> ) =>
   sortedEntries ( params ).flatMap<CommonParamsDetails> ( ( [ name, param ] ) => isCommonLens ( param ) ? [ { name, param, page, restName, rest } ] : [] )
 
-export function findAllCommonParamsDetails< G> ( pds: RefD< G>[] ): CommonParamsDetails[] {
+export function findAllCommonParamsDetails<G> ( pds: RefD<G>[] ): CommonParamsDetails[] {
   return flatMapParams ( pds, ( page, restName, rest, name, param ) =>
     isCommonLens ( param ) ? [ { name, param, page, rest, restName } ] : [] )
   //TODO This is a fix while we work out how to deal with the head parameters differently
@@ -113,7 +112,7 @@ export function validateCommonParams ( cs: CommonParamsDetails[] ): CommonParamE
     } )
   return [ ...nameDuplicates, ...nameMismatches ]
 }
-export function findAllCommonParamsWithSamples< G> ( pages: RefD< G>[] ): any {
+export function findAllCommonParamsWithSamples<G> ( pages: RefD<G>[] ): any {
   const lensAndValue: [ string, any ][] = flatMapCommonParams ( pages, ( p, restName, r, name, c ) =>
     [ [ c.commonLens, c.testValue ] ] )
   const result = unique ( lensAndValue.sort ( ( l, r ) => l[ 0 ].localeCompare ( l[ 0 ] ) ), x => x[ 0 ] )
@@ -122,10 +121,10 @@ export function findAllCommonParamsWithSamples< G> ( pages: RefD< G>[] ): any {
 
 //
 
-export function makeCommonParams<G> ( params: TSParams, pages: RefD< G>[], directorySpec: DirectorySpec ) {
+export function makeCommonParams<G> ( params: TSParams, pages: RefD<G>[], directorySpec: DirectorySpec ) {
   let commonParams: CommonParamsDetails[] = unique ( findAllCommonParamsDetails ( pages ), t => t.param.commonLens );
-  const errorMessage = commonParams.filter(d => !d.param.commonLens.match(/^[a-zA-Z_][a-zA-Z0-9_]*$/)).map(d => `Common Ids must be legal javascript identifiers. [${d.param.commonLens}]`).join('\n')
+  const errorMessage = commonParams.filter ( d => !d.param.commonLens.match ( /^[a-zA-Z_][a-zA-Z0-9_]*$/ ) ).map ( d => `Common Ids must be legal javascript identifiers. [${d.param.commonLens}]` ).join ( '\n' )
   const commonParamDefns = commonParams.map ( s => '  ' + s.param.commonLens + ` ? : ${s.param.typeScriptType};\n` ).join ( "" )
   const commonParamNameAndLens = commonParams.map ( s => `   ${s.name}  :    commonIdsL.focusQuery ( '${s.param.commonLens}' )` ).join ( ",\n" )
-  return applyToTemplate ( loadFile ( 'templates/commonTemplate.ts', directorySpec ).toString (), { ...params, commonParamDefns, commonParamNameAndLens ,errorMessage} )
+  return applyToTemplate ( loadFile ( 'templates/commonTemplate.ts', directorySpec ).toString (), { ...params, commonParamDefns, commonParamNameAndLens, errorMessage } )
 }

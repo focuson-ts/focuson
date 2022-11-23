@@ -1,6 +1,7 @@
 import { Optional, replaceTextFn, Transform } from "@focuson/lens";
 import { TagHolder } from "@focuson/template";
-import { DateFn, filterObject, RestAction, SimpleMessageLevel, toArray } from "@focuson/utils";
+import { DateFn, filterObject, PageMode, RestAction, SimpleMessageLevel, toArray } from "@focuson/utils";
+
 
 
 export interface ChangeCommand {
@@ -151,7 +152,13 @@ export function processChangeCommandProcessor<S> ( errorPrefix: string, p: Chang
     return result
   } )
 }
-
+export interface MinimalPageSelection {
+  pageName: string;
+  firstTime?: boolean;
+  time: string;
+  pageMode: PageMode;
+  focusOn?: string;
+}
 type CommonCommands = DeleteCommand | MessageCommand | SetChangeCommand | DeleteAllMessages | TimeStampCommand
 export type RestChangeCommands = CommonCommands | CopyResultCommand | DeleteRestWindowCommand
 export type ModalChangeCommands = CommonCommands | CopyCommand

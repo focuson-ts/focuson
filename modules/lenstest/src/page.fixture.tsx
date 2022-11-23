@@ -1,7 +1,7 @@
 import { lensState } from "@focuson/state";
 import { identityOptics } from "@focuson/lens";
-import { focusedPage, HasPageSelection, Loading, MultiPageDetails, PageConfig, PageMode, simpleMessagesPageConfig } from "@focuson/pages";
-import { HasSimpleMessages, SimpleMessage, testDateFn } from "@focuson/utils";
+import { focusedPage, HasPageSelection, Loading, MultiPageDetails, PageConfig,simpleMessagesPageConfig } from "@focuson/pages";
+import { HasSimpleMessages, PageMode, SimpleMessage, testDateFn } from "@focuson/utils";
 import { defaultPageSelectionAndRestCommandsContext, FocusOnContext } from "@focuson/focuson";
 import { HasTagHolder } from "@focuson/template";
 import { HasRestCommands, RestCommand } from "@focuson/rest";

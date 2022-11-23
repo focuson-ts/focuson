@@ -1,9 +1,9 @@
 import React from 'react';
 import { Story } from "@storybook/react";
-import { HasPageSelection, HasSimpleMessageL, ModalButton, PageMode, PageSelectionContext, simpleMessagesL } from "@focuson/pages";
+import { HasPageSelection, HasSimpleMessageL, ModalButton,  PageSelectionContext, simpleMessagesL } from "@focuson/pages";
 import { SBookProvider } from "./sbookProvider";
 import { defaultPageSelectionAndRestCommandsContext, defaultPageSelectionContext, FocusOnContext } from "@focuson/focuson";
-import { HasSimpleMessages, testDateFn } from "@focuson/utils";
+import { HasSimpleMessages, testDateFn ,PageMode} from "@focuson/utils";
 import { HasRestCommands } from "@focuson/rest";
 import { HasTagHolder } from "@focuson/template";
 

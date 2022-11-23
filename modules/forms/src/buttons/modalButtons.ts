@@ -1,11 +1,11 @@
 import { DataD } from "../common/dataD";
 import { CommonRestOnCommit, isRestOnCommitRefresh, MainPageD, ModalPageD, PageD, RestOnCommit } from "../common/pageD";
-import { CopyStringDetails, PageMode, PageOps, PageParams, SetToLengthOnClose } from "@focuson/pages";
+import { CopyStringDetails, PageOps, PageParams, SetToLengthOnClose } from "@focuson/pages";
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
 import { indentList, opt, optObj, optT } from "../codegen/codegen";
 import { emptyName, modalName, restDetailsName } from "../codegen/names";
 import { EnabledBy, enabledByString } from "./enabledBy";
-import { CopyDetails, decamelize, toArray, toArrayOrUndefined } from "@focuson/utils";
+import { CopyDetails, decamelize, PageMode, toArray, toArrayOrUndefined } from "@focuson/utils";
 import { ModalChangeCommands, RestCommand, RestLoadWindowWithoutRestProps, } from "@focuson/rest";
 import { stateQueryForParams } from "../codegen/lens";
 
@@ -74,8 +74,10 @@ function makeModalButtonInPage<G> (): ButtonCreator<ModalOrMainButtonInPage<G>, 
     import: "@focuson/pages",
     makeButton:
       ( { params, mainPage, parent, name, button } ) => {
-        const { mode, restOnCommit, loader,copy, createEmpty, createEmptyIfUndefined, copyOnClose, copyJustString, setToLengthOnClose,
-                text, pageParams, buttonType, deleteOnOpen, change, changeOnClose, restOnOpen, pageOp } = button
+        const {
+                mode, restOnCommit, loader, copy, createEmpty, createEmptyIfUndefined, copyOnClose, copyJustString, setToLengthOnClose,
+                text, pageParams, buttonType, deleteOnOpen, change, changeOnClose, restOnOpen, pageOp
+              } = button
         const createEmptyString = createEmpty ? [ `createEmpty={${params.emptyFile}.${emptyName ( createEmpty )}}` ] : []
         const createEmptyIfUndefinedString = createEmptyIfUndefined ? [ `createEmptyIfUndefined={${params.emptyFile}.${emptyName ( createEmptyIfUndefined )}}` ] : []
         createEmptyIfUndefined

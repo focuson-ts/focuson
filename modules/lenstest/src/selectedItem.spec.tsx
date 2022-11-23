@@ -1,7 +1,7 @@
 import { enzymeSetup } from "./enzymeAdapterSetup";
 import { mount } from "enzyme";
 import { SelectedItem, SelectedItemDisplayProps } from "@focuson/form_components";
-import { PageMode } from "@focuson/pages";
+import { PageMode } from "@focuson/utils";
 import { LensState, lensState } from "@focuson/state";
 import { Lenses } from "@focuson/lens";
 
@@ -21,7 +21,7 @@ interface SelectedItemThings {
 }
 function displaySelectedItem ( s: StateForSelectedItem, selectedItemThings: SelectedItemThings, setMain: ( s: StateForSelectedItem ) => void ) {
   function display ( { state, mode, id }: SelectedItemDisplayProps<StateForSelectedItem, string, {}> ) {
-    const optJson = state.optJson();
+    const optJson = state.optJson ();
     return <span id={id}>{mode}/{optJson}</span>
   }
   const state: LensState<StateForSelectedItem, StateForSelectedItem, {}> = lensState ( s, setMain, 'desc', {} );
@@ -30,7 +30,7 @@ function displaySelectedItem ( s: StateForSelectedItem, selectedItemThings: Sele
 
 describe ( "selectedItem", () => {
   it ( "should display the selected item", () => {
-    const x = Lenses.identity<StateForSelectedItem>().focusQuery('data').chain(Lenses.nth(1)).getOption({data: ['1','2','3']})
+    const x = Lenses.identity<StateForSelectedItem> ().focusQuery ( 'data' ).chain ( Lenses.nth ( 1 ) ).getOption ( { data: [ '1', '2', '3' ] } )
     expect ( displaySelectedItem ( { data: [ 'a', 'b' ] }, { index: 1, mode: 'view' }, () => {} ).html () ).toEqual ( '<span id="someId">view/b</span>' )
     expect ( displaySelectedItem ( { data: [ 'a', 'b' ] }, { index: 999, mode: 'view' }, () => {} ).html () ).toEqual ( '<span id="someId">view/</span>' )
     expect ( displaySelectedItem ( { data: [] }, { index: 999, mode: 'view' }, () => {} ).html () ).toEqual ( '<span id="someId">view/</span>' )

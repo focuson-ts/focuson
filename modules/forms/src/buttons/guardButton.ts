@@ -1,9 +1,8 @@
-import { NameAnd, toArray } from "@focuson/utils";
+import { NameAnd, PageMode, toArray } from "@focuson/utils";
 import { guardName } from "../codegen/names";
 import { stateQueryForGuards } from "../codegen/lens";
 import { MainPageD, PageD } from "../common/pageD";
 import { TSParams } from "../codegen/config";
-import { PageMode } from "@focuson/pages";
 
 
 export type AllGuards = LocalVariableGuard | LocalVariableMoreThanZero | LocalVariableLessThanLengthMinusOne |

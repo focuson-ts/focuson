@@ -2,7 +2,7 @@ import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButto
 import { indentList, opt } from "../codegen/codegen";
 import { EnabledBy, enabledByString } from "./enabledBy";
 import { ButtonWithControl } from "./allButtons";
-import { PageMode } from "@focuson/pages";
+import { PageMode } from "@focuson/utils";
 
 
 function makeSelectPageButton<B extends SelectButtonInPage<G>, G> (): ButtonCreator<SelectButtonInPage<G>, G> {

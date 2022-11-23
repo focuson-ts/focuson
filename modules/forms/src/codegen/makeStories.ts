@@ -17,7 +17,8 @@ export function makeOneModalStory<B, G> ( params: TSParams, p: PageD<B, G> ): st
 export function makeOneMainStory<B, G> ( params: TSParams, p: MainPageD<B, G> ): string[] {
   return [
     `import { Story } from "@storybook/react";`,
-    `import { findOneSelectedPageDetails, PageMode, PageSelection } from "@focuson/pages";`,
+    `import {  PageMode } from "@focuson/utils";`,
+    `import { findOneSelectedPageDetails,  PageSelection } from "@focuson/pages";`,
     `import { SBookProvider } from "@focuson/stories";`,
     `import { Lenses } from "@focuson/lens";`,
     `import { Context, emptyState, ${params.stateName} } from "../${params.commonFile}";`,

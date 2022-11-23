@@ -1,7 +1,6 @@
 import { LensState } from "@focuson/state";
-import { PageMode } from "@focuson/pages";
-import { NameAnd, toArray } from "@focuson/utils";
-import { InputChangeCommands, ModalChangeCommands } from "@focuson/rest";
+import { NameAnd, PageMode } from "@focuson/utils";
+import { InputChangeCommands } from "@focuson/rest";
 
 
 export interface CommonComponentProps {

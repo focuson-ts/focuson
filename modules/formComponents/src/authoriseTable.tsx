@@ -1,12 +1,11 @@
-import { LensProps, LensState, reasonFor } from "@focuson/state";
+import { LensState, reasonFor } from "@focuson/state";
 import { Lenses, Transform } from "@focuson/lens";
-import { PageMode } from "@focuson/pages";
+import { safeArray } from "@focuson/utils";
 import { LabelAndStringInput } from "./labelAndInput";
 import { FocusOnContext } from "@focuson/focuson";
 import { Layout } from "./layout";
 import { defaultDisplayTitleFn, defaultOnClick, defaultOneRowWithGetValue, DisplayTitleFn, getValueForTable, rawTable, TableProps } from "./table";
 import { LabelAndFixedNumber } from "./labelAndFixedNumber";
-import { safeArray } from "@focuson/utils";
 
 
 export interface AuthoriseTableData {

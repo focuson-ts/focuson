@@ -1,13 +1,13 @@
 import { identityOptics, Lens, lensBuilder, NameAndLensFn, Optional, parsePath, prefixNameAndLens, Transform } from "@focuson/lens";
 import { LensState } from "@focuson/state";
 import { HasMultiPageDetails, isMainPageDetails } from "./pageConfig";
-import { CopyDetails, safeArray, safeObject } from "@focuson/utils";
-import { ModalChangeCommands, RestCommand } from "@focuson/rest";
+import { CopyDetails, PageMode, safeArray, safeObject } from "@focuson/utils";
+import { MinimalPageSelection, ModalChangeCommands, RestCommand } from "@focuson/rest";
 import { PageDetailsForCombine } from "./selectedPage";
 
 import { RestLoadWindowWithoutRestProps } from "@focuson/rest";
 
-export type PageMode = 'view' | 'create' | 'edit'
+
 
 export interface PagePosition {
   left?: number;
@@ -29,7 +29,8 @@ export interface SetToLengthOnClose {
   variable: string
 }
 
-export interface PageSelection {
+
+export interface PageSelection extends MinimalPageSelection{
   pageName: string;
   firstTime?: boolean;
   time: string;

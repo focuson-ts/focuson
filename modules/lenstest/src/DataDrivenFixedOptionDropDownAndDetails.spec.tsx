@@ -1,9 +1,9 @@
 import { lensState, LensState } from "@focuson/state";
 import { shallow } from "enzyme";
 import { HasRestCommands, restL } from "@focuson/rest";
-import { HasPageSelection, PageDetailsForCombine, PageMode, pageSelectionlens, simpleMessagesL } from "@focuson/pages";
+import { HasPageSelection, PageDetailsForCombine, pageSelectionlens, simpleMessagesL } from "@focuson/pages";
 import { ContextForDropdown, DataDrivenFixedOptionDropDownAndDetails, OneDropDownDetails } from "@focuson/form_components";
-import { HasSimpleMessages, NameAnd, testDateFn } from "@focuson/utils";
+import { HasSimpleMessages, NameAnd,PageMode,  testDateFn } from "@focuson/utils";
 import { enzymeSetup } from "./enzymeAdapterSetup";
 import { Lenses } from "@focuson/lens";
 

@@ -1,6 +1,5 @@
 import { LensProps, LensState } from "@focuson/state";
-import { PageMode } from "@focuson/pages";
-import { NameAnd } from "@focuson/utils";
+import { NameAnd, PageMode } from "@focuson/utils";
 import { Lenses } from "@focuson/lens";
 import { HasButtons } from "./makeButtons";
 
