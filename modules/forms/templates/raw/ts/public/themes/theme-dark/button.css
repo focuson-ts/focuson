@@ -53,7 +53,6 @@ button:hover:after, .button:hover:after {
     color: var(--button-primary-foreground-color);
     min-width: var(--button-primary-min-width);
     padding: var(--button-primary-inside-padding);
-    margin: var(--button-primary-margin);
 }
 
 .primary-btn:after {
@@ -118,7 +117,6 @@ button:hover:after, .button:hover:after {
     color: var(--button-secondary-foreground-color);
     min-width: var(--button-secondary-min-width);
     padding: var(--button-secondary-inside-padding);
-    margin: var(--button-primary-margin)
 }
 
 .secondary-btn:after {

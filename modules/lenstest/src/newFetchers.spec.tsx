@@ -107,13 +107,13 @@ const pathToLens = ( s: StateForNewFetcherTests ) => ( path: string ): Optional<
 describe ( "test setup for new fetcher", () => {
   it ( "just check the rest works ", async () => {
     const pageL = identityOptics<StateForNewFetcherTests> ().focusQuery ( 'pageSelection' )
-    const props: RestToTransformProps<StateForNewFetcherTests, SimpleMessage> = {
+    const props: RestToTransformProps<StateForNewFetcherTests, SimpleMessage, PageSelection> = {
       fetchFn, mockJwt: true, d: restDetails, urlMutatorForRest: someConfig.restUrlMutator, pathToLens, messageL: someConfig.messageL,
       // @ts-ignore
       pageL,
       traceL: traceL (), stringToMsg: someConfig.stringToMsg
     }
-    const [ actual ] = await restToTransforms<StateForNewFetcherTests, SimpleMessage> ( props, () => empty, [ { name: 'someRestName', restAction: 'get' } ] )
+    const [ actual ] = await restToTransforms<StateForNewFetcherTests, SimpleMessage, PageSelection> ( props, () => empty, [ { name: 'someRestName', restAction: 'get' } ] )
     expect ( actual.restCommand ).toEqual ( { name: 'someRestName', restAction: 'get' } )
     expect ( actual.status ).toEqual ( 200 )
     const txs = actual.txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( empty ) ) ] )

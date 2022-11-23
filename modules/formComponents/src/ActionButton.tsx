@@ -1,6 +1,6 @@
 import { LensState, reasonFor } from "@focuson/state";
 import { disabledFrom, NameAnd, SimpleMessage } from "@focuson/utils";
-import { wrapWithErrors } from "@focuson/pages";
+import { PageSelection, wrapWithErrors } from "@focuson/pages";
 import { CommandButtonChangeCommands, commandButtonCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor } from "@focuson/rest";
 import { Transform } from "@focuson/lens";
 import { FocusOnContext, makeProcessorsConfig } from "@focuson/focuson";
@@ -22,7 +22,7 @@ export function ActionButton<S, C extends FocusOnContext<S>> ( { id, state, acti
   const pathsAsLens = Object.fromEntries ( Object.entries ( paths ).map ( ( [ name, fn ] ) => [ name, fn ( state ) ] ) )
   function onClick ( e: any ) {
     const errorPrefix = `Action button ${id}`
-    const config: ModalProcessorsConfig<S, SimpleMessage> = makeProcessorsConfig ( state.main, state.context )
+    const config: ModalProcessorsConfig<S, SimpleMessage, PageSelection> = makeProcessorsConfig ( state.main, state.context )
     const processor = commandButtonCommandProcessors ( config ) ( state.main )
     const pre: Transform<S, any>[] = processChangeCommandProcessor ( errorPrefix, processor, preCommands )
     const actions: Transform<S, any>[] = action ( state, id, pathsAsLens , history )

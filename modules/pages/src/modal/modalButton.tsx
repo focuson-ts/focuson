@@ -88,18 +88,19 @@ function makeModalProcessorsConfig<S, Context extends PageSelectionContext<S> & 
   props: JustModalButtonProps<S, Context> | MainModalButtonProps<S, Context>,
   dateFn: () => string,
   pathToLens: PathToLens<S>
-): ModalProcessorsConfig<S, SimpleMessage> {
+): ModalProcessorsConfig<S, SimpleMessage, PageSelection> {
 
   const realFromPathTolens: ( path: string ) => Optional<S, any> = pathToLens.fromPathTolens ? pathToLens.fromPathTolens : fromPathGivenState ( state );
   const realToPathTolens = pathToLens.toPathTolens ? pathToLens.toPathTolens : fromPathGivenState ( state, ps => [ ...ps, newPageSelection ] );
   const focusOnL = findFocusLFromCurrentState ( errorPrefix, props, realFromPathTolens, state.context.pages )
 
-  const config: ModalProcessorsConfig<S, SimpleMessage> = {
+  const config: ModalProcessorsConfig<S, SimpleMessage, PageSelection> = {
     pageNameFn: ( s: S ) => mainPage ( state ).pageName,
     tagHolderL: state.context.tagHolderL,
     stringToMsg: stringToSimpleMsg ( dateFn, 'info' ),
     fromPathTolens: realFromPathTolens,
     toPathTolens: realToPathTolens,
+    pageSelectionL: state.context.pageSelectionL,
     dateFn,
     defaultL: focusOnL,
     messageL: state.context.simpleMessagesL,
@@ -123,7 +124,7 @@ export function ModalButton<S extends any, Context extends PageSelectionContext<
     const focusOn = isModal ( props ) ? props.focusOn : undefined
     const pageName = isModal ( props ) ? props.modal : props.main.toString ()
     const newPageSelection: PageSelection = {
-      pageName, firstTime: true, pageMode, rest,loader, focusOn, copyOnClose, setToLengthOnClose,
+      pageName, firstTime: true, pageMode, rest, loader, focusOn, copyOnClose, setToLengthOnClose,
       pageParams, time: dateFn (), changeOnClose
     };
     if ( debug ) console.log ( `${errorPrefix} newPageSelection`, newPageSelection )

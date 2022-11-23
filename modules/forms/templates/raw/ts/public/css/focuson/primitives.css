@@ -72,9 +72,10 @@ table {
     margin: 0 0 20px 0;
 }
 
-.highlight{
+.highlight {
     background-color: red;
 }
+
 .labelDropdownButton {
     width: 100%;
     /* display: flex; */
@@ -436,3 +437,20 @@ button[id^="selectPage"] {
 .TwoColRow select {
     width: 98%;
 }
+
+.primary-btn {
+    margin: var(--button-primary-margin)
+}
+
+.secondary-btn {
+    margin: var(--button-primary-margin)
+}
+
+#default_template > .tooltip-wrap > .primary-btn {
+    margin-bottom: 1rem;
+}
+
+#default_template > .tooltip-wrap > .secondary-btn {
+    margin-bottom: 1rem;
+}
+

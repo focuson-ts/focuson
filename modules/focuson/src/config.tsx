@@ -172,7 +172,7 @@ export const processRestsAndFetchers = <S, Context extends FocusOnContext<S>, MS
     if ( debug ) console.log ( 'processRestsAndFetchers - pageName', pageName )
     const fromFetchers = restCommandsFromFetchers ( tagHolderL, newFetchers, restDetails, pageName, s )
     const allCommands: RestCommand[] = [ ...restCommands, ...fromFetchers ]
-    const restProps: RestToTransformProps<S, MSGs> = { fetchFn, mockJwt, d: restDetails, pathToLens, messageL, pageL: context.pageSelectionL, stringToMsg, traceL: traceL (), urlMutatorForRest: restUrlMutator }
+    const restProps: RestToTransformProps<S, MSGs,PageSelection> = { fetchFn, mockJwt, d: restDetails, pathToLens, messageL, pageSelectionL: context.pageSelectionL, stringToMsg, traceL: traceL (), urlMutatorForRest: restUrlMutator }
     const txs = await restToTransforms ( restProps, sFn, allCommands )
     const result = addTagTxsForFetchers ( config.tagHolderL, txs )
     return result
@@ -214,7 +214,7 @@ export const dispatchRestAndFetchCommands = <S, Context extends FocusOnContext<S
 export function makeProcessorsConfig<S, Context extends FocusOnContext<S>> ( startS: S, context: Context ) {
   // console.log('MakeProcessorsConfig', startS)
   const pathToLens = fromPathGivenState ( lensState ( startS, () => {throw Error ()}, '', context ) )
-  const processorsConfig: ModalProcessorsConfig<S, SimpleMessage> = {
+  const processorsConfig: ModalProcessorsConfig<S, SimpleMessage,PageSelection> = {
     pageNameFn: ( s: S ) => mainPage<S, Context> ( lensState ( s, () => {throw Error ()}, '', context ) ).pageName,
     tagHolderL: context.tagHolderL,
     messageL: context.simpleMessagesL,
@@ -223,14 +223,15 @@ export function makeProcessorsConfig<S, Context extends FocusOnContext<S>> ( sta
     stringToMsg: stringToSimpleMsg ( defaultDateFn, 'info' ),
     s: startS,
     fromPathTolens: pathToLens,
-    toPathTolens: pathToLens
+    toPathTolens: pathToLens,
+    pageSelectionL: context.pageSelectionL
   }
   return processorsConfig;
 }
 
 export function makeRestProcessorsConfig<S, Context extends FocusOnContext<S>> ( startS: S, context: Context ) {
   const pathToLens = fromPathGivenState ( lensState ( startS, () => {throw Error ()}, '', context ) )
-  const processorsConfig: RestAndInputProcessorsConfig<S, any, SimpleMessage> = {
+  const processorsConfig: RestAndInputProcessorsConfig<S, any, SimpleMessage,PageSelection> = {
     // pageNameFn: ( s: S ) => mainPage<S, Context> ( lensState ( s, () => {throw Error ()}, '', context ) ).pageName,
     // tagHolderL: context.tagHolderL,
     messageL: context.simpleMessagesL,
@@ -239,7 +240,7 @@ export function makeRestProcessorsConfig<S, Context extends FocusOnContext<S>> (
     s: startS,
     toPathTolens: pathToLens,
     resultPathToLens: pathToLens,
-    pageL: context.pageSelectionL
+    pageSelectionL: context.pageSelectionL
   }
   return processorsConfig;
 }
@@ -248,7 +249,7 @@ export function setJsonWithDispatcherSettingTrace<S, Context extends FocusOnCont
                                                                                           dispatch: FocusonDispatcher<S> ): ( sFn: () => S, reason: any ) => Promise<S> {
 
   const deleteRestCommands: Transform<S, any> = [ config.restL, () => [] ];
-  const { preMutate, postMutate, onError } = config
+  const { preMutate,  onError } = config
   return async ( sFn: () => S, reason: any ) => {
     const startS = sFn ();
     // @ts-ignore
@@ -293,7 +294,7 @@ export function setJsonForFocusOn<S, Context extends FocusOnContext<S>> ( config
       const withPreMutate = preMutate ( withDebug )
       const processorsConfig = makeProcessorsConfig ( main, context );
       const firstPageProcesses: S = preMutateForPages<S, Context> ( context, processorsConfig ) ( withPreMutate )
-      const restProps: RestToTransformProps<S, SimpleMessage> = { fetchFn, mockJwt: context.mockJwt, d: restDetails, pathToLens, messageL, pageL: context.pageSelectionL, stringToMsg, traceL: traceL (), urlMutatorForRest: config.restUrlMutator }
+      const restProps: RestToTransformProps<S, SimpleMessage, PageSelection> = { fetchFn, mockJwt: context.mockJwt, d: restDetails, pathToLens, messageL, pageSelectionL: context.pageSelectionL, stringToMsg, traceL: traceL (), urlMutatorForRest: config.restUrlMutator }
       const afterRest = await rest ( restProps, restL, () => firstPageProcesses )
       if ( afterRest ) newStateFn ( afterRest )
       let newMain = await loadTree ( fetchers, afterRest, fetchFn, debug )

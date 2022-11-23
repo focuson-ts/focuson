@@ -1,8 +1,7 @@
 import { defaultDateFn, HasSimpleMessages, safeArray, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson/utils";
-import { CopyCommand, copyCommandProcessor, CopyResultCommand, copyResultCommandProcessor, DeleteCommand, deleteCommandProcessor, DeleteMessageStrictCopySetProcessorsConfig, MessageCommand, messageCommandProcessor, modalCommandProcessors, ModalProcessorsConfig, restChangeCommandProcessors, RestAndInputProcessorsConfig, SetChangeCommand, setCommandProcessor, StrictCopyCommand, strictCopyCommandProcessor, deletePageTagsCommandProcessor, DeletePageTagsCommand, TimeStampCommand, confirmWindowCommandProcessors } from "./changeCommands";
+import { CopyCommand, copyCommandProcessor, CopyResultCommand, copyResultCommandProcessor, DeleteCommand, deleteCommandProcessor, DeleteMessageStrictCopySetProcessorsConfig, MessageCommand, messageCommandProcessor, modalCommandProcessors, ModalProcessorsConfig, restChangeCommandProcessors, RestAndInputProcessorsConfig, SetChangeCommand, setCommandProcessor, StrictCopyCommand, strictCopyCommandProcessor, deletePageTagsCommandProcessor, DeletePageTagsCommand, TimeStampCommand, confirmWindowCommandProcessors, MinimalPageSelection, processOpenPageCommandProcessor, OpenPageCommand } from "./changeCommands";
 import { displayTransformsInState, identityOptics, lensBuilder, Lenses, parsePath } from "@focuson/lens";
 import { TagHolder } from "@focuson/template";
-
 
 
 interface abc {
@@ -13,7 +12,7 @@ interface yz {
   z?: abc
 }
 interface StateForChangeCommands extends HasSimpleMessages {
-  pageSelection: [],
+  pageSelection: MinimalPageSelection[],
   fromA?: abc,
   toA?: abc,
   x?: yz,
@@ -26,20 +25,22 @@ const resultPathToLens = ( p: string ) => parsePath ( p, lensBuilder (
 // @ts-ignore
   { '/': Lenses.identity<yz> ( 'resultPath' ) }, {} ) )
 const defaultL = Lenses.identity<StateForChangeCommands> ( 'default' ).focusQuery ( 'x' ).focusQuery ( 'z' ).focusQuery ( 'a' )
+const pageSelectionL = Lenses.identity<StateForChangeCommands> ( 'default' ).focusQuery ( 'pageSelection' )
 const empty: StateForChangeCommands = { messages: [], pageSelection: [] }
 const froma12: StateForChangeCommands = { ...empty, fromA: { a: { b: "one", c: "two" } } }
 const froma12Withz: StateForChangeCommands = { ...empty, fromA: { a: { b: "one", c: "two" } }, x: { z: { a: { b: 'from', c: 'default' } } } }
 
 const froma12WithAMessage: StateForChangeCommands = { ...empty, messages: [ { level: 'error', msg: 'a', time: 'someTime' } ], fromA: { a: { b: "one", c: "two" } } }
-const config: DeleteMessageStrictCopySetProcessorsConfig<StateForChangeCommands, SimpleMessage> = {
+const config: DeleteMessageStrictCopySetProcessorsConfig<StateForChangeCommands, SimpleMessage, MinimalPageSelection> = {
   s: empty,
-  dateFn: defaultDateFn,
+  dateFn: testDateFn,
   toPathTolens, messageL: simpleMessagesL (), stringToMsg: stringToSimpleMsg ( testDateFn, 'info' ),
+  pageSelectionL
 }
-const restConfig: RestAndInputProcessorsConfig<StateForChangeCommands, any, SimpleMessage> = {
-  ...config, resultPathToLens, pageL: identityOptics<StateForChangeCommands> ().focusQuery ( 'pageSelection' )
+const restConfig: RestAndInputProcessorsConfig<StateForChangeCommands, any, SimpleMessage, MinimalPageSelection> = {
+  ...config, resultPathToLens, pageSelectionL
 }
-const modalConfig: ModalProcessorsConfig<StateForChangeCommands, SimpleMessage> = {
+const modalConfig: ModalProcessorsConfig<StateForChangeCommands, SimpleMessage, MinimalPageSelection> = {
   ...config, fromPathTolens, defaultL,
   dateFn: testDateFn,
   pageNameFn: s => 'somePage',
@@ -148,7 +149,7 @@ describe ( " copy command", () => {
   } )
 } )
 describe ( "messageCommandProcessor", () => {
-  const processor = messageCommandProcessor<StateForChangeCommands, SimpleMessage> ( config );
+  const processor = messageCommandProcessor<StateForChangeCommands, SimpleMessage, MinimalPageSelection> ( config );
   const command: MessageCommand = { command: 'message', msg: 'someMessage' };
   const expected = [ {
     "opt": "I.focus?(messages)", "value": [
@@ -167,8 +168,22 @@ describe ( "messageCommandProcessor", () => {
   it ( "should copy the from to the to -rest", () => {
     expect ( displayTransformsInState ( froma12WithAMessage, safeArray ( restProcessor ( result ) ( command ) ) ) ).toEqual ( expected )
   } )
+} )
 
-
+describe ( "processOpenPageCommandProcessor", () => {
+  const processor = processOpenPageCommandProcessor<StateForChangeCommands, MinimalPageSelection> ( config.pageSelectionL, config.dateFn );
+  const command: OpenPageCommand = { command: 'openPage', page: { pageMode: 'view', pageName: 'somePage', focusOn: 'focusOnThis' } };
+  it ( "should ignore none OpenPageCommands", () => {
+    expect ( processor ( { command: 'something else' } ) ).toEqual ( undefined )
+  } )
+  it ( "should create a page selection ", () => {
+    expect ( displayTransformsInState ( froma12, safeArray ( processor ( command ) ) ) ).toEqual ( [
+      {
+        "opt": "default.focus?(pageSelection)",
+        "value": [ { "firstTime": true, "focusOn": "focusOnThis", "pageMode": "view", "pageName": "somePage", "time": "timeForTest" } ]
+      }
+    ] )
+  } )
 } )
 
 describe ( "setCommandProcessor", () => {

@@ -12,7 +12,7 @@ import { replaceTextUsingPath } from "../replace";
 import { HasTagHolderL } from "@focuson/template";
 import { closeTwoPagesTxs, ConfirmActions, ConfirmProps, ConfirmWindow, isConfirmWindow } from "./confirmWindow";
 import { wrapWithErrors } from "../errors";
-import { openRestLoadWindowPageSelection, openRestLoadWindowTxs } from "./restLoader";
+import { openRestLoadWindowPageSelection } from "./restLoader";
 
 export interface HasPathToLens<S> {
   pathToLens: ( s: S, currentLens?: Optional<S, any> ) => ( path: string ) => Optional<S, any>
@@ -79,13 +79,14 @@ export function ModalCancelButton<S, Context extends ModalContext<S>> ( { id, st
       const ps = pageSelections ( state )
       const toPathTolens = fromPathGivenState ( state, () => ps.slice ( 0, -1 ) );
       const fromPathTolens = fromPathGivenState ( state, () => ps );
-      const config: ModalProcessorsConfig<S, SimpleMessage> = {
+      const config: ModalProcessorsConfig<S, SimpleMessage, PageSelection> = {
         pageNameFn: ( s: S ) => mainPage ( lensState<S, Context> ( s, () => {throw Error ()}, '', state.context ) ).pageName,
         tagHolderL,
         dateFn,
         stringToMsg: stringToSimpleMsg ( dateFn, 'info' ),
         fromPathTolens,
         toPathTolens,
+        pageSelectionL: state.context.pageSelectionL,
         defaultL: Lenses.identity ( '' ),
         messageL: simpleMessagesL,
         s: state.main
@@ -155,7 +156,7 @@ export function findClosePageTxs<S, C extends PageSelectionContext<S> & HasRestC
     [ to ? toPathTolens ( to ) : focusLensForTo, () => (from ? fromPathTolens ( from ) : focusLensForFrom).getOption ( state.main ) ] )
 
 
-  const config: ModalProcessorsConfig<S, SimpleMessage> = {
+  const config: ModalProcessorsConfig<S, SimpleMessage, PageSelection> = {
     pageNameFn: ( s: S ) => mainPage ( lensState<S, C> ( s, () => {throw Error ()}, '', state.context ) ).pageName,
     tagHolderL,
     dateFn,
@@ -163,6 +164,7 @@ export function findClosePageTxs<S, C extends PageSelectionContext<S> & HasRestC
     fromPathTolens,
     toPathTolens,
     defaultL: focusLensForTo,
+    pageSelectionL,
     messageL: simpleMessagesL,
     s: state.main
   };
@@ -192,7 +194,7 @@ export function closeOnePageTxs<S, Context extends ModalContext<S>> ( errorPrefi
 
 export function ModalCommitButton<S, Context extends ModalContext<S>> ( c: ModalCommitButtonProps<S, Context> ) {
   const { id, state, validate, confirm, enabledBy, buttonType, change, text, closeTwoWindowsNotJustOne } = c
-  const { dateFn, pageSelectionL } = state.context
+  const { dateFn } = state.context
   function onClick () {
     const realvalidate = validate === undefined ? true : validate
     if ( realvalidate && hasValidationErrorAndReport ( id, state, dateFn ) ) return

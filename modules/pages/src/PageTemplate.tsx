@@ -3,7 +3,6 @@ import { FocusedPage, TitleDetails } from "./focusedPage";
 import { PageMode } from "@focuson/utils";
 
 
-
 export interface PageTemplateProps<S, D, Context> extends LensProps<S, D, Context> {
   loading: ( ls: LensState<S, any, Context> ) => JSX.Element;
   focusedPage: FocusedPage<S, D, Context>;
