@@ -103,6 +103,7 @@ export function makeNewFetchersDataStructure<G> ( params: TSParams, ps: RefD<G>[
         tagName: rdp.targetFromPath,
         restName: restDetailsName ( p, restName, rdp.rest ),
         postFetchCommands: toArray ( rdp.postFetchCommands ),
+        onCompleteCommands: toArray ( rdp.onComplete ),
         on404Commands: toArray ( rdp.on404 ),
         onErrorCommands: toArray ( rdp.onError )
       }) ) ] )

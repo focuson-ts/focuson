@@ -20,7 +20,9 @@ export const FourOhFourPageD: ExampleMainPage = {
       control: 'RestButton', restName: 'single', result: 'nothing', action: 'get',
       loader: { msg: 'Some Message', button: 'ButtonText' },
       // onSuccess: {command: 'deleteRestWindow', rest: "FourOhFourPage_single_FourOhFourRestDetails", action: 'get'},
-      on404: { command: 'message', msg: 'single 404 {/CommonIds/accountId}' }
+      on404: { command: 'message', msg: 'single 404 {/CommonIds/accountId}' },
+      onSuccess: { command: 'message', msg: `single 404 - on success. Shouldn't see this {/CommonIds/accountId}` },
+      onComplete: { command: 'message', msg: `single 404 - on completion` },
     },
     multiple: {
       control: 'RestButton', restName: 'multiple', result: 'nothing', action: 'get', on404: { command: 'message', msg: 'multiple 404' },

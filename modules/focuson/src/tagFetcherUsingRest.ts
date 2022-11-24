@@ -14,6 +14,7 @@ export interface FetcherUsingRestConfig {
   restName: string;// OneRestDetails<S, FD, D, MSGs>; // this holds all the ids .. gosh this might be all the config we need...
   postFetchCommands: RestChangeCommands[]
   on404Commands: RestChangeCommands[]
+  onCompleteCommands: RestChangeCommands[]
   onErrorCommands: RestChangeCommands[]
 }
 
@@ -32,7 +33,11 @@ export const findRestCommands = <S> ( tagHolderL: Optional<S, TagHolder> ) => <F
   const restCommand: RestCommand = {
     restAction: 'get', name: restName, comment: 'Fetcher',
     tagNameAndTags: { tagName: `${pageName}_${tagName}`, tags: desiredTags },
-    changeOnSuccess: f.postFetchCommands, on404: f.on404Commands , onError: f.onErrorCommands}
+    changeOnSuccess: f.postFetchCommands,
+    on404: f.on404Commands,
+    onError: f.onErrorCommands,
+    changeOnCompletion: f.onCompleteCommands
+  }
   if ( !areAllDefined ( desiredTags ) ) return [ undefined, tagName, `Undefined tags. ${tagAndNames.map ( ( [ name, tag ] ) => `${name}:${tag}` )}` ]
   let tagsDifferent = !arraysEqual ( desiredTags, currentTags );
   let target = targetLens.getOption ( s );
@@ -46,7 +51,7 @@ export const findRestCommands = <S> ( tagHolderL: Optional<S, TagHolder> ) => <F
   }
   return [ undefined, tagName, 'Tags all the same, and target defined' ];
 };
-const fetcherToRestCommandsAndWhy = <S, FD, D, MSGs> ( tagHolderL: Optional<S, TagHolder>, f: FetcherUsingRestConfig, restDetails: RestDetails<S, MSGs>) => ( s: S, pageName: string ): [ RestCommand | undefined, string, string ] => {
+const fetcherToRestCommandsAndWhy = <S, FD, D, MSGs> ( tagHolderL: Optional<S, TagHolder>, f: FetcherUsingRestConfig, restDetails: RestDetails<S, MSGs> ) => ( s: S, pageName: string ): [ RestCommand | undefined, string, string ] => {
   if ( tagHolderL === null ) throw Error ( `tagHolderL is null` )
   if ( f === null ) throw Error ( `f is null` )
   if ( restDetails === null ) throw Error ( `restDetails is null` )
@@ -56,7 +61,7 @@ const fetcherToRestCommandsAndWhy = <S, FD, D, MSGs> ( tagHolderL: Optional<S, T
   const theseRestDetails = restDetails[ restName ]
   if ( theseRestDetails === undefined )
     throw Error ( `Fetched misconfigured. ${JSON.stringify ( f )}. Legal restNames are ${Object.keys ( restDetails )}` )
-  return findRestCommands ( tagHolderL ) ( theseRestDetails, pageName, f,  s );
+  return findRestCommands ( tagHolderL ) ( theseRestDetails, pageName, f, s );
 }
 
 export function restCommandsAndWhyFromFetchers<S, MSGs> ( tagHolderL: Optional<S, TagHolder>, allF: AllFetcherUsingRestConfig, restDetails: RestDetails<S, MSGs>, pageName: string, s: S ): [ RestCommand | undefined, string, string ][] {
@@ -66,7 +71,7 @@ export function restCommandsAndWhyFromFetchers<S, MSGs> ( tagHolderL: Optional<S
 }
 
 export function restCommandsFromFetchers<S, MSGs> ( tagHolderL: Optional<S, TagHolder>, allF: AllFetcherUsingRestConfig, restDetails: RestDetails<S, MSGs>, pageName: string, s: S ): RestCommand[] {
-  const rcAndWhy = restCommandsAndWhyFromFetchers ( tagHolderL, allF, restDetails, pageName,  s )
+  const rcAndWhy = restCommandsAndWhyFromFetchers ( tagHolderL, allF, restDetails, pageName, s )
   // @ts-ignore
   const debug = s.debug?.tagFetcherDebug
   return rcAndWhy.flatMap ( ( [ rc, tagName, why ] ) => {

@@ -17,7 +17,7 @@ function restCommandForButton<B, G> ( mainPage: MainPageD<B, G>, parent: PageD<B
   const { action, restName, messageOnSuccess } = rest
   let restCommand: RestCommand = {
     name: restDetailsName ( mainPage, restName, rd.rest ),
-    restAction: action, messageOnSuccess, ...deleteOnSuccess, on404: toArrayOrUndefined ( rest.on404 ), changeOnSuccess: toArrayOrUndefined ( rest.changeOnSuccess )
+    restAction: action, messageOnSuccess, ...deleteOnSuccess, on404: toArrayOrUndefined ( rest.on404 ), changeOnSuccess: toArrayOrUndefined ( rest.changeOnSuccess ) , changeOnCompletion: toArrayOrUndefined(rest.changeOnComplete)
   };
   return restCommand
 }

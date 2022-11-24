@@ -20,7 +20,10 @@ export function isCopyJustStringsCommand ( c: ChangeCommand ): c is CopyJustStri
 }
 
 export function copyJustStringsCommandProcessor<S> ( fromPathToLens: ( path: string ) => Optional<S, any>, toPathToLens: ( path: string ) => Optional<S, any>, s: S ): ChangeCommandProcessor<S> {
-  return c => isCopyJustStringsCommand ( c ) ? [ [ toPathToLens ( c.to ), () => anyIntoPrimitive ( fromPathToLens ( c.from ).getOption ( s ), c.joiner ) ] ] : undefined
+  return c => isCopyJustStringsCommand ( c ) ? [ [ toPathToLens ( c.to ), () => {
+    const fromL = fromPathToLens ( c.from );
+    const from = fromL.getOption ( s );
+    return anyIntoPrimitive ( from, c.joiner ); } ] ] : undefined
 }
 
 
@@ -182,38 +185,63 @@ export interface MinimalModalPageSelectionForCommand {
   copyOnClose?: CopyDetails[],
   changeOnClose?: ModalChangeCommands | ModalChangeCommands[]
 }
+export interface MinimalMainPageSelectionForCommand {
+  type: 'main'
+  pageName: string;
+  pageMode: PageMode;
+}
+export type MinimalPageSelectionForCommand = MinimalModalPageSelectionForCommand | MinimalMainPageSelectionForCommand
 
-export type MinimalPageSelectionForCommand = MinimalModalPageSelectionForCommand
-
-export interface OpenPageCommand extends ChangeCommand {
+export interface OpenModalPageCommand extends ChangeCommand {
   command: 'openPage'
-  page: MinimalPageSelectionForCommand
+  page: MinimalModalPageSelectionForCommand
+}
+export interface OpenMainPageCommand extends ChangeCommand {
+  command: 'openPage'
+  page: MinimalMainPageSelectionForCommand
 }
 
-export function isOpenPageCommand ( c: ChangeCommand ): c is OpenPageCommand {
-  return c.command === 'openPage'
+export function isOpenMainPageCommand ( c: ChangeCommand ): c is OpenMainPageCommand {
+  const a: any = c
+  return c.command === 'openPage' && a.page.type === 'main'
+}
+export function isOpenModalPageCommand ( c: ChangeCommand ): c is OpenModalPageCommand {
+  const a: any = c
+  return c.command === 'openPage' && a.page.type === 'modal'
+
 }
 
-export function processOpenPageCommandProcessor<S, PS extends MinimalPageSelection> ( pageSelectionL: Optional<S, PS[]>, dateFn: DateFn ): ChangeCommandProcessor<S> {
+export function processOpenModalPageCommandProcessor<S, PS extends MinimalPageSelection> ( pageSelectionL: Optional<S, PS[]>, dateFn: DateFn ): ChangeCommandProcessor<S> {
   function makePageSelection ( ps: MinimalPageSelectionForCommand[], m: MinimalPageSelectionForCommand ): MinimalPageSelection {
     if ( ps.length === 0 ) throw Error ( `Trying to open modal window, but there are no open pages` )
     const last = ps[ ps.length - 1 ]
     const copy = { ...m }
+    // @ts-ignore
     delete copy.type
     if ( m.type === 'modal' ) return { ...copy, pageName: `${last.pageName}_${m.pageName}`, time: dateFn (), firstTime: true }
     throw new Error ( `Cannot work out type of window in ${JSON.stringify ( m )}` )
   }
-  return c => isOpenPageCommand ( c ) ? [ [ pageSelectionL, ps => [ ...ps, makePageSelection ( ps, c.page ) ] ] ] : undefined
+  return c => isOpenModalPageCommand ( c ) ? [ [ pageSelectionL, ps => [ ...ps, makePageSelection ( ps, c.page ) ] ] ] : undefined
+}
+export function processOpenMainPageCommandProcessor<S, PS extends MinimalPageSelection> ( pageSelectionL: Optional<S, PS[]>, dateFn: DateFn ): ChangeCommandProcessor<S> {
+  function makePageSelection ( ps: MinimalPageSelectionForCommand[], m: MinimalPageSelectionForCommand ): MinimalPageSelection {
+    const copy = { ...m }
+    // @ts-ignore
+    delete copy.type
+    if ( m.type === 'main' ) return { ...copy, time: dateFn (), firstTime: true }
+    throw new Error ( `Cannot work out type of window in ${JSON.stringify ( m )}` )
+  }
+  return c => isOpenMainPageCommand ( c ) ? [ [ pageSelectionL, ps => [ ...ps, makePageSelection ( ps, c.page ) ] ] ] : undefined
 }
 
 
 type CommonCommands = DeleteCommand | MessageCommand | SetChangeCommand | DeleteAllMessages | TimeStampCommand | CopyJustStringsCommands
-export type RestChangeCommands = CommonCommands | CopyResultCommand | DeleteRestWindowCommand | OpenPageCommand
-export type ModalChangeCommands = CommonCommands | CopyCommand | OpenPageCommand
+export type RestChangeCommands = CommonCommands | CopyResultCommand | DeleteRestWindowCommand | OpenModalPageCommand
+export type ModalChangeCommands = CommonCommands | CopyCommand | OpenModalPageCommand | OpenMainPageCommand
 export type NewPageChangeCommands = CommonCommands | CopyCommand | DeletePageTagsCommand
-export type InputChangeCommands = CommonCommands | StrictCopyCommand | OpenPageCommand
-export type CommandButtonChangeCommands = CommonCommands | StrictCopyCommand | OpenPageCommand
-export type ConfirmWindowChangeCommands = CommonCommands | StrictCopyCommand | OpenPageCommand
+export type InputChangeCommands = CommonCommands | StrictCopyCommand | OpenModalPageCommand | OpenMainPageCommand
+export type CommandButtonChangeCommands = CommonCommands | StrictCopyCommand | OpenModalPageCommand | OpenMainPageCommand
+export type ConfirmWindowChangeCommands = CommonCommands | StrictCopyCommand | OpenModalPageCommand | OpenMainPageCommand
 
 
 export interface DeleteMessageStrictCopySetProcessorsConfig<S, MSGs, PS extends MinimalPageSelection> {
@@ -241,7 +269,7 @@ export interface ModalProcessorsConfig<S, MSGs, PS extends MinimalPageSelection>
 }
 export type  InputProcessorsConfig<S, MSGs, PS extends MinimalPageSelection> = DeleteMessageStrictCopySetProcessorsConfig<S, MSGs, PS>
 
-export function deleteMessageSetProcessors<S, MSGs, PS extends MinimalPageSelection> ( config: DeleteMessageStrictCopySetProcessorsConfig<S, MSGs, PS> ): ChangeCommandProcessor<S> {
+export function commonProcessors<S, MSGs, PS extends MinimalPageSelection> ( config: DeleteMessageStrictCopySetProcessorsConfig<S, MSGs, PS> ): ChangeCommandProcessor<S> {
   const { toPathTolens, messageL, dateFn } = config
   return composeChangeCommandProcessors (
     processDeleteAllMessagesCommand ( messageL ),
@@ -255,9 +283,9 @@ export function deleteMessageSetProcessors<S, MSGs, PS extends MinimalPageSelect
 export const restChangeCommandProcessors = <S, Result, MSGs, PS extends MinimalPageSelection> ( config: RestAndInputProcessorsConfig<S, Result, MSGs, PS> ) =>
   ( result: Result ) =>
     composeChangeCommandProcessors (
-      deleteMessageSetProcessors ( config ),
-      copyJustStringsCommandProcessor(config.toPathTolens, config.toPathTolens, config.s),
-      processOpenPageCommandProcessor ( config.pageSelectionL, config.dateFn ),
+      commonProcessors ( config ),
+      copyJustStringsCommandProcessor ( config.toPathTolens, config.toPathTolens, config.s ),
+      processOpenModalPageCommandProcessor ( config.pageSelectionL, config.dateFn ),
       processDeleteRestWindowCommand ( config.pageSelectionL ),
       copyResultCommandProcessor ( config.resultPathToLens, config.toPathTolens ) ( result ) );
 
@@ -265,9 +293,10 @@ export const modalCommandProcessors = <S, MSGs, PS extends MinimalPageSelection>
   const { fromPathTolens, toPathTolens, tagHolderL, pageNameFn, defaultL } = config
   return composeChangeCommandProcessors (
     deletePageTagsCommandProcessor ( tagHolderL, pageNameFn, s ),
-    copyJustStringsCommandProcessor(config.fromPathTolens, config.toPathTolens, config.s),
-    deleteMessageSetProcessors ( config ),
-    processOpenPageCommandProcessor ( config.pageSelectionL, config.dateFn ),
+    copyJustStringsCommandProcessor ( config.fromPathTolens, config.toPathTolens, config.s ),
+    commonProcessors ( config ),
+    processOpenModalPageCommandProcessor ( config.pageSelectionL, config.dateFn ),
+    processOpenMainPageCommandProcessor ( config.pageSelectionL, config.dateFn ),
     copyCommandProcessor ( fromPathTolens, toPathTolens, defaultL ) ( s ) );
 };
 
@@ -275,8 +304,8 @@ export const newPageCommandProcessors = <S, MSGs, PS extends MinimalPageSelectio
   const { fromPathTolens, toPathTolens, defaultL } = config
   return composeChangeCommandProcessors (
     deletePageTagsCommandProcessor ( config.tagHolderL, config.pageNameFn, s ),
-    copyJustStringsCommandProcessor(config.toPathTolens, config.toPathTolens, config.s),
-    deleteMessageSetProcessors ( config ),
+    copyJustStringsCommandProcessor ( config.toPathTolens, config.toPathTolens, config.s ),
+    commonProcessors ( config ),
     copyCommandProcessor ( fromPathTolens, toPathTolens, defaultL ) ( s ) );
 };
 
@@ -284,26 +313,29 @@ export const newPageCommandProcessors = <S, MSGs, PS extends MinimalPageSelectio
 export const inputCommandProcessors = <S, MSGs, PS extends MinimalPageSelection> ( config: InputProcessorsConfig<S, MSGs, PS> ) => ( s: S ) => {
   const { toPathTolens } = config
   return composeChangeCommandProcessors (
-    deleteMessageSetProcessors ( config ),
-    copyJustStringsCommandProcessor(config.toPathTolens, config.toPathTolens, config.s),
-    processOpenPageCommandProcessor ( config.pageSelectionL, config.dateFn ),
+    commonProcessors ( config ),
+    copyJustStringsCommandProcessor ( config.toPathTolens, config.toPathTolens, config.s ),
+    processOpenModalPageCommandProcessor ( config.pageSelectionL, config.dateFn ),
+    processOpenMainPageCommandProcessor ( config.pageSelectionL, config.dateFn ),
     strictCopyCommandProcessor ( toPathTolens, toPathTolens ) ( s ) );
 };
 export const commandButtonCommandProcessors = <S, MSGs, PS extends MinimalPageSelection> ( config: InputProcessorsConfig<S, MSGs, PS> ) => ( s: S ) => {
   const { toPathTolens } = config
   return composeChangeCommandProcessors (
-    deleteMessageSetProcessors ( config ),
-    copyJustStringsCommandProcessor(config.toPathTolens, config.toPathTolens, config.s),
-    processOpenPageCommandProcessor ( config.pageSelectionL, config.dateFn ),
+    commonProcessors ( config ),
+    copyJustStringsCommandProcessor ( config.toPathTolens, config.toPathTolens, config.s ),
+    processOpenModalPageCommandProcessor ( config.pageSelectionL, config.dateFn ),
+    processOpenMainPageCommandProcessor ( config.pageSelectionL, config.dateFn ),
     strictCopyCommandProcessor ( toPathTolens, toPathTolens ) ( s ) );
 };
 
 export const confirmWindowCommandProcessors = <S, MSGs, PS extends MinimalPageSelection> ( config: InputProcessorsConfig<S, MSGs, PS> ) => ( s: S ) => {
   const { toPathTolens } = config
   return composeChangeCommandProcessors (
-    deleteMessageSetProcessors ( config ),
-    copyJustStringsCommandProcessor(config.toPathTolens, config.toPathTolens, config.s),
-    processOpenPageCommandProcessor ( config.pageSelectionL, config.dateFn ),
+    commonProcessors ( config ),
+    copyJustStringsCommandProcessor ( config.toPathTolens, config.toPathTolens, config.s ),
+    processOpenModalPageCommandProcessor ( config.pageSelectionL, config.dateFn ),
+    processOpenMainPageCommandProcessor ( config.pageSelectionL, config.dateFn ),
     strictCopyCommandProcessor ( toPathTolens, toPathTolens ) ( s ) );
 };
 

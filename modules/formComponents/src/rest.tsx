@@ -16,10 +16,10 @@ export interface RestButtonProps<S, C, MSGs> extends CommonStateProps<S, any, C>
   text?: string;
   onSuccess?: RestChangeCommands[];
   on404?: RestChangeCommands[];
+  onComplete?: RestChangeCommands[];
   dateFn?: DateFn
   loader?: RestLoadWindowWithoutRestProps
 }
-
 
 
 export function RestLoadWindow<S, C extends ModalContext<S>> ( state: LensState<S, any, C>, { msg, button, rest, action, onClose, className }: RestLoadWindowProps ): JSX.Element {
@@ -35,9 +35,8 @@ export function RestLoadWindow<S, C extends ModalContext<S>> ( state: LensState<
 }
 
 
-
 export function RestButton<S, C extends ModalContext<S>> ( props: RestButtonProps<S, C, SimpleMessage> ) {
-  const { id, rest, action, result, state, text, confirm, validate, dateFn, onSuccess, enabledBy, name, buttonType, on404, loader } = props
+  const { id, rest, action, result, state, text, confirm, validate, dateFn, onSuccess, enabledBy, name, buttonType, on404, onComplete, loader } = props
   const debug = false//just to stop spamming: should already have all the validations visible if debugging is on
   const debounceRef = useRef<Date> ( null )
 
@@ -53,7 +52,7 @@ export function RestButton<S, C extends ModalContext<S>> ( props: RestButtonProp
     debounceRef.current = now
     const realvalidate = validate === undefined ? true : validate
     if ( realvalidate && hasValidationErrorAndReport ( id, state, dateFn ) ) return
-    const restCommand: RestCommand = { restAction: action, name: rest, changeOnSuccess: onSuccess, on404 };
+    const restCommand: RestCommand = { restAction: action, name: rest, changeOnSuccess: onSuccess, on404, changeOnCompletion: onComplete };
     const realRestCommand: RestCommand = addLoaderCommandsIfNeeded ( loader, restCommand )
     if ( isConfirmWindow ( confirm ) )
       openConfirmWindow ( confirm, 'justclose', [], state, 'RestButton', id, 'onClick', realRestCommand )

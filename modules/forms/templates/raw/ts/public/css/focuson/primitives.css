@@ -455,4 +455,11 @@ button[id^="selectPage"] {
 }
 
 
+.buttons-in-card >.button-span > .tooltip-wrap > .primary-btn {
+    margin-bottom: 1rem;
+}
+
+.buttons-in-card > .button-span > .tooltip-wrap > .secondary-btn {
+    margin-bottom: 1rem;
+}
 

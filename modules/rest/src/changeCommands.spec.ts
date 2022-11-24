@@ -1,5 +1,5 @@
 import { defaultDateFn, HasSimpleMessages, safeArray, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson/utils";
-import { CopyCommand, copyCommandProcessor, CopyResultCommand, copyResultCommandProcessor, DeleteCommand, deleteCommandProcessor, DeleteMessageStrictCopySetProcessorsConfig, MessageCommand, messageCommandProcessor, modalCommandProcessors, ModalProcessorsConfig, restChangeCommandProcessors, RestAndInputProcessorsConfig, SetChangeCommand, setCommandProcessor, StrictCopyCommand, strictCopyCommandProcessor, deletePageTagsCommandProcessor, DeletePageTagsCommand, TimeStampCommand, confirmWindowCommandProcessors, MinimalPageSelection, processOpenPageCommandProcessor, OpenPageCommand } from "./changeCommands";
+import { CopyCommand, copyCommandProcessor, CopyResultCommand, copyResultCommandProcessor, DeleteCommand, deleteCommandProcessor, DeleteMessageStrictCopySetProcessorsConfig, MessageCommand, messageCommandProcessor, modalCommandProcessors, ModalProcessorsConfig, restChangeCommandProcessors, RestAndInputProcessorsConfig, SetChangeCommand, setCommandProcessor, StrictCopyCommand, strictCopyCommandProcessor, deletePageTagsCommandProcessor, DeletePageTagsCommand, TimeStampCommand, confirmWindowCommandProcessors, MinimalPageSelection, processOpenModalPageCommandProcessor, OpenModalPageCommand, processOpenMainPageCommandProcessor, OpenMainPageCommand, copyJustStringsCommandProcessor, CopyJustStringsCommands } from "./changeCommands";
 import { displayTransformsInState, identityOptics, lensBuilder, Lenses, parsePath } from "@focuson/lens";
 import { TagHolder } from "@focuson/template";
 
@@ -170,21 +170,12 @@ describe ( "messageCommandProcessor", () => {
   } )
 } )
 
-describe ( "processOpenPageCommandProcessor", () => {
-  const processor = processOpenPageCommandProcessor<StateForChangeCommands, MinimalPageSelection> ( config.pageSelectionL, config.dateFn );
-  // const mainCommand: OpenPageCommand = { command: 'openPage', page: { type: 'main', pageMode: 'view', pageName: 'somePage' } };
-  const modalCommand: OpenPageCommand = { command: 'openPage', page: { type: 'modal', pageMode: 'view', pageName: 'somePage', focusOn: 'focusOnThis' } };
+describe ( "processOpenModalPageCommandProcessor", () => {
+  const processor = processOpenModalPageCommandProcessor<StateForChangeCommands, MinimalPageSelection> ( config.pageSelectionL, config.dateFn );
+  const modalCommand: OpenModalPageCommand = { command: 'openPage', page: { type: 'modal', pageMode: 'view', pageName: 'somePage', focusOn: 'focusOnThis' } };
   it ( "should ignore none OpenPageCommands", () => {
     expect ( processor ( { command: 'something else' } ) ).toEqual ( undefined )
   } )
-  // it ( "should create a page selection for a main page", () => {
-  //   expect ( displayTransformsInState ( froma12, safeArray ( processor ( mainCommand ) ) ) ).toEqual ( [
-  //     {
-  //       "opt": "default.focus?(pageSelection)",
-  //       "value": [ { "firstTime": true, "pageMode": "view", "pageName": "somePage", "time": "timeForTest" } ]
-  //     }
-  //   ] )
-  // } )
   it ( "should create a page selection for a modal page", () => {
     expect ( displayTransformsInState ( {
       ...froma12,
@@ -196,6 +187,38 @@ describe ( "processOpenPageCommandProcessor", () => {
           { "pageMode": "view", "pageName": "mainPageName", "time": "unimportant" },
           { "firstTime": true, "focusOn": "focusOnThis", "pageMode": "view", "pageName": "mainPageName_somePage", "time": "timeForTest" }
         ]
+      }
+    ] )
+  } )
+} )
+
+describe ( "processOpenMainPageCommandProcessor", () => {
+  const processor = processOpenMainPageCommandProcessor<StateForChangeCommands, MinimalPageSelection> ( config.pageSelectionL, config.dateFn );
+  const mainCommand: OpenMainPageCommand = { command: 'openPage', page: { type: 'main', pageMode: 'view', pageName: 'somePage' } };
+  it ( "should ignore none OpenPageCommands", () => {
+    expect ( processor ( { command: 'something else' } ) ).toEqual ( undefined )
+  } )
+  it ( "should create a page selection for a main page", () => {
+    expect ( displayTransformsInState ( froma12, safeArray ( processor ( mainCommand ) ) ) ).toEqual ( [
+      {
+        "opt": "default.focus?(pageSelection)",
+        "value": [ { "firstTime": true, "pageMode": "view", "pageName": "somePage", "time": "timeForTest" } ]
+      }
+    ] )
+  } )
+} )
+
+describe ( "CopyJustStrings command", () => {
+  const processor = copyJustStringsCommandProcessor<StateForChangeCommands> ( fromPathTolens, toPathTolens, froma12 )
+  const command: CopyJustStringsCommands = { command: 'copyJustStrings', from: '/a', to: '/to', joiner: '-' }
+  it ( "should ignore none copyJustString commands", () => {
+    expect ( processor ( { command: 'somethingElse' } ) ).toEqual ( undefined )
+  } )
+  it ( "should copy strings", () => {
+    expect ( displayTransformsInState ( froma12, safeArray ( processor ( command ) ) ) ).toEqual ( [
+      {
+        "opt": "I.focus?(toA).focus?(to)",
+        "value": "one-two"
       }
     ] )
   } )

@@ -109,6 +109,7 @@ export interface RestCommand {
   /** @deprecated - moving to changeOnSuccess*/
   messageOnSuccess?: string
   changeOnSuccess?: RestChangeCommands[]
+  changeOnCompletion?: RestChangeCommands[]
   on404?: RestChangeCommands[]
   onError?: RestChangeCommands[]
 }
@@ -152,15 +153,16 @@ export const restResultToTx = <S, MSGs, PS extends MinimalPageSelection> ( s: S,
   const processor = restChangeCommandProcessors ( config ) ( data );
 
   const legacyChangeTxs: Transform<S, any>[] = processChangeCommandProcessor ( `Rest for ${JSON.stringify ( restCommand )}  changeCommands`, processor, changeCommands );
-  const changeTxs = processChangeCommandProcessor ( '', processor, toArray ( restCommand.changeOnSuccess ) )
   const useResponse = getRestTypeDetails ( restCommand.restAction ).output.needsObj
-  const resultTransform: Transform<S, any>[] = useResponse && status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => data ] ] : []
+  const resultTx: Transform<S, any>[] = useResponse && status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => data ] ] : []
   const is404 = status == 404
   const isError = status && status >= 400 && !is404
-  const on404Transforms: Transform<S, any>[] = is404 ? processChangeCommandProcessor ( `Rest for ${JSON.stringify ( restCommand )} - on404`, processor, toArray ( restCommand.on404 ) ) : []
+  const changeOnSuccessTxs = status<400 ? processChangeCommandProcessor ( '', processor, toArray ( restCommand.changeOnSuccess ) ) :[]
+  const changeOnCompletionTxs =  processChangeCommandProcessor ( '', processor, toArray ( restCommand.changeOnCompletion ) )
+  const on404Txs: Transform<S, any>[] = is404 ? processChangeCommandProcessor ( `Rest for ${JSON.stringify ( restCommand )} - on404`, processor, toArray ( restCommand.on404 ) ) : []
   const onErrorTransforms: Transform<S, any>[] = isError ? processChangeCommandProcessor ( `Rest for ${JSON.stringify ( restCommand )}  onError`, processor, toArray ( restCommand.onError ) ) : []
   const msgFromBodyTx: Transform<S, any> = [ messageL, old => [ ...processedMessages, ...safeArray ( old ) ] ]
-  let resultTxs: Transform<S, any>[] = [ msgFromBodyTx, ...on404Transforms, ...onErrorTransforms, ...legacyChangeTxs, ...changeTxs, ...resultTransform ];
+  let resultTxs: Transform<S, any>[] = [ msgFromBodyTx,...changeOnCompletionTxs, ...on404Txs, ...onErrorTransforms, ...legacyChangeTxs, ...changeOnSuccessTxs, ...resultTx ];
   return resultTxs;
 };
 
@@ -266,7 +268,7 @@ export interface RestLoadWindowWithoutRestProps {
   onClose?: ModalChangeCommands | ModalChangeCommands[]
 }
 export function addLoaderCommandsIfNeeded ( loader: RestLoadWindowWithoutRestProps, restCommand: RestCommand ): RestCommand {
-  return loader ? { ...restCommand, changeOnSuccess: [ ...toArray ( restCommand.changeOnSuccess ), { command: 'deleteRestWindow', rest: restCommand.name, action: restCommand.restAction } ] } : restCommand;
+  return loader ? { ...restCommand, changeOnCompletion: [ ...toArray ( restCommand.changeOnSuccess ), { command: 'deleteRestWindow', rest: restCommand.name, action: restCommand.restAction } ] } : restCommand;
 }
 /** Executes all the rest commands returning a list of transformations. It doesn't remove the rest commands from S
  This is valuable over the 'make a new S'for a few reasons:

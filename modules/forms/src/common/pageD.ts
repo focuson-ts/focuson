@@ -14,8 +14,9 @@ export interface RestDefnInPageProperties<G> {
   rest: RestD<G>,
   targetFromPath: string,
   fetcher?: boolean;
-  postFetchCommands?: RestChangeCommands | RestChangeCommands[]
+  postFetchCommands?: RestChangeCommands | RestChangeCommands[] // these are actually onSuccess
   on404?:  RestChangeCommands | RestChangeCommands[],
+  onComplete?:  RestChangeCommands | RestChangeCommands[],
   onError?: RestChangeCommands | RestChangeCommands[]
 }
 export interface RestDefnInPage<G> {
@@ -26,6 +27,7 @@ export interface CommonRestOnCommit {
   action: RestAction,
   messageOnSuccess?: string
   changeOnSuccess?: RestChangeCommands | RestChangeCommands[]
+  changeOnComplete?: RestChangeCommands | RestChangeCommands[]
   on404?: RestChangeCommands | RestChangeCommands[]
 }
 export interface RestOnCommitNothing extends CommonRestOnCommit {

@@ -40,7 +40,7 @@ const cd: NameAndLens<StateForNewFetcherTests> = {
 }
 
 const newFetchers: AllFetcherUsingRestConfig = {
-  pageName: [ { tagName: 'someTag', restName: 'someRestName', postFetchCommands: [], on404Commands: [], onErrorCommands: [] } ]
+  pageName: [ { tagName: 'someTag', restName: 'someRestName', postFetchCommands: [], on404Commands: [], onErrorCommands: [], onCompleteCommands:[] } ]
 }
 function MyLoading () {
   return <p>Loading</p>
