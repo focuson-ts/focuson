@@ -73,7 +73,7 @@ table {
 }
 
 .highlight {
-    background-color: red;
+    color: red;
 }
 
 .labelDropdownButton {
@@ -446,11 +446,13 @@ button[id^="selectPage"] {
     margin: var(--button-primary-margin)
 }
 
-#default_template > .tooltip-wrap > .primary-btn {
+#default_template > .tooltip-wrap > button {
     margin-bottom: 1rem;
 }
 
-#default_template > .tooltip-wrap > .secondary-btn {
+.buttons-in-card >.button-span > .tooltip-wrap > button{
     margin-bottom: 1rem;
 }
+
+
 

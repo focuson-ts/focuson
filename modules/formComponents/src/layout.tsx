@@ -44,7 +44,7 @@ export function Layout<S, C extends FocusOnContext<S>> ( { state, details, child
 
   const buttonFor = ( allButtons: NameAnd<JSX.Element> ) => ( name: string ) => {
     const button = allButtons [ name ];
-    return <span key={name}>{button ? button : `Button ${name} not in ${Object.keys ( allButtons )}`}</span>
+    return <span className='button-span' key={name}>{button ? button : `Button ${name} not in ${Object.keys ( allButtons )}`}</span>
   };
   const buttonsForTheCard = ( initialValue: number ) => {
     var colIndex = initialValue

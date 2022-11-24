@@ -84,6 +84,7 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
       focusOn: '~/createPayment',
       modal: CreatePaymentMP,
       createEmpty: CreatePaymentDD,
+      buttonType: 'primary',
       copy: [
         { from: '~/display/collectionSummary/allowance', to: '~/createPayment/allowance' },
         { from: '~/display/collectionSummary/period', to: '~/createPayment/period' } ],
@@ -100,12 +101,14 @@ export const LinkedAccountDetailsPD: ExampleMainPage = {
       control: "RestButton",
       restName: 'payments',
       confirm: 'Really?',
+      buttonType: 'primary',
       enabledBy: 'haveLegalSelectedPayment',
       validate: false,
       action: { state: 'cancel' },
       deleteOnSuccess: [ '~/display/collectionSummary', '~/display/collectionHistory', '~/selectedCollectionIndex' ]
     },
     refreshMandate: {
+      buttonType: 'primary',
       control: 'DeleteStateButton', path: [ '~/display/collectionSummary', '~/display/collectionHistory' ], label: "Refresh Mandate",
     }
   },

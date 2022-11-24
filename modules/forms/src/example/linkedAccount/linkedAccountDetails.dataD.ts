@@ -146,7 +146,7 @@ export const CollectionListDD: ExampleRepeatingD = {
 export const linkedAccountDetailsDD: ExampleDataD = {
   name: 'LinkedAccountDetailsDisplay',
   description: 'All the data displayed on the screen',
-  layout: { component: LayoutCd, displayParams: { details: '[[1],[1],[1]]', displayAsCards: true } },
+  layout: { component: LayoutCd, displayParams: { details: '[[1],[1],[1]]', displayAsCards: true, buttons: {1: ['selectMandate', 'createPayment']} } },
   structure: {
     mandate: { dataDD: MandateDD },
     collectionSummary: { dataDD: CollectionSummaryDD },
