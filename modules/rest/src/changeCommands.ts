@@ -91,8 +91,7 @@ export interface TimeStampCommand extends ChangeCommand {
   path: string;
 }
 export function isTimeStampCommand ( c: ChangeCommand ): c is TimeStampCommand {
-  const a: any = c;
-  return c && c.command === 'timestamp'
+    return c && c.command === 'timestamp'
 }
 export const timeStampCommandProcessor = <S> ( pathToLens: ( path: string ) => Optional<S, any>, dateFn: DateFn ): ChangeCommandProcessor<S> =>
   c => isTimeStampCommand ( c ) ? [ [ pathToLens ( c.path ), () => dateFn () ] ] : undefined

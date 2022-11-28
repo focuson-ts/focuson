@@ -128,8 +128,7 @@ export interface RestD<G> {
   initialSql?: string[];
   /** @deprecated Moved to be inside Entity */
   insertSqlStrategy?: any;
-  states?: NameAnd<RestStateDetails>;
-  access?: AccessDetails[];
+  states?: NameAnd<RestStateDetails>;access?: AccessDetails[];
   audits?: any[] //doesn't do anything. Is just for legacy
   mutations?: MutationsForRestAction[];
   resolvers?: NameAnd<PrimaryMutations>;

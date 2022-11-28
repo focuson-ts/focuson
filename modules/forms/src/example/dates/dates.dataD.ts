@@ -57,7 +57,7 @@ export const datesDataD: ExampleDataD = {
           paymentType: 'paymentType',
           messages: {
             EMT: {
-              warning: { time: '11:20', messageText: "Warning msg for EMT", showCancelButton: false },
+              warning: { time: '11:20', messageText: "Warning msg for EMT", showCancelButton: false, confirmCommands: {command: 'message', msg : 'We did the command after the confirm'} },
               error: { time: '11:26', messageText: "Error msg for EMT", showCancelButton: false }
             },
             CHAPS: {

@@ -77,7 +77,7 @@ export const PaymentsPageD: ExampleMainPage = {
   },
   layout: {
     component: GuardLayoutCD,
-    displayParams: { guard: 'brandOk', message: 'Does not display when Brand is {/CommonIds/brandRef}', className: 'someClassName', displayGuardMessages: false }
+    displayParams: { guard: 'brandOk', message: `Doesn'"t display when Brand is {/CommonIds/brandRef}`, className: 'someClassName', displayGuardMessages: false }
   },
 
   variables: {

@@ -82,7 +82,7 @@ export const processParam = <B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G
   if ( dcdType === undefined ) throw Error ( `${errorPrefix}  param '${name}' not found in ${JSON.stringify ( Object.keys ( dcd.params ).sort () )}` )
   const fullErrorPrefix = ` ${errorPrefix} has a display component ${dcd.name} and sets a param ${name} `
   if ( dcdType === undefined ) throw new Error ( `${fullErrorPrefix}. Legal values are ${sortedEntries ( dcd.params ).map ( t => t[ 0 ] ).join ( ',' )}` )
-  function processStringParam () {return "'" + s + "'"}
+  function processStringParam () {return "'" +  s.toString().replace(/'/g, '&apos;') + "'"}
   function processObjectParam () {return "{" + s + "}"}
   function processStringArrayParam () {
     if ( Array.isArray ( s ) ) return `{${JSON.stringify ( s )}}`; else
