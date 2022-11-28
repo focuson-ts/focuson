@@ -268,7 +268,7 @@ export interface RestLoadWindowWithoutRestProps {
   onClose?: ModalChangeCommands | ModalChangeCommands[]
 }
 export function addLoaderCommandsIfNeeded ( loader: RestLoadWindowWithoutRestProps, restCommand: RestCommand ): RestCommand {
-  return loader ? { ...restCommand, changeOnCompletion: [ ...toArray ( restCommand.changeOnSuccess ), { command: 'deleteRestWindow', rest: restCommand.name, action: restCommand.restAction } ] } : restCommand;
+  return loader ? { ...restCommand, changeOnCompletion: [ ...toArray ( restCommand.changeOnCompletion ), { command: 'deleteRestWindow', rest: restCommand.name, action: restCommand.restAction } ] } : restCommand;
 }
 /** Executes all the rest commands returning a list of transformations. It doesn't remove the rest commands from S
  This is valuable over the 'make a new S'for a few reasons:

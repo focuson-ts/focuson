@@ -235,7 +235,7 @@ export function processOpenMainPageCommandProcessor<S, PS extends MinimalPageSel
 
 
 type CommonCommands = DeleteCommand | MessageCommand | SetChangeCommand | DeleteAllMessages | TimeStampCommand | CopyJustStringsCommands
-export type RestChangeCommands = CommonCommands | CopyResultCommand | DeleteRestWindowCommand | OpenModalPageCommand
+export type RestChangeCommands = CommonCommands | CopyResultCommand | DeleteRestWindowCommand | OpenModalPageCommand | StrictCopyCommand
 export type ModalChangeCommands = CommonCommands | CopyCommand | OpenModalPageCommand | OpenMainPageCommand
 export type NewPageChangeCommands = CommonCommands | CopyCommand | DeletePageTagsCommand
 export type InputChangeCommands = CommonCommands | StrictCopyCommand | OpenModalPageCommand | OpenMainPageCommand
@@ -286,6 +286,7 @@ export const restChangeCommandProcessors = <S, Result, MSGs, PS extends MinimalP
       copyJustStringsCommandProcessor ( config.toPathTolens, config.toPathTolens, config.s ),
       processOpenModalPageCommandProcessor ( config.pageSelectionL, config.dateFn ),
       processDeleteRestWindowCommand ( config.pageSelectionL ),
+      strictCopyCommandProcessor( config.toPathTolens, config.toPathTolens)(config.s),
       copyResultCommandProcessor ( config.resultPathToLens, config.toPathTolens ) ( result ) );
 
 export const modalCommandProcessors = <S, MSGs, PS extends MinimalPageSelection> ( config: ModalProcessorsConfig<S, MSGs, PS> ) => ( s: S ) => {
