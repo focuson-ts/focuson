@@ -105,8 +105,8 @@ describe ( "strict copy command", () => {
   it ( "should copy the from to the to", () => {
     expect ( displayTransformsInState ( froma12, safeArray ( processor ( froma12 ) ( command ) ) ) ).toEqual ( expected )
   } )
-  it ( "should cnot be in the rest commands", () => {
-    expect ( restProcessor ( result ) ( command ) ).toEqual ( undefined )
+  it ( "should  be in the rest commands", () => {
+    expect ( displayTransformsInState ( froma12, safeArray ( restProcessor ( froma12 ) ( command ) ) ) ).toEqual ( expected )
   } )
   it ( "should copy the from to the to -modal", () => {
     expect ( displayTransformsInState ( froma12, safeArray ( modalProcessor ( froma12 ) ( command ) ) ) ).toEqual ( expected )
