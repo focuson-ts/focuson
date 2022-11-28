@@ -86,6 +86,9 @@
   border-width: var(--table-border-width);
   border-style: var(--table-border-style);
   border-color: var(--table-border-color) var(--table-border-color) transparent transparent;
+  overflow: hidden;
+  height: auto;
+  word-wrap: break-word;
 }
 
 .grid tbody tr:first-child td {

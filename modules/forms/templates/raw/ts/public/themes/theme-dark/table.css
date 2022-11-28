@@ -81,12 +81,14 @@
   flex-basis: 100%;
   flex-grow: 2;
   display: block;
-  
   padding: 8px 8px;
   border-spacing: 0;
   border-width: var(--table-border-width);
   border-style: var(--table-border-style);
   border-color: var(--table-border-color) var(--table-border-color) transparent transparent;
+  overflow: hidden;
+  height: auto;
+  word-wrap: break-word;
 }
 
 .grid tbody tr:first-child td {
