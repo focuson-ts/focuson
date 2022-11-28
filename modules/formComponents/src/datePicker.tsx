@@ -2,7 +2,7 @@ import { NameAnd, safeArray } from "@focuson/utils";
 import { CommonStateProps, InputOnChangeProps, LabelAlignment } from "./common";
 import { format, parse } from 'date-fns';
 import { LensState, reasonFor, SetJsonReasonEvent } from "@focuson/state";
-import { ModalContext } from "@focuson/pages";
+import { HasPathToLens, ModalContext } from "@focuson/pages";
 import { Label } from "./label";
 import { makeButtons } from "./makeButtons";
 import ReactDatePicker from "react-datepicker";
@@ -38,6 +38,7 @@ interface CommonDateRange<S, C> {
   allowWeekends?: boolean;
   allowHolidays?: boolean;
   defaultDay?: boolean
+  firstSelectableDatePath?: string // This is the path to the firstSelectableDate
 }
 export interface DateRangeInPast<S, C> extends CommonDateRange<S, C> {
   type: 'past'
@@ -98,9 +99,10 @@ const weekEndsOk = <S, C> ( dateRange: DateRange<S, C>, dateErrorMessage: DateEr
 }
 
 const futureOk = <S, C> ( udi: UsableDateInfo, dateRange: DateRange<S, C>, dateErrorMessage: DateErrorMessage ): DateValidation => {
-  const firstValidDate = firstAllowedDate ( udi.today, udi.holidays, dateRange, dateErrorMessage )
+  // const firstValidDate = firstAllowedDate ( udi.today, udi.holidays, dateRange, udi.firstValidDate, udi.dateFormat, dateErrorMessage )
   return date => {
     if ( date && isDateRangeInFuture ( dateRange ) ) {
+      const firstValidDate = udi.firstValidDate;
       if ( firstValidDate === undefined ) {
         console.error ( 'error - undefined firstValidDate', udi, dateRange )
         throw Error ( `Cannot work out if date is in future because firstValidDate is undefined` )
@@ -134,23 +136,24 @@ function map<T> ( d: Date | string[], fn: ( d: Date ) => T ): T | string[] {
 const noErrorsBooleanFn = <T extends any> ( fn: ( t: T ) => string[] ): ( t: T ) => boolean => t => fn ( t ).length === 0;
 const errorsBooleanFn = <T extends any> ( fn: ( t: T ) => string[] ): ( t: T ) => boolean => t => fn ( t ).length > 0;
 
-export function validateDateInfo<S, C> ( dateInfo: DateInfo | undefined, targetJurisdiction: string | undefined, dateRange: DateRange<S, C>, dateErrorMessage: DateErrorMessage, debug?: boolean ): UsableDateInfo | string[] {
+export function validateDateInfo<S, C> ( dateInfo: DateInfo | undefined, targetJurisdiction: string | undefined, dateRange: DateRange<S, C>, firstValidDate: Date | undefined, dateErrorMessage: DateErrorMessage, debug?: boolean ): UsableDateInfo | string[] {
   if ( dateInfo === undefined ) return { today: new Date (), holidays: [], firstValidDate: undefined }
-  const dateFormat = dateInfo.dateFormat;
+  const dateFormatForInfo = dateInfo.dateFormat;
   const [ holidayErrors, holidays ] = errorsAnd ( safeArray ( dateInfo.holidays ).filter ( h => h.jurisdiction === targetJurisdiction || targetJurisdiction === undefined )
     .map ( ( { date, jurisdiction }, i ) =>
-      parseDate ( `holidays[${i}]: `, dateFormat ) ( date ) ) )
-  const [ todayErrors, todayDates ] = errorsAnd ( [ parseDate ( '', dateFormat ) ( dateInfo.today ) ] )
+      parseDate ( `holidays[${i}]: `, dateFormatForInfo ) ( date ) ) )
+  const [ todayErrors, todayDates ] = errorsAnd ( [ parseDate ( '', dateFormatForInfo ) ( dateInfo.today ) ] )
   const errors = [ ...todayErrors, ...holidayErrors ]
   if ( debug ) console.log ( 'validateDateInfo', dateInfo, errors )
   if ( errors.length > 0 ) return errors
   const today = todayDates[ 0 ]
-  const firstValidDate = firstAllowedDate ( today, holidays, dateRange, dateErrorMessage )
-  return { holidays, today, firstValidDate }
+  const actualFirstValidDate = firstAllowedDate ( today, holidays, dateRange, firstValidDate, dateErrorMessage )
+  return { holidays, today, firstValidDate: actualFirstValidDate }
 
 }
 
-export function firstAllowedDate<S, C> ( today: Date | undefined, holidays: Date[], dateRange: DateRange<S, C>, dateErrorMessage: DateErrorMessage ) {
+export function firstAllowedDate<S, C> ( today: Date | undefined, holidays: Date[], dateRange: DateRange<S, C>, firstValidDate: Date | undefined, dateErrorMessage: DateErrorMessage ): Date {
+  if ( firstValidDate ) return firstValidDate
   if ( isDateRangeInFuture ( dateRange ) ) {
     const checkDate = combine ( holidaysOK ( holidays, dateRange, dateErrorMessage ), weekEndsOk ( dateRange, dateErrorMessage ) )
     if ( dateRange.minWorkingDaysBefore === undefined ) return today
@@ -177,8 +180,9 @@ function acceptDate<S, C> ( udi: UsableDateInfo, dateRange: DateRange<S, C>, dat
     holidaysOK ( holidays, dateRange, dateErrorMessage ),
     weekEndsOk ( dateRange, dateErrorMessage ) )
 }
-export function acceptDateForTest<S, C> ( jurisdiction: string | undefined, dateInfo: DateInfo, dateRange: DateRange<S, C>, dateErrorMessage: DateErrorMessage ): DateValidation {
-  const usableInfo = validateDateInfo ( dateInfo, jurisdiction, dateRange, dateErrorMessage )
+export function acceptDateForTest<S, C extends HasPathToLens<S>> ( state: LensState<S, any, C>, jurisdiction: string | undefined, dateInfo: DateInfo, dateRange: DateRange<S, C>, dateFormat: string, dateErrorMessage: DateErrorMessage ): DateValidation {
+  const firstSelectableDate = findFirstSelectableDate ( state, dateRange.firstSelectableDatePath, dateFormat )
+  const usableInfo = validateDateInfo ( dateInfo, jurisdiction, dateRange, firstSelectableDate, dateErrorMessage )
   if ( Array.isArray ( usableInfo ) ) throw new Error ( `Problem in dateInfo\n${JSON.stringify ( usableInfo )}` )
   return acceptDate ( usableInfo, dateRange, dateErrorMessage )
 }
@@ -190,9 +194,23 @@ interface InfoTheDatePickerNeeds {
   defaultDate: Date | undefined;
 }
 
-export function calcInfoTheDatePickerNeeds<S, C> ( id: string, jurisdiction: string | undefined, dateInfo: DateInfo | undefined, dateFormat: DateFormat, dateRange: undefined | DateRange<S, C>, dateErrorMessage: DateErrorMessage, debug: boolean ): InfoTheDatePickerNeeds {
+function findFirstSelectableDate<S, C extends HasPathToLens<S>> ( state: LensState<S, any, C>, firstSelectableDatePath: string | undefined, dateFormat: string ): Date | undefined {
+  if ( firstSelectableDatePath === undefined ) return undefined
+  const path = state.context.pathToLens ( state.main ) ( firstSelectableDatePath )
+  const firstSelectableDateAsString = path.getOption ( state.main )
+  if ( firstSelectableDateAsString === undefined ) return undefined
+  const parsed = parseDate ( `DatePicker.firstSelectableDate`, dateFormat ) ( firstSelectableDateAsString.toString () )
+  if ( Array.isArray ( parsed ) ) {
+    console.error ( 'findFirstSelectableDate', 'path', path, 'dateString', firstSelectableDateAsString, 'result', parsed )
+    return undefined
+  }
+  return parsed
+}
+
+export function calcInfoTheDatePickerNeeds<S, C extends HasPathToLens<S>> ( id: string, state: LensState<S, any, C>, jurisdiction: string | undefined, dateInfo: DateInfo | undefined, dateFormat: DateFormat, dateRange: undefined | DateRange<S, C>, dateErrorMessage: DateErrorMessage, debug: boolean ): InfoTheDatePickerNeeds {
   const actualDateRange: DateRange<S, C> = dateRange ? dateRange : {}
-  const usableInfo = validateDateInfo ( dateInfo, jurisdiction, actualDateRange, dateErrorMessage )
+  const firstSelectableDate = findFirstSelectableDate ( state, actualDateRange.firstSelectableDatePath, dateFormat )
+  const usableInfo = validateDateInfo ( dateInfo, jurisdiction, actualDateRange, firstSelectableDate, dateErrorMessage )
   if ( Array.isArray ( usableInfo ) ) throw  new Error ( `Problem in dateInfo\n${JSON.stringify ( usableInfo )}` )
   const dateAcceptor = acceptDate ( usableInfo, actualDateRange, dateErrorMessage )
   let result: InfoTheDatePickerNeeds = {
@@ -256,7 +274,7 @@ export function RawDatePicker<S extends any, C extends ModalContext<S>> ( select
     const main: any = state.main
     const debug = main?.debug?.dateDebug
 
-    const { defaultDate, dateFilter, holidays, dateAcceptor } = calcInfoTheDatePickerNeeds ( id, jurisdiction?.optJson (), dateInfo?.optJson (), dateFormat, dateRange,
+    const { defaultDate, dateFilter, holidays, dateAcceptor } = calcInfoTheDatePickerNeeds ( id, state, jurisdiction?.optJson (), dateInfo?.optJson (), dateFormat, dateRange,
       { ...defaultDateErrorMessage, ...dateErrorMessage }, debug )
     const { date, selectedDateErrors, scrollToDate } = selectedDate ( state, dateFormat, defaultDate )
 
@@ -276,7 +294,7 @@ export function RawDatePicker<S extends any, C extends ModalContext<S>> ( select
     function onChangeRaw ( e: React.FocusEvent<HTMLInputElement> ) {
       const value = e.target?.value;
       if ( value !== undefined ) {
-        setEdited ( e?.target , e?.target?.value)
+        setEdited ( e?.target, e?.target?.value )
         if ( debug ) console.log ( 'datePicker.onChangeRaw', id, value, 'changed', e )
         selectFn ( debug, props ) ( 'changeRaw', value )
       }

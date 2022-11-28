@@ -4,7 +4,7 @@ import { onlySchema } from "../database/tableNames";
 import { StringParam } from "../../common/restD";
 
 export const helloWorldRD: ExampleRestD = {
-  params: {today: {...StringParam, lens: '/CommonData/dates/today', testValue: '12-02-2022'}},
+  params: {},
   dataDD: helloWorldDD,
   url: '/helloWorld?{query}',
   actions: [ 'get', 'update' ],

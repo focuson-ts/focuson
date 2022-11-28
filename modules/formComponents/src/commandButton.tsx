@@ -20,10 +20,8 @@ export function CommandButton<S, C extends FocusOnContext<S>> ( { id, state, lab
     const errorPrefix = `CommandButton ${id}`;
     const s: S = state.optJson ()
     const config: ModalProcessorsConfig<S, SimpleMessage,PageSelection> = makeProcessorsConfig ( state.main, state.context )
-    const txs: Transform<S, any>[] = processChangeCommandProcessor ( errorPrefix, commandButtonCommandProcessors ( config ) ( state.main ), commands )
-    const txsa: any = txs
-    const display = displayTransformsInState<S> ( state.main, txsa );
-    console.log ( errorPrefix, display )
+    const processor = commandButtonCommandProcessors ( config ) ( state.main );
+    const txs: Transform<S, any>[] = processChangeCommandProcessor ( errorPrefix, processor, commands )
     if ( txs.length === 0 ) return
     state.massTransform ( reasonFor ( 'CommandButton', 'onClick', id ) ) ( ...txs )
   }

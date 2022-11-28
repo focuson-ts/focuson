@@ -45,6 +45,8 @@ export const datesDataD: ExampleDataD = {
     length: { dataDD: LabelAndMonthYearLengthDD, displayParams: { fromDate: 'startDate', toDate: 'endDate', onChange: { command: 'message', msg: 'length' } } },
     startDate: { dataDD: StartMonthYearFromRangeFromWithDatePickerDD, displayParams: { endDatePath: 'endDate', lengthPath: 'length', onChange: { command: 'message', msg: 'startDate' } } },
     endDate: { dataDD: EndMonthYearFromRangeFromWithDatePickerDD, displayParams: { startDatePath: 'startDate', lengthPath: 'length', onChange: { command: 'message', msg: 'endDate' } } },
+    firstDate: { dataDD: DateWithDatePickerDD , displayParams: { dateRange: { type: 'future' }}},
+    futureAfterFirstDate: { dataDD: DateWithDatePickerDD, displayParams: { dateRange: {type:'future', firstSelectableDatePath: '~/dates/firstDate' }} },
     paymentType: { dataDD: PaymentTypeDd },
     forPayment: {
       dataDD: {
@@ -57,7 +59,7 @@ export const datesDataD: ExampleDataD = {
           paymentType: 'paymentType',
           messages: {
             EMT: {
-              warning: { time: '11:20', messageText: "Warning msg for EMT", showCancelButton: false, confirmCommands: {command: 'message', msg : 'We did the command after the confirm'} },
+              warning: { time: '11:20', messageText: "Warning msg for EMT", showCancelButton: false, confirmCommands: { command: 'message', msg: 'We did the command after the confirm' } },
               error: { time: '11:26', messageText: "Error msg for EMT", showCancelButton: false }
             },
             CHAPS: {
