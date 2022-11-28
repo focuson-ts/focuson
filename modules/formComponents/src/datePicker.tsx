@@ -1,4 +1,4 @@
-import { NameAnd, safeArray } from "@focuson/utils";
+import { NameAnd, safeArray, unique } from "@focuson/utils";
 import { CommonStateProps, InputOnChangeProps, LabelAlignment } from "./common";
 import { format, parse } from 'date-fns';
 import { LensState, reasonFor, SetJsonReasonEvent } from "@focuson/state";
@@ -308,7 +308,7 @@ export function RawDatePicker<S extends any, C extends ModalContext<S>> ( select
       return result
     }
     const errorFromValue = findErrorsFrom ( value )
-    const dateError = errorFromValue.length > 0 ? errorFromValue.join ( ", " ) : undefined
+    const dateError = errorFromValue.length > 0 ? unique(errorFromValue, e=>e).join ( ", " ) : undefined
     if ( debug ) console.log ( 'datePicker', id, 'value', value, 'date', date, 'errorFromValue', errorFromValue )
     const error = selectedDateErrors.length > 0 || (dateError !== undefined);
     //@ts-ignore - because react doesn't understand currying so thinks this isn't being called inside a function component

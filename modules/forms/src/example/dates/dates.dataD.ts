@@ -20,7 +20,7 @@ export const datesDataD: ExampleDataD = {
       dataDD: DateWithDatePickerDD,
       displayParams: {
         dateRange: { type: 'future', allowWeekends: false, allowHolidays: false },
-        dateErrorMessage: { isWeekend: 'forget them weekends... no work allowed!' }
+        dateErrorMessage: { isWeekend: 'is a holiday' }
       }
     },
     past: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Past', dateRange: { type: 'past' } } },
