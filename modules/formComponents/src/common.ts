@@ -1,5 +1,5 @@
 import { LensState } from "@focuson/state";
-import { NameAnd, PageMode } from "@focuson/utils";
+import {NameAnd, PageMode} from "@focuson/utils";
 import { InputChangeCommands } from "@focuson/rest";
 
 

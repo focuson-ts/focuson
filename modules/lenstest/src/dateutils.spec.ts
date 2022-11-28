@@ -146,7 +146,7 @@ describe ( "startEndDateAndLength", () => {
       expect ( setEndDate ( { startDate: '08-2022', endDate: '07-2022' }, "09-2022" ) ).toEqual ( { startDate: '08-2022', length: "2", endDate: '09-2022' } )
     } )
     it ( "should set the date when length is defined, and start date is defined", () => {
-      expect ( setEndDate ( { startDate: '07-2022', length:"2", endDate: '08-2022' }, "10-2022" ) ).toEqual ( { startDate: '9/2022', length:"2", endDate: '10-2022' } )
+      expect ( setEndDate ( { startDate: '07-2022', length:"2", endDate: '08-2022' }, "10-2022" ) ).toEqual ( { startDate: '07-2022', length:"4", endDate: '10-2022' } )
     } )
   } )
   describe ( "setLength", () => {
