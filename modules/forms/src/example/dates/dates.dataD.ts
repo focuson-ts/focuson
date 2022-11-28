@@ -46,7 +46,7 @@ export const datesDataD: ExampleDataD = {
     startDate: { dataDD: StartMonthYearFromRangeFromWithDatePickerDD, displayParams: { endDatePath: 'endDate', lengthPath: 'length', onChange: { command: 'message', msg: 'startDate' } } },
     endDate: { dataDD: EndMonthYearFromRangeFromWithDatePickerDD, displayParams: { startDatePath: 'startDate', lengthPath: 'length', onChange: { command: 'message', msg: 'endDate' } } },
     firstDate: { dataDD: DateWithDatePickerDD , displayParams: { dateRange: { type: 'future' }}},
-    futureAfterFirstDate: { dataDD: DateWithDatePickerDD, displayParams: { dateRange: {type:'future', firstSelectableDatePath: '~/dates/firstDate' }} },
+    futureAfterFirstDate: { dataDD: DateWithDatePickerDD, displayParams: { dateRange: {type:'future', firstSelectableDatePath: '~/dates/firstDate' , allowWeekends: false}} },
     paymentType: { dataDD: PaymentTypeDd },
     forPayment: {
       dataDD: {
