@@ -33,7 +33,7 @@
 .modalPopup-content {
     position: relative;
     top: 10%;
-    left: 20%;
+    margin: auto;
     padding: 10px;
     background-color: white;
     border: 5px solid var(--modal-border-color, black);
