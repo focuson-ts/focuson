@@ -212,8 +212,8 @@ export function isOpenModalPageCommand ( c: ChangeCommand ): c is OpenModalPageC
 
 export function processOpenModalPageCommandProcessor<S, PS extends MinimalPageSelection> ( pageSelectionL: Optional<S, PS[]>, dateFn: DateFn ): ChangeCommandProcessor<S> {
   function makePageSelection ( ps: MinimalPageSelectionForCommand[], m: MinimalPageSelectionForCommand ): MinimalPageSelection {
-    if ( ps.length === 0 ) throw Error ( `Trying to open modal window, but there are no open pages` )
-    const last = ps[ ps.length - 1 ]
+    const last = ps.reverse().find(p => p.type==='main')
+    if (last === undefined) throw Error( `Trying to open modal window, but there are no open pages` )
     const copy = { ...m }
     // @ts-ignore
     delete copy.type
