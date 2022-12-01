@@ -68,7 +68,7 @@ export const ButtonsPageD: ExampleMainPage = {
       control: 'RestButton', action: 'get', restName: 'buttons', result: 'nothing',
       validate: false,
       onSuccess: {command: 'openPage',
-        page: {type: 'modal', pageName: 'ButtonsModalPage', pageMode: 'view', focusOn: '~/display',
+        page: {pageName: 'ButtonsModalPage', pageMode: 'view', focusOn: '~/display',
           changeOnClose:{command: 'message', msg: 'Closing Rest With Modal Page'}
         }}
     },

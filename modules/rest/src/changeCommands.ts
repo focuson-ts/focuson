@@ -202,7 +202,6 @@ export function processChangeCommandProcessor<S> ( errorPrefix: string, p: Chang
   } )
 }
 export interface MinimalPageSelection extends PageSelectionForDeleteRestWindowCommand {
-  type?: string
   pageName: string;
   firstTime?: boolean;
   time: string;
@@ -210,7 +209,6 @@ export interface MinimalPageSelection extends PageSelectionForDeleteRestWindowCo
   focusOn?: string;
 }
 export interface MinimalModalPageSelectionForCommand {
-  type: 'modal'
   pageName: string;
   pageMode: PageMode;
   focusOn: string;
@@ -218,12 +216,18 @@ export interface MinimalModalPageSelectionForCommand {
   changeOnClose?: ModalChangeCommands | ModalChangeCommands[]
 }
 export interface MinimalMainPageSelectionForCommand {
-  type: 'main'
   pageName: string;
   pageMode: PageMode;
 }
 export type MinimalPageSelectionForCommand = MinimalModalPageSelectionForCommand | MinimalMainPageSelectionForCommand
-
+function isMinimalMainPageSelectionForCommand(p: MinimalPageSelectionForCommand): p is MinimalMainPageSelectionForCommand {
+  const a : any= p
+  return a.focusOn === undefined
+}
+function isMinimalModalPageSelectionForCommand(p: MinimalPageSelectionForCommand): p is MinimalModalPageSelectionForCommand {
+  const a : any= p
+  return a.focusOn !== undefined
+}
 export interface OpenModalPageCommand extends ChangeCommand {
   command: 'openPage'
   page: MinimalModalPageSelectionForCommand
@@ -235,32 +239,27 @@ export interface OpenMainPageCommand extends ChangeCommand {
 
 export function isOpenMainPageCommand ( c: ChangeCommand ): c is OpenMainPageCommand {
   const a: any = c
-  return c.command === 'openPage' && a.page.type === 'main'
+  return c.command === 'openPage' && isMinimalMainPageSelectionForCommand(a.page)
 }
 export function isOpenModalPageCommand ( c: ChangeCommand ): c is OpenModalPageCommand {
   const a: any = c
-  return c.command === 'openPage' && a.page.type === 'modal'
+  return c.command === 'openPage' &&isMinimalModalPageSelectionForCommand(a.page)
 
 }
 
 export function processOpenModalPageCommandProcessor<S, PS extends MinimalPageSelection> ( pageSelectionL: Optional<S, PS[]>, dateFn: DateFn ): ChangeCommandProcessor<S> {
   function makePageSelection ( ps: MinimalPageSelectionForCommand[], m: MinimalPageSelectionForCommand ): MinimalPageSelection {
-    const last = ps.reverse ().find ( p => p.type === 'main' )
-    if ( last === undefined ) throw Error ( `Trying to open modal window, but there are no open pages.\n${JSON.stringify(ps,null,2)}` )
-    const copy = { ...m }
-    // @ts-ignore
-    delete copy.type
-    if ( m.type === 'modal' ) return { ...copy, pageName: `${last.pageName}_${m.pageName}`, time: dateFn (), firstTime: true }
+    const last = ps.reverse ().find (isMinimalMainPageSelectionForCommand )
+    if ( last === undefined ) throw Error ( `Trying to open modal window, but there are no open pages.\n${JSON.stringify(ps,null,2)}\n\n${ps.map(isMinimalMainPageSelectionForCommand)}` )
+    if (isMinimalModalPageSelectionForCommand(m)) return { ...m, pageName: `${last.pageName}_${m.pageName}`, time: dateFn (), firstTime: true }
     throw new Error ( `Cannot work out type of window in ${JSON.stringify ( m )}` )
   }
   return c => isOpenModalPageCommand ( c ) ? [ [ pageSelectionL, ps => [ ...ps, makePageSelection ( ps, c.page ) ] ] ] : undefined
 }
 export function processOpenMainPageCommandProcessor<S, PS extends MinimalPageSelection> ( pageSelectionL: Optional<S, PS[]>, dateFn: DateFn ): ChangeCommandProcessor<S> {
   function makePageSelection ( ps: MinimalPageSelectionForCommand[], m: MinimalPageSelectionForCommand ): MinimalPageSelection {
-    const copy = { ...m }
-    // @ts-ignore
-    delete copy.type
-    if ( m.type === 'main' ) return { ...copy, time: dateFn (), firstTime: true }
+
+    if (isMinimalMainPageSelectionForCommand(m)) return { ...m, time: dateFn (), firstTime: true }
     throw new Error ( `Cannot work out type of window in ${JSON.stringify ( m )}` )
   }
   return c => isOpenMainPageCommand ( c ) ? [ [ pageSelectionL, ps => [ ...ps, makePageSelection ( ps, c.page ) ] ] ] : undefined
