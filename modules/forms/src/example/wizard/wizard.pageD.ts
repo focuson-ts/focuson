@@ -20,7 +20,8 @@ const wizard3: ExampleModalPage = {
   modes: [ 'view' ],
   name: "Wizard3",
   buttons: {
-    next: { control: 'ModalButton', modal: wizard4, mode: 'view', focusOn: '~/nothing' , pageOp: 'replace',
+    next: {
+      control: 'ModalButton', modal: wizard4, mode: 'view', focusOn: '~/nothing', pageOp: 'replace',
 
 
     },
@@ -46,7 +47,8 @@ const wizard1: ExampleModalPage = {
   name: "Wizard1",
   buttons: {
     next: { control: 'ModalButton', modal: wizard2, mode: 'view', focusOn: '~/nothing', pageOp: 'replace' },
-    cancel: { control: 'ModalCancelButton' }
+    cancel: { control: 'ModalCancelButton' },
+    closePageButton: { control: 'CommandButton', command: { command: 'closeCurrentWindow' } }
   },
 }
 
@@ -63,5 +65,6 @@ export const wizardPD: ExampleMainPage = {
   rest: {},
   buttons: {
     start: { control: 'ModalButton', modal: wizard1, mode: 'view', focusOn: '~/nothing' },
+    selectDates: { control: 'SelectPage', pageMode: 'edit', pageName: 'Dates' }
   },
 }

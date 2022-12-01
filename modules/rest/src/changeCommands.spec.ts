@@ -1,5 +1,5 @@
 import { defaultDateFn, HasSimpleMessages, safeArray, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson/utils";
-import { CopyCommand, copyCommandProcessor, CopyResultCommand, copyResultCommandProcessor, DeleteCommand, deleteCommandProcessor, DeleteMessageStrictCopySetProcessorsConfig, MessageCommand, messageCommandProcessor, modalCommandProcessors, ModalProcessorsConfig, restChangeCommandProcessors, RestAndInputProcessorsConfig, SetChangeCommand, setCommandProcessor, StrictCopyCommand, strictCopyCommandProcessor, deletePageTagsCommandProcessor, DeletePageTagsCommand, TimeStampCommand, confirmWindowCommandProcessors, MinimalPageSelection, processOpenModalPageCommandProcessor, OpenModalPageCommand, processOpenMainPageCommandProcessor, OpenMainPageCommand, copyJustStringsCommandProcessor, CopyJustStringsCommands } from "./changeCommands";
+import { CopyCommand, copyCommandProcessor, CopyResultCommand, copyResultCommandProcessor, DeleteCommand, deleteCommandProcessor, DeleteMessageStrictCopySetProcessorsConfig, MessageCommand, messageCommandProcessor, modalCommandProcessors, ModalProcessorsConfig, restChangeCommandProcessors, RestAndInputProcessorsConfig, SetChangeCommand, setCommandProcessor, StrictCopyCommand, strictCopyCommandProcessor, deletePageTagsCommandProcessor, DeletePageTagsCommand, TimeStampCommand, confirmWindowCommandProcessors, MinimalPageSelection, processOpenModalPageCommandProcessor, OpenModalPageCommand, processOpenMainPageCommandProcessor, OpenMainPageCommand, copyJustStringsCommandProcessor, CopyJustStringsCommands, HasCloseOnePage } from "./changeCommands";
 import { displayTransformsInState, identityOptics, lensBuilder, Lenses, parsePath } from "@focuson/lens";
 import { TagHolder } from "@focuson/template";
 
@@ -31,14 +31,19 @@ const froma12: StateForChangeCommands = { ...empty, fromA: { a: { b: "one", c: "
 const froma12Withz: StateForChangeCommands = { ...empty, fromA: { a: { b: "one", c: "two" } }, x: { z: { a: { b: 'from', c: 'default' } } } }
 
 const froma12WithAMessage: StateForChangeCommands = { ...empty, messages: [ { level: 'error', msg: 'a', time: 'someTime' } ], fromA: { a: { b: "one", c: "two" } } }
+
+type Context = HasCloseOnePage<StateForChangeCommands, Context>
+const context: Context = {
+  closeOnePageTxs: () => []
+}
 const config: DeleteMessageStrictCopySetProcessorsConfig<StateForChangeCommands, SimpleMessage, MinimalPageSelection> = {
   s: empty,
   dateFn: testDateFn,
   toPathTolens, messageL: simpleMessagesL (), stringToMsg: stringToSimpleMsg ( testDateFn, 'info' ),
   pageSelectionL
 }
-const restConfig: RestAndInputProcessorsConfig<StateForChangeCommands, any, SimpleMessage, MinimalPageSelection> = {
-  ...config, resultPathToLens, pageSelectionL
+const restConfig: RestAndInputProcessorsConfig<StateForChangeCommands, any, SimpleMessage, MinimalPageSelection, Context> = {
+  ...config, resultPathToLens, pageSelectionL, context
 }
 const modalConfig: ModalProcessorsConfig<StateForChangeCommands, SimpleMessage, MinimalPageSelection> = {
   ...config, fromPathTolens, defaultL,
@@ -49,7 +54,7 @@ const modalConfig: ModalProcessorsConfig<StateForChangeCommands, SimpleMessage, 
 const result = { y: 'y', z: { a: { b: 'from', c: 'res' } } }
 const restProcessor = restChangeCommandProcessors ( restConfig )
 const modalProcessor = modalCommandProcessors ( modalConfig )
-const confirmWindowProcessor = confirmWindowCommandProcessors ( modalConfig )
+const confirmWindowProcessor = confirmWindowCommandProcessors ( restConfig )
 
 describe ( "delete command", () => {
   const processor = deleteCommandProcessor ( toPathTolens );
@@ -106,7 +111,10 @@ describe ( "strict copy command", () => {
     expect ( displayTransformsInState ( froma12, safeArray ( processor ( froma12 ) ( command ) ) ) ).toEqual ( expected )
   } )
   it ( "should  be in the rest commands", () => {
-    expect ( displayTransformsInState ( froma12, safeArray ( restProcessor ( froma12 ) ( command ) ) ) ).toEqual ( expected )
+    //because there is no 'fromPathToLens' we've need to mess with this one a bit
+    const s = { ...froma12, toA: froma12.fromA };
+    const restProcessor = restChangeCommandProcessors ( {...restConfig,s} )
+    expect ( displayTransformsInState ( s, safeArray ( restProcessor ( s ) ( command ) ) ) ).toEqual ( expected )
   } )
   it ( "should copy the from to the to -modal", () => {
     expect ( displayTransformsInState ( froma12, safeArray ( modalProcessor ( froma12 ) ( command ) ) ) ).toEqual ( expected )
@@ -179,12 +187,12 @@ describe ( "processOpenModalPageCommandProcessor", () => {
   it ( "should create a page selection for a modal page", () => {
     expect ( displayTransformsInState ( {
       ...froma12,
-      pageSelection: [ { pageName: 'mainPageName', pageMode: 'view', time: 'unimportant' } ]
+      pageSelection: [ { type: 'main', pageName: 'mainPageName', pageMode: 'view', time: 'unimportant' } ]
     }, safeArray ( processor ( modalCommand ) ) ) ).toEqual ( [
       {
         "opt": "default.focus?(pageSelection)",
         "value": [
-          { "pageMode": "view", "pageName": "mainPageName", "time": "unimportant" },
+          { type: 'main', "pageMode": "view", "pageName": "mainPageName", "time": "unimportant" },
           { "firstTime": true, "focusOn": "focusOnThis", "pageMode": "view", "pageName": "mainPageName_somePage", "time": "timeForTest" }
         ]
       }

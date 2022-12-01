@@ -113,7 +113,7 @@ describe ( "test setup for new fetcher", () => {
       pageL,
       traceL: traceL (), stringToMsg: someConfig.stringToMsg
     }
-    const [ actual ] = await restToTransforms<StateForNewFetcherTests, SimpleMessage, PageSelection> ( props, () => empty, [ { name: 'someRestName', restAction: 'get' } ] )
+    const [ actual ] = await restToTransforms<StateForNewFetcherTests, SimpleMessage, PageSelection, any> ( props, () => empty, {},[ { name: 'someRestName', restAction: 'get' } ] )
     expect ( actual.restCommand ).toEqual ( { name: 'someRestName', restAction: 'get' } )
     expect ( actual.status ).toEqual ( 200 )
     const txs = actual.txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( empty ) ) ] )

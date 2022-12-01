@@ -4,7 +4,7 @@
  * string and string[] are just the types
  *
  * */
-export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' |
+export type DisplayCompParamType = 'boolean' | 'string' | 'state' | 'pageState' | 'fullState' | 'stateValue' | 'pageStateValue' | 'teamName' |
   'fullStateValue' | 'object' | 'json' | 'jsonWithDisplayFn' | 'string[]' | 'path' | 'nameAndPaths' | 'pathValue' | 'objectAndRenderPrefix' | 'guards' | 'guardAndMessage'
 
 type ParamNeeded = 'no' | 'yes' | 'defaultToCamelCaseOfName' | 'defaultToPath' | 'defaultToEnum' | 'id' | 'notARealParam' | 'defaultToButtons' | 'defaultToLabel' | 'defaultToParentState' | 'defaultToParentStateIfOnChange'
@@ -176,6 +176,7 @@ export const DatePicker2CD: DisplayCompD = {
     dateRange: { paramType: 'json', needed: 'no' },
     jurisdiction: { paramType: 'path', needed: 'no' },
     dateInfo: { paramType: 'path', needed: 'no' },
+    teamName: { paramType: 'teamName', needed: 'no' },
     showMonthYearPicker: { paramType: 'boolean', needed: 'no' },
     placeholder: { paramType: 'string', needed: 'no' },
     dateErrorMessage: { paramType: 'json', needed: 'no' },

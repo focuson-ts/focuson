@@ -65,9 +65,9 @@ export const makeConfirmCommitWindow = <S, D, C extends ModalContext<S>> ( makeF
     const { simpleMessagesL, pathToLens, dateFn, pageSelectionL } = state.context
     const resultPathToLens = fromPathGivenState ( state )
 
-    const config: RestAndInputProcessorsConfig<S, any, SimpleMessage, PageSelection> = {
+    const config: RestAndInputProcessorsConfig<S, any, SimpleMessage, PageSelection,C> = {
       resultPathToLens, messageL: simpleMessagesL, pageSelectionL, toPathTolens: resultPathToLens,
-      stringToMsg: stringToSimpleMsg ( dateFn ), s: state.main, dateFn
+      stringToMsg: stringToSimpleMsg ( dateFn ), s: state.main, dateFn, context: state.context
     }
     const processor = confirmWindowCommandProcessors ( config ) ( state.main );
     return processor

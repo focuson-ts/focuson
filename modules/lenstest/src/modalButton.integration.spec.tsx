@@ -1,4 +1,4 @@
-import { fromPathFromRaw, HasPageSelection, ModalButton, ModalCommitButton, MultiPageDetails, PageDetailsForCombine, pageSelectionlens, simpleMessagesL } from "@focuson/pages";
+import { fromPathFromRaw, HasPageSelection, ModalButton, ModalCommitButton, MultiPageDetails, PageDetailsForCombine, pageSelectionlens, rawCloseOnePageTxs, simpleMessagesL } from "@focuson/pages";
 import { HasRestCommands, restL } from "@focuson/rest";
 import { lensState, LensState } from "@focuson/state";
 import { shallow } from "enzyme";
@@ -69,6 +69,7 @@ const context: Context = {
   newFetchers: {},
   dateFn: testDateFn,
   restDetails: {},
+  closeOnePageTxs: rawCloseOnePageTxs,
   tagHolderL: Lenses.identity<ModalButtonStateForTest> ().focusQuery ( 'tags' ),
   currentState<D, C> ( state: LensState<ModalButtonStateForTest, any, C> ): LensState<ModalButtonStateForTest, D, C> {return state},
   messagePostProcessor:{},

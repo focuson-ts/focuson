@@ -9,13 +9,13 @@ export const datesDataD: ExampleDataD = {
   layout: { component: LayoutCd, displayParams: { details: '[[8,8]]', title: 'Some Title {empty}', rightHandTitle: 'Some Right Hand Title {empty}' } },
   // layout: { component: LayoutCd, displayParams: { details: '[[1]]', title: 'Some Title {empty}', rightHandTitle: 'Some Right Hand Title {empty}' } },
   structure: {
-    empty: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified', onChange: { command: 'message', msg: 'empty' } } },
-    emptyAndReadonly: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified - readonly', readonly: true } },
-    emptyAndNotRequired: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified - required false', required: false } },
-    value: { dataDD: { ...DateWithDatePickerDD, emptyValue: '6/7/2022' }, displayParams: { label: 'Specified 6/7/2022' } },
-    valueDateFormat: { dataDD: { ...DateWithDatePickerDD, emptyValue: '2022/7/5' }, displayParams: { label: 'Specified 2022/7/5 (different date format) ', dateFormat: 'yyyy/MM/dd' } },
-    future: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Future', dateRange: { type: 'future' } } },
-    futureNoHolidaysOrWeekends: { dataDD: DateWithDatePickerDD, displayParams: { dateRange: { type: 'future', allowWeekends: false, allowHolidays: false, } } },
+    empty: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified', onChange: { command: 'message', msg: 'empty' } , dateInfo: '/FocusonCommonData/dates'} },
+    emptyAndReadonly: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified - readonly', readonly: true  , dateInfo: '/FocusonCommonData/dates'} },
+    emptyAndNotRequired: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Nothing specified - required false', required: false , dateInfo: '/FocusonCommonData/dates' } },
+    value: { dataDD: { ...DateWithDatePickerDD, emptyValue: '6/7/2022' }, displayParams: { label: 'Specified 6/7/2022' , dateInfo: '/FocusonCommonData/dates' } },
+    valueDateFormat: { dataDD: { ...DateWithDatePickerDD, emptyValue: '2022/7/5' }, displayParams: { label: 'Specified 2022/7/5 (different date format) ', dateFormat: 'yyyy/MM/dd'  , dateInfo: '/FocusonCommonData/dates'} },
+    future: { dataDD: DateWithDatePickerDD, displayParams: { label: 'Future', dateRange: { type: 'future' }  , dateInfo: '/FocusonCommonData/dates'} },
+    futureNoHolidaysOrWeekends: { dataDD: DateWithDatePickerDD, displayParams: { dateRange: { type: 'future', allowWeekends: false, allowHolidays: false, } , dateInfo: '/FocusonCommonData/dates' } },
     futureNoHolidaysOrWeekendsCustomMessages: {
       dataDD: DateWithDatePickerDD,
       displayParams: {
@@ -55,7 +55,7 @@ export const datesDataD: ExampleDataD = {
           dateFormat: 'dd/MM/yyyy',
 
           dateRange: { type: 'future', allowWeekends: false, allowHolidays: false },
-          pathToDateInfo: '/CommonData',
+          pathToDateInfo: '/FocusonCommonData',
           paymentType: 'paymentType',
           messages: {
             EMT: {

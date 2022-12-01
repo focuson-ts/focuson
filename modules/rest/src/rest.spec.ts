@@ -1,7 +1,7 @@
 import { createSimpleMessage, FetchFn, HasSimpleMessages, insertBefore, isRestStateChange, RestAction, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson/utils";
 import { HasRestCommands, massFetch, OneRestDetails, rest, RestCommand, RestDetails, restL, restReq, RestToTransformProps } from "./rest";
 import { identityOptics, lensBuilder, Lenses, NameAndLens, Optional, parsePath } from "@focuson/lens";
-import { CopyResultCommand, DeleteCommand, MinimalPageSelection } from "./changeCommands";
+import { CopyResultCommand, DeleteCommand, HasCloseOnePage, MinimalPageSelection } from "./changeCommands";
 import { justInfoToSuccessMessagesPostProcessor } from "./messages";
 
 
@@ -17,6 +17,11 @@ interface RestStateForTest extends HasSimpleMessages, HasRestCommands, HasFullDo
   token?: string;
   debug?: { recordTrace?: boolean }
 }
+type Context = HasCloseOnePage<RestStateForTest, Context>
+const context: Context = {
+  closeOnePageTxs: () => []
+}
+
 export function traceL<S> (): Optional<S, any> {
   // @ts-ignore
   return Lenses.identity<S> ().focusQuery ( 'trace' )
@@ -157,14 +162,14 @@ const propsJwtFalse: RestToTransformProps<RestStateForTest, SimpleMessage, Minim
 const propsJwtTrue: RestToTransformProps<RestStateForTest, SimpleMessage, MinimalPageSelection> = { ...propsJwtFalse, mockJwt: true };
 describe ( "rest", () => {
   it ( "should fetch the results and put them into the state, removing the rest commands mockJwt false", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage, MinimalPageSelection> ( propsJwtFalse, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+    const result = await rest<RestStateForTest, SimpleMessage, MinimalPageSelection,Context> ( propsJwtFalse, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
       { restAction: 'get', name: 'one' },
       { restAction: 'create', name: 'one' },
       { restAction: 'createWithoutFetch', name: 'one' },
       { restAction: 'delete', name: 'one' },
       { restAction: 'update', name: 'one' },
       { restAction: 'updateWithoutFetch', name: 'one' },
-    ) );
+    ),context );
     expect ( result ).toEqual ( {
       ...emptyRestState,
       "fullDomain": {
@@ -182,14 +187,14 @@ describe ( "rest", () => {
     } )
   } )
   it ( "should fetch the results and put them into the state, removing the rest commands mockJwt false", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage, MinimalPageSelection> ( propsJwtTrue, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+    const result = await rest<RestStateForTest, SimpleMessage, MinimalPageSelection,Context> ( propsJwtTrue, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
       { restAction: 'get', name: 'one' },
       { restAction: 'create', name: 'one' },
       { restAction: 'createWithoutFetch', name: 'one' },
       { restAction: 'delete', name: 'one' },
       { restAction: 'update', name: 'one' },
       { restAction: 'updateWithoutFetch', name: 'one' },
-    ) );
+    ) ,context);
     expect ( result ).toEqual ( {
       ...emptyRestState,
       "fullDomain": { "fromApi": "Extracted[200].from/some/url/someToken/update?nontoken=nontoken&id=someId", "idFromFullDomain": "someId" },
@@ -205,7 +210,7 @@ describe ( "rest", () => {
   } )
 
   it ( "should fetch the results and put them into the state, removing the rest commands and record trace if debug set", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage, MinimalPageSelection> ( propsJwtFalse, restL (), withRestCommand ( { ...emptyRestStateWithTrace, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+    const result = await rest<RestStateForTest, SimpleMessage, MinimalPageSelection,Context> ( propsJwtFalse, restL (), withRestCommand ( { ...emptyRestStateWithTrace, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
       { restAction: 'get', name: 'one' },
       { restAction: 'create', name: 'one' },
       { restAction: 'createWithoutFetch', name: 'one' },
@@ -213,7 +218,7 @@ describe ( "rest", () => {
       { restAction: 'delete', name: 'one' },
       { restAction: 'update', name: 'one' },
       { restAction: 'updateWithoutFetch', name: 'one' },
-    ) );
+    ) ,context);
     // @ts-ignore
     const trace = result.trace
     expect ( trace ).toEqual ( [
@@ -341,9 +346,9 @@ describe ( "rest", () => {
   } )
 
   it ( "should process state changes without changing the domain object", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage, MinimalPageSelection> ( propsJwtFalse, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+    const result = await rest<RestStateForTest, SimpleMessage, MinimalPageSelection,Context> ( propsJwtFalse, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
       { restAction: { state: 'newState' }, name: 'one' }
-    ) );
+    ) ,context);
     expect ( result ).toEqual ( {
       "fullDomain": {
         "fromApi": "someData",
@@ -363,16 +368,16 @@ describe ( "rest", () => {
   } )
 
   it ( "should throw error with illegal state", async () => {
-    await expect ( rest<RestStateForTest, SimpleMessage, MinimalPageSelection> ( propsJwtFalse, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+    await expect ( rest<RestStateForTest, SimpleMessage, MinimalPageSelection,Context> ( propsJwtFalse, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
       { restAction: { state: 'illegalState' }, name: 'one' }
-    ) ) ).rejects.toThrow ( 'Illegal state [illegalState] requested. Legal values are [newState]' )
+    ),context ) ).rejects.toThrow ( 'Illegal state [illegalState] requested. Legal values are [newState]' )
   } )
 
   it ( "should delete items specified in the 'delete on success' - single item", async () => {
     const deleteCommand: DeleteCommand = { command: 'delete', path: '/token' };
-    const result = await rest<RestStateForTest, SimpleMessage, MinimalPageSelection> ( propsJwtFalse, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
+    const result = await rest<RestStateForTest, SimpleMessage, MinimalPageSelection,Context> ( propsJwtFalse, restL (), withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
       { restAction: { state: 'newState' }, name: 'one', changeOnSuccess: [ deleteCommand ] }
-    ) );
+    ) ,context);
     expect ( result ).toEqual ( {
       "fullDomain": {
         "fromApi": "someData",
@@ -391,10 +396,10 @@ describe ( "rest", () => {
   } )
   it ( "should delete items specified in the 'delete on success' - multiple item", async () => {
     const deleteCommands: DeleteCommand[] = [ { command: 'delete', path: '/token' }, { command: "delete", path: '/fullDomain/idFromFullDomain' } ];
-    const result = await rest<RestStateForTest, SimpleMessage, MinimalPageSelection> ( propsJwtFalse, restL (),
+    const result = await rest<RestStateForTest, SimpleMessage, MinimalPageSelection,Context> ( propsJwtFalse, restL (),
       withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
         { restAction: { state: 'newState' }, name: 'one', changeOnSuccess: deleteCommands }
-      ) );
+      ),context );
     expect ( result ).toEqual ( {
       "fullDomain": {
         "fromApi": "someData"
@@ -412,10 +417,10 @@ describe ( "rest", () => {
   } )
   it ( "should copy items specified in the 'copyOnSuccess", async () => {
     const copyCommand: CopyResultCommand = { command: 'copyResult', from: '', to: '/somewhere' }
-    const result = await rest<RestStateForTest, SimpleMessage, MinimalPageSelection> ( propsJwtFalse, restL (),
+    const result = await rest<RestStateForTest, SimpleMessage, MinimalPageSelection,Context> ( propsJwtFalse, restL (),
       withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
         { restAction: { state: 'newState' }, name: 'one', changeOnSuccess: [ copyCommand ] }
-      ) );
+      ),context );
     expect ( result ).toEqual ( {
       "fullDomain": {
         "fromApi": "someData",
@@ -433,10 +438,10 @@ describe ( "rest", () => {
 describe ( "deprecated rest commands", () => {
 
   it ( "should delete items specified in the 'delete on success' - single item", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage, MinimalPageSelection> ( propsJwtFalse, restL (),
+    const result = await rest<RestStateForTest, SimpleMessage, MinimalPageSelection,Context> ( propsJwtFalse, restL (),
       withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
         { restAction: { state: 'newState' }, name: 'one', deleteOnSuccess: '/token' }
-      ) );
+      ) ,context);
     expect ( result ).toEqual ( {
       "fullDomain": {
         "fromApi": "someData",
@@ -449,15 +454,16 @@ describe ( "deprecated rest commands", () => {
           "time": "timeForTest"
         }
       ],
+      pageSelection:[],
       "restCommands": []
     } )
 
   } )
   it ( "should delete items specified in the 'delete on success' - multiple item", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage, MinimalPageSelection> ( propsJwtFalse, restL (),
+    const result = await rest<RestStateForTest, SimpleMessage, MinimalPageSelection,Context> ( propsJwtFalse, restL (),
       withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
         { restAction: { state: 'newState' }, name: 'one', deleteOnSuccess: [ '/token', '/fullDomain/idFromFullDomain' ] }
-      ) );
+      ),context );
     expect ( result ).toEqual ( {
       "fullDomain": {
         "fromApi": "someData"
@@ -468,23 +474,23 @@ describe ( "deprecated rest commands", () => {
           "msg": "200/\"from/some/new/state/someToken/newState?id=someId\"",
           "time": "timeForTest"
         }
-      ],
+      ],pageSelection:[],
       "restCommands": []
     } )
 
   } )
   it ( "should copy items specified in the 'copyOnSuccess", async () => {
-    const result = await rest<RestStateForTest, SimpleMessage, MinimalPageSelection> ( propsJwtFalse, restL (),
+    const result = await rest<RestStateForTest, SimpleMessage, MinimalPageSelection,Context> ( propsJwtFalse, restL (),
       withRestCommand ( { ...emptyRestState, fullDomain: { idFromFullDomain: 'someId', fromApi: "someData" } },
         { restAction: { state: 'newState' }, name: 'one', copyOnSuccess: [ { from: '', to: '/somewhere' } ] }
-      ) );
+      ),context );
     expect ( result ).toEqual ( {
       "fullDomain": {
         "fromApi": "someData",
         "idFromFullDomain": "someId"
       },
       "messages": [ { "level": "success", "msg": "200/\"from/some/new/state/someToken/newState?id=someId\"", "time": "timeForTest" } ],
-      "restCommands": [],
+      "restCommands": [],pageSelection:[],
       "somewhere": "Extracted[200].from/some/new/state/someToken/newState?id=someId",
       "token": "someToken"
     } )

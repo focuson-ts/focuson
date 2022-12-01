@@ -1,10 +1,10 @@
-import { focusPageClassName, fromPathFromRaw, fromPathGivenState, HasPageSelection, HasPathToLens, HasSimpleMessageL, mainPage, mainPageFrom, MultiPageDetails, PageDetailsForCombine, PageSelection, PageSelectionContext, pageSelectionlens, preMutateForPages, simpleMessagesL } from "@focuson/pages";
+import { focusPageClassName, fromPathFromRaw, fromPathGivenState, HasPageSelection, HasPathToLens, HasSimpleMessageL, mainPage, mainPageFrom, MultiPageDetails, PageDetailsForCombine, PageSelection, PageSelectionContext, pageSelectionlens, preMutateForPages, rawCloseOnePageTxs, simpleMessagesL } from "@focuson/pages";
 import { HasPostCommand, HasPostCommandLens } from "@focuson/poster";
 import { FetcherTree, loadTree } from "@focuson/fetcher";
 import { lensState, LensState } from "@focuson/state";
-import { identityOptics, Lenses, massTransform, NameAndLens, Optional, Transform } from "@focuson/lens";
+import { identityOptics, identityOptional, Lenses, massTransform, NameAndLens, Optional, Transform } from "@focuson/lens";
 import { DateFn, defaultDateFn, errorMonad, FetchFn, HasDateFn, HasSimpleMessages, NameAnd, RestAction, safeArray, safeString, SimpleMessage, SimpleMessageLevel, stringToSimpleMsg } from "@focuson/utils";
-import { HasMessagesPostProcessor, HasRestCommandL, HasRestCommands, ModalProcessorsConfig, rest, RestAndInputProcessorsConfig, RestCommand, RestCommandAndTxs, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson/rest";
+import { HasCloseOnePage, HasMessagesPostProcessor, HasRestCommandL, HasRestCommands, InputProcessorsConfig, ModalProcessorsConfig, rest, RestAndInputProcessorsConfig, RestCommand, RestCommandAndTxs, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson/rest";
 import { HasTagHolder, TagHolder } from "@focuson/template";
 import { AllFetcherUsingRestConfig, restCommandsFromFetchers } from "./tagFetcherUsingRest";
 import { FocusOnDebug } from "./debug";
@@ -60,7 +60,7 @@ export type Dependencies = NameAnd<any>
 export interface HasDependencies {
   dependencies?: Dependencies
 }
-export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasPathToLens<S>,
+export interface FocusOnContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasPathToLens<S>, HasCloseOnePage<S, FocusOnContext<S>>,
   HasFetchersAndRest<S, SimpleMessage>, HasDateFn, HasGetCurrentMain<S>, HasMessagesPostProcessor<SimpleMessage>, HasMockJwt, HasDependencies {
   commonIds: NameAndLens<S>;
 }
@@ -77,6 +77,7 @@ export function defaultPageSelectionAndRestCommandsContext<S extends HasPageSele
     commonIds,
     pathToLens,
     dateFn,
+    closeOnePageTxs: rawCloseOnePageTxs,
     restL: restL<S> (),
     tagHolderL: Lenses.identity<S> ().focusQuery ( 'tags' ),
     newFetchers,
@@ -173,7 +174,7 @@ export const processRestsAndFetchers = <S, Context extends FocusOnContext<S>, MS
     const fromFetchers = restCommandsFromFetchers ( tagHolderL, newFetchers, restDetails, pageName, s )
     const allCommands: RestCommand[] = [ ...restCommands, ...fromFetchers ]
     const restProps: RestToTransformProps<S, MSGs,PageSelection> = { fetchFn, mockJwt, d: restDetails, pathToLens, messageL, pageSelectionL: context.pageSelectionL, stringToMsg, traceL: traceL (), urlMutatorForRest: restUrlMutator }
-    const txs = await restToTransforms ( restProps, sFn, allCommands )
+    const txs = await restToTransforms ( restProps, sFn, context,allCommands )
     const result = addTagTxsForFetchers ( config.tagHolderL, txs )
     return result
   }
@@ -211,10 +212,28 @@ export const dispatchRestAndFetchCommands = <S, Context extends FocusOnContext<S
 };
 
 
-export function makeProcessorsConfig<S, Context extends FocusOnContext<S>> ( startS: S, context: Context ) {
+export function makeInputProcessorsConfig<S, Context extends FocusOnContext<S>> ( startS: S, context: Context ) : InputProcessorsConfig<S, SimpleMessage, PageSelection, Context>{
   // console.log('MakeProcessorsConfig', startS)
   const pathToLens = fromPathGivenState ( lensState ( startS, () => {throw Error ()}, '', context ) )
-  const processorsConfig: ModalProcessorsConfig<S, SimpleMessage,PageSelection> = {
+  const processorsConfig = {
+    pageNameFn: ( s: S ) => mainPage<S, Context> ( lensState ( s, () => {throw Error ()}, '', context ) ).pageName,
+    tagHolderL: context.tagHolderL,
+    messageL: context.simpleMessagesL,
+    defaultL: identityOptional<S>(),
+    dateFn: context.dateFn,
+    stringToMsg: stringToSimpleMsg ( defaultDateFn, 'info' ),
+    s: startS,
+    fromPathTolens: pathToLens,
+    toPathTolens: pathToLens,
+    context,
+    pageSelectionL: context.pageSelectionL
+  }
+  return processorsConfig;
+}
+export function makeModalProcessorsConfig<S, Context extends FocusOnContext<S>> ( startS: S, context: Context ): ModalProcessorsConfig<S, SimpleMessage, PageSelection> {
+  // console.log('MakeProcessorsConfig', startS)
+  const pathToLens = fromPathGivenState ( lensState ( startS, () => {throw Error ()}, '', context ) )
+  const processorsConfig: ModalProcessorsConfig<S, SimpleMessage, PageSelection> = {
     pageNameFn: ( s: S ) => mainPage<S, Context> ( lensState ( s, () => {throw Error ()}, '', context ) ).pageName,
     tagHolderL: context.tagHolderL,
     messageL: context.simpleMessagesL,
@@ -231,11 +250,12 @@ export function makeProcessorsConfig<S, Context extends FocusOnContext<S>> ( sta
 
 export function makeRestProcessorsConfig<S, Context extends FocusOnContext<S>> ( startS: S, context: Context ) {
   const pathToLens = fromPathGivenState ( lensState ( startS, () => {throw Error ()}, '', context ) )
-  const processorsConfig: RestAndInputProcessorsConfig<S, any, SimpleMessage,PageSelection> = {
+  const processorsConfig: RestAndInputProcessorsConfig<S, any, SimpleMessage,PageSelection, Context> = {
     // pageNameFn: ( s: S ) => mainPage<S, Context> ( lensState ( s, () => {throw Error ()}, '', context ) ).pageName,
     // tagHolderL: context.tagHolderL,
     messageL: context.simpleMessagesL,
     dateFn: context.dateFn,
+    context,
     stringToMsg: stringToSimpleMsg ( defaultDateFn, 'info' ),
     s: startS,
     toPathTolens: pathToLens,
@@ -255,7 +275,7 @@ export function setJsonWithDispatcherSettingTrace<S, Context extends FocusOnCont
     // @ts-ignore
     const debug = startS.debug?.restDebug
     const restCommands = safeArray ( config.restL.getOption ( startS ) )
-    const processorsConfig = makeProcessorsConfig ( startS, context );
+    const processorsConfig = makeModalProcessorsConfig ( startS, context );
     let start = errorMonad ( startS, debug, onError,
       [ 'preMutateForPages', preMutateForPages<S, Context> ( context, processorsConfig ) ],
       [ 'preMutate', preMutate ],
@@ -292,10 +312,10 @@ export function setJsonForFocusOn<S, Context extends FocusOnContext<S>> ( config
     const newStateFn = ( fs: S ) => publish ( lensState ( fs, setJsonForFocusOn ( config, context, pathToLens, publish ), 'setJson', context ) )
     try {
       const withPreMutate = preMutate ( withDebug )
-      const processorsConfig = makeProcessorsConfig ( main, context );
+      const processorsConfig = makeModalProcessorsConfig ( main, context );
       const firstPageProcesses: S = preMutateForPages<S, Context> ( context, processorsConfig ) ( withPreMutate )
       const restProps: RestToTransformProps<S, SimpleMessage, PageSelection> = { fetchFn, mockJwt: context.mockJwt, d: restDetails, pathToLens, messageL, pageSelectionL: context.pageSelectionL, stringToMsg, traceL: traceL (), urlMutatorForRest: config.restUrlMutator }
-      const afterRest = await rest ( restProps, restL, () => firstPageProcesses )
+      const afterRest = await rest ( restProps, restL, () => firstPageProcesses , context)
       if ( afterRest ) newStateFn ( afterRest )
       let newMain = await loadTree ( fetchers, afterRest, fetchFn, debug )
         .then ( s => s ? s : onError ( s, Error ( 'could not load tree' ) ) )

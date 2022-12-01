@@ -116,13 +116,15 @@ export function timeDataResolver(sqlList: NameAnd<SqlInfo>): NameAnd<PrimaryMuta
 }
 
 export const accountTypeConfig: RefConfiguration = {
-  urlPrefix: '/v1/rocket',
+  urlPrefix: '/v1/focuson',
+  teamName: 'Focuson',
   params: accountTypeRestParams,
   resolver: accountTypeResolver
 }
 
 export const timeDataConfig: RefConfiguration = {
-  urlPrefix: '/v1/rocket',
+  urlPrefix: '/v1/focuson',
+  teamName: 'Focuson',
   params: timeDataRestParams,
   resolver: timeDataResolver(sqlList)
 }

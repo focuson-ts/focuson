@@ -8,7 +8,6 @@ import { PageDetailsForCombine } from "./selectedPage";
 import { RestLoadWindowWithoutRestProps } from "@focuson/rest";
 
 
-
 export interface PagePosition {
   left?: number;
   right?: number;
@@ -30,7 +29,7 @@ export interface SetToLengthOnClose {
 }
 
 
-export interface PageSelection extends MinimalPageSelection{
+export interface PageSelection extends MinimalPageSelection {
   pageName: string;
   firstTime?: boolean;
   time: string;
@@ -56,6 +55,11 @@ export interface PageSelectionContext<S> extends HasPageSelectionLens<S>, HasMul
 }
 
 
+export const pageSelectionsRaw = <S extends any> ( pageSelectionL: Optional<S, PageSelection[]> ) => ( s: S ): PageSelection[] => {
+  if ( pageSelectionL === undefined ) throw Error ( `configuration error. PageSelection is undefined` )
+  return safeArray ( pageSelectionL.getOption ( s ) )
+};
+
 export function pageSelections<S, Context extends HasPageSelectionLens<S>> ( s: LensState<S, any, Context> ): PageSelection[] {
   const pageSelectionL = s.context.pageSelectionL;
   if ( pageSelectionL === undefined ) {
@@ -80,11 +84,13 @@ export type PageOps = 'select' | 'popup' | 'replace'
 //   return path.map ( p => p === '{basePage}' ? getFirstPageName ( state ) : p )
 // }
 
-
-export function fromPathGivenState<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context>, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ): ( path: string ) => Optional<S, any> {
-  const [ lens, namedOptionals ] = firstPageDataLensAndOptionals ( state, adjustPages )
-  const prefixs = lens ? prefixNameAndLens<S> ( [ '~', lens ], [ '', state.optional ] ) : prefixNameAndLens<S> ( [ '', state.optional ] );
+export function fromPathGivenStateRaw<S, C extends PageSelectionContext<S>> ( s: S, optional: Optional<S, any>, context: C, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ): ( path: string ) => Optional<S, any> {
+  const [ lens, namedOptionals ] = firstPageDataLensAndOptionalsRaw ( s, context, adjustPages )
+  const prefixs = lens ? prefixNameAndLens<S> ( [ '~', lens ], [ '', optional ] ) : prefixNameAndLens<S> ( [ '', optional ] );
   return ( path: string ) => parsePath<Optional<S, any>> ( path, lensBuilder<S> ( prefixs, namedOptionals ? namedOptionals : {} ) );
+}
+export function fromPathGivenState<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context>, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ): ( path: string ) => Optional<S, any> {
+  return fromPathGivenStateRaw ( state.main, state.optional, state.context, adjustPages )
 }
 
 export function applyPageOps ( pageOps: PageOps, pageSelection: PageSelection ): ( s: PageSelection[] | undefined ) => PageSelection[] {
@@ -112,6 +118,9 @@ export function currentPageSelection<S, Context extends HasPageSelectionLens<S>>
 export function currentPageSelectionHead<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context> ): PageSelection {
   return safeArray ( state.context.pageSelectionL.getOption ( state.main ) )[ 0 ]
 }
+export const currentPageSelectionTailRaw = <S extends any> ( pageSelectionL: Optional<S, PageSelection[]> ) => ( s: S ): PageSelection =>
+  pageSelectionsRaw ( pageSelectionL ) ( s ).slice ( -1 )?.[ 0 ];
+
 export function currentPageSelectionTail<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context> ): PageSelection {
   return pageSelections ( state ).slice ( -1 )?.[ 0 ]
 }
@@ -128,19 +137,25 @@ export function mainPageOrUndefinedFrom ( ps: PageSelection[] ): PageSelection {
   // console.log('mainPageOrUndefinedFrom - result',result, Array.isArray(result))
   return result
 }
-export function mainPage<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context>, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ): PageSelection {
+export function mainPageRaw<S, Context extends HasPageSelectionLens<S>> ( s: S, c: Context, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ): PageSelection {
   const realAdjustPages = adjustPages ? adjustPages : ( ps: PageSelection[] ) => ps
-  let adjustedPages = realAdjustPages ( pageSelections ( state ) );
+  let adjustedPages = realAdjustPages ( pageSelectionsRaw ( c.pageSelectionL ) ( s ) );
   return mainPageFrom ( adjustedPages )
 }
-export function mainPageorUndefined<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context>, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ): PageSelection {
+export function mainPage<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context>, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ): PageSelection {
+  return mainPageRaw ( state.main, state.context, adjustPages )
+}
+export function mainPageorUndefinedRaw<S, Context extends HasPageSelectionLens<S>> ( s: S, context: Context, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ): PageSelection {
   const realAdjustPages = adjustPages ? adjustPages : ( ps: PageSelection[] ) => ps
-  let adjustedPages = realAdjustPages ( pageSelections ( state ) );
+  const adjustedPages = realAdjustPages ( pageSelectionsRaw ( context.pageSelectionL ) ( s ) );
   // console.log ( 'mainPageorUndefined -  pageSelections ( state) ',  pageSelections ( state  ))
   // console.log ( 'mainPageorUndefined - adjustedPages', adjustedPages )
   const result = mainPageOrUndefinedFrom ( adjustedPages );
   // console.log ( 'mainPageorUndefined - result', result )
   return result
+}
+export function mainPageorUndefined<S, Context extends HasPageSelectionLens<S>> ( state: LensState<S, any, Context>, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ): PageSelection {
+  return mainPageorUndefinedRaw ( state.main, state.context )
 }
 
 export function pageSelectionlens<S extends HasPageSelection> (): Lens<S, PageSelection[]> {
@@ -148,16 +163,19 @@ export function pageSelectionlens<S extends HasPageSelection> (): Lens<S, PageSe
 }
 
 
-function firstPageDataLensAndOptionals<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context>, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ): [ Optional<S, any> | undefined, NameAndLensFn<S> ] {
-  let pageSelection = mainPageorUndefined<S, Context> ( state, adjustPages );
+function firstPageDataLensAndOptionalsRaw<S, C extends PageSelectionContext<S>> ( s: S, c: C, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ): [ Optional<S, any> | undefined, NameAndLensFn<S> ] {
+  let pageSelection = mainPageorUndefinedRaw<S, C> ( s, c, adjustPages );
   if ( pageSelection === undefined ) return [ undefined, {} ]
   const { pageName, focusOn } = pageSelection
   // console.log ( 'firstPageDataLensAndOptionals', pageSelection, 'pageName', pageName, 'focuson', focusOn )
   if ( focusOn !== undefined ) throw Error ( 'Main page should only have a lens not a focusOn' )
-  const page = state.context.pages[ pageName ]
-  if ( page === undefined ) throw Error ( `Main Page is [${pageName}] and it cannot be found.\nLegal values are ${Object.keys ( state.context.pages )}\n\nState\m${JSON.stringify ( state.main, null, 2 )}` )
+  const page = c.pages[ pageName ]
+  if ( page === undefined ) throw Error ( `Main Page is [${pageName}] and it cannot be found.\nLegal values are ${Object.keys ( c.pages )}\n\nState\m${JSON.stringify ( s, null, 2 )}` )
   if ( !isMainPageDetails ( page ) ) throw Error ( `Main page ${pageName} has details which aren't a main page${JSON.stringify ( page )}` )
   return [ page.lens, safeObject ( page.namedOptionals ) ]
+}
+function firstPageDataLensAndOptionals<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context>, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ): [ Optional<S, any> | undefined, NameAndLensFn<S> ] {
+  return firstPageDataLensAndOptionalsRaw ( state.main, state.context, adjustPages )
 }
 
 export function newStateFromPath<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ): ( path: string ) => LensState<S, any, Context> {

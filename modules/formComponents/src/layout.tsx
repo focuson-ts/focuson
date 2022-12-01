@@ -1,5 +1,5 @@
 import { Children, CSSProperties, MutableRefObject } from "react";
-import { FocusOnContext, makeProcessorsConfig } from "@focuson/focuson";
+import { FocusOnContext, makeModalProcessorsConfig } from "@focuson/focuson";
 import { LensProps } from "@focuson/state";
 import { inputCommandProcessors, processChangeCommandProcessor } from "@focuson/rest";
 import { replaceTextUsingPath } from "@focuson/pages";

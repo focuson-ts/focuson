@@ -1,9 +1,9 @@
 import { LensProps, reasonFor } from "@focuson/state";
-import { displayTransformsInState, Transform } from "@focuson/lens";
+import { Transform } from "@focuson/lens";
 import { SimpleMessage } from "@focuson/utils";
 import { CustomButtonType, getButtonClassName } from "./common";
-import { CommandButtonChangeCommands, commandButtonCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor } from "@focuson/rest";
-import { FocusOnContext, makeProcessorsConfig } from "@focuson/focuson";
+import { CommandButtonChangeCommands, commandButtonCommandProcessors, InputProcessorsConfig, processChangeCommandProcessor } from "@focuson/rest";
+import { FocusOnContext, makeInputProcessorsConfig } from "@focuson/focuson";
 import { getRefForValidateLogicToButton, PageSelection, wrapWithErrors } from "@focuson/pages";
 
 
@@ -19,7 +19,7 @@ export function CommandButton<S, C extends FocusOnContext<S>> ( { id, state, lab
   function onClick () {
     const errorPrefix = `CommandButton ${id}`;
     const s: S = state.optJson ()
-    const config: ModalProcessorsConfig<S, SimpleMessage,PageSelection> = makeProcessorsConfig ( state.main, state.context )
+    const config: InputProcessorsConfig<S, SimpleMessage,PageSelection,C> = makeInputProcessorsConfig ( state.main, state.context )
     const processor = commandButtonCommandProcessors ( config ) ( state.main );
     const txs: Transform<S, any>[] = processChangeCommandProcessor ( errorPrefix, processor, commands )
     if ( txs.length === 0 ) return

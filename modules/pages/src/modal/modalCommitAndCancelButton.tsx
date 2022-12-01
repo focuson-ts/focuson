@@ -1,8 +1,8 @@
-import { applyPageOps, currentPageSelectionTail, fromPathGivenState, mainPage, PageSelection, PageSelectionContext, pageSelections, popPage, popTwoPages } from "../pageSelection";
+import { applyPageOps, currentPageSelectionTail, currentPageSelectionTailRaw, fromPathGivenState, fromPathGivenStateRaw, HasPageSelectionLens, mainPage, mainPageRaw, PageSelection, PageSelectionContext, pageSelections, popPage, popTwoPages } from "../pageSelection";
 import { LensProps, lensState, LensState, reasonFor, SetJsonReasonEvent } from "@focuson/state";
 import { HasDateFn, safeArray, safeString, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
-import { displayTransformsInState, Lenses, Optional, Transform } from "@focuson/lens";
-import { addLoaderCommandsIfNeeded, HasRestCommandL, ModalChangeCommands, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand } from "@focuson/rest";
+import { displayTransformsInState, identityOptional, Lenses, Optional, Transform } from "@focuson/lens";
+import { addLoaderCommandsIfNeeded, HasCloseOnePage, HasRestCommandL, ModalChangeCommands, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand } from "@focuson/rest";
 import { getRefForValidateLogicToButton, hasValidationErrorAndReport } from "../validity";
 import { HasSimpleMessageL } from "../simpleMessage";
 import { CustomButtonType, getButtonClassName } from "../common";
@@ -17,7 +17,7 @@ import { openRestLoadWindowPageSelection } from "./restLoader";
 export interface HasPathToLens<S> {
   pathToLens: ( s: S, currentLens?: Optional<S, any> ) => ( path: string ) => Optional<S, any>
 }
-export interface ModalContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasTagHolderL<S>, HasDateFn, HasPathToLens<S> {}
+export interface ModalContext<S> extends PageSelectionContext<S>, HasRestCommandL<S>, HasSimpleMessageL<S>, HasTagHolderL<S>, HasDateFn, HasPathToLens<S>, HasCloseOnePage<S, any> {}
 
 
 export const confirmIt = <S, C extends PageSelectionContext<S>> ( state: LensState<S, any, C>, c: boolean | string | undefined ) => {
@@ -105,15 +105,18 @@ export function ModalCancelButton<S, Context extends ModalContext<S>> ( { id, st
 }
 
 
-function findFocusL<S, Context extends PageSelectionContext<S>> ( errorPrefix: string, state: LensState<S, any, Context>, fromPath: ( path: string ) => Optional<S, any>, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ) {
-  const lastPage = currentPageSelectionTail ( state )
+function findFocusLRaw<S, Context extends PageSelectionContext<S>> ( errorPrefix: string, s: S, context: Context, fromPath: ( path: string ) => Optional<S, any>, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ) {
+  const lastPage = currentPageSelectionTailRaw ( context.pageSelectionL ) ( s )
   if ( lastPage.focusOn ) return fromPath ( lastPage.focusOn )
-  const mp: PageSelection = mainPage ( state, adjustPages )
-  const pages = state.context.pages
+  const mp: PageSelection = mainPageRaw ( s, context, adjustPages )
+  const pages = context.pages
   const onePage = pages[ mp.pageName ]
   if ( onePage === undefined ) throw Error ( `${errorPrefix} cannot find details for main page '${mp.pageName}'. Legal names are [${Object.keys ( pages )}]` )
   if ( !isMainPageDetails ( onePage ) ) throw new Error ( `${errorPrefix} page ${mp.pageName} should be a MainPage but is a ${onePage.pageType}` )
   return onePage.lens
+}
+function findFocusL<S, Context extends PageSelectionContext<S>> ( errorPrefix: string, state: LensState<S, any, Context>, fromPath: ( path: string ) => Optional<S, any>, adjustPages?: ( ps: PageSelection[] ) => PageSelection[] ) {
+  return findFocusLRaw ( errorPrefix, state.main, state.context, fromPath, adjustPages )
 }
 
 function findSetLengthOnClose<S> ( lastPage: PageSelection, main: S, toPathTolens: ( path: string ) => Optional<S, any> ): Transform<S, any>[] {
@@ -129,35 +132,46 @@ export interface ClosePageTxs<S> {
   txs: Transform<S, any>[],
   newPages: PageSelection[]
 }
-/** This finds all transforms except the actual 'close the page'
- * This is because we might be calling it twice in cases like 'modal confirm windows'
- */
 export function findClosePageTxs<S, C extends PageSelectionContext<S> & HasRestCommandL<S> & HasSimpleMessageL<S> & HasTagHolderL<S> & HasDateFn> (
   errorPrefix: string,
   state: LensState<S, any, C>,
   pageToClose: PageSelection,
   pageOffset: number, // typically -1 if we are closing the last page. -2 if we are closing the page before that.
   otherCommands: ModalChangeCommands[], ): ClosePageTxs<S> | undefined {
-  const { dateFn, pageSelectionL, restL, tagHolderL, simpleMessagesL } = state.context
+  return findClosePageTxsRaw ( errorPrefix, state.main, state.optional, state.context, pageToClose, pageOffset, otherCommands )
+}
+
+/** This finds all transforms except the actual 'close the page'
+ * This is because we might be calling it twice in cases like 'modal confirm windows'
+ */
+export function findClosePageTxsRaw<S, C extends PageSelectionContext<S> & HasRestCommandL<S> & HasSimpleMessageL<S> & HasTagHolderL<S> & HasDateFn> (
+  errorPrefix: string,
+  s: S,
+  optionalForPath: Optional<S, any>,
+  context: C,
+  pageToClose: PageSelection,
+  pageOffset: number, // typically -1 if we are closing the last page. -2 if we are closing the page before that.
+  otherCommands: ModalChangeCommands[], ): ClosePageTxs<S> | undefined {
+  const { dateFn, pageSelectionL, restL, tagHolderL, simpleMessagesL } = context
   if ( !pageToClose ) return undefined
   const rest = pageToClose?.rest;
   const loader = pageToClose.loader
   const copyOnClose = pageToClose?.copyOnClose
 
-  const toPathTolens = fromPathGivenState ( state, ps => ps.slice ( 0, -1 ) );
-  const fromPathTolens = fromPathGivenState ( state );
+  const toPathTolens = fromPathGivenStateRaw ( s, optionalForPath, context, ps => ps.slice ( 0, -1 ) );
+  const fromPathTolens = fromPathGivenStateRaw ( s, optionalForPath, context );
 
-  const focusLensForFrom = findFocusL ( errorPrefix, state, fromPathTolens, ps => pageOffset >= -1 ? ps : ps.slice ( 0, pageOffset + 1 ) )
-  const focusLensForTo = findFocusL ( errorPrefix, state, toPathTolens, ps => ps.slice ( 0, pageOffset ) )
+  const focusLensForFrom = findFocusLRaw ( errorPrefix, s, context, fromPathTolens, ps => pageOffset >= -1 ? ps : ps.slice ( 0, pageOffset + 1 ) )
+  const focusLensForTo = findFocusLRaw ( errorPrefix, s, context, toPathTolens, ps => ps.slice ( 0, pageOffset ) )
 
   const restCommandTxs: Transform<S, any>[] = rest ? [ [ restL, ( rcs: RestCommand[] ) => [ ...safeArray ( rcs ), addLoaderCommandsIfNeeded ( loader, rest ) ] ] ] : []
   // const loaderTxs: Transform<S, any>[] = rest && loader ? openRestLoadWindowTxs ( { ...loader, rest: rest.name, action: rest.restAction }, pageSelectionL, dateFn ) : []
   const copyOnCloseTxs: Transform<S, any>[] = safeArray ( copyOnClose ).map ( ( { from, to } ) =>
-    [ to ? toPathTolens ( to ) : focusLensForTo, () => (from ? fromPathTolens ( from ) : focusLensForFrom).getOption ( state.main ) ] )
+    [ to ? toPathTolens ( to ) : focusLensForTo, () => (from ? fromPathTolens ( from ) : focusLensForFrom).getOption ( s ) ] )
 
 
   const config: ModalProcessorsConfig<S, SimpleMessage, PageSelection> = {
-    pageNameFn: ( s: S ) => mainPage ( lensState<S, C> ( s, () => {throw Error ()}, '', state.context ) ).pageName,
+    pageNameFn: ( s: S ) => mainPage ( lensState<S, C> ( s, () => {throw Error ()}, '', context ) ).pageName,
     tagHolderL,
     dateFn,
     stringToMsg: stringToSimpleMsg ( dateFn, 'info' ),
@@ -166,18 +180,32 @@ export function findClosePageTxs<S, C extends PageSelectionContext<S> & HasRestC
     defaultL: focusLensForTo,
     pageSelectionL,
     messageL: simpleMessagesL,
-    s: state.main
+    s
   };
 
   const changeCommands = [ ...toArray ( pageToClose.changeOnClose ), ...otherCommands ];
-  const changeTxs = processChangeCommandProcessor ( errorPrefix, modalCommandProcessors ( config ) ( state.main ), changeCommands )
+  const changeTxs = processChangeCommandProcessor ( errorPrefix, modalCommandProcessors ( config ) ( s ), changeCommands )
   return {
-    txs: [ ...restCommandTxs, ...copyOnCloseTxs, ...findSetLengthOnClose ( pageToClose, state.main, toPathTolens ), ...changeTxs ],
+    txs: [ ...restCommandTxs, ...copyOnCloseTxs, ...findSetLengthOnClose ( pageToClose, s, toPathTolens ), ...changeTxs ],
     newPages: rest && loader ? [ openRestLoadWindowPageSelection ( { ...loader, rest: rest.name, action: rest.restAction }, dateFn ) ] : []
   }
 }
 
+export type CloseOnePageContext<S> = PageSelectionContext<S> & HasRestCommandL<S> & HasSimpleMessageL<S> & HasTagHolderL<S> & HasDateFn
 
+export function rawCloseOnePageTxs<S> ( errorPrefix: string, s: S,optionalForPath: Optional<S, any>|undefined, context: CloseOnePageContext<S>, change: ModalChangeCommands[] ): Transform<S, any>[] {
+  const { pageSelectionL } = context
+  const pageToClose = currentPageSelectionTailRaw ( context.pageSelectionL ) ( s )
+  const closePageTxs = findClosePageTxsRaw ( errorPrefix, s,optionalForPath?optionalForPath:identityOptional(), context, pageToClose, -1, toArray ( change ) )
+  if ( !closePageTxs ) return undefined
+  const { txs, newPages } = closePageTxs
+  const pageCloseTx: Transform<S, any> = [ pageSelectionL, ( ps: PageSelection[] ) => {
+    const result = [ ...ps.slice ( 0, -1 ), ...newPages ];
+    // console.log ( 'closeOnePageTxs', ps, newPages, result, )
+    return result;
+  } ]
+  return [ ...txs, pageCloseTx ];
+}
 export function closeOnePageTxs<S, Context extends ModalContext<S>> ( errorPrefix: string, state: LensState<S, any, Context>, change: ModalChangeCommands[] ): Transform<S, any>[] {
   const { pageSelectionL } = state.context
   const pageToClose = currentPageSelectionTail ( state )

@@ -7,7 +7,7 @@ import { makeInputChangeTxs } from "./labelAndInput";
 import { ChangeEvent } from "react";
 import { HasButtons, makeButtons } from "./makeButtons";
 import { HasPathToLens, HasSimpleMessageL, PageSelectionContext } from "@focuson/pages";
-import { HasRestCommandL } from "@focuson/rest";
+import { HasCloseOnePage, HasRestCommandL } from "@focuson/rest";
 
 export interface DropdownProps<S, T, Context> extends CommonStateProps<S, T, Context>, DropDownOnChangeProps<S, Context>, HasButtons {
   enums: NameAnd<string | undefined>;
@@ -18,7 +18,7 @@ export interface DropdownProps<S, T, Context> extends CommonStateProps<S, T, Con
   enabledBy?: string[][];
   required?: boolean;
 }
-export type ContextForDropdown<S> = PageSelectionContext<S> & HasRestCommandL<S> & HasSimpleMessageL<S> & HasPathToLens<S> &HasDateFn
+export type ContextForDropdown<S> = PageSelectionContext<S> & HasRestCommandL<S> & HasSimpleMessageL<S> & HasPathToLens<S> &HasDateFn & HasCloseOnePage<S, any> //too hard to make te HasOneCloseOnePage work
 
 export interface LabelAndDropdownProps<S, T, Context> extends DropdownProps<S, T, Context>, LabelAlignment {
   label: string;

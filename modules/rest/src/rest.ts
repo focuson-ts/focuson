@@ -1,7 +1,7 @@
 import { reqFor, Tags, UrlConfig } from "@focuson/template";
 import { beforeAfterSeparator, defaultDateFn, FetchFn, isRestStateChange, NameAnd, RequiredCopyDetails, RestAction, RestStateChange, safeArray, safeObject, sortedEntries, toArray } from "@focuson/utils";
 import { identityOptics, lensBuilder, Lenses, massTransform, Optional, parsePath, Transform } from "@focuson/lens";
-import { ChangeCommand, CopyResultCommand, DeleteCommand, MessageCommand, MinimalPageSelection, ModalChangeCommands, processChangeCommandProcessor, RestAndInputProcessorsConfig, restChangeCommandProcessors, RestChangeCommands } from "./changeCommands";
+import { ChangeCommand, CopyResultCommand, DeleteCommand, HasCloseOnePage, MessageCommand, MinimalPageSelection, ModalChangeCommands, processChangeCommandProcessor, RestAndInputProcessorsConfig, restChangeCommandProcessors, RestChangeCommands } from "./changeCommands";
 import { MessagesPostProcessor, processAllMessageProcessors } from "./messages";
 
 
@@ -142,13 +142,13 @@ interface RestResultToTxProps {
 
 }
 
-export const restResultToTx = <S, MSGs, PS extends MinimalPageSelection> ( s: S, messageL: Optional<S, MSGs[]>, pageSelectionL: Optional<S, PS[]>, extractMsgs: ( status: number | undefined, body: any ) => MSGs[], toPathTolens: ( path: string ) => Optional<S, any>, stringToMsg: ( msg: string ) => MSGs, extractData: ( status: number | undefined, body: any ) => any ) => ( { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): Transform<S, any>[] => {
+export const restResultToTx = <S, MSGs, PS extends MinimalPageSelection, C extends HasCloseOnePage<S, C>> ( s: S, context: C, messageL: Optional<S, MSGs[]>, pageSelectionL: Optional<S, PS[]>, extractMsgs: ( status: number | undefined, body: any ) => MSGs[], toPathTolens: ( path: string ) => Optional<S, any>, stringToMsg: ( msg: string ) => MSGs, extractData: ( status: number | undefined, body: any ) => any ) => ( { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): Transform<S, any>[] => {
   const messagesFromBody: MSGs[] = extractMsgs ( status, result )
   const processedMessages = processAllMessageProcessors ( one.messagePostProcessors, one.postProcessors ) ( messagesFromBody )
   const changeCommands = restCommandToChangeCommands ( stringToMsg ) ( restCommand, status )
 
   const resultPathToLens = ( s: string ) => parsePath<any> ( s, lensBuilder ( { '': Lenses.identity<any> () }, {} ) )
-  const config: RestAndInputProcessorsConfig<S, any, MSGs, PS> = { resultPathToLens, messageL, pageSelectionL, toPathTolens, stringToMsg, s, dateFn: defaultDateFn }
+  const config: RestAndInputProcessorsConfig<S, any, MSGs, PS, C> = { resultPathToLens, messageL, pageSelectionL, toPathTolens, stringToMsg, s, dateFn: defaultDateFn, context }
   const data = extractData ( status, result );
   const processor = restChangeCommandProcessors ( config ) ( data );
 
@@ -157,17 +157,17 @@ export const restResultToTx = <S, MSGs, PS extends MinimalPageSelection> ( s: S,
   const resultTx: Transform<S, any>[] = useResponse && status && status < 400 ? [ [ one.fdLens.chain ( one.dLens ), old => data ] ] : []
   const is404 = status == 404
   const isError = status && status >= 400 && !is404
-  const changeOnSuccessTxs = status<400 ? processChangeCommandProcessor ( '', processor, toArray ( restCommand.changeOnSuccess ) ) :[]
-  const changeOnCompletionTxs =  processChangeCommandProcessor ( '', processor, toArray ( restCommand.changeOnCompletion ) )
+  const changeOnSuccessTxs = status < 400 ? processChangeCommandProcessor ( '', processor, toArray ( restCommand.changeOnSuccess ) ) : []
+  const changeOnCompletionTxs = processChangeCommandProcessor ( '', processor, toArray ( restCommand.changeOnCompletion ) )
   const on404Txs: Transform<S, any>[] = is404 ? processChangeCommandProcessor ( `Rest for ${JSON.stringify ( restCommand )} - on404`, processor, toArray ( restCommand.on404 ) ) : []
   const onErrorTransforms: Transform<S, any>[] = isError ? processChangeCommandProcessor ( `Rest for ${JSON.stringify ( restCommand )}  onError`, processor, toArray ( restCommand.onError ) ) : []
   const msgFromBodyTx: Transform<S, any> = [ messageL, old => [ ...processedMessages, ...safeArray ( old ) ] ]
-  let resultTxs: Transform<S, any>[] = [ msgFromBodyTx,...changeOnCompletionTxs, ...on404Txs, ...onErrorTransforms, ...legacyChangeTxs, ...changeOnSuccessTxs, ...resultTx ];
+  let resultTxs: Transform<S, any>[] = [ msgFromBodyTx, ...changeOnCompletionTxs, ...on404Txs, ...onErrorTransforms, ...legacyChangeTxs, ...changeOnSuccessTxs, ...resultTx ];
   return resultTxs;
 };
 
-export const processRestResult = <S, MSGs, PS extends MinimalPageSelection> ( messageL: Optional<S, MSGs[]>, pageL: Optional<S, PS[]>, pathToLens: ( path: string ) => Optional<S, any>, stringToMsg: ( msg: string ) => MSGs ) => ( s: S, { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): S => {
-  const txs: Transform<S, any>[] = restResultToTx<S, MSGs, PS> ( s, messageL, pageL, one.messages, pathToLens, stringToMsg, one.extractData ) ( result )
+export const processRestResult = <S, MSGs, PS extends MinimalPageSelection, C extends HasCloseOnePage<S, C>> ( context: C, messageL: Optional<S, MSGs[]>, pageL: Optional<S, PS[]>, pathToLens: ( path: string ) => Optional<S, any>, stringToMsg: ( msg: string ) => MSGs ) => ( s: S, { restCommand, one, status, result }: RestResult<S, MSGs, OneRestDetails<S, any, any, MSGs>> ): S => {
+  const txs: Transform<S, any>[] = restResultToTx<S, MSGs, PS, C> ( s, context, messageL, pageL, one.messages, pathToLens, stringToMsg, one.extractData ) ( result )
   return massTransform ( s, ...txs )
 };
 
@@ -275,9 +275,11 @@ export function addLoaderCommandsIfNeeded ( loader: RestLoadWindowWithoutRestPro
  * It makes testing the rest logic easier
  * It reduces race conditions where user clicks will be ignore with slow networks... the transformations can be applied to the updated world. It's not a perfect solution though (that's a hard problem)
  * It allows us (in the calling code) to add the restful data to the trace. This is great for 'understanding what happened' */
-export async function restToTransforms<S, MSGS, PS extends MinimalPageSelection> (
+export async function restToTransforms<S, MSGS, PS extends MinimalPageSelection, C extends HasCloseOnePage<S, C>> (
   props: RestToTransformProps<S, MSGS, PS>,
-  sFn: () => S, commands: RestCommand[] ): Promise<RestCommandAndTxs<S>[]> {
+  sFn: () => S,
+  context: C,
+  commands: RestCommand[] ): Promise<RestCommandAndTxs<S>[]> {
   const startS = sFn ()
   if ( startS === undefined ) throw new Error ( `State was null` )
   // @ts-ignore
@@ -298,7 +300,7 @@ export async function restToTransforms<S, MSGS, PS extends MinimalPageSelection>
   if ( debug ) console.log ( 'results from fetching rest commands', results )
 
   const restCommandAndTxs: RestCommandAndTxs<S>[] = results.map ( res => {
-    const txs: Transform<S, any>[] = restResultToTx ( sAfterFetch, messageL, pageSelectionL, res.one.messages, toLens, stringToMsg, res.one.extractData ) ( res );
+    const txs: Transform<S, any>[] = restResultToTx ( sAfterFetch, context, messageL, pageSelectionL, res.one.messages, toLens, stringToMsg, res.one.extractData ) ( res );
     const trace: Transform<S, any>[] = tracing ? [ [ traceL, old => [ ...safeArray ( old ), { restCommand: res.restCommand, lensTxs: txs.map ( ( [ l, tx ] ) => [ l.description, tx ( l.getOption ( sAfterFetch ) ) ] ) } ] ] ] : []
     const restAndTxs: RestCommandAndTxs<S> = { ...res, txs: [ ...txs, ...trace ] };
     return restAndTxs
@@ -314,12 +316,13 @@ export async function restToTransforms<S, MSGS, PS extends MinimalPageSelection>
  * It is deprecated because of the race condition it introduces: the users commands from the start to the time the rest command results are processed will be overwritten
  * In addition it is hard to link this to the tracing system, so visibility about what is happening is much less
  * */
-export async function rest<S, MSGS, PS extends MinimalPageSelection> (
+export async function rest<S, MSGS, PS extends MinimalPageSelection, C extends HasCloseOnePage<S, C>> (
   props: RestToTransformProps<S, MSGS, PS>,
   restL: Optional<S, RestCommand[]>,
-  sFn: () => S ): Promise<S> {
+  sFn: () => S,
+  context: C ): Promise<S> {
   const commands = restL.getOption ( sFn () )
-  const restCommandAndTxs: RestCommandAndTxs<S>[] = await restToTransforms ( props, sFn, safeArray ( commands ) )
+  const restCommandAndTxs: RestCommandAndTxs<S>[] = await restToTransforms ( props, sFn, context, safeArray ( commands ) )
   const sNow = sFn ()
   // @ts-ignore
   const [ debug, trace ] = [ sNow.debug?.restDebug, sNow.debug?.recordTrace ]

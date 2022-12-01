@@ -51,7 +51,11 @@ const selectFnForPayments: DatePickerSelectFn = defaultDatePickerWithExtraTxs ( 
       const serverNow = timeOnServerinGMT ( browserNow, dateInfo )
       if ( dateDebug ) console.log ( 'Datapicker for payments', id, 'browserNow', browserNow )
       if ( dateDebug ) console.log ( 'Datapicker for payments', id, 'serverNow', serverNow )
+      if ( dateDebug ) console.log ( 'Datapicker for payments', id, 'error.time', error.time )
+      if ( dateDebug ) console.log ( 'Datapicker for payments', id, 'warning.time', warning.time )
+      if ( dateDebug ) console.log ( 'Datapicker for payments', id, 'dateInfo',dateInfo )
       if ( dateDebug ) console.log ( 'Datapicker for payments', id, 'after error', error.time, after ( browserNow, error.time, dateInfo ) )
+
       if ( after ( browserNow, error.time, dateInfo ) )
         return openConfirmWindowTxs ( error, 'justclose', [], state, 'DatePickerForPayments', props.id, 'onChange' )
       if ( dateDebug ) console.log ( 'Datapicker for payments', id, 'after warning', warning.time, after ( browserNow, warning.time, dateInfo ) )

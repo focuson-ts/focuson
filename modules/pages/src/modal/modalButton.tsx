@@ -1,7 +1,7 @@
 import { LensState, reasonFor } from "@focuson/state";
 import { fromPathGivenState, mainPage, page, PageOps, PageParams, PageSelection, PageSelectionContext, SetToLengthOnClose } from "../pageSelection";
 import { displayTransformsInState, Optional, Transform } from "@focuson/lens";
-import { CopyCommand, DeleteCommand, HasRestCommandL, ModalChangeCommands, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand, SetChangeCommand } from "@focuson/rest";
+import { CopyCommand, DeleteCommand, HasCloseOnePage, HasRestCommandL, InputProcessorsConfig, ModalChangeCommands, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand, SetChangeCommand } from "@focuson/rest";
 import { anyIntoPrimitive, CopyDetails, DateFn, PageMode, safeArray, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
 import { CustomButtonType, getButtonClassName } from "../common";
 import { isMainPageDetails, MultiPageDetails } from "../pageConfig";
@@ -81,7 +81,7 @@ interface PathToLens<S> {
   toPathTolens?: ( path: string ) => Optional<S, any>
 }
 
-function makeModalProcessorsConfig<S, Context extends PageSelectionContext<S> & HasSimpleMessageL<S> & HasTagHolderL<S>> (
+export function makeModalProcessorsConfig<S, Context extends PageSelectionContext<S> & HasSimpleMessageL<S> & HasTagHolderL<S>> (
   errorPrefix: string,
   state: LensState<S, any, Context>,
   newPageSelection: PageSelection,

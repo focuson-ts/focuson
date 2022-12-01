@@ -164,6 +164,10 @@ export class Optional<Main, Child> implements GetOptioner<Main, Child>, SetOptio
 export function optional<Main, Child> ( getOption: ( m: Main ) => Child | undefined, setOption: ( m: Main, c: Child ) => Main | undefined, description?: string ) {
   return new Optional ( getOption, setOption, description )
 }
+export function identityOptional<Main>(): Optional<Main, Main> {
+  return optional( m =>m, (m,c) => c)
+}
+
 export function orUndefined<T> ( description?: string ): Optional<T | undefined, T> {
   const getOption = ( t: T | undefined ) => t
   const setOption = ( t: T | undefined, child: T | undefined ) => child

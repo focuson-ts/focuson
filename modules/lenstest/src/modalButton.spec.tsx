@@ -1,7 +1,7 @@
 import { LensState, lensState } from "@focuson/state";
 import { mount } from "enzyme";
 
-import { HasPageSelection, ModalButton, ModalCommitButton, ModalContext, PageDetailsForCombine, pageSelectionlens, simpleMessagesL } from "@focuson/pages";
+import { HasPageSelection, ModalButton, ModalCommitButton, ModalContext, PageDetailsForCombine, pageSelectionlens, rawCloseOnePageTxs, simpleMessagesL } from "@focuson/pages";
 import { Lenses, Optional } from "@focuson/lens";
 import { SimpleMessage, testDateFn } from "@focuson/utils";
 
@@ -29,6 +29,7 @@ const context: Context = {
   },
   restL: restL (),
   dateFn: testDateFn,
+  closeOnePageTxs: rawCloseOnePageTxs,
   tagHolderL: Lenses.identity<StateForModalButtonTest> ().focusQuery ( 'tags' ),
   pathToLens: function ( s: StateForModalButtonTest, currentLens?: Optional<StateForModalButtonTest, any> | undefined ): ( path: string ) => Optional<StateForModalButtonTest, any> {
     throw new Error ( "Function not implemented." );

@@ -10,6 +10,7 @@ import { TableCD } from "./componentsD";
 // - but isn't going to work in this project as we are using natwest stuff (sqlList+resolvers)
 
 export interface RefConfiguration {
+    teamName: string
     urlPrefix: string;
     params: RestParams;
     resolver?: NameAnd<PrimaryMutations>;
@@ -32,7 +33,7 @@ export function accountTypeRefD<G> (d: RefConfiguration): RefD<G> {
         resolvers: { ...d.resolver }
     }
     return {
-        name: "AccountData",
+        name: `${d.teamName}AccountData`,
         refGroups: 'once',
         domain: {
             vbAccountType: {dataDD: accountTypeDD},
@@ -92,7 +93,7 @@ export function timeDataRefD<G> (d: RefConfiguration ): RefD<G> {
         resolvers: {...d.resolver}
     }
     return {
-        name: "CommonData",
+        name: `${d.teamName}CommonData`,
         refGroups: 'once',
         commonParams: {
             jurisdiction: { ...StringParam, commonLens: 'jurisdiction', testValue: 'GB' },
@@ -108,7 +109,7 @@ export function timeDataRefD<G> (d: RefConfiguration ): RefD<G> {
                 fetcher: true,
                 postFetchCommands: [
                     {command: 'copyResult', from: 'today', to: '/CommonIds/today'},
-                    {command: 'timestamp', path: '/CommonData/now'}
+                    {command: 'timestamp', path: `/${d.teamName}CommonData/now`}
                 ]
             }
         },

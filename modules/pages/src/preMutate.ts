@@ -27,7 +27,7 @@ function premutateOnePage<S, Context extends PageSelectionContext<S>> ( c: Conte
   const { firstTime, pageName, focusOn } = pageSelection
   if ( firstTime ) {
     console.log('scrolling')
-    document.getElementById('root').scrollIntoView()
+    document.getElementById('root')?.scrollIntoView()
     firstTimeHappened = true
     const pageDetails: MultiPageDetails<S, any> = c.pages;
     const details = pageDetails[ pageName ]

@@ -4,7 +4,7 @@ import { Context, emptyState, FState, identityL } from "./common";
 import { defaultDateFn, errorMonad, errorPromiseMonad, fetchWithDelay, fetchWithPrefix, loggingFetchFn, safeArray, SimpleMessage, stringToSimpleMsg } from "@focuson/utils";
 import { lensState, LensState } from "@focuson/state";
 import { Reducer } from "react";
-import { dispatchRestAndFetchCommands, FocusOnConfig, FocusOnContext, FocusOnDebug, HasFocusOnDebug, restCountL, traceL, makeProcessorsConfig, Dependencies} from "@focuson/focuson";
+import { dispatchRestAndFetchCommands, FocusOnConfig, FocusOnContext, FocusOnDebug, HasFocusOnDebug, restCountL, traceL, makeModalProcessorsConfig, Dependencies} from "@focuson/focuson";
 import { Lens, Lenses, massTransform, Transform } from "@focuson/lens";
 import { pageSelectionlens, preMutateForPages, simpleMessagesL, removeOldMessages } from "@focuson/pages";
 import { newFetchers } from "./fetchers";
@@ -72,7 +72,7 @@ export const focusOnMiddlewareFor{teamName} = <BigState, S extends HasFocusOnDeb
   const debug = s.debug?.reduxDebug === true
   if ( debug ) console.log ( 'focusOnMiddleware', action )
   const restCommands = safeArray ( config.restL.getOption ( s ) )
-  const processorsConfig = makeProcessorsConfig ( s, context );
+  const processorsConfig = makeModalProcessorsConfig ( s, context );
   let start: S = errorMonad ( s, debug, onError,
     [ 'preMutateForPages', preMutateForPages<S, C> ( context,processorsConfig ) ],
     ['removeOldMessage',  removeOldMessages<S> ( context.dateFn,  context.simpleMessagesL, delayBeforeMessagesRemoved )],

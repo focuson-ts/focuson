@@ -446,7 +446,7 @@ export const DateDD: DatePrimitiveDD = {
   displayParams: { dateFormat: "yyyy-MM-dd" },
   sample: [ "2020-10-01", '2021-09-01', '2022-11-01' ],
 }
-const commonDateDisplayParams = { dateFormat: "dd-MM-yyyy", dateInfo: '/CommonData/dates', jurisdiction: '/CommonIds/jurisdiction' };
+export const commonDateDisplayParams = { dateFormat: "dd-MM-yyyy", dateInfo: '/FocusonCommonData/dates', jurisdiction: '/CommonIds/jurisdiction' };
 export const DateWithDatePickerDD: DatePrimitiveDD = {
   format: { type: 'Date', pattern: "dd-MM-yyyy" },
   ...datePrimDD,

@@ -72,6 +72,9 @@ export const ButtonsPageD: ExampleMainPage = {
           changeOnClose:{command: 'message', msg: 'Closing Rest With Modal Page'}
         }}
     },
+    scrollToTopOfPage: {
+      control: "CommandButton", validate: false, command: {command: 'scrollToTop'}
+    }
     // restWithDatesMainPage: {
     //   control: 'RestButton', action: 'get', restName: 'buttons', result: 'nothing',
     //   validate: false,

@@ -2,7 +2,7 @@ import { lensState, LensState } from "@focuson/state";
 import { shallow } from "enzyme";
 
 import { enzymeSetup } from "./enzymeAdapterSetup";
-import { fromPathFromRaw, HasPageSelection, MultiPageDetails, PageDetailsForCombine, pageSelectionlens, simpleMessagesL } from "@focuson/pages";
+import { fromPathFromRaw, HasPageSelection, MultiPageDetails, PageDetailsForCombine, pageSelectionlens, rawCloseOnePageTxs, simpleMessagesL } from "@focuson/pages";
 import { HasRestCommands, restL } from "@focuson/rest";
 import { SimpleMessage, testDateFn } from "@focuson/utils";
 import { FocusOnContext } from "@focuson/focuson";
@@ -41,6 +41,7 @@ const context: Context = {
   dateFn: testDateFn,
   newFetchers: {},
   restDetails: {},
+  closeOnePageTxs: rawCloseOnePageTxs,
   tagHolderL: Lenses.identity<RestButtonStateForTest> ().focusQuery ( 'tags' ),
   currentState<D, C> ( state: LensState<RestButtonStateForTest, any, C> ): LensState<RestButtonStateForTest, D, C> {return state},
   messagePostProcessor: {},

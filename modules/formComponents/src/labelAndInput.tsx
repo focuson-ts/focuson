@@ -3,10 +3,11 @@ import { Input, } from "./input";
 import { Label } from "./label";
 import { BooleanTransformer, BooleanYNTransformer, isCheckboxProps, NumberTransformer, StringTransformer, TransformerProps } from "./transformers";
 import { BooleanValidations, defaultDateFn, HasDateFn, NameAnd, NumberValidations, SimpleMessage, stringToSimpleMsg, StringValidations, toArray } from "@focuson/utils";
-import { FocusOnContext } from "@focuson/focuson";
+
 import { LensState } from "@focuson/state";
 import { Transform } from "@focuson/lens";
-import { InputChangeCommands, inputCommandProcessors, InputProcessorsConfig, processChangeCommandProcessor } from "@focuson/rest";
+import { FocusOnContext, makeInputProcessorsConfig } from "@focuson/focuson";
+import { HasCloseOnePage, InputChangeCommands, inputCommandProcessors, InputProcessorsConfig, processChangeCommandProcessor } from "@focuson/rest";
 import { makeButtons } from "./makeButtons";
 import { HasPageSelectionLens, HasPathToLens, HasSimpleMessageL, PageSelection } from "@focuson/pages";
 import { CustomError } from "./CustomError";
@@ -27,15 +28,16 @@ export interface LabelAndInputProps<S, T, Context> extends CommonStateProps<S, T
   tabWhenLengthExceeds?: number
 }
 
-export function makeInputChangeTxs<S, C extends HasSimpleMessageL<S> & HasPathToLens<S> & HasDateFn&HasPageSelectionLens<S>> ( id: string, parentState: LensState<S, any, C> | undefined, change?: InputChangeCommands | InputChangeCommands[] ): Transform<S, any>[] {
+export function makeInputChangeTxs<S, C extends HasSimpleMessageL<S> & HasPathToLens<S> & HasDateFn&HasPageSelectionLens<S>&HasCloseOnePage<S,C>> ( id: string, parentState: LensState<S, any, C> | undefined, change?: InputChangeCommands | InputChangeCommands[] ): Transform<S, any>[] {
   if ( parentState === undefined ) return []
   const { simpleMessagesL, pathToLens, dateFn, pageSelectionL } = parentState.context
-  const config: InputProcessorsConfig<S, SimpleMessage, PageSelection> = {
+  const config: InputProcessorsConfig<S, SimpleMessage, PageSelection,C> = {
     dateFn,
     toPathTolens: pathToLens ( parentState.main, parentState.optional ),
     stringToMsg: stringToSimpleMsg ( defaultDateFn, 'info' ),
     messageL: simpleMessagesL,
     pageSelectionL,
+    context: parentState.context,
     s: parentState.main
   };
   return processChangeCommandProcessor ( `Modal button.${id}`, inputCommandProcessors ( config ) ( parentState.main ), toArray ( change ) );
