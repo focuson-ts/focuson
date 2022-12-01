@@ -65,46 +65,46 @@ export const sqlList: NameAnd<SqlInfo> = {
 export const timeDataRestParams: RestParams = {
   dbName: allCommonIds.dbName,
 }
-export function timeDataResolver(sqlList: NameAnd<SqlInfo>): NameAnd<PrimaryMutations> {
-  return {
-    getTimeData: [
-      { type: 'sql', name: sqlList.today.name, schema: onlySchema, sql: sqlList.today.sql, params: [
-          { type: "output", name: 'today', rsName: 'TODAY', javaType: 'String', format: { pattern: 'dd-MM-yyyy', type: 'Date' } },
-        ]
-      },
-      // // Keep me I am very useful for debugging
-      // { type: 'manual', name: 'manualToday', code: [
-      //   'String today = "20-11-2022";'
-      //   ],
-      //   params: [
-      //     { type: 'output', name: 'today', javaType: 'String', format: { type: 'Date', pattern: 'dd-MM-yyyy' } }
-      //   ]},
-      { type:'manual', name: 'getServerNow', import: [
-          'import java.text.DateFormat;',
-          'import java.text.SimpleDateFormat;',
-          'import java.util.TimeZone;',
-        ], code: [
-          `DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");`,
-          `dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));`,
-          `java.util.Date now = new java.util.Date();`,
-          'String serverNow = dateFormat.format(now);'
-        ], params: [
-          { type: 'output', name: 'serverNow', javaType: 'String' }
-        ]
-      },
-      { type: 'manual', name: 'dateFormat', code: [
-          'String dateFormat = "dd-MM-yyyy";'
-        ], params: [
-          { type: 'output', name: 'dateFormat', javaType: 'String' }
-        ]
-      },
-      { type: 'manual', name: 'getServerOffsetFromGMT', code: [
-          'Integer serverOffsetHoursFromGMT = 0;'
-        ], params: [
-          { type: 'output', name: 'serverOffsetHoursFromGMT', javaType: 'Integer' }
-        ]
-      },
-    ],
+export function timeDataResolver(teamName: string,sqlList: NameAnd<SqlInfo>): NameAnd<PrimaryMutations> {
+  const timeData : PrimaryMutations= [
+    { type: 'sql', name: sqlList.today.name, schema: onlySchema, sql: sqlList.today.sql, params: [
+        { type: "output", name: 'today', rsName: 'TODAY', javaType: 'String', format: { pattern: 'dd-MM-yyyy', type: 'Date' } },
+      ]
+    },
+    // // Keep me I am very useful for debugging
+    // { type: 'manual', name: 'manualToday', code: [
+    //   'String today = "20-11-2022";'
+    //   ],
+    //   params: [
+    //     { type: 'output', name: 'today', javaType: 'String', format: { type: 'Date', pattern: 'dd-MM-yyyy' } }
+    //   ]},
+    { type:'manual', name: 'getServerNow', import: [
+        'import java.text.DateFormat;',
+        'import java.text.SimpleDateFormat;',
+        'import java.util.TimeZone;',
+      ], code: [
+        `DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");`,
+        `dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));`,
+        `java.util.Date now = new java.util.Date();`,
+        'String serverNow = dateFormat.format(now);'
+      ], params: [
+        { type: 'output', name: 'serverNow', javaType: 'String' }
+      ]
+    },
+    { type: 'manual', name: 'dateFormat', code: [
+        'String dateFormat = "dd-MM-yyyy";'
+      ], params: [
+        { type: 'output', name: 'dateFormat', javaType: 'String' }
+      ]
+    },
+    { type: 'manual', name: 'getServerOffsetFromGMT', code: [
+        'Integer serverOffsetHoursFromGMT = 0;'
+      ], params: [
+        { type: 'output', name: 'serverOffsetHoursFromGMT', javaType: 'Integer' }
+      ]
+    },
+  ];
+  var result: NameAnd<PrimaryMutations> = {
     getHolidays: [
       { type: 'sql', name: sqlList.today.name, schema: onlySchema, sql: sqlList.today.sql, params: [
           { type: "output", name: 'today', rsName: 'TODAY', javaType: 'String', format: { pattern: 'dd-MM-yyyy', type: 'Date' } },
@@ -115,7 +115,9 @@ export function timeDataResolver(sqlList: NameAnd<SqlInfo>): NameAnd<PrimaryMuta
           { type: 'output', name: 'jurisdiction', rsName: 'JURISDICTION_CODE', javaType: 'String' },
         ], list: true }
     ]
-  }
+  };
+  result[`get${teamName}TimeData`]= timeData
+  return result
 }
 
 export const accountTypeConfig: RefConfiguration = {
@@ -129,7 +131,7 @@ export const timeDataConfig: RefConfiguration = {
   urlPrefix: '/v1/focuson',
   teamName: 'Focuson',
   params: timeDataRestParams,
-  resolver: timeDataResolver(sqlList)
+  resolver: timeDataResolver('Focuson', sqlList)
 }
 
 

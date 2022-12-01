@@ -48,7 +48,7 @@ export const PostCodeMainPage: ExampleMainPage = {
       ]
     },
     save: {
-      control: 'RestButton', restName: 'address', action: 'createWithoutFetch', validate: true, messageOnSuccess: 'Saved'
+      control: 'RestButton', restName: 'address', action: 'createWithoutFetch', validate: true, messageOnSuccess: {msg:'Saved',level: 'success'}
     }
   }
 }

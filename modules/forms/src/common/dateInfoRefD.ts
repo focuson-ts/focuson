@@ -75,7 +75,7 @@ export function timeDataRefD<G> (d: RefConfiguration ): RefD<G> {
     }
     const timeDataD: DataD<G> = {
         description: "Today and holidays",
-        name: "TimeData",
+        name: `${d.teamName}TimeData`,
         structure: {
             today: {dataDD: StringDD, sample: ['01-07-2022']},
             serverNow: {dataDD: StringDD, sample: ['2022-07-01T11:25:32.077Z']},

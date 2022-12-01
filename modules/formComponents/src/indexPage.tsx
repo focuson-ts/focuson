@@ -1,7 +1,7 @@
 import { isMainPageDetails, isPopup, PageSelectionContext, SelectPage } from "@focuson/pages";
 import { LensProps, LensState } from "@focuson/state";
 import { Lenses } from "@focuson/lens";
-import { DateFn, sortedEntries } from "@focuson/utils";
+import { DateFn, HasDateFn, sortedEntries } from "@focuson/utils";
 
 
 export interface IndexPageProps<S, Context extends PageSelectionContext<S>> extends LensProps<S, S, Context> {
@@ -10,7 +10,7 @@ export interface IndexPageProps<S, Context extends PageSelectionContext<S>> exte
 }
 
 
-export function IndexPage<S, Context extends PageSelectionContext<S>> ( { state, children, dateFn }: IndexPageProps<S, Context> ) {
+export function IndexPage<S, Context extends PageSelectionContext<S>&HasDateFn> ( { state, children, dateFn }: IndexPageProps<S, Context> ) {
   // @ts-ignore
   let showDebugState: LensState<S, boolean, Context> = state.copyWithLens ( Lenses.identity<S> ().focusQuery ( 'debug' ).focusQuery ( 'showDebug' ) );
   return (
