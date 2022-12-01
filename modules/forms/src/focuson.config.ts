@@ -40,13 +40,16 @@ export const accountTypeRestParams: RestParams = {
   dbName: allCommonIds.dbName,
   ...fromCommonIds('vbAccountSeq')
 }
-export const accountTypeResolver: NameAnd<PrimaryMutations> = {
-  getVbAccountTypeForRefD: [
-    { type: 'sqlFunction', package: 'B003N_ACCOUNT_OPTIONS', name: 'Get_Account_Type', schema: onlySchema, params: [
+export function accountTypeResolver(teamName: string): NameAnd<PrimaryMutations> {
+  const getVbAccountTypeForRefD: PrimaryMutations=
+    { type: 'sqlFunction', name: 'Get_Account_Type', schema: onlySchema, params: [
         { type: "output", name: 'vbAccountType', sqlType: 'INTEGER', javaType: 'Integer' },
         'vbAccountSeq',
-      ] },
-  ]
+      ] }
+
+  var result: NameAnd<PrimaryMutations> = {}
+  result[ `get${teamName}VbAccountTypeForRefD`] = getVbAccountTypeForRefD
+  return result
 }
 
 export interface SqlInfo {
@@ -119,7 +122,7 @@ export const accountTypeConfig: RefConfiguration = {
   urlPrefix: '/v1/focuson',
   teamName: 'Focuson',
   params: accountTypeRestParams,
-  resolver: accountTypeResolver
+  resolver: accountTypeResolver('Focuson')
 }
 
 export const timeDataConfig: RefConfiguration = {

@@ -20,7 +20,7 @@ export interface RefConfiguration {
 export function accountTypeRefD<G> (d: RefConfiguration): RefD<G> {
     const accountTypeDD: DataD<G> = {
         description: 'contains account type',
-        name: 'VbAccountTypeForRefD',
+        name: `${d.teamName}VbAccountTypeForRefD`,
         structure: {
             vbAccountType: { dataDD: IntegerDD, sample: [ 10, 18 ] }
         }
