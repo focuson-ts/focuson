@@ -71,7 +71,7 @@ export interface FullMessageForSuccessAndFailure {
 }
 export function getMessagesForSuccessAndFailure ( md: MutationDetail ): FullMessageForSuccessAndFailure | undefined {
   const a: any = md
-  function toMessageAndLevel ( s: string | MessageAndLevel, defaultLevel: SimpleMessageLevel ): MessageAndLevel {
+  function toMessageAndLevel ( s: string | MessageAndLevel, defaultLevel: SimpleMessageLevel ): MessageAndLevel|undefined {
     if ( s === undefined ) return undefined
     if ( typeof s === 'string' ) return { msg: s, level: defaultLevel }
     return s
@@ -309,7 +309,8 @@ export function javaTypeForOutput ( m: MutationParam | MutationParam[] ) {
 
 export function isSqlOutputParam ( m: MutationParam ): m is OutputForSqlMutationParam {
   const ma: any = m
-  return isOutputParam ( m ) && ma.rsName !== undefined
+  const result = isOutputParam ( m ) && ma.rsName !== undefined;
+  return result
 }
 export function isStoredProcOutputParam ( m: MutationParam ): m is OutputForStoredProcMutationParam {
   const ma: any = m
@@ -440,7 +441,14 @@ export function isBodyMutationParam ( p: MutationParam ): p is BodyMutationParam
   return a.type === 'body'
 }
 
-export interface OutputForStoredProcMutationParam {
+export interface HasIsInOut{
+  inout?: true
+}
+export function isHasInOut(a: any): a is HasIsInOut{
+  return a.inout !== undefined
+}
+
+export interface OutputForStoredProcMutationParam extends HasIsInOut{
   type: 'output';
   name: string;
   javaType: JavaTypePrimitive
@@ -448,7 +456,7 @@ export interface OutputForStoredProcMutationParam {
   msgLevel?: SimpleMessageLevel
   format?: Pattern
 }
-export interface OutputForSqlMutationParam {
+export interface OutputForSqlMutationParam extends HasIsInOut {
   type: 'output';
   name: string;
   javaType: JavaTypePrimitive;

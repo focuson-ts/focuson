@@ -4,7 +4,7 @@ import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationDetailsName, mutationMethodName } from "./names";
 import { AllLensRestParams, RestD } from "../common/restD";
 import { indentList } from "./codegen";
-import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutoSqlResolver, AutowiredMutationParam, displayParam, getMakeMock, getMessagesForSuccessAndFailure, importForTubles, InputMutationParam, isAutoSqlResolver, isBodyMutationParam, isInputParam, isManualMutation, isManualMutationThatThrowsException, isMessageMutation, isMultipleMutation, isMutationThatIsaList, isOutputParam, isSelectMutationThatIsAList, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, paramNamePathOrValue, PrimaryMutationDetail, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlFunctionMutation, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
+import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutoSqlResolver, AutowiredMutationParam, displayParam, getMakeMock, getMessagesForSuccessAndFailure, importForTubles, InputMutationParam, isAutoSqlResolver, isBodyMutationParam, isHasInOut, isInputParam, isManualMutation, isManualMutationThatThrowsException, isMessageMutation, isMultipleMutation, isMutationThatIsaList, isOutputParam, isSelectMutationThatIsAList, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, paramNamePathOrValue, PrimaryMutationDetail, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlFunctionMutation, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
 import { applyToTemplate } from "@focuson/template";
 import { restActionForName } from "@focuson/rest";
 import { outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint";
@@ -14,6 +14,7 @@ import { getDataFromRS } from "./makeDBFetchers";
 
 export const setObjectFor = ( errorPrefix: string ) => ( m: MutationParam, i: number ): string => {
   const index = i + 1
+  if ( isStoredProcOutputParam ( m ) && isHasInOut ( m ) && m.inout ) return `s.setObject(${index},null);s.registerOutParameter(${index},java.sql.Types.${m.sqlType});`
   if ( isStoredProcOutputParam ( m ) ) return `s.registerOutParameter(${index},java.sql.Types.${m.sqlType});`
   if ( typeof m === 'string' ) return `s.setObject(${index}, ${m});`
   if ( isBodyMutationParam ( m ) ) return processInput ( errorPrefix, m.javaType, m.format, index, m );
@@ -73,7 +74,7 @@ export function makeMutationResolverReturnStatementForList ( m: MutationDetail, 
     if ( m.throwsException ) return `return null;//this is because the code above throws an exception`
     const param = allOutputParams ( toArray ( m.params ) ).filter ( p => p.javaType === 'List<Map<String,Object>>' )
     if ( param?.length === 1 )
-      return `return ${param[ 0 ].name};//from manual mutation ${JSON.stringify(m)}`
+      return `return ${param[ 0 ].name};//from manual mutation ${JSON.stringify ( m )}`
     else throw new Error ( `The manual mutation did not have a single output param of type List<Map<String,Object>>\nIndex: ${index}\n${JSON.stringify ( m )}` )
   }
   throw new Error ( `Cannot makeMutationResolverReturnStatment for [${index}] ${JSON.stringify ( m )}` )
@@ -82,7 +83,7 @@ export function makeMutationResolverReturnStatementForList ( m: MutationDetail, 
 export function makeMutationResolverReturnStatement ( m: PrimaryMutationDetail, outputs: OutputMutationParam[] ): string {
   if ( isManualMutationThatThrowsException ( m ) ) return '//No return statement because it throws an exception'
   if ( outputs.length === 0 ) return `return;`
-  if ( outputs.length === 1 ) return `return ${outputs[ 0 ].name};//${JSON.stringify(outputs[0])} from ${JSON.stringify(m)}`
+  if ( outputs.length === 1 ) return `return ${outputs[ 0 ].name};//${JSON.stringify ( outputs[ 0 ] )} from ${JSON.stringify ( m )}`
   return `return new Tuple${outputs.length}<${outputs.map ( o => o.javaType ).join ( "," )}>(${outputs.map ( x => x.name ).join ( ',' )});`
 }
 function toStringForMock ( javaType: AllJavaTypes, value: number ) {

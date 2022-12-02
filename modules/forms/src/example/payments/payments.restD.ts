@@ -114,7 +114,7 @@ export const newPaymentsRD: ExampleRestD = {
             { type: 'output', name: 'twelve', javaType: 'Integer', sqlType: 'INTEGER' },
             { type: 'output', name: 'thirteen', javaType: 'Integer', sqlType: 'INTEGER' },
             { type: 'output', name: 'fourteen', javaType: 'Integer', sqlType: 'INTEGER' },
-            { type: 'output', name: 'fiveteen', javaType: 'Integer', sqlType: 'INTEGER' },
+            { type: 'output', name: 'fiveteen', javaType: 'String', sqlType: 'VARCHAR', msgLevel:'error', inout: true },
           ], schema: onlySchema, package: 'bo11'
         },
         {

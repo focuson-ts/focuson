@@ -7,7 +7,7 @@ export const inputsDD: ExampleDataD = {
   description: `A load of inputs to allow to check the validity behaviour`,
   structure: {
     natNum: { dataDD: NatNumDd },
-    tab1: { dataDD: { ...OneLineStringDD, layout: StringInputCD, displayParams: { maxlength: 10, tabWhenLengthExceeds: 2, label: '' } } },
+    tab1: { dataDD: { ...OneLineStringDD, layout: StringInputCD, displayParams: { maxlength: 10, tabWhenLengthExceeds: 2, label: '', className: 'myTabClass' } } },
     tab2: { dataDD: { ...StringDD, layout: StringInputCD, displayParams: { maxlength: 10, tabWhenLengthExceeds: 2 } } },
     tab3: { dataDD: { ...StringDD, layout: StringInputCD, displayParams: { maxlength: 10 } } },
     integerMax100: { dataDD: IntegerDD, displayParams: { max: 100 } },

@@ -6,3 +6,10 @@ export const HideButtonsCD: DisplayCompD = {
   params: { buttons: { paramType: 'object', needed: "defaultToButtons" },
     hide: { paramType: 'string[]', needed: 'yes' } }
 }
+
+export const HideButtonsAndRestOnTopCD: DisplayCompD = {
+  import: "@focuson/form_components",
+  name: "HideButtonsAndRestOnTopLayout",
+  params: { buttons: { paramType: 'object', needed: "defaultToButtons" },
+    hide: { paramType: 'string[]', needed: 'yes' } }
+}

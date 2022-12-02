@@ -1,8 +1,8 @@
 import { ExampleMainPage, ExampleModalPage } from "../common";
 import { nameAndAddressDataD, postCodeSearchDataD } from "./addressSearch.dataD";
-import { addressRestD, postcodeForManualRestD, postcodeRestD } from "./addressSearch.restD";
+import { addressRestD, postcodeRestD } from "./addressSearch.restD";
 import { IntegerDD } from "../../common/dataD";
-import { HideButtonsCD } from "../../buttons/hideButtonsCD";
+import { HideButtonsAndRestOnTopCD } from "../../buttons/hideButtonsCD";
 
 export const PostCodeModalPage: ExampleModalPage = {
   name: "PostCodeSearch",
@@ -33,7 +33,7 @@ export const PostCodeMainPage: ExampleMainPage = {
     address: { rest: addressRestD, targetFromPath: '~/main' }
   },
   buttonOrder: [ 'save' ],//hide the search button
-  layout: { component: HideButtonsCD, displayParams: { hide: [ 'search' ] } },
+  layout: { component: HideButtonsAndRestOnTopCD, displayParams: { hide: [ 'search' ] } },
   buttons: {
     search: {
       control: 'ModalButton', modal: PostCodeModalPage, mode: 'edit',

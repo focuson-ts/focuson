@@ -14,7 +14,7 @@ export interface InputProps<S, T, Context> extends CommonStateProps<S, T, Contex
   enums?: NameAnd<string>;
   onBlur?: ( e: any ) => void;
   errorMessage?: string
-  tabWhenLengthExceeds? : number
+  tabWhenLengthExceeds?: number
 }
 
 export const cleanInputProps = <T extends NameAnd<any>> ( p: T ): T => {
@@ -31,6 +31,7 @@ export const cleanInputProps = <T extends NameAnd<any>> ( p: T ): T => {
   delete result.scrollAfter
   delete result.enabledBy
   delete result.regexForChange
+  delete result.className
   return result
 };
 
@@ -42,10 +43,11 @@ export const CheckboxInput = <S, T extends any, P> ( tProps: CheckboxProps<T> ) 
   return <Props extends InputProps<S, T, Context> & P, Context extends FocusOnContext<S>> ( props: Props ) => {
     const { state, mode, id, parentState, onChange, readonly, enabledBy, onBlur } = props
     const onChangeEventHandler = ( e: React.ChangeEvent<HTMLInputElement> ) => {
-      setEdited(e?.target, e?.target?.checked?.toString())
+      setEdited ( e?.target, e?.target?.checked?.toString () )
       selectFn<S, T, Context> ( state, id, transformer ( e?.target?.checked ), parentState, onChange, true )
     }
     return <><input type='checkbox' {...cleanInputProps ( props )}
+                    className='input'
                     checked={checkbox ( state.optJson () )}
                     disabled={disabledFrom ( enabledBy ) || mode === 'view' || readonly}
                     onBlur={onBlur}
@@ -55,15 +57,15 @@ export const CheckboxInput = <S, T extends any, P> ( tProps: CheckboxProps<T> ) 
   }
 }
 
-function findNextTabStop() {
+function findNextTabStop () {
   var el = document.activeElement
-  var universe = document.querySelectorAll('input, button, select, textarea, a[href]');
-  var list = Array.prototype.filter.call(universe, function(item) {return item.tabIndex >= "0"});
-  var index = list.indexOf(el);
+  var universe = document.querySelectorAll ( 'input, button, select, textarea, a[href]' );
+  var list = Array.prototype.filter.call ( universe, function ( item ) {return item.tabIndex >= "0"} );
+  var index = list.indexOf ( el );
   // console.log('findNextTabstop - el',el)
   // console.log('findNextTabstop - list',list)
   // console.log('findNextTabstop - index',index)
-  const result = list[index + 1] || list[0];
+  const result = list[ index + 1 ] || list[ 0 ];
   // console.log('findNextTabstop - result',result)
   return result
     ;
@@ -76,13 +78,13 @@ export const NonCheckboxInput = <S, T extends any, P> ( tProps: StringProps<T> )
     throw new Error ( `selectFn must be a function it is ${selectFn}` )
   }
   return <Props extends InputProps<S, T, Context> & P, Context extends FocusOnContext<S>> ( props: Props ) => {
-    const { state, mode, id, parentState, onChange, readonly, enabledBy, onBlur, regexForChange, errorMessage ,tabWhenLengthExceeds} = props
+    const { state, mode, id, parentState, onChange, readonly, enabledBy, onBlur, regexForChange, errorMessage, tabWhenLengthExceeds } = props
     const onChangeEventHandler = ( transformer: ( s: string ) => T, e: React.ChangeEvent<HTMLInputElement> ) => {
       const value = e?.target?.value;
-      setEdited(e?.target, value)
-      if (tabWhenLengthExceeds && value.toString().length>=tabWhenLengthExceeds) {
+      setEdited ( e?.target, value )
+      if ( tabWhenLengthExceeds && value.toString ().length >= tabWhenLengthExceeds ) {
         // console.log('focus on next')
-        findNextTabStop().focus()
+        findNextTabStop ().focus ()
       }
       return selectFn<S, T, Context> ( state, id, transformer ( value ), parentState, onChange, regexForChange === undefined || value.match ( regexForChange ) !== null );
     }
