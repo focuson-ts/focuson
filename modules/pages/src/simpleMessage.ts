@@ -37,7 +37,7 @@ function parseBodyOrError ( body: any ): any {
 }
 
 export var msgsDebug = false
-export const extractMessages = ( dateFn: DateFn ) => ( status: number | undefined, body: any ) => {
+export const extractMessages = (ignore429: boolean, dateFn: DateFn ) => ( status: number | undefined, body: any ) => {
   function fromHeaderOrMessages ( m: any ) {
     if ( msgsDebug ) console.log ( 'in fromHeaderOrMessages', m )
     if ( m === undefined ) return []
@@ -58,6 +58,7 @@ export const extractMessages = ( dateFn: DateFn ) => ( status: number | undefine
   const headersMessages = fromHeaderOrMessages ( realBody?.headerMessages );
   const fullMessages = [ ...messages, ...headersMessages ];
   if ( status < 400 || status == 404 || fullMessages.length > 0 ) return fullMessages
+  if (ignore429===true && status === 429) return []
   return [ stringToSimpleMsg ( dateFn, 'error' ) ( `${status} returned and no messages` ) ];
 };
 

@@ -47,7 +47,7 @@ export const makeRest = <G> ( params: TSParams, p: RefD<G> ) => ( restName: stri
     `    resourceId:  ${JSON.stringify ( resourceIds )},`,
     `    canBeUndefinedIds: ${JSON.stringify ( canBeUndefinedIds )},`,
     `    extractData: ${params.extractData},`,
-    `    messages: extractMessages(dateFn),`,
+    `    messages: extractMessages(${params.ignore429},dateFn),`,
     `    url: "${r.rest.url}",`,
     `    states : {`,
     ...indentList ( indentList ( indentList ( addStringToEndOfAllButLast ( "," ) ( makeStates ( errorPrefix, params, p ) ( states ) ) ) ) ),
