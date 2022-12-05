@@ -1,6 +1,5 @@
 import { NameAnd, RestAction, toArray } from "@focuson/utils";
 import { AllLensRestParams, MutationsForRestAction, RefD, RestDefnInPageProperties } from "@focuson/forms";
-import { Source } from "../dist/generators";
 
 
 export type TaglessMapGenerator<Acc, Source> = ( source: Source, template: NameAnd<string> ) => Acc

@@ -1,13 +1,12 @@
 {
   "template":    "noreact",
-  "name":        "@focuson/generators",
-  "description": "Code generators",
+  "name":        "@focuson/composition",
+  "description": "Composition of functions",
   "details":     {
     "test":         true,
     "publish":      false,
     "links":        [
-      "@focuson/utils",
-      "@focuson/files"
+      "@focuson/utils"
     ],
     "extraDeps":    {},
     "extraDevDeps": {},
