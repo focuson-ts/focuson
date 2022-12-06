@@ -91,13 +91,14 @@ export function makeAllEmptyData<G> ( params: TSParams, ps: RefD<G>[] ): string[
   return sortedEntries ( dataDsIn ( ps, false ) ).flatMap ( ( [ name, dd ] ) =>
     [ `export const ${emptyName ( dd )}:${params.domainsFile}.${domainName ( dd )} =`, ...indentList ( JSON.stringify ( makeEmptyData ( dd ), null, 2 ).split ( "\n" ) ) ] )
 }
-export function makeEmptyData<G> ( d: AllDataDD<G> ): string[] {
+export function makeEmptyData<G> ( d: AllDataDD<G> ): any{
   let folder: AllDataFolder<any, G> = {
     stopAtDisplay: false,
     foldData: ( acc, path, parents, oneDataDD, dataDD, start ) => addData ( start, path, acc, dataDD ),
     foldRep: ( acc, path, parents, oneDataDD, dataDD, start ) =>
       start ? acc : parsePathFromListFromPage ( path ).transform ( child => [ child ] ) ( acc ),
-    foldPrim: ( acc, path, parents, oneDataDD, dataDD ) => parsePathFromListFromPage ( path ).set ( acc, dataDD.emptyValue ? dataDD.emptyValue : dataDD.emptyValue )
+    foldPrim: ( acc, path, parents, oneDataDD, dataDD ) =>
+      parsePathFromListFromPage ( path ).set ( acc, dataDD.emptyValue)
   };
   return foldDataDD ( d, [], [], [], folder )
 }
