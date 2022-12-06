@@ -55,17 +55,17 @@ export const commonInputParams: DisplayCompParamD = {
 }
 export const commonInputParamsWithTab: DisplayCompParamD = {
   ...commonParams,
-    tabWhenLengthExceeds: { paramType: "object", needed: 'no' }
+  tabWhenLengthExceeds: { paramType: "object", needed: 'no' }
 }
 
 export const StringInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "StringInput",
-  params: { ...commonInputParamsWithTab, ...stringValidationParams   }
+  params: { ...commonInputParamsWithTab, ...stringValidationParams }
 }
 
 export const NumberInputCD: DisplayCompD = {
   import: "@focuson/form_components", name: "NumberInput",
-  params: { ...commonInputParamsWithTab, ...intValidationParams}
+  params: { ...commonInputParamsWithTab, ...intValidationParams }
 }
 
 export const CheckboxInputCD: DisplayCompD = {
@@ -353,7 +353,9 @@ export const GuardsAndMessageTitleLayoutCD: DisplayCompD = {
   import: "@focuson/form_components",
   params: {
     messages: { paramType: 'guardAndMessage', needed: 'yes' },
-    state: { paramType: 'state', needed: 'defaultToPath' }
+    state: { paramType: 'state', needed: 'defaultToPath' },
+    messageClassName: { paramType: 'string', needed: 'no' },
+    defaultMessage: { paramType: 'string', needed: 'no' }
   }
 }
 
