@@ -1,5 +1,5 @@
 import React from 'react';
-import { ariaRoleForMessageLevel, SimpleMessage, SimpleMessageLevel } from "@focuson/utils";
+import { ariaRoleForMessageLevel, SimpleMessage, SimpleMessageLevel, unique } from "@focuson/utils";
 import { LensProps, reasonFor } from "@focuson/state";
 
 export interface MessagesProps<S, T, Context> extends LensProps<S, T, Context> {
@@ -48,7 +48,7 @@ export function Messages<S, T, Context> ( { state, pageDisplayTime, nextPageDisp
   const pageTime = new Date ( pageDisplayTime ).getTime ()
   const nextPageTime = nextPageDisplayTime ? new Date ( nextPageDisplayTime ).getTime () : undefined
   const simpleMessages = state.optJsonOr ( [] );
-  const actualMessages = simpleMessages.filter ( canDisplayInThisWindow ( pageTime, nextPageTime ) );
+  const actualMessages = unique(simpleMessages.filter ( canDisplayInThisWindow ( pageTime, nextPageTime ) ), sm => `${sm.level}-${sm.msg}`);
   if ( actualMessages.length === 0 ) return <></>
 
   const removeMessage = ( index: number ) => {

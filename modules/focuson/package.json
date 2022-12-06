@@ -12,8 +12,8 @@
     ]
   },
   "dependencies": {
-    "@focuson/pages": "1.43.47",
-    "@focuson/poster": "1.43.47"
+    "@focuson/pages": "1.43.48",
+    "@focuson/poster": "1.43.48"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -45,7 +45,7 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "1.43.47",
+  "version": "1.43.48",
   "template": "noreact",
   "description": "Brings together state management, declarative fetching and posting of data to/from apis and some simple page management",
   "details": {
