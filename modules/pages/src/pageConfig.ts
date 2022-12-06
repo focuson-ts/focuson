@@ -53,6 +53,7 @@ export function isPopup<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Contex
 export interface ModalPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> extends CommonPageDetails<S, D, Msgs, Config, Context> {
   pageType: 'ModalPopup' | 'ModalPage'
   pageFunction: PageFunctionType<S, D, Context>,
+  shouldModalPageCloseOnClickAway: boolean
 
 }
 export function isModalPageDetails<S, D, Msgs, Config extends PageConfig<S, D, Msgs, Context>, Context> ( o: OnePageDetails<S, D, Msgs, Config, Context> ): o is ModalPageDetails<S, D, Msgs, Config, Context> {

@@ -1,4 +1,4 @@
-import { allMainPages, flatMapToModal, InitialValue, isMainPage, MainPageD, PageD, PageDisplay } from "../common/pageD";
+import { allMainPages, flatMapToModal, InitialValue, isMainPage, isModalPage, MainPageD, PageD, PageDisplay } from "../common/pageD";
 import { TSParams } from "./config";
 import { modalName, modalPageComponentName, optionalsFileName, optionalsName, pageComponentName, pageInState, renderFileName } from "./names";
 import { addStringToEndOfAllButLast, indentList } from "./codegen";
@@ -36,7 +36,8 @@ export function walkModals<B, G> ( ps: PageD<B, G>[] ): ModalCreationData<B, G>[
 }
 
 export const makeModal = <G, B> ( params: TSParams, ) => ( { name, main, modal }: ModalCreationData<B, G> ): string[] => {
-  return [ `    ${name}: {pageType: '${modal.pageType}',  config: simpleMessagesConfig,  pageFunction: ${modalPageComponentName ( main ) ( modal )}()}` ]
+  const shouldModalPageCloseOnClickAway: boolean = isModalPage(modal)? modal.shouldModalPageCloseOnClickAway === true : false
+  return [ `    ${name}: {pageType: '${modal.pageType}',  config: simpleMessagesConfig,  pageFunction: ${modalPageComponentName ( main ) ( modal )}(), shouldModalPageCloseOnClickAway: ${shouldModalPageCloseOnClickAway}}` ]
 };
 
 export interface ExtraPage {

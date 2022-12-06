@@ -45,6 +45,7 @@ const wizard1: ExampleModalPage = {
   display: { dataDD: nothingDD, target: '~/nothing' },
   modes: [ 'view' ],
   name: "Wizard1",
+  shouldModalPageCloseOnClickAway: true,
   buttons: {
     next: { control: 'ModalButton', modal: wizard2, mode: 'view', focusOn: '~/nothing', pageOp: 'replace' },
     cancel: { control: 'ModalCancelButton' },

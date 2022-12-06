@@ -196,7 +196,7 @@ export type CloseOnePageContext<S> = PageSelectionContext<S> & HasRestCommandL<S
 export function rawCloseOnePageTxs<S> ( errorPrefix: string, s: S,optionalForPath: Optional<S, any>|undefined, context: CloseOnePageContext<S>, change: ModalChangeCommands[] ): Transform<S, any>[] {
   const { pageSelectionL } = context
   const pageToClose = currentPageSelectionTailRaw ( context.pageSelectionL ) ( s )
-  const closePageTxs = findClosePageTxsRaw ( errorPrefix, s,optionalForPath?optionalForPath:identityOptional(), context, pageToClose, -1, toArray ( change ) )
+   const closePageTxs = findClosePageTxsRaw ( errorPrefix, s,optionalForPath?optionalForPath:identityOptional(), context, pageToClose, -1, toArray ( change ) )
   if ( !closePageTxs ) return undefined
   const { txs, newPages } = closePageTxs
   const pageCloseTx: Transform<S, any> = [ pageSelectionL, ( ps: PageSelection[] ) => {

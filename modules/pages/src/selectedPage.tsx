@@ -2,7 +2,7 @@ import { LensProps, LensState } from "@focuson/state";
 
 import { currentPageSelection, HasPageSelectionLens, mainPage, mainPageFrom, PageParams, PageSelection, PageSelectionContext } from "./pageSelection";
 import { FocusedPage } from "./focusedPage";
-import { isArbitraryPageDetails, isMainPageDetails, MainPageDetails, MultiPageDetails, OnePageDetails, PageConfig } from "./pageConfig";
+import { isArbitraryPageDetails, isMainPageDetails, isModalPageDetails, MainPageDetails, MultiPageDetails, OnePageDetails, PageConfig } from "./pageConfig";
 import { DefaultTemplate, PageTemplateProps } from "./PageTemplate";
 import { Loading } from "./loading";
 import { lensBuilder, Lenses, NameAndLens, Optional, parsePath } from "@focuson/lens";
@@ -19,7 +19,7 @@ export interface SelectedPageDebug {
 export function SelectedPage<S, Context extends PageSelectionContext<S>> ( { state }: LensProps<S, any, Context> ): JSX.Element {
   let combine: ( state: LensState<S, any, any>, pages: PageDetailsForCombine[] ) => JSX.Element = state.context.combine;
   let pages: PageDetailsForCombine[] = findSelectedPageDetails ( state );
-  return combine ? combine ( state, pages ) : <div key={0}>Need to define combine<br />{JSON.stringify(pages)}</div>
+  return combine ? combine ( state, pages ) : <div key={0}>Need to define combine<br/>{JSON.stringify ( pages )}</div>
 }
 
 export interface PageDetailsForCombine {
@@ -27,6 +27,8 @@ export interface PageDetailsForCombine {
   element: JSX.Element;
   pageParams?: PageParams;
   pageDisplayedTime: string;
+  state: LensState<any, any, any>
+  shouldModalPageCloseOnClickAway: boolean
 }
 
 function findSelectedPageDetails<S, Context extends PageSelectionContext<S>> ( state: LensState<S, any, Context> ): PageDetailsForCombine[] {
@@ -95,10 +97,13 @@ export const findOneSelectedPageDetails = <S, T, Context extends ModalContext<S>
 
     const { config, pageType } = page
     const lsForPage = state.copyWithLens ( lensForPageDetails ( page0Details, page, focusOn ) )
+    const shouldModalPageCloseOnClickAway: boolean = isModalPageDetails ( page ) ? page.shouldModalPageCloseOnClickAway : false
     if ( isArbitraryPageDetails ( page ) ) {
       if ( !arbitraryParams ) throw Error ( `Trying to display arbritrary page but don't have params on the page select\n${JSON.stringify ( ps )}` )
       const element = page.pageFunction ( lsForPage, arbitraryParams );
-      return { element, pageType, pageDisplayedTime: ps.time };
+      const shouldModalPageCloseOnClickAway: boolean = ps.arbitraryParams?.shouldModalPageCloseOnClickAway === true
+      console.log('findOneSelectedPageDetails - shouldModalPageCloseOnClickAway', shouldModalPageCloseOnClickAway )
+      return { element, pageType, pageDisplayedTime: ps.time, state, shouldModalPageCloseOnClickAway };
     }
     const pageFunction = page.pageFunction
     if ( debug ) console.log ( "findOneSelectedPageDetails.pageFunction", pageFunction )
@@ -107,15 +112,15 @@ export const findOneSelectedPageDetails = <S, T, Context extends ModalContext<S>
       let element = pageFunction ( { state: lsForPage } );
       if ( debug ) console.log ( "findOneSelectedPageDetails.legacy result", element )
       if ( debug ) console.log ( "findOneSelectedPageDetails.legacy result - json", JSON.stringify ( element ) )
-      return { element, pageType, pageDisplayedTime: ps.time }
-    } else return displayOne ( config, pageType, pageFunction, ps.pageParams, ps.time, lsForPage, pageMode, pageCount - index );
+      return { element, pageType, pageDisplayedTime: ps.time, state, shouldModalPageCloseOnClickAway }
+    } else return displayOne ( config, pageType, pageFunction, ps.pageParams, ps.time, shouldModalPageCloseOnClickAway, lsForPage, pageMode, pageCount - index );
   }
 ;
 
 export function findMainPageDetails<S> ( pageSelections: PageSelection[], pageDetails: MultiPageDetails<S, any> ): MainPageDetails<S, any, any, any, any> {
   const firstPage: PageSelection = mainPageFrom ( pageSelections )
   let page0Details: any = pageDetails[ firstPage.pageName ];
-  if ( !isMainPageDetails<S, any, any, any, any> ( page0Details ) ) throw Error ( `Software error:  page ${firstPage.pageName} is not a main page.\nPageSelections: ${JSON.stringify ( pageSelections )}\n\nfirstPage: ${JSON.stringify(firstPage)}\nPage details${page0Details}` )
+  if ( !isMainPageDetails<S, any, any, any, any> ( page0Details ) ) throw Error ( `Software error:  page ${firstPage.pageName} is not a main page.\nPageSelections: ${JSON.stringify ( pageSelections )}\n\nfirstPage: ${JSON.stringify ( firstPage )}\nPage details${page0Details}` )
   return page0Details
 }
 
@@ -126,16 +131,17 @@ export function displayOne<S extends any, D extends any, Msgs, Context extends M
   focusedPage: FocusedPage<S, D, Context>,
   pageParams: PageParams | undefined,
   pageDisplayedTime: string,
-  s: LensState<S, D, Context>, pageMode: PageMode, index: number ): PageDetailsForCombine {
+  shouldModalPageCloseOnClickAway: boolean,
+  state: LensState<S, D, Context>, pageMode: PageMode, index: number ): PageDetailsForCombine {
   // @ts-ignore
-  const debug = s.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
+  const debug = state.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug..
   let t = config.template
   const template: ( p: PageTemplateProps<S, D, Context> ) => JSX.Element = t ? t : DefaultTemplate
   if ( debug ) console.log ( "displayMain.template 1", template )
   const loading = config.loading ? config.loading : Loading
   if ( debug ) console.log ( "displayMain.loading 2", loading )
-  const element = template ( { state: s, focusedPage, loading, pageMode, index } )
+  const element = template ( { state: state, focusedPage, loading, pageMode, index } )
   if ( debug ) console.log ( "displayMain.element 3", element );
-  return { element, pageType, pageParams, pageDisplayedTime }
+  return { element, pageType, pageParams, pageDisplayedTime, state, shouldModalPageCloseOnClickAway }
 }
 

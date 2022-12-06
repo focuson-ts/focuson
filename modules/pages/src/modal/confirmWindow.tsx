@@ -17,6 +17,7 @@ export interface ConfirmProps {
   showCancelButton?: boolean;
   confirmCommands?: ConfirmWindowChangeCommands | ConfirmWindowChangeCommands[]
   cancelCommands?: ConfirmWindowChangeCommands | ConfirmWindowChangeCommands[]
+  shouldModalPageCloseOnClickAway?: boolean
 }
 export interface ConfirmWindow extends ConfirmProps {
   type: 'window'

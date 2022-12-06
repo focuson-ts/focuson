@@ -1,5 +1,5 @@
-import { findThisPageElement, firstTimeHappened, focusPageClassName, PageDetailsForCombine, resetFirstTimeHappened } from "@focuson/pages";
-import { LensState } from "@focuson/state";
+import { findThisPageElement, firstTimeHappened, focusPageClassName, PageDetailsForCombine, popPage, resetFirstTimeHappened } from "@focuson/pages";
+import { LensState, reasonFor } from "@focuson/state";
 import { Messages } from "./messages";
 import { HasTagHolder } from "@focuson/template";
 import { HasSimpleMessages } from "@focuson/utils";
@@ -8,11 +8,15 @@ import { DebugState } from "./debugState";
 import { lastIndexOf } from "./common";
 import { useEffect } from "react";
 
-
+//export type CloseOnePage<S, C> = ( errorPrefix: string, s: S, optionalForPath: Optional<S, any>|undefined, context: C, change: ModalChangeCommands[] ) => Transform<S, any>[]
 const popupJSX = ( p: PageDetailsForCombine, i: number, messagesJSX: JSX.Element ) => {
+  const id = `page${i}`;
   return (
-    <div id={`page${i}`} className="modalPopup show-modal focus-page" key={i}>
-      <div className="modalPopup-content">
+    <div id={id} onClick={e => {
+      if (p.shouldModalPageCloseOnClickAway)
+        p.state.massTransform ( reasonFor ( 'popupJSX - modal', 'onClick', id ) ) ( popPage ( p.state ));
+    }} className="modalPopup show-modal focus-page" key={i}>
+      <div className="modalPopup-content" onClick={e => e.stopPropagation ()}>
         {messagesJSX}
         {p.element}
       </div>
@@ -20,9 +24,14 @@ const popupJSX = ( p: PageDetailsForCombine, i: number, messagesJSX: JSX.Element
   )
 }
 const arbitaryJSX = ( p: PageDetailsForCombine, i: number, messagesJSX: JSX.Element ) => {
+  const id = `page${i}`;
+
   return (
-    <div id={`page${i}`} className="modalPopup show-modal focus-page" key={i}>
-      <div>
+    <div id={id} className="modalPopup show-modal focus-page" key={i} onClick={e => {
+      if (p.shouldModalPageCloseOnClickAway)
+        p.state.massTransform ( reasonFor ( 'popupJSX - arbitrary', 'onClick', id ) ) ( popPage ( p.state ));
+    }} >
+      <div  onClick={e => e.stopPropagation ()} >
         {messagesJSX}
         {p.element}
       </div>
