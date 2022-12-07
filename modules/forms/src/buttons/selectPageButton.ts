@@ -1,5 +1,5 @@
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
-import { indentList, opt } from "../codegen/codegen";
+import {indentList, opt, optT} from "../codegen/codegen";
 import { EnabledBy, enabledByString } from "./enabledBy";
 import { ButtonWithControl } from "./allButtons";
 import { PageMode } from "@focuson/utils";
@@ -9,12 +9,13 @@ function makeSelectPageButton<B extends SelectButtonInPage<G>, G> (): ButtonCrea
   return {
     import: '@focuson/pages',
     makeButton: ( { params, mainPage, parent, name, button } ) => {
-      const { id, pageMode, pageName, text } = button
+      const { id, pageMode, pageName, text, validate } = button
 
       return [ `<SelectPage state={state} id=${makeIdForButton ( name )} ${enabledByString ( button )} `,
         ...indentList ( [
           ...opt ( 'text', text ),
           ...opt ( 'pageName', pageName ),
+          ...optT( 'validate', validate ),
           ...opt ( 'pageMode', pageMode ) ] ),
         ' />' ]
     }
@@ -34,5 +35,6 @@ export interface SelectButtonInPage<G> extends EnabledBy {
   text?: string;
   pageMode: PageMode,
   pageName: string,
+  validate?: boolean
 }
 

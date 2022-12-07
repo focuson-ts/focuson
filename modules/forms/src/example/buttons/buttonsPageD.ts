@@ -35,13 +35,16 @@ export const ButtonsPageD: ExampleMainPage = {
   name: 'Buttons',
   pageType: "MainPage",
   display: { dataDD: ModalButtonDomain, target: '~display' },
-  modes: [ 'view' ],
+  modes: [ 'edit' ],
   modals: [ { modal: ModalButtonsModalPageD } ],
   initialValue: 'empty',
   domain: {
     display: { dataDD: ModalButtonDomain },
     temp1: { dataDD: ModalButtonDomain },
     temp2: { dataDD: ModalButtonDomain }
+  },
+  guards: {
+    lineOneNotEmpty: { condition: 'notEquals', path: '~/display/line1', value: '' }
   },
   rest: {
     buttons: { rest: ButtonsRestD, postFetchCommands: [], targetFromPath: "~/display" }
@@ -74,6 +77,9 @@ export const ButtonsPageD: ExampleMainPage = {
     },
     scrollToTopOfPage: {
       control: "CommandButton", validate: false, command: {command: 'scrollToTop'}
+    },
+    selectPageButton: {
+      control: 'SelectPage', pageName: 'ChequeCreditbooks', pageMode: 'view', enabledBy: 'lineOneNotEmpty', validate: true, buttonType: "secondary"
     }
     // restWithDatesMainPage: {
     //   control: 'RestButton', action: 'get', restName: 'buttons', result: 'nothing',
