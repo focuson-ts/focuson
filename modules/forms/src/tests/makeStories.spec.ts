@@ -6,7 +6,8 @@ describe ( 'makeStories', () => {
   it ( 'generate ts for a story', () => {
     expect ( makeOneStory ( paramsForTest, PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([
       "import { Story } from '@storybook/react';",
-      "import { findOneSelectedPageDetails, PageMode, PageSelection } from '@focuson/pages';",
+      "import {  PageMode } from '@focuson/utils';",
+      "import { findOneSelectedPageDetails,  PageSelection } from '@focuson/pages';",
       "import { SBookProvider } from '@focuson/stories';",
       "import { Lenses } from '@focuson/lens';",
       "import { Context, emptyState, FState } from '../common';",

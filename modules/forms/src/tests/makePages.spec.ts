@@ -64,17 +64,19 @@ describe ( "makePages", () => {
       "import { EAccountsSummaryOptionals } from './EAccountsSummary/EAccountsSummary.optionals'; ",
       "import { RepeatingOptionals } from './Repeating/Repeating.optionals'; ",
       "import { ConfirmCommitWindow } from '@focuson/pages';",
+      "import { RestLoadWindow } from '@focuson/form_components';",
       "",
       "const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Context> (  Loading )",
       "const identity = identityOptics<FState> ();",
       "export const pages: MultiPageDetails<FState, Context> = {",
       "    confirm:{pageType: 'Arbitrary', config: simpleMessagesConfig, pageFunction: ConfirmCommitWindow()},",
+      "    restLoader:{pageType: 'Arbitrary', config: simpleMessagesConfig, pageFunction: RestLoadWindow},",
       "    EAccountsSummary: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'EAccountsSummary' ), pageFunction: EAccountsSummaryPage(), initialValue: [{'command':'set','path':'~/fromApi','value':{}}], pageMode: 'view',namedOptionals: EAccountsSummaryOptionals },",
       "    Repeating: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'Repeating' ), pageFunction: RepeatingPage(), initialValue: [{'command':'set','path':'~/selectedItem','value':0}], pageMode: 'view',namedOptionals: RepeatingOptionals },",
-      "    EAccountsSummary_CreatePlan: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: EAccountsSummary_CreatePlanPage()},",
-      "    Repeating_RepeatingLine: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: Repeating_RepeatingLinePage()}",
+      "    EAccountsSummary_CreatePlan: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: EAccountsSummary_CreatePlanPage(), shouldModalPageCloseOnClickAway: false},",
+      "    Repeating_RepeatingLine: {pageType: 'ModalPage',  config: simpleMessagesConfig,  pageFunction: Repeating_RepeatingLinePage(), shouldModalPageCloseOnClickAway: false}",
       "  }"
-    ] )
+    ])
   } )
   it ( "should create an initial from 'empty'", () => {
     expect ( makePages ( paramsForTest, [ CreateEAccountPageD ], undefined ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
@@ -84,11 +86,13 @@ describe ( "makePages", () => {
       "import { CreateEAccountPage } from './CreateEAccount/CreateEAccount.render';",
       "import { CreateEAccountOptionals } from './CreateEAccount/CreateEAccount.optionals'; ",
       "import { ConfirmCommitWindow } from '@focuson/pages';",
+      "import { RestLoadWindow } from '@focuson/form_components';",
       "",
       "const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Context> (  Loading )",
       "const identity = identityOptics<FState> ();",
       "export const pages: MultiPageDetails<FState, Context> = {",
       "    confirm:{pageType: 'Arbitrary', config: simpleMessagesConfig, pageFunction: ConfirmCommitWindow()},",
+      "    restLoader:{pageType: 'Arbitrary', config: simpleMessagesConfig, pageFunction: RestLoadWindow},",
       "    CreateEAccount: {pageType: 'MainPage',  config: simpleMessagesConfig, lens: identity.focusQuery ( 'CreateEAccount' ), pageFunction: CreateEAccountPage(), initialValue: [{'command':'set','path':'~/editing','value':{'name':'','type':'savings','savingsStyle':'adhoc','initialAmount':0}}], pageMode: 'create',namedOptionals: CreateEAccountOptionals }",
       "  }"
     ] )

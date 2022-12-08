@@ -1,6 +1,6 @@
-import { defaultDateFn, HasSimpleMessages, safeArray, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson/utils";
-import { CopyCommand, copyCommandProcessor, CopyResultCommand, copyResultCommandProcessor, DeleteCommand, deleteCommandProcessor, DeleteMessageStrictCopySetProcessorsConfig, MessageCommand, messageCommandProcessor, modalCommandProcessors, ModalProcessorsConfig, restChangeCommandProcessors, RestAndInputProcessorsConfig, SetChangeCommand, setCommandProcessor, StrictCopyCommand, strictCopyCommandProcessor, deletePageTagsCommandProcessor, DeletePageTagsCommand, TimeStampCommand, confirmWindowCommandProcessors, MinimalPageSelection, processOpenModalPageCommandProcessor, OpenModalPageCommand, processOpenMainPageCommandProcessor, OpenMainPageCommand, copyJustStringsCommandProcessor, CopyJustStringsCommands, HasCloseOnePage } from "./changeCommands";
-import { displayTransformsInState, identityOptics, lensBuilder, Lenses, parsePath } from "@focuson/lens";
+import { HasSimpleMessages, safeArray, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson/utils";
+import { confirmWindowCommandProcessors, CopyCommand, copyCommandProcessor, copyJustStringsCommandProcessor, CopyJustStringsCommands, CopyResultCommand, copyResultCommandProcessor, DeleteCommand, deleteCommandProcessor, DeleteMessageStrictCopySetProcessorsConfig, DeletePageTagsCommand, deletePageTagsCommandProcessor, HasCloseOnePage, MessageCommand, messageCommandProcessor, MinimalPageSelection, modalCommandProcessors, ModalProcessorsConfig, OpenMainPageCommand, OpenModalPageCommand, processOpenMainPageCommandProcessor, processOpenModalPageCommandProcessor, RestAndInputProcessorsConfig, restChangeCommandProcessors, SetChangeCommand, setCommandProcessor, StrictCopyCommand, strictCopyCommandProcessor, TimeStampCommand } from "./changeCommands";
+import { displayTransformsInState, lensBuilder, Lenses, parsePath } from "@focuson/lens";
 import { TagHolder } from "@focuson/template";
 
 
@@ -180,19 +180,19 @@ describe ( "messageCommandProcessor", () => {
 
 describe ( "processOpenModalPageCommandProcessor", () => {
   const processor = processOpenModalPageCommandProcessor<StateForChangeCommands, MinimalPageSelection> ( config.pageSelectionL, config.dateFn );
-  const modalCommand: OpenModalPageCommand = { command: 'openPage', page: { type: 'modal', pageMode: 'view', pageName: 'somePage', focusOn: 'focusOnThis' } };
+  const modalCommand: OpenModalPageCommand = { command: 'openPage', page: { pageMode: 'view', pageName: 'somePage', focusOn: 'focusOnThis' } };
   it ( "should ignore none OpenPageCommands", () => {
     expect ( processor ( { command: 'something else' } ) ).toEqual ( undefined )
   } )
   it ( "should create a page selection for a modal page", () => {
     expect ( displayTransformsInState ( {
       ...froma12,
-      pageSelection: [ { type: 'main', pageName: 'mainPageName', pageMode: 'view', time: 'unimportant' } ]
+      pageSelection: [ {  pageName: 'mainPageName', pageMode: 'view', time: 'unimportant' } ]
     }, safeArray ( processor ( modalCommand ) ) ) ).toEqual ( [
       {
         "opt": "default.focus?(pageSelection)",
         "value": [
-          { type: 'main', "pageMode": "view", "pageName": "mainPageName", "time": "unimportant" },
+          { "pageMode": "view", "pageName": "mainPageName", "time": "unimportant" },
           { "firstTime": true, "focusOn": "focusOnThis", "pageMode": "view", "pageName": "mainPageName_somePage", "time": "timeForTest" }
         ]
       }
@@ -202,7 +202,7 @@ describe ( "processOpenModalPageCommandProcessor", () => {
 
 describe ( "processOpenMainPageCommandProcessor", () => {
   const processor = processOpenMainPageCommandProcessor<StateForChangeCommands, MinimalPageSelection> ( config.pageSelectionL, config.dateFn );
-  const mainCommand: OpenMainPageCommand = { command: 'openPage', page: { type: 'main', pageMode: 'view', pageName: 'somePage' } };
+  const mainCommand: OpenMainPageCommand = { command: 'openPage', page: {  pageMode: 'view', pageName: 'somePage' } };
   it ( "should ignore none OpenPageCommands", () => {
     expect ( processor ( { command: 'something else' } ) ).toEqual ( undefined )
   } )

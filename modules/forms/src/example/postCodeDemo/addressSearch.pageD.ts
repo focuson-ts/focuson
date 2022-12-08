@@ -15,9 +15,9 @@ export const PostCodeModalPage: ExampleModalPage = {
     commit: { control: 'ModalCommitButton', confirm: { type: 'window',
         shouldModalPageCloseOnClickAway: true,
         confirmCommands: { command: 'timestamp', path: '~/now' }, cancelCommands: { command: 'message', msg: 'canceling' }, showCancelButton: true } }
-  },
-
+  }
 }
+
 export const PostCodeMainPage: ExampleMainPage = {
   name: "PostCodeMainPage",
   pageType: "MainPage",

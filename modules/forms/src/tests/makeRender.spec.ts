@@ -77,7 +77,7 @@ describe ( " listComponentsIn", () => {
       "export function EAccountsSummaryPage(){",
       "   //A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/fromApi",
       "  return focusedPageWithExtraState<FState, EAccountsSummaryPageDomain, EAccountsSummaryDomain, Context> ( s => ({title: 'E Accounts Summary'})) ( state => state.focusOn('fromApi')) (",
-      "( fullState, state , full, d, mode, index) => {",
+      "( fullPageState, state , full, d, mode, index) => {",
       "const id=`page${index}`;",
       "  const allButtons =    {amendExistingPlan:<ModalButton id={`${id}.amendExistingPlan`} text='Amend Existing Plan' dateFn={defaultDateFn} state={state} modal='EAccountsSummary_CreatePlan' ",
       "        pageMode='edit'",
@@ -212,17 +212,17 @@ describe ( " listComponentsIn", () => {
     ] )
   } )
   it ( "should create a page with a Layout", () => {
-    expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), PostCodeMainPage, PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
+    expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), PostCodeMainPage, PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([
       "export function PostCodeMainPagePage(){",
       "   //A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/main",
       "  return focusedPageWithExtraState<FState, PostCodeMainPagePageDomain, PostCodeNameAndAddressDomain, Context> ( s => ({title: 'Post Code Main Page'})) ( state => state.focusOn('main')) (",
-      "( fullState, state , full, d, mode, index) => {",
+      "( fullPageState, state , full, d, mode, index) => {",
       "const id=`page${index}`;",
       "  const allButtons =    {save:<RestButton state={state} id={`${id}.save`}  text='Save'",
       "        name='save'",
       "        action={'createWithoutFetch'}",
       "        validate={true}",
-      "        onSuccess={[{'command':'message','msg':'Saved'}]}",
+      "        onSuccess={[{'command':'message','msg':'Saved','level':'success'}]}",
       "        rest='PostCodeMainPage_PostCodeNameAndAddressRestDetails'",
       "       />,",
       "      search:<ModalButton id={`${id}.search`} text='Search' dateFn={defaultDateFn} state={state} modal='PostCodeMainPage_PostCodeSearch' ",
@@ -235,11 +235,11 @@ describe ( " listComponentsIn", () => {
       "      />,}",
       "",
       "      return <>",
-      "      <HideButtonsLayout buttons={allButtons} hide={['search']}>",
+      "      <HideButtonsAndRestOnTopLayout buttons={allButtons} hide={['search']}>",
       "          <PostCodeNameAndAddress id={`${id}`} state={state} mode={mode} label='' allButtons={allButtons} />",
       "      { allButtons.search } ",
       "      { allButtons.save } ",
-      "      </HideButtonsLayout></>})}",
+      "      </HideButtonsAndRestOnTopLayout></>})}",
       ""
     ] )
   } )

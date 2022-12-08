@@ -22,8 +22,8 @@ describe ( "makeCommon", () => {
   it ( 'should make the common page', () => {
     let common = makeCommon ( devAppConfig, paramsForTest, [ EAccountsSummaryPD, OccupationAndIncomeSummaryPD ], { main: '.', backup: '.' } );
     expect ( common.map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "import { fromPathFromRaw, HasPageSelection, PageMode ,PageSelectionContext, pageSelectionlens} from '@focuson/pages'",
-      "import { defaultDateFn, HasSimpleMessages, SimpleMessage, NameAnd } from '@focuson/utils';",
+      "import { fromPathFromRaw, HasPageSelection, PageSelectionContext, pageSelectionlens} from '@focuson/pages'",
+      "import { defaultDateFn, HasSimpleMessages, SimpleMessage, NameAnd, PageMode } from '@focuson/utils';",
       "import {  OnTagFetchErrorFn } from '@focuson/fetcher';",
       "import { identityOptics,NameAndLens, Optional } from '@focuson/lens';",
       "import { HasTagHolder } from '@focuson/template';",

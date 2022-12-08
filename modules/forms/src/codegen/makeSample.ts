@@ -46,7 +46,8 @@ export function makeTsSample<G> ( d: CompDataD<G>, i: number ): any {
     },
     foldRep: ( acc, path, parents, oneDataDD, dataDD, start ) =>
       start ? acc : parsePathFromListFromPage ( path ).transform ( child => [ child, ...makeTsSampleForRepeats ( dataDD, i ) ] ) ( acc ),
-    foldPrim: ( acc, path, parents, oneDataDD, dataDD ) => addPrimitive ( acc, path, oneDataDD, dataDD, i + foldStoppingAtRepeats.offset )
+    foldPrim: ( acc, path, parents, oneDataDD, dataDD ) =>
+      addPrimitive ( acc, path, oneDataDD, dataDD, i + foldStoppingAtRepeats.offset )
   };
   return foldDataDD<any, G> ( d, [], [], {}, foldStoppingAtRepeats )
 }
@@ -94,11 +95,12 @@ export function makeAllEmptyData<G> ( params: TSParams, ps: RefD<G>[] ): string[
 export function makeEmptyData<G> ( d: AllDataDD<G> ): any{
   let folder: AllDataFolder<any, G> = {
     stopAtDisplay: false,
-    foldData: ( acc, path, parents, oneDataDD, dataDD, start ) => addData ( start, path, acc, dataDD ),
+    foldData: ( acc, path, parents, oneDataDD, dataDD, start ) =>
+      addData ( start, path, acc, dataDD ),
     foldRep: ( acc, path, parents, oneDataDD, dataDD, start ) =>
       start ? acc : parsePathFromListFromPage ( path ).transform ( child => [ child ] ) ( acc ),
     foldPrim: ( acc, path, parents, oneDataDD, dataDD ) =>
       parsePathFromListFromPage ( path ).set ( acc, dataDD.emptyValue)
   };
-  return foldDataDD ( d, [], [], [], folder )
+  return foldDataDD ( d, [], [], {  }, folder )
 }
