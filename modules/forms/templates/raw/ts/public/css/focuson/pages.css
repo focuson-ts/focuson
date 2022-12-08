@@ -52,3 +52,11 @@
     position: absolute;
     top: 50px
 }
+
+.top-right-cross {
+    color: pink;
+    float: right;
+    margin-right: 2px;
+    top: 2px;
+    border-color: darksalmon;
+}

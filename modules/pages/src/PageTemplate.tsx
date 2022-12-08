@@ -1,6 +1,7 @@
-import { LensProps, LensState } from "@focuson/state";
+import { LensProps, LensState, reasonFor } from "@focuson/state";
 import { FocusedPage, TitleDetails } from "./focusedPage";
 import { PageMode } from "@focuson/utils";
+import { HasCloseOnePage } from "@focuson/rest";
 
 
 export interface PageTemplateProps<S, D, Context> extends LensProps<S, D, Context> {
@@ -12,7 +13,7 @@ export interface PageTemplateProps<S, D, Context> extends LensProps<S, D, Contex
 export const focusPageClassName = 'focus-page'
 
 /** A sample template that shows the title, and 'loading' if 'D' isn't present */
-export function DefaultTemplate<S extends any, D extends any, Msgs, Context> ( { state, loading, focusedPage, pageMode, index }: PageTemplateProps<S, D, Context> ): JSX.Element {
+export function DefaultTemplate<S extends any, D extends any, Msgs, Context extends HasCloseOnePage<S, any>> ( { state, loading, focusedPage, pageMode, index }: PageTemplateProps<S, D, Context> ): JSX.Element {
   // @ts-ignore
   const debug = state.main?.debug?.selectedPageDebug  //basically if S extends SelectedPageDebug
   if ( debug ) console.log ( `DefaultTemplate`, focusedPage )
@@ -26,5 +27,13 @@ export function DefaultTemplate<S extends any, D extends any, Msgs, Context> ( {
   const child: JSX.Element = bodyFn ( state, pageMode, index )
   if ( debug ) console.log ( `DefaultTemplate.child`, child )
   const titleDetails: TitleDetails = title ( state );
-  return (<div key={index} id='default_template'><h1 className={titleDetails.className} dangerouslySetInnerHTML={{ __html: titleDetails.title }}/>{child}</div>)
+  const needCrossButton = focusedPage.haveTopRightCrossToCancel !== false
+  function onClick () {
+    const txs = state.context.closeOnePageTxs ( `CrossAtTopRight`, state.main, undefined, state.context, [] );
+    state.massTransform ( reasonFor ( 'DefaultTemplate', "onClick", 'default_template' ) ) ( ...txs )
+  }
+  const crossButton = needCrossButton ? <button className='top-right-cross' onClick={onClick}>X</button> : <></>
+  return (<>{crossButton}
+    <div key={index} id='default_template'><h1 className={titleDetails.className} dangerouslySetInnerHTML={{ __html: titleDetails.title }}/>{child}</div>
+  </>)
 }

@@ -136,6 +136,7 @@ export interface ModalPageD<Buttons, G> extends HasLayout, HasGuards<G>, HasName
   display: PageDisplay<G>, //importFrom is deprecated
   buttons: ButtonDefnInPage<Buttons>;
   shouldModalPageCloseOnClickAway? : boolean
+  haveTopRightCrossToCancel? : boolean
 }
 
 

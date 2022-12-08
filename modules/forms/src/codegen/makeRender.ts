@@ -82,7 +82,7 @@ export const processParam = <B, G> ( mainPage: MainPageD<B, G>, page: PageD<B, G
   if ( dcdType === undefined ) throw Error ( `${errorPrefix}  param '${name}' not found in ${JSON.stringify ( Object.keys ( dcd.params ).sort () )}` )
   const fullErrorPrefix = ` ${errorPrefix} has a display component ${dcd.name} and sets a param ${name} `
   if ( dcdType === undefined ) throw new Error ( `${fullErrorPrefix}. Legal values are ${sortedEntries ( dcd.params ).map ( t => t[ 0 ] ).join ( ',' )}` )
-  function processStringParam () {return "'" +  s.toString().replace(/'/g, '&apos;') + "'"}
+  function processStringParam () {return "'" + s.toString ().replace ( /'/g, '&apos;' ) + "'"}
   function processObjectParam () {return "{" + s + "}"}
   function processStringArrayParam () {
     if ( Array.isArray ( s ) ) return `{${JSON.stringify ( s )}}`; else
@@ -214,8 +214,8 @@ function makeLayoutPrefixPostFix<B, G> ( mainPage: MainPageD<B, G>, page: PageD<
 export function defaultGuardMessage ( name: string ) {
   return `${name} is not valid`;
 }
-export function makeUseHistory<B extends ButtonD,G>(makeButton: MakeButton<G>,p: PageD<B, G>){
-  return hasNeedsHistory ( makeButton, p ) ? [ `const h = state.context.dependencies?.history; const history=h?h(() =>{}):undefined` ] :[]
+export function makeUseHistory<B extends ButtonD, G> ( makeButton: MakeButton<G>, p: PageD<B, G> ) {
+  return hasNeedsHistory ( makeButton, p ) ? [ `const h = state.context.dependencies?.history; const history=h?h(() =>{}):undefined` ] : []
 
 }
 export function makeGuardVariables<B, G extends GuardWithCondition> ( hasGuards: HasGuards<G>, makeGuard: MakeGuard<G>, params: TSParams, mainP: MainPageD<B, G>, page: PageD<B, G> ): string[] {
@@ -278,6 +278,13 @@ function makeStringifiedTitle<B, G> ( pageD: PageD<B, G> ): string {
   const classNameString = className === undefined ? '' : `, className: ${JSON.stringify ( className )}`
   return `({title: ${title}${classNameString}})`;
 }
+function getNeedsTopRightCross<B, G> ( pageD:PageD<B, G>) {
+  if (!isModalPage(pageD)) return false
+  if (pageD.pageType === 'ModalPopup')
+      if (pageD.haveTopRightCrossToCancel === undefined) return true
+
+  return pageD.haveTopRightCrossToCancel === true
+}
 export function createReactModalPageComponent<B extends ButtonD, G extends GuardWithCondition> ( params: TSParams, makeGuard: MakeGuard<G>, makeButtons: MakeButton<G>, mainP: MainPageD<B, G>, pageD: PageD<B, G> ): string[] {
   const { dataDD } = pageD.display
   // const focus = focusOnFor ( pageD.display.target );
@@ -285,13 +292,14 @@ export function createReactModalPageComponent<B extends ButtonD, G extends Guard
   const { layoutPrefixString, layoutPostfixString } = makeLayoutPrefixPostFix ( mainP, pageD, params, `createReactModalPageComponent-layout ${pageD.name}`, [], pageD, "<>", '</>' );
 
   const guards = makeGuardVariables ( pageD, makeGuard, params, mainP, pageD )
+  const haveTopRightCrossToCancel = getNeedsTopRightCross ( pageD );
   return [
     `export function ${modalPageComponentName ( mainP ) ( pageD )}(){`,
-    `  return focusedPage<${params.stateName}, ${domName}, Context> ( s => ${(makeStringifiedTitle ( pageD ))} ) (//If there is a compilation here have you added this to the 'domain' of the main page`,
+    `  return focusedPage<${params.stateName}, ${domName}, Context> ( s => ${(makeStringifiedTitle ( pageD ))}, ${haveTopRightCrossToCancel}) (//If there is a compilation here have you added this to the 'domain' of the main page`,
     `     ( state, d, mode, index ) => {`,
     ...(indentList ( indentList ( indentList ( indentList ( indentList ( [
       'const id=`page${index}`;',
-      ...makeUseHistory(makeButtons,pageD),
+      ...makeUseHistory ( makeButtons, pageD ),
       ...guards,
       ...makeGuardButtonVariables ( params, makeGuard, mainP, pageD ),
       ...makeButtonsVariable ( params, makeGuard, makeButtons, mainP, pageD ),
@@ -313,11 +321,11 @@ export function createReactMainPageComponent<B extends ButtonD, G extends GuardW
   return [
     `export function ${pageComponentName ( pageD )}(){`,
     `   //A compilation error here is often because you have specified the wrong path in display. The path you gave is ${pageD.display.target}`,
-    `  return focusedPageWithExtraState<${params.stateName}, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => ${makeStringifiedTitle ( pageD )}) ( state => state${stateFocusQueryWithTildaFromPage ( `createReactMainPageComponent for page ${pageD.name}`, params, pageD, pageD, pageD.display.target )}) (`,
+    `  return focusedPageWithExtraState<${params.stateName}, ${pageDomainName ( pageD )}, ${domainName ( pageD.display.dataDD )}, Context> ( s => ${makeStringifiedTitle ( pageD )}, false) ( state => state${stateFocusQueryWithTildaFromPage ( `createReactMainPageComponent for page ${pageD.name}`, params, pageD, pageD, pageD.display.target )}) (`,
     `( fullPageState, state , full, d, mode, index) => {`,
     ...indentList ( makeGuardButtonVariables ( params, makeGuard, pageD, pageD ) ),
     'const id=`page${index}`;',
-    ...makeUseHistory(makeButtons,pageD),
+    ...makeUseHistory ( makeButtons, pageD ),
     ...indentList ( guards ),
     ...indentList ( makeButtonsVariable ( params, makeGuard, makeButtons, pageD, pageD ) ),
     '',
@@ -380,7 +388,7 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
       ...guardImports ],
     s => s )
   // const history = hasNeedsHistory ( makeButton, page ) ? [ `const useHistory = requireBypassingReactCheck('react-router-dom')` ] : []
-  return [ ...allImports,  ...pageComponents, ...dataComponents ]
+  return [ ...allImports, ...pageComponents, ...dataComponents ]
 }
 
 
