@@ -32,7 +32,7 @@ export function DefaultTemplate<S extends any, D extends any, Msgs, Context exte
     const txs = state.context.closeOnePageTxs ( `CrossAtTopRight`, state.main, undefined, state.context, [] );
     state.massTransform ( reasonFor ( 'DefaultTemplate', "onClick", 'default_template' ) ) ( ...txs )
   }
-  const crossButton = needCrossButton ? <button className='top-right-cross' onClick={onClick}>X</button> : <></>
+  const crossButton = needCrossButton ? <button className='top-right-cross' onClick={onClick}></button> : <></>
   return (<>{crossButton}
     <div key={index} id='default_template'><h1 className={titleDetails.className} dangerouslySetInnerHTML={{ __html: titleDetails.title }}/>{child}</div>
   </>)

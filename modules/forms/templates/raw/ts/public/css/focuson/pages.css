@@ -54,9 +54,14 @@
 }
 
 .top-right-cross {
-    color: pink;
+    right: 0;
     float: right;
-    margin-right: 2px;
-    top: 2px;
-    border-color: darksalmon;
+    border: none;
+    cursor: pointer;
+    background-image: var(--close-cross-icon);
+    background-repeat: no-repeat;
+    height: var(--close-cross-icon-height);
+    width: var(--close-cross-icon-width);
+    padding: 5px;
+    margin: var(--close-cross-icon-margin) 3px 3px;
 }
