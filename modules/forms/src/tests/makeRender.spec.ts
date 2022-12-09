@@ -76,7 +76,7 @@ describe ( " listComponentsIn", () => {
       "import {EAccountSummaryDomain} from '../EAccountsSummary/EAccountsSummary.domains'",
       "export function EAccountsSummaryPage(){",
       "   //A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/fromApi",
-      "  return focusedPageWithExtraState<FState, EAccountsSummaryPageDomain, EAccountsSummaryDomain, Context> ( s => ({title: 'E Accounts Summary'})) ( state => state.focusOn('fromApi')) (",
+      "  return focusedPageWithExtraState<FState, EAccountsSummaryPageDomain, EAccountsSummaryDomain, Context> ( s => ({title: 'E Accounts Summary'}), false) ( state => state.focusOn('fromApi')) (",
       "( fullPageState, state , full, d, mode, index) => {",
       "const id=`page${index}`;",
       "  const allButtons =    {amendExistingPlan:<ModalButton id={`${id}.amendExistingPlan`} text='Amend Existing Plan' dateFn={defaultDateFn} state={state} modal='EAccountsSummary_CreatePlan' ",
@@ -182,7 +182,7 @@ describe ( " listComponentsIn", () => {
       "import {ToggleButton} from '@focuson/form_components';",
       "import {ValidationButton} from '@focuson/form_components';",
       "export function OccupationAndIncomeSummary_ListOccupationsModalPage(){",
-      "  return focusedPage<FState, ListOccupationsDomain, Context> ( s => ({title: replaceTextUsingPath(s,'List Occupations'), className: 'ListOccupationsH1'}) ) (//If there is a compilation here have you added this to the 'domain' of the main page",
+      "  return focusedPage<FState, ListOccupationsDomain, Context> ( s => ({title: replaceTextUsingPath(s,'List Occupations'), className: 'ListOccupationsH1'}), true) (//If there is a compilation here have you added this to the 'domain' of the main page",
       "     ( state, d, mode, index ) => {",
       "          const id=`page${index}`;",
       "          const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state}  buttonType='secondary' />,",
@@ -198,7 +198,7 @@ describe ( " listComponentsIn", () => {
   it ( "should create a simple page", () => {
     expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), EAccountsSummaryPD, CreatePlanPD ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
       "export function EAccountsSummary_CreatePlanPage(){",
-      "  return focusedPage<FState, CreatePlanDomain, Context> ( s => ({title: 'Create Plan'}) ) (//If there is a compilation here have you added this to the 'domain' of the main page",
+      "  return focusedPage<FState, CreatePlanDomain, Context> ( s => ({title: 'Create Plan'}), false) (//If there is a compilation here have you added this to the 'domain' of the main page",
       "     ( state, d, mode, index ) => {",
       "          const id=`page${index}`;",
       "          const allButtons =    {cancel:<ModalCancelButton id={`${id}.cancel`} state={state}  confirm={'It will start on {~/tempCreatePlan/createPlanStart}'} buttonType='secondary' />,",
@@ -215,7 +215,7 @@ describe ( " listComponentsIn", () => {
     expect ( createReactPageComponent ( paramsForTest, AllGuardCreator, makeButtons (), PostCodeMainPage, PostCodeMainPage ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ([
       "export function PostCodeMainPagePage(){",
       "   //A compilation error here is often because you have specified the wrong path in display. The path you gave is ~/main",
-      "  return focusedPageWithExtraState<FState, PostCodeMainPagePageDomain, PostCodeNameAndAddressDomain, Context> ( s => ({title: 'Post Code Main Page'})) ( state => state.focusOn('main')) (",
+      "  return focusedPageWithExtraState<FState, PostCodeMainPagePageDomain, PostCodeNameAndAddressDomain, Context> ( s => ({title: 'Post Code Main Page'}), false) ( state => state.focusOn('main')) (",
       "( fullPageState, state , full, d, mode, index) => {",
       "const id=`page${index}`;",
       "  const allButtons =    {save:<RestButton state={state} id={`${id}.save`}  text='Save'",

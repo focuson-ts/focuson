@@ -42,8 +42,8 @@ export function lensStateWith ( main: PageSpecState, setMain: ( s: PageSpecState
 export type ContextForTest = FocusOnContext<PageSpecState>
 
 
-const DisplayPageSpecState = ( prefix: string ) =>
-  focusedPage<PageSpecState, string, ContextForTest> ( () => ({title:`[${prefix}Title]:`} )) ( ( s, d, mode ) => (<p>{prefix}[{d}]/{mode}</p>) );
+const DisplayPageSpecState = ( prefix: string , haveTopRightCrossToCancel?: boolean) =>
+  focusedPage<PageSpecState, string, ContextForTest> ( () => ({title:`[${prefix}Title]:`} ),haveTopRightCrossToCancel===true) ( ( s, d, mode ) => (<p>{prefix}[{d}]/{mode}</p>) );
 
 export function pageSpecStateConfig<D> (): PageConfig<PageSpecState, D, SimpleMessage[], ContextForTest> {
   // @ts-ignore  There is some crazy thing going on here around SimpleMessage and SimpleMessage[].

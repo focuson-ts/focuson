@@ -65,7 +65,7 @@ export const rawTable = <S, T, Context extends PageSelectionContext<S>> (
     const { id, state, copySelectedIndexTo, joiners, prefixFilter, prefixColumn, maxCount, emptyData, tableTitle, scrollAfter, rights } = props
     const tbodyScroll: CSSProperties | undefined = scrollAfter ? { height: scrollAfter, overflow: 'auto' } : undefined
     const orderJsx = titles.map ( ( o, i ) => realDisplayTitleFn ( id, o.toString (), i ) )
-    const json: T[] = safeArray ( state.optJson () )
+    const json: T[] = safeArray ( state.optJson (), `Table id: [${id}] path: ${state.optional.description}` )
     const selected = copySelectedIndexTo?.optJson ()
     function selectedClass ( i: number ) {return i === selected ? 'grid-selected' : undefined }
 

@@ -11,6 +11,7 @@
     "extraDeps":    {},
     "extraDevDeps": {},
     "generator":    false,
-    "tsc":          true
+    "tsc":          true,
+    "test":         false
   }
 }

@@ -1,4 +1,4 @@
-import { disabledFrom, HasDateFn, NameAnd, safeObject } from "@focuson/utils";
+import { disabledFrom, HasDateFn, NameAnd, safeObject, toArray } from "@focuson/utils";
 import { reasonFor } from "@focuson/state";
 import { CommonStateProps, DropDownOnChangeProps, LabelAlignment } from "./common";
 import { Label } from "./label";
@@ -46,7 +46,7 @@ export function Dropdown<S, T, Context extends ContextForDropdown<S>> ( props: D
   const onChangeEventHandler = ( e: ChangeEvent<HTMLSelectElement> ) => {
     const newValue = e.target.value;
     const changeTxs = regexForChange===undefined || newValue.match ( regexForChange ) !== null ? [
-      ...makeInputChangeTxs ( id, parentState, specificOnChange?.[ newValue ] ),
+      ...makeInputChangeTxs ( id, parentState, toArray(specificOnChange?.[ newValue ] )),
       ...makeInputChangeTxs ( id, parentState, onChange ), ]:[]
     state.massTransform ( reasonFor ( 'LabelAndDropdown', 'onChange', id ) ) ( [ state.optional, () => newValue ], ...changeTxs );
   }
