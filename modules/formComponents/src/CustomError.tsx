@@ -22,7 +22,7 @@ export function CustomError ( { id, validationMessage, error }: CustomErrorProps
     const errorDiv: any = ref.current
     const component: any = document.getElementById ( id )
     const hasBeenEdited = component?.dataset?.[ canHaveErrorMessage ] === 'true'
-    const actualError = error === undefined ? !component.checkValidity () : error
+    const actualError = error === undefined &&component? !component.checkValidity () : error
     // console.log ( 'CustomError - valid', id, 'actualError', actualError, 'checkValidity', component.checkValidity (), validationMessage, 'hasBeenEdited', hasBeenEdited )
     if ( hasBeenEdited && actualError ) {
       errorDiv.className = 'custom-error'

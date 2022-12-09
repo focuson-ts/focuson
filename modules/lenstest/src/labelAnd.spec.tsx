@@ -48,90 +48,90 @@ function labelAndYNBoolean ( label: string | undefined, yn: string, className?: 
 describe ( 'LabelAndString', () => {
   it ( 'should render with data', () => {
     expect ( labelAndString ( 'someLabel', 'someString' ).html () ).toEqual (
-      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class=""><input type="text" id="someId" data-validationmessage="someLabel" value="someString"></div></div>' )
+      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class=""><input class="input" type="text" id="someId" data-validationmessage="someLabel" value="someString"></div><div id="someId.error" hidden="" class=""></div></div>' )
   } )
   it ( 'should render with html label', () => {
     expect ( labelAndString ( 'some <b>bold</b> Label', 'someString' ).html () ).toEqual (
-      '<div class="labelValueButton "> <label for="someId" class="input-label">some <b>bold</b> Label</label><div class=""><input type="text" id="someId" data-validationmessage="some <b>bold</b> Label" value="someString"></div></div>' )
+      '<div class="labelValueButton "> <label for="someId" class="input-label">some <b>bold</b> Label</label><div class=""><input class="input" type="text" id="someId" data-validationmessage="some <b>bold</b> Label" value="someString"></div><div id="someId.error" hidden="" class=""></div></div>' )
   } )
   it ( 'should render with undefined', () => {
     // @ts-ignore
     const string: string = undefined;
     expect ( labelAndString ( 'someLabel', string ).html () ).toEqual (
-      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class=""><input type="text" id="someId" data-validationmessage="someLabel" value=""></div></div>' )
+      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class=""><input class="input" type="text" id="someId" data-validationmessage="someLabel" value=""></div><div id="someId.error" hidden="" class=""></div></div>' )
 
   } )
   it ( 'should render with null', () => {
     // @ts-ignore
     const string: string = null;
     expect ( labelAndString ( 'someLabel', string ).html () ).toEqual (
-      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class=""><input type="text" id="someId" data-validationmessage="someLabel" value=""></div></div>' )
+      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class=""><input class="input" type="text" id="someId" data-validationmessage="someLabel" value=""></div><div id="someId.error" hidden="" class=""></div></div>' )
   } )
   it ( 'should include a className if specified', () => {
     // @ts-ignore
     const number: string = 'someString';
     expect ( labelAndString ( 'someLabel', number, 'theClass' ).html () ).toEqual (
-      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class="theClass"><input class="theClass" type="text" id="someId" data-validationmessage="someLabel" value="someString"></div></div>' )
+      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class="theClass"><input class="input" type="text" id="someId" data-validationmessage="someLabel" value="someString"></div><div id="someId.error" hidden="" class=""></div></div>' )
   } )
 
 } );
 describe ( 'LabelAndNumber', () => {
   it ( 'should render with data', () => {
     expect ( labelAndNumber ( 'someLabel', 123 ).html () ).toEqual (
-      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class=""><input type="number" id="someId" data-validationmessage="someLabel" value="123"></div></div>' )
+      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class=""><input class="input" type="number" id="someId" data-validationmessage="someLabel" value="123"></div><div id="someId.error" hidden="" class=""></div></div>' )
   } )
   it ( 'should render with html label', () => {
     expect ( labelAndNumber ( 'some <b>bold</b> Label', 123 ).html () ).toEqual (
-      '<div class="labelValueButton "> <label for="someId" class="input-label">some <b>bold</b> Label</label><div class=""><input type="number" id="someId" data-validationmessage="some <b>bold</b> Label" value="123"></div></div>' )
+      '<div class="labelValueButton "> <label for="someId" class="input-label">some <b>bold</b> Label</label><div class=""><input class="input" type="number" id="someId" data-validationmessage="some <b>bold</b> Label" value="123"></div><div id="someId.error" hidden="" class=""></div></div>' )
   } )
   it ( 'should render with undefined', () => {
     // @ts-ignore
     const number: number = undefined;
     expect ( labelAndNumber ( 'someLabel', number ).html () ).toEqual (
-      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class=""><input type="number" id="someId" data-validationmessage="someLabel" value=""></div></div>' )
+      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class=""><input class="input" type="number" id="someId" data-validationmessage="someLabel" value=""></div><div id="someId.error" hidden="" class=""></div></div>' )
 
   } )
   it ( 'should render with null', () => {
     // @ts-ignore
     const number: number = null;
     expect ( labelAndNumber ( 'someLabel', number ).html () ).toEqual (
-      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class=""><input type="number" id="someId" data-validationmessage="someLabel" value=""></div></div>' )
+      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class=""><input class="input" type="number" id="someId" data-validationmessage="someLabel" value=""></div><div id="someId.error" hidden="" class=""></div></div>' )
   } )
   it ( 'should include a className if specified', () => {
     // @ts-ignore
     const number: number = 123;
     expect ( labelAndNumber ( 'someLabel', number, 'theClass' ).html () ).toEqual (
-      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class="theClass"><input class="theClass" type="number" id="someId" data-validationmessage="someLabel" value="123"></div></div>' )
+      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class="theClass"><input class="input" type="number" id="someId" data-validationmessage="someLabel" value="123"></div><div id="someId.error" hidden="" class=""></div></div>' )
   } )
 } );
 
 describe ( 'LabelAndBoolean', () => {
   it ( 'should render with data - true', () => {
     expect ( labelAndBoolean ( 'someLabel', true ).html () ).toEqual (
-      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class="checkbox-container"><input type="checkbox" id="someId" data-validationmessage="someLabel" checked=""><span class="checkmark"></span></div></div>' )
+      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class="checkbox-container"><input type="checkbox" id="someId" data-validationmessage="someLabel" class="input" checked=""><span class="checkmark"></span></div><div id="someId.error" hidden="" class=""></div></div>' )
   } )
   it ( 'should render with data - false', () => {
     expect ( labelAndBoolean ( 'someLabel', false ).html () ).toEqual (
-      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class="checkbox-container"><input type="checkbox" id="someId" data-validationmessage="someLabel"><span class="checkmark"></span></div></div>' )
+      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class="checkbox-container"><input type="checkbox" id="someId" data-validationmessage="someLabel" class="input"><span class="checkmark"></span></div><div id="someId.error" hidden="" class=""></div></div>' )
   } )
   it ( 'should render with undefined', () => {
     // @ts-ignore
     const number: boolean = undefined;
     expect ( labelAndBoolean ( 'someLabel', number ).html () ).toEqual (
-      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class="checkbox-container"><input type="checkbox" id="someId" data-validationmessage="someLabel"><span class="checkmark"></span></div></div>' )
+      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class="checkbox-container"><input type="checkbox" id="someId" data-validationmessage="someLabel" class="input"><span class="checkmark"></span></div><div id="someId.error" hidden="" class=""></div></div>' )
 
   } )
   it ( 'should render with null', () => {
     // @ts-ignore
     const number: boolean = null;
     expect ( labelAndBoolean ( 'someLabel', number ).html () ).toEqual (
-      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class="checkbox-container"><input type="checkbox" id="someId" data-validationmessage="someLabel"><span class="checkmark"></span></div></div>' )
+      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class="checkbox-container"><input type="checkbox" id="someId" data-validationmessage="someLabel" class="input"><span class="checkmark"></span></div><div id="someId.error" hidden="" class=""></div></div>' )
   } )
   it ( 'should include a className if specified', () => {
     // @ts-ignore
     const number: boolean = true;
     expect ( labelAndBoolean ( 'someLabel', number, 'theClass' ).html () ).toEqual (
-      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class="checkbox-container theClass"><input type="checkbox" id="someId" class="theClass" data-validationmessage="someLabel" checked=""><span class="checkmark"></span></div></div>' )
+      '<div class="labelValueButton "> <label for="someId" class="input-label">someLabel</label><div class="checkbox-container theClass"><input type="checkbox" id="someId" data-validationmessage="someLabel" class="input" checked=""><span class="checkmark"></span></div><div id="someId.error" hidden="" class=""></div></div>' )
 
   } )
 
