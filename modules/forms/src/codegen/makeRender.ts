@@ -281,7 +281,7 @@ function makeStringifiedTitle<B, G> ( pageD: PageD<B, G> ): string {
 function getNeedsTopRightCross<B, G> ( pageD:PageD<B, G>) {
   if (!isModalPage(pageD)) return false
   if (pageD.pageType === 'ModalPopup')
-      if (pageD.haveTopRightCrossToCancel === undefined) return true
+      if (pageD.haveTopRightCrossToCancel === undefined) return false
 
   return pageD.haveTopRightCrossToCancel === true
 }

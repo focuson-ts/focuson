@@ -34,6 +34,7 @@ const wizard2: ExampleModalPage = {
   display: { dataDD: nothingDD, target: '~/nothing' },
   modes: [ 'view' ],
   name: "Wizard2",
+  haveTopRightCrossToCancel: false,
   buttons: {
     next: { control: 'ModalButton', modal: wizard3, mode: 'view', focusOn: '~/nothing', pageOp: 'replace' },
     cancel: { control: 'ModalCancelButton' }
@@ -46,6 +47,7 @@ const wizard1: ExampleModalPage = {
   modes: [ 'view' ],
   name: "Wizard1",
   shouldModalPageCloseOnClickAway: true,
+  haveTopRightCrossToCancel: true,
   buttons: {
     next: { control: 'ModalButton', modal: wizard2, mode: 'view', focusOn: '~/nothing', pageOp: 'replace' },
     cancel: { control: 'ModalCancelButton' },

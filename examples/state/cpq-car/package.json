@@ -17,9 +17,9 @@
     "typescript": "^4.1.5",
     "react-i18next": "^11.8.5",
     "i18next": "^19.8.4",
-    "@focuson-nw/lens": "1.44.1",
-    "@focuson-nw/nav": "1.44.1",
-    "@focuson-nw/state": "1.44.1"
+    "@focuson-nw/lens": "2.0.1",
+    "@focuson-nw/nav": "2.0.1",
+    "@focuson-nw/state": "2.0.1"
   },
   "description": "A fully featured car leasing cpq",
   "devDependencies": {
@@ -61,7 +61,7 @@
     "test:watch": "npm run test -- --watch",
     "storybook": "start-storybook -p 6006 -s public"
   },
-  "version": "1.44.1",
+  "version": "2.0.1",
   "eslintConfig": {
     "extends": [
       "react-app",
