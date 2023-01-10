@@ -1,0 +1,12 @@
+{
+  "files": [
+    {
+      "file": ".template.json",
+      "target": ".template.json"
+    },
+    {
+      "file": "placeholder.txt",
+      "target": "placeholder.txt"
+    }
+  ]
+}
