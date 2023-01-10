@@ -1,368 +1,47 @@
 {
-  "templateDir": "${laobanDirectory}/template",
-  "versionFile": "${laobanDirectory}/template/version.txt",
-  "log": ".log",
-  "status": ".status",
-  "profile": ".profile",
+  "templateDir":    "${laobanDirectory}/template",
+  "versionFile":    "${laobanDirectory}/template/version.txt",
+  "log":            ".log",
+  "status":         ".status",
+  "profile":        ".profile",
   "packageManager": "yarn",
-  "scripts": {
-    "log": {
-      "description": "displays the log file",
-      "commands": [
-        "cat ${log}"
-      ],
-      "osGuard": "Linux"
-    },
-    "link": {
-      "description": "call '${packageManager} link' in each project directory",
-      "commands": [
-        {
-          "name": "tsc",
-          "command": "tsc --noEmit false --outDir dist",
-          "status": true
-        },
-        {
-          "name": "link",
-          "command": "cd dist && ${packageManager} link",
-          "status": true
-        }
-      ]
-    },
-    "ls": {
-      "description": "lists all the projects",
-      "commands": [
-        "js:process.cwd()"
-      ]
-    },
-    "ls-deps": {
-      "description": "lists all the projects, and which other projects they depend on",
-      "commands": [
-        "js:'${packageDetails.name}  => '.padEnd(30,' ') + '${packageDetails.details.links}'"
-      ]
-    },
-    "ls-names": {
-      "description": "lists all the projects and their nams ",
-      "commands": [
-        "js:`${process.cwd().padEnd(50)} ${packageDetails.name}`"
-      ]
-    },
-    "clean": {
-      "description": "removes the dist directory",
-      "commands": [
-        "rm -rf dist",
-        "rm -f .status",
-        "rm -f .log",
-        "rm -f .profile"
-      ]
-    },
-    "lsDist": {
-      "description": "check that the directory option works",
-      "commands": [
-        {
-          "command": "js:process.cwd()",
-          "directory": "dist"
-        },
-        {
-          "command": "pwd",
-          "directory": "dist"
-        }
-      ]
-    },
-    "envCheck": {
-      "description": "checks evn",
-      "commands": [
-        "echo Linux: [${PORT}] windows: [%PORT%]"
-      ],
-      "guard": "${packageDetails.details.port}",
-      "env": {
-        "PORT": "${packageDetails.details.port}"
-      }
-    },
-    "ls-tsc": {
-      "description": "lists projects that will be tsced",
-      "guard": "${packageDetails.details.tsc}",
-      "commands": [
-        "js:process.cwd()"
-      ]
-    },
-    "tsc": {
-      "description": "runs tsc - the typescript compiler - in each project",
-      "guard": "${packageDetails.details.tsc}",
-      "commands": [
-        {
-          "name": "tsc",
-          "command": "tsc --noEmit false --outDir dist",
-          "status": true
-        }
-      ]
-    },
-    "tsc-noguard": {
-      "description": "runs tsc without a guard",
-      "commands": [
-        {
-          "name": "tsc-noguard",
-          "command": "tsc --noEmit false --outDir dist",
-          "status": true
-        }
-      ]
-    },
-    "test": {
-      "description": "runs ${packageManager} test",
-      "guard": "${packageDetails.details.test}",
-      "commands": [
-        {
-          "name": "test",
-          "command": "${packageManager} test",
-          "status": true
-        }
-      ]
-    },
-    "ls-tests": {
-      "description": "lists the projects with tests in them",
-      "guard": "${packageDetails.details.test}",
-      "commands": [
-        "js:process.cwd()"
-      ]
-    },
-    "ls-pact": {
-      "osGuard": "Windows_NT",
-      "description": "lists the projects with pact files in them",
-      "guard": "${packageDetails.details.packport}",
-      "commands": [
-        "echo %PORT%  %cwd%"
-      ],
-      "env": {
-        "PORT": "${packageDetails.details.packport}"
-      }
-    },
-    "runPact": {
-      "osGuard": "Windows_NT",
-      "description": "runs the pactserver as a stub",
-      "guard": "${packageDetails.details.packport}",
-      "commands": [
-        "docker run -t -p  %PORT%:%PORT% -v \"%cwd%/pact/pacts/:/app/pact/pacts\" pactfoundation/pact-stub-server -p %PORT% -d pact/pacts"
-      ],
-      "env": {
-        "PORT": "${packageDetails.details.packport}"
-      }
-    },
-    "slow": {
-      "description": "prints something, delays 2s, prints something",
-      "commands": [
-        "echo `pwd` 'start'",
-        "sleep 2s",
-        "echo `pwd` 'stop' "
-      ]
-    },
-    "install": {
-      "description": "does the initial updateConfigFilesFromTemplates/install/link/tsc/test... etc in each project",
-      "commands": [
-        "laoban update",
-        {
-          "name": "install",
-          "command": "${packageManager} install",
-          "status": true
-        },
-        {
-          "name": "tsc",
-          "command": "tsc --noEmit false --outDir dist",
-          "status": true
-        },
-        {
-          "name": "link",
-          "command": "${packageManager} link",
-          "status": true,
-          "directory": "dist"
-        },
-        {
-          "name": "test",
-          "command": "${packageManager} test",
-          "status": true
-        }
-      ],
-      "inLinksOrder": true
-    },
-    "copyPackFilesToCode": {
-      "description": "copies all the tgz files to a code repo",
-      "guard": "${packageDetails.details.publish}",
-      "commands": [
-        "copy *.tgz ..\\..\\focusoncode"
-      ]
-    },
-    "ls-publish": {
-      "description": "lists the projects that can be published",
-      "guard": "${packageDetails.details.publish}",
-      "commands": [
-        "js:process.cwd()"
-      ],
-      "inLinksOrder": true
-    },
+  "parents":        [
+    "@laoban@/laoban.json/core.laoban.json",
+    "@laoban@/laoban.json/javascript.laoban.json",
+    "@laoban@/laoban.json/typescript.laoban.json",
+    "@laoban@/laoban.json/typescript.publish.laoban.json",
+    "@laoban@/laoban.json/typescript.focuson.laoban.json",
+    "@laoban@/laoban.json/typescript.ls.laoban.json",
+    "@laoban@/laoban.json/typescript.pact.laoban.json",
+    "@laoban@/laoban.json/typescript.sprintboot.laoban.json"
+  ],
+  "scripts":        {
     "ls-orgcmd": {
       "description": "lists the projects that have code on demand",
-      "guard": "${packageDetails.details.orgcmd}",
-      "commands": [
+      "guard":       "${packageDetails.details.orgcmd}",
+      "commands":    [
         "js:process.cwd()"
       ]
     },
-    "orgcmd": {
+    "orgcmd":    {
       "description": "makes the code on demand using orgcmd",
-      "guard": "${packageDetails.details.orgcmd}",
-      "commands": [
+      "guard":       "${packageDetails.details.orgcmd}",
+      "commands":    [
         {
-          "name": "orgcmd",
+          "name":    "orgcmd",
           "command": "orgcmd build -f",
-          "status": true
+          "status":  true
         }
-      ]
-    },
-    "ls-ideify": {
-      "description": "lists the projects that have an ideify setting (used to allow mono repos to work in ide",
-      "guard": "${packageDetails.details.ideify}",
-      "commands": [
-        "js:`${process.cwd()} ${packageDetails.name}`"
-      ]
-    },
-    "pack": {
-      "description": "does everything for a publish except the actual 'npm publish'",
-      "guard": "${packageDetails.details.publish}",
-      "commands": [
-        {
-          "name": "tsc",
-          "command": "tsc --noEmit false --outDir dist",
-          "status": true
-        },
-        {
-          "name": "pack",
-          "command": "${packageManager} pack",
-          "status": true
-        }
-      ]
-    },
-    "publish": {
-      "description": "publishes the projects to npmjs",
-      "guard": "${packageDetails.details.publish}",
-      "commands": [
-        {
-          "name": "tsc",
-          "command": "tsc --noEmit false --outDir dist",
-          "status": true
-        },
-        {
-          "name": "publish",
-          "command": "${packageManager} publish --access public",
-          "status": true
-        }
-      ]
-    },
-    "publish-public": {
-      "description": "publishes the projects to npmjs as a public repo",
-      "guard": "${packageDetails.details.publish}",
-      "commands": [
-        {
-          "name": "tsc",
-          "command": "tsc --noEmit false --outDir dist",
-          "status": true
-        },
-        {
-          "name": "publish",
-          "command": "${packageManager} publish --access public",
-          "status": true
-        }
-      ],
-      "inLinksOrder": true
-    },
-    "ls-generated": {
-      "description": "lists all the projects that were generated",
-      "commands": [
-        "js:process.cwd()"
-      ],
-      "guard": "${packageDetails.details.generated}"
-    },
-    "kill-generated-src": {
-      "description": "removes the src folders ",
-      "guard": "${packageDetails.details.generated}",
-      "osGuard": "Windows",
-      "commands": [
-        "rmdir /Q /S src "
-      ]
-    },
-    "ls-generate": {
-      "description": "lists the projects that will respond to the generate command",
-      "guard": "${packageDetails.details.generator}",
-      "commands": [
-        {
-          "name": "generate",
-          "command": "js:`${process.cwd()} ${packageDetails.name}`"
-        }
-      ]
-    },
-    "generate": {
-      "description": "generates the type script and java projects",
-      "guard": "${packageDetails.details.generator}",
-      "commands": [
-        {
-          "name": "generate",
-          "command": " npx ts-node src/focuson.generate.ts",
-          "status": true
-        }
-      ]
-    },
-    "mvn": {
-      "description": "generates the type script and java projects",
-      "guard": "${packageDetails.details.mvn}",
-      "commands": [
-        {
-          "name": "maven",
-          "command": "mvn clean install",
-          "status": true
-        }
-      ]
-    },
-    "run-api": {
-      "description": "Runs the spring boot server (the jar must exist in /target...",
-      "guard": "${packageDetails.details.mvn}",
-      "commands": [
-        {
-          "name": "run-java",
-          "command": "java -jar  .\\target\\${packageDetails.details.name}-2.5.0.jar --server.port=${packageDetails.details.javaPort}"
-        }
-      ]
-    },
-    "ls-api": {
-      "description": "Lists the spring boot servers and their port",
-      "guard": "${packageDetails.details.mvn}",
-      "commands": [
-        {
-          "name": "echo-java",
-          "command": "echo java -jar  .\\target\\${packageDetails.details.name}-2.5.0.jar --server.port=${packageDetails.details.javaPort}"
-        }
-      ]
-    },
-    "run-react": {
-      "description": "${packageManager} start for all  projects that have a port defined in project.details.json",
-      "guard": "${packageDetails.details.port}",
-      "commands": [
-        "${packageManager} start"
-      ],
-      "env": {
-        "PORT": "${packageDetails.details.port}"
-      }
-    },
-    "ls-react": {
-      "description": "lists the projects that have a port defined in project.details.json",
-      "guard": "${packageDetails.details.port}",
-      "commands": [
-        "js: '${packageDetails.name}'.padEnd(40)+ ' React ${packageDetails.details.port} Java ${packageDetails.details.javaPort}'"
       ]
     }
   },
-  "templates": {
+  "templates":      {
     "codeondemand": "template\\codeondemand",
-    "components": "template\\components",
-    "forms": "template\\forms",
-    "generated": "template\\generated",
-    "noreact": "template\\noreact",
-    "react": "template\\react",
-    "react17": "template\\react17"
+    "components":   "template\\components",
+    "forms":        "template\\forms",
+    "generated":    "template\\generated",
+    "noreact":      "template\\noreact",
+    "react":        "template\\react",
+    "react17":      "template\\react17"
   }
 }
