@@ -1,26 +1,21 @@
 {
-  "template": "typescript",
-  "name": "@focuson/forms",
+  "template":    "forms",
+  "name":        "@focuson/forms",
   "description": "Allows us to define data that is stored in a database, or perhaps an api",
-  "details": {
-    "publish": false,
-    "test": true,
-    "links": [
+  "details":     {
+    "ideify":       true,
+    "test":         true,
+    "publish":      true,
+    "links":        [
       "@focuson/utils",
       "@focuson/files",
       "@focuson/focuson"
     ],
-    "compile": true,
-    "extraDeps": {},
-    "extraDevDeps": {
-      "npm-check-updates": "^10.0.0",
-      "@types/fs-extra": "^9.0.13"
-    },
-    "extraBins": {},
-    "keywords": [
-      "functionalprogramming",
-      "lens",
-      "optics"
-    ]
+    "extraDeps":    {},
+    "extraDevDeps": {},
+    "generator":    true,
+    "tsc":          true,
+    "javaPort":     8080,
+    "tsPort":       3000
   }
 }

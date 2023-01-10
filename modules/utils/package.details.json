@@ -1,23 +1,14 @@
 {
-  "template": "typescript",
-  "name": "@focuson/utils",
+  "template":    "noreact",
+  "name":        "@focuson/utils",
   "description": "Common utilities for the @focuson project",
-  "details": {
-    "publish": false,
-    "test": true,
-    "links": [],
-    "compile": true,
-    "extraDeps": {
-      "node-fetch": "2.6.1"
-    },
-    "extraDevDeps": {
-      "npm-check-updates": "^10.0.0"
-    },
-    "extraBins": {},
-    "keywords": [
-      "functionalprogramming",
-      "lens",
-      "optics"
-    ]
+  "details":     {
+    "ideify":       true,
+    "publish":      true,
+    "links":        [],
+    "extraDeps":    {"node-fetch": "2.6.1"},
+    "extraDevDeps": {},
+    "test":         false,
+    "tsc":          true
   }
 }

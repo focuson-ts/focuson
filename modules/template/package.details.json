@@ -1,23 +1,16 @@
 {
-  "template": "typescript",
-  "name": "@focuson/template",
+  "template":    "noreact",
+  "name":        "@focuson/template",
   "description": "Putting the values from lens into strings. For things like urls, or general string substitutio",
-  "details": {
-    "publish": false,
-    "test": true,
-    "links": [
+  "details":     {
+    "ideify":       true,
+    "publish":      true,
+    "links":        [
       "@focuson/utils"
     ],
-    "compile": true,
-    "extraDeps": {},
-    "extraDevDeps": {
-      "npm-check-updates": "^10.0.0"
-    },
-    "extraBins": {},
-    "keywords": [
-      "functionalprogramming",
-      "lens",
-      "optics"
-    ]
+    "extraDeps":    {},
+    "extraDevDeps": {},
+    "tsc":          true,
+    "test":         true
   }
 }

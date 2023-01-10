@@ -1,23 +1,14 @@
 {
-  "template": "typescript",
-  "name": "@focuson/files",
+  "template":    "noreact",
+  "name":        "@focuson/files",
   "description": "File manipulation: loading/saving",
-  "details": {
-    "publish": false,
-    "test": true,
-    "links": [
-      "@focuson/template"
-    ],
-    "compile": true,
-    "extraDeps": {},
-    "extraDevDeps": {
-      "npm-check-updates": "^10.0.0"
-    },
-    "extraBins": {},
-    "keywords": [
-      "functionalprogramming",
-      "lens",
-      "optics"
-    ]
-  }
+  "details":     {
+    "ideify":       true,
+    "publish":      true,
+    "links":        ["@focuson/template"],
+    "extraDeps":    {},
+    "extraDevDeps": {},
+    "tsc":          true
+  },
+  "test":        false
 }

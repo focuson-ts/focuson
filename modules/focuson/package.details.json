@@ -1,24 +1,15 @@
 {
-  "template": "typescript",
-  "name": "@focuson/focuson",
+  "template":    "noreact",
+  "name":        "@focuson/focuson",
   "description": "Brings together state management, declarative fetching and posting of data to/from apis and some simple page management",
-  "details": {
-    "publish": false,
-    "test": true,
-    "links": [
-      "@focuson/pages",
-      "@focuson/poster"
+  "details":     {
+    "ideify":       true,
+    "publish":      true,
+    "links":        [
+      "@focuson/pages", "@focuson/poster"
     ],
-    "compile": true,
-    "extraDeps": {},
-    "extraDevDeps": {
-      "npm-check-updates": "^10.0.0"
-    },
-    "extraBins": {},
-    "keywords": [
-      "functionalprogramming",
-      "lens",
-      "optics"
-    ]
+    "extraDeps":    {},
+    "extraDevDeps": {},
+    "tsc":          true
   }
 }

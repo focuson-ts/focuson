@@ -1,25 +1,17 @@
 {
-  "template": "typescript",
-  "name": "@focuson/fetcher",
+  "template":    "noreact",
+  "name":        "@focuson/fetcher",
   "description": "Used when we want to fetch data from APIs in order to display it. This provides a declarative and composable approach to state management",
-  "details": {
-    "publish": false,
-    "test": true,
-    "links": [
+  "details":     {
+    "ideify":       true,
+    "publish":      true,
+    "links":        [
       "@focuson/lens",
       "@focuson/template",
       "@focuson/state"
     ],
-    "compile": true,
-    "extraDeps": {},
-    "extraDevDeps": {
-      "npm-check-updates": "^10.0.0"
-    },
-    "extraBins": {},
-    "keywords": [
-      "functionalprogramming",
-      "lens",
-      "optics"
-    ]
+    "extraDeps":    {},
+    "extraDevDeps": {},
+    "tsc":          true
   }
 }

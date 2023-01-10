@@ -1,24 +1,14 @@
 {
-  "template": "typescript",
-  "name": "@focuson/poster",
+  "template":    "noreact",
+  "name":        "@focuson/poster",
   "description": "This allows for declarative 'posting' ",
-  "details": {
-    "publish": false,
-    "test": true,
-    "links": [
-      "@focuson/lens",
-      "@focuson/fetcher"
-    ],
-    "compile": true,
-    "extraDeps": {},
-    "extraDevDeps": {
-      "npm-check-updates": "^10.0.0"
-    },
-    "extraBins": {},
-    "keywords": [
-      "functionalprogramming",
-      "lens",
-      "optics"
-    ]
-  }
+  "details":     {
+    "ideify":       true,
+    "publish":      true,
+    "links":        ["@focuson/lens", "@focuson/fetcher"],
+    "extraDeps":    {},
+    "extraDevDeps": {},
+    "tsc":          true
+  },
+  "test":        true
 }

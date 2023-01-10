@@ -1,24 +1,18 @@
 {
-  "template": "typescript",
-  "name": "@focuson/generators",
+  "template":    "noreact",
+  "name":        "@focuson/generators",
   "description": "Code generators",
-  "details": {
-    "publish": false,
-    "test": true,
-    "links": [
+  "details":     {
+    "test":         true,
+    "publish":      false,
+    "links":        [
       "@focuson/utils",
       "@focuson/files"
     ],
-    "compile": true,
-    "extraDeps": {},
-    "extraDevDeps": {
-      "npm-check-updates": "^10.0.0"
-    },
-    "extraBins": {},
-    "keywords": [
-      "functionalprogramming",
-      "lens",
-      "optics"
-    ]
+    "extraDeps":    {},
+    "extraDevDeps": {},
+    "generator":    false,
+    "tsc":          true,
+    "test":         false
   }
 }

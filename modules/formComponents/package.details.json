@@ -1,27 +1,17 @@
 {
-  "template": "typescript",
-  "name": "@focuson/form_components",
+  "template":    "components",
+  "name":        "@focuson/form_components",
   "description": "Components that can be used by @focuson/forms ",
-  "details": {
-    "publish": false,
-    "test": true,
-    "links": [
+  "details":     {
+    "ideify":       true,
+    "test":         false,
+    "publish":      true,
+    "links":        [
       "@focuson/state",
       "@focuson/focuson"
     ],
-    "compile": true,
-    "extraDeps": {
-      "@types/react-datepicker": "^4.4.1",
-      "react-datepicker": "^4.7.0"
-    },
-    "extraDevDeps": {
-      "npm-check-updates": "^10.0.0"
-    },
-    "extraBins": {},
-    "keywords": [
-      "functionalprogramming",
-      "lens",
-      "optics"
-    ]
+    "extraDeps":    {},
+    "extraDevDeps": {},
+    "tsc":          true
   }
 }
