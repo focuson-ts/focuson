@@ -12,8 +12,8 @@
     ]
   },
   "dependencies": {
-    "@focuson-nw/lens": "1.44.0",
-    "@focuson-nw/fetcher": "1.44.0"
+    "@focuson/lens": "1.44.1",
+    "@focuson/fetcher": "1.44.1"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -40,25 +40,25 @@
   "license": "MIT",
   "main": "dist/index",
   "types": "dist/index",
-  "repository": "github:LewisT543/focuson-nw",
+  "repository": "github:focuson-ts/focuson",
   "scripts": {
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "1.44.0",
+  "version": "1.44.1",
   "template": "noreact",
   "description": "This allows for declarative 'rest actions'. Get/Update/Create... ",
   "details": {
     "ideify": true,
     "publish": true,
     "links": [
-      "@focuson-nw/lens",
-      "@focuson-nw/fetcher"
+      "@focuson/lens",
+      "@focuson/fetcher"
     ],
     "extraDeps": {},
     "extraDevDeps": {},
     "tsc": true,
     "test": true
   },
-  "name": "@focuson-nw/rest"
+  "name": "@focuson/rest"
 }

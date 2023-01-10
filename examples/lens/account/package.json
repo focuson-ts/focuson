@@ -12,7 +12,7 @@
     ]
   },
   "dependencies": {
-    "@focuson-nw/lens": "1.44.0"
+    "@focuson/lens": "1.44.1"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -39,22 +39,22 @@
   "license": "MIT",
   "main": "dist/index",
   "types": "dist/index",
-  "repository": "github:LewisT543/focuson-nw",
+  "repository": "github:focuson-ts/focuson",
   "scripts": {
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "1.44.0",
+  "version": "1.44.1",
   "template": "noreact",
   "description": "Showing how lens help in 'normal programming'",
   "details": {
     "links": [
-      "@focuson-nw/lens"
+      "@focuson/lens"
     ],
     "extraDeps": {},
     "extraDevDeps": {},
     "test": false,
     "tsc": true
   },
-  "name": "@focuson-nw/example_lens_account"
+  "name": "@focuson/example_lens_account"
 }

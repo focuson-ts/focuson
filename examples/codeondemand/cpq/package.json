@@ -16,9 +16,9 @@
     "react-dom": "16.14.0",
     "typescript": "^4.1.5",
     "crypto-js": "^4.0.0",
-    "@focuson-nw/lens": "1.44.0",
-    "@focuson-nw/nav": "1.44.0",
-    "@focuson-nw/codeondemand": "1.44.0"
+    "@focuson/lens": "1.44.1",
+    "@focuson/nav": "1.44.1",
+    "@focuson/codeondemand": "1.44.1"
   },
   "description": "Demonstrating the code on demand approach for configure price quotation",
   "devDependencies": {
@@ -54,20 +54,20 @@
   "license": "MIT",
   "main": "dist/index",
   "types": "dist/index",
-  "repository": "github:LewisT543/focuson-nw",
+  "repository": "github:focuson-ts/focuson",
   "scripts": {
     "start": "react-scripts start",
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "1.44.0",
+  "version": "1.44.1",
   "template": "codeondemand",
-  "name": "@focuson-nw/examples_codeondemand_cpq",
+  "name": "@focuson/examples_codeondemand_cpq",
   "details": {
     "links": [
-      "@focuson-nw/lens",
-      "@focuson-nw/nav",
-      "@focuson-nw/codeondemand"
+      "@focuson/lens",
+      "@focuson/nav",
+      "@focuson/codeondemand"
     ],
     "extraDeps": {},
     "extraDevDeps": {},

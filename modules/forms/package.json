@@ -12,9 +12,9 @@
     ]
   },
   "dependencies": {
-    "@focuson-nw/utils": "1.44.0",
-    "@focuson-nw/files": "1.44.0",
-    "@focuson-nw/focuson": "1.44.0"
+    "@focuson/utils": "1.44.1",
+    "@focuson/files": "1.44.1",
+    "@focuson/focuson": "1.44.1"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -50,12 +50,12 @@
   "license": "MIT",
   "main": "dist/index",
   "types": "dist/index",
-  "repository": "github:LewisT543/focuson-nw",
+  "repository": "github:focuson-ts/focuson",
   "scripts": {
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "1.44.0",
+  "version": "1.44.1",
   "template": "forms",
   "description": "Allows us to define data that is stored in a database, or perhaps an api",
   "details": {
@@ -63,9 +63,9 @@
     "test": true,
     "publish": true,
     "links": [
-      "@focuson-nw/utils",
-      "@focuson-nw/files",
-      "@focuson-nw/focuson"
+      "@focuson/utils",
+      "@focuson/files",
+      "@focuson/focuson"
     ],
     "extraDeps": {},
     "extraDevDeps": {},
@@ -74,5 +74,5 @@
     "javaPort": 8080,
     "tsPort": 3000
   },
-  "name": "@focuson-nw/forms"
+  "name": "@focuson/forms"
 }

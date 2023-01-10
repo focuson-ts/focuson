@@ -12,8 +12,8 @@
     ]
   },
   "dependencies": {
-    "@focuson-nw/utils": "1.44.0",
-    "@focuson-nw/files": "1.44.0"
+    "@focuson/utils": "1.44.1",
+    "@focuson/files": "1.44.1"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -40,25 +40,25 @@
   "license": "MIT",
   "main": "dist/index",
   "types": "dist/index",
-  "repository": "github:LewisT543/focuson-nw",
+  "repository": "github:focuson-ts/focuson",
   "scripts": {
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "1.44.0",
+  "version": "1.44.1",
   "template": "noreact",
   "description": "Code generators",
   "details": {
     "test": false,
     "publish": false,
     "links": [
-      "@focuson-nw/utils",
-      "@focuson-nw/files"
+      "@focuson/utils",
+      "@focuson/files"
     ],
     "extraDeps": {},
     "extraDevDeps": {},
     "generator": false,
     "tsc": true
   },
-  "name": "@focuson-nw/generators"
+  "name": "@focuson/generators"
 }

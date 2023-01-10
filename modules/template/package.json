@@ -12,7 +12,7 @@
     ]
   },
   "dependencies": {
-    "@focuson-nw/utils": "1.44.0"
+    "@focuson/utils": "1.44.1"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -39,24 +39,24 @@
   "license": "MIT",
   "main": "dist/index",
   "types": "dist/index",
-  "repository": "github:LewisT543/focuson-nw",
+  "repository": "github:focuson-ts/focuson",
   "scripts": {
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "1.44.0",
+  "version": "1.44.1",
   "template": "noreact",
   "description": "Putting the values from lens into strings. For things like urls, or general string substitutio",
   "details": {
     "ideify": true,
     "publish": true,
     "links": [
-      "@focuson-nw/utils"
+      "@focuson/utils"
     ],
     "extraDeps": {},
     "extraDevDeps": {},
     "tsc": true,
     "test": true
   },
-  "name": "@focuson-nw/template"
+  "name": "@focuson/template"
 }

@@ -56,7 +56,7 @@
     "test:watch": "npm run test -- --watch",
     "storybook": "start-storybook -p 6006 -s public"
   },
-  "version": "1.44.0",
+  "version": "1.44.1",
   "eslintConfig": {
     "extends": [
       "react-app",

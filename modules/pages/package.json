@@ -12,9 +12,9 @@
     ]
   },
   "dependencies": {
-    "@focuson-nw/state": "1.44.0",
-    "@focuson-nw/fetcher": "1.44.0",
-    "@focuson-nw/rest": "1.44.0"
+    "@focuson/state": "1.44.1",
+    "@focuson/fetcher": "1.44.1",
+    "@focuson/rest": "1.44.1"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -41,25 +41,25 @@
   "license": "MIT",
   "main": "dist/index",
   "types": "dist/index",
-  "repository": "github:LewisT543/focuson-nw",
+  "repository": "github:focuson-ts/focuson",
   "scripts": {
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "1.44.0",
+  "version": "1.44.1",
   "template": "noreact",
   "description": "Used when we want a simple many page application",
   "details": {
     "ideify": true,
     "publish": true,
     "links": [
-      "@focuson-nw/state",
-      "@focuson-nw/fetcher",
-      "@focuson-nw/rest"
+      "@focuson/state",
+      "@focuson/fetcher",
+      "@focuson/rest"
     ],
     "extraDeps": {},
     "extraDevDeps": {},
     "tsc": true
   },
-  "name": "@focuson-nw/pages"
+  "name": "@focuson/pages"
 }
