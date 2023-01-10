@@ -1,6 +1,6 @@
 import { JavaWiringParams } from "./config";
 import { RefD, RestDefnInPageProperties } from "../common/pageD";
-import { safeObject, sortedEntries, toArray } from "@focuson/utils";
+import { safeObject, sortedEntries, toArray } from "@focuson-nw/utils";
 import { dbFetcherClassName, dbFetcherPackage, fetcherInterfaceName, fetcherPackageName, resolverName, sqlMapName, sqlMapPackageName } from "./names";
 import { indentList } from "./codegen";
 import { findParamsForTable } from "./makeSqlFromEntities";

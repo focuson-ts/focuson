@@ -19,7 +19,7 @@ export interface ListPrevButtonInPage extends CommonListButtonInPage {
 
 function ListNextButton<B extends ListNextButtonInPage, G> (): ButtonCreator<B, any> {
   return {
-    import: "@focuson/form_components",
+    import: "@focuson-nw/form_components",
     makeButton: createButton => {
       const { params, parent, name, button } = createButton
       const forButton = stateForButtonWithPath ( createButton, 'ListNextButton' )
@@ -30,7 +30,7 @@ function ListNextButton<B extends ListNextButtonInPage, G> (): ButtonCreator<B, 
 
 function ListPrevButton<B extends ListPrevButtonInPage, G> (): ButtonCreator<B, any> {
   return {
-    import: "@focuson/form_components",
+    import: "@focuson-nw/form_components",
     makeButton: ( createButton ) => {
       const { params, parent, name, button } = createButton
       const forButton = stateForButtonWithPath ( createButton, 'ListPrevButton' )

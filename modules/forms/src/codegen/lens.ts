@@ -1,9 +1,9 @@
-import { lensBuilder, Lenses, Optional, parsePath, PathBuilder, prefixNameAndLens, stateCodeBuilder } from "@focuson/lens";
+import { lensBuilder, Lenses, Optional, parsePath, PathBuilder, prefixNameAndLens, stateCodeBuilder } from "@focuson-nw/lens";
 import { TSParams } from "./config";
 import { MainPageD, PageD, RefD } from "../common/pageD";
 import { optionalsName, pageDomainName } from "./names";
 import { CreateButtonData } from "./makeButtons";
-import { HasName } from "@focuson/utils";
+import { HasName } from "@focuson-nw/utils";
 
 export function pathBuilderForLensIncPage ( pageName: string ): PathBuilder<Optional<any, any>> {
   return lensBuilder ( prefixNameAndLens<any> ( [ '~', Lenses.identity<any> ().focusQuery ( pageName ) ] ), {} )

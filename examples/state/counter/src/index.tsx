@@ -2,7 +2,7 @@
 import * as React from 'react'
 import ReactDOM from 'react-dom';
 
-import { getElement, setJsonForFlux } from "@focuson/state";
+import { getElement, setJsonForFlux } from "@focuson-nw/state";
 import { Counter, TwoCounter } from "./Counter";
 import { CounterData, TwoCounterData } from "./domain";
 import { context, Context } from "./context";

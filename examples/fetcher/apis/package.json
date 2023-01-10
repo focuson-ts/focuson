@@ -12,7 +12,7 @@
     ]
   },
   "dependencies": {
-    "@focuson/lens": "1.44.0"
+    "@focuson-nw/lens": "1.44.0"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -39,7 +39,7 @@
   "license": "MIT",
   "main": "dist/index",
   "types": "dist/index",
-  "repository": "github:focuson-ts/focuson",
+  "repository": "github:LewisT543/focuson-nw",
   "scripts": {
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
@@ -49,12 +49,12 @@
   "description": "A relatively complex example of fetchers showing",
   "details": {
     "links": [
-      "@focuson/lens"
+      "@focuson-nw/lens"
     ],
     "extraDeps": {},
     "extraDevDeps": {},
     "test": false,
     "tsc": true
   },
-  "name": "@focuson/example_fetcher_api"
+  "name": "@focuson-nw/example_fetcher_api"
 }

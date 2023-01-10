@@ -1,9 +1,9 @@
-import { Lenses } from "@focuson/lens";
-import { defaultPageSelectionAndRestCommandsContext, FocusOnContext } from "@focuson/focuson";
+import { Lenses } from "@focuson-nw/lens";
+import { defaultPageSelectionAndRestCommandsContext, FocusOnContext } from "@focuson-nw/focuson";
 
-import { lensState } from "@focuson/state";
-import { applyPageOps, fromPathFromRaw, fromPathGivenState, MultiPageDetails, PageSelection, pageSelectionlens } from "@focuson/pages";
-import { testDateFn } from "@focuson/utils";
+import { lensState } from "@focuson-nw/state";
+import { applyPageOps, fromPathFromRaw, fromPathGivenState, MultiPageDetails, PageSelection, pageSelectionlens } from "@focuson-nw/pages";
+import { testDateFn } from "@focuson-nw/utils";
 
 
 let pageSelection: PageSelection = { pageName: 'a', pageMode: 'view', time: 'now' };

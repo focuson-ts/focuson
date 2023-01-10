@@ -1,7 +1,7 @@
-import { copyFile, copyFiles, CopyFilesRecursively, DirectorySpec, GetFilelistRecursively2, templateFile, writeToFile } from "@focuson/files";
+import { copyFile, copyFiles, CopyFilesRecursively, DirectorySpec, GetFilelistRecursively2, templateFile, writeToFile } from "@focuson-nw/files";
 import { TSParams } from "../codegen/config";
 import fs, { write } from "fs";
-import { detailsLog, GenerateLogLevel, NameAnd, safeArray, sortedEntries, unique } from "@focuson/utils";
+import { detailsLog, GenerateLogLevel, NameAnd, safeArray, sortedEntries, unique } from "@focuson-nw/utils";
 import { allMainPages, flatMapToModal, isMainPage, MainPageD, PageD, RefD, RestDefnInPageProperties } from "../common/pageD";
 import { createRenderPage } from "../codegen/makeRender";
 import { ButtonD } from "../buttons/allButtons";

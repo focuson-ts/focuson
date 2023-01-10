@@ -1,14 +1,14 @@
-import { lensState, LensState } from "@focuson/state";
+import { lensState, LensState } from "@focuson-nw/state";
 import { shallow } from "enzyme";
 
 import { enzymeSetup } from "./enzymeAdapterSetup";
-import { fromPathFromRaw, HasPageSelection, MultiPageDetails, PageDetailsForCombine, pageSelectionlens, rawCloseOnePageTxs, simpleMessagesL } from "@focuson/pages";
-import { HasRestCommands, restL } from "@focuson/rest";
-import { SimpleMessage, testDateFn } from "@focuson/utils";
-import { FocusOnContext } from "@focuson/focuson";
-import { identityOptics, Lenses } from "@focuson/lens";
-import { RestButton } from "@focuson/form_components";
-import { HasTagHolder } from "@focuson/template";
+import { fromPathFromRaw, HasPageSelection, MultiPageDetails, PageDetailsForCombine, pageSelectionlens, rawCloseOnePageTxs, simpleMessagesL } from "@focuson-nw/pages";
+import { HasRestCommands, restL } from "@focuson-nw/rest";
+import { SimpleMessage, testDateFn } from "@focuson-nw/utils";
+import { FocusOnContext } from "@focuson-nw/focuson";
+import { identityOptics, Lenses } from "@focuson-nw/lens";
+import { RestButton } from "@focuson-nw/form_components";
+import { HasTagHolder } from "@focuson-nw/template";
 
 enzymeSetup ()
 

@@ -1,11 +1,11 @@
-import { sortedEntries, toArray } from "@focuson/utils";
+import { sortedEntries, toArray } from "@focuson-nw/utils";
 import { isMainPage, MainPageD, PageD, RefD, RestDefnInPageProperties } from "../common/pageD";
 import { domainName, domainsFileName, fetcherFileName, fetcherName, pageDomainName, restDetailsName } from "./names";
 import { TSParams } from "./config";
 import { addStringToEndOfAllButLast, importsDot, importsDotDot, lensFocusQueryFor, noExtension } from "./codegen";
 import { findIds, isRestLens, LensRestParam } from "../common/restD";
 import { lensFocusQueryWithTildaFromPage } from "./lens";
-import { FetcherUsingRestConfig } from "@focuson/focuson";
+import { FetcherUsingRestConfig } from "@focuson-nw/focuson";
 
 
 export const makeFetcherCode = ( params: TSParams ) => <G> ( p: RefD<G> ) => ( restName: string, def: RestDefnInPageProperties<G> ): string[] => {
@@ -57,12 +57,12 @@ export function makeFetchersImport<B, G> ( params: TSParams, p: PageD<B, G> ): s
   return [
     ...importsDotDot ( params.commonFile ),
     `import * as domains from '${domainsFileName ( '..', params, p )}'`,
-    `import { HasTagHolder } from "@focuson/template";`,
-    `import { HasPageSelection } from "@focuson/pages";`,
-    `import { HasSimpleMessages, SimpleMessage } from '@focuson/utils';`,
-    `import {  pageAndTagFetcher } from "@focuson/focuson";`,
+    `import { HasTagHolder } from "@focuson-nw/template";`,
+    `import { HasPageSelection } from "@focuson-nw/pages";`,
+    `import { HasSimpleMessages, SimpleMessage } from '@focuson-nw/utils';`,
+    `import {  pageAndTagFetcher } from "@focuson-nw/focuson";`,
     `import { ${params.stateName}, identityL} from "../${params.commonFile}";`,
-    `import { Optional, Lenses, NameAndLens} from '@focuson/lens';`
+    `import { Optional, Lenses, NameAndLens} from '@focuson-nw/lens';`
 
   ]
 }
@@ -72,13 +72,13 @@ export function makeFetcherDataStructureImport<G> ( params: TSParams, pages: Ref
   return [
     ...importsDot ( params.commonFile ),
     // ...fetcherImports,
-    `import { FetcherTree,  } from "@focuson/fetcher";`,
-    `import { HasTagHolder } from "@focuson/template";`,
-    `import { HasPageSelection } from "@focuson/pages";`,
-    `import { HasSimpleMessages, SimpleMessage } from '@focuson/utils';`,
-    `import { AllFetcherUsingRestConfig, pageAndTagFetcher } from "@focuson/focuson";`,
+    `import { FetcherTree,  } from "@focuson-nw/fetcher";`,
+    `import { HasTagHolder } from "@focuson-nw/template";`,
+    `import { HasPageSelection } from "@focuson-nw/pages";`,
+    `import { HasSimpleMessages, SimpleMessage } from '@focuson-nw/utils';`,
+    `import { AllFetcherUsingRestConfig, pageAndTagFetcher } from "@focuson-nw/focuson";`,
     `import { commonIds, identityL } from './${params.commonFile}';`,
-    `import { Optional, Lenses, NameAndLens} from '@focuson/lens';`
+    `import { Optional, Lenses, NameAndLens} from '@focuson-nw/lens';`
 
   ]
 }

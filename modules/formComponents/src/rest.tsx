@@ -1,10 +1,10 @@
-import { addLoaderCommandsIfNeeded, RestChangeCommands, RestCommand, RestLoadWindowWithoutRestProps } from "@focuson/rest";
-import { LensState, reasonFor } from "@focuson/state";
-import { DateFn, RestAction, RestResult, SimpleMessage, toArray } from "@focuson/utils";
+import { addLoaderCommandsIfNeeded, RestChangeCommands, RestCommand, RestLoadWindowWithoutRestProps } from "@focuson-nw/rest";
+import { LensState, reasonFor } from "@focuson-nw/state";
+import { DateFn, RestAction, RestResult, SimpleMessage, toArray } from "@focuson-nw/utils";
 import { CommonStateProps, CustomButtonType, getButtonClassName } from "./common";
-import { closeOnePageTxs, confirmIt, ConfirmWindow, getRefForValidateLogicToButton, hasValidationErrorAndReport, isConfirmWindow, ModalContext, openConfirmWindow, openRestLoadWindowTxs, RestLoadWindowProps, wrapWithErrors } from "@focuson/pages";
+import { closeOnePageTxs, confirmIt, ConfirmWindow, getRefForValidateLogicToButton, hasValidationErrorAndReport, isConfirmWindow, ModalContext, openConfirmWindow, openRestLoadWindowTxs, RestLoadWindowProps, wrapWithErrors } from "@focuson-nw/pages";
 import { useRef } from "react";
-import { Transform } from "@focuson/lens";
+import { Transform } from "@focuson-nw/lens";
 
 export interface RestButtonProps<S, C, MSGs> extends CommonStateProps<S, any, C>, CustomButtonType {
   rest: string;

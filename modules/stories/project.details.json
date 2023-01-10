@@ -1,11 +1,11 @@
 {
   "template":    "noreact",
-  "name":        "@focuson/stories",
+  "name":        "@focuson-nw/stories",
   "description": "Storybook showing the components' ",
   "details":     {
     "ideify":       true,
     "publish":      true,
-    "links":        ["@focuson/focuson"],
+    "links":        ["@focuson-nw/focuson"],
     "extraDeps":    {},
     "extraDevDeps": {
       "@sambego/storybook-state":           "^2.0.1",

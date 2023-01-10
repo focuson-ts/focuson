@@ -1,7 +1,7 @@
-import { isMainPageDetails, isPopup, PageSelectionContext, SelectPage } from "@focuson/pages";
-import { LensProps, LensState } from "@focuson/state";
-import { Lenses } from "@focuson/lens";
-import { DateFn, HasDateFn, sortedEntries } from "@focuson/utils";
+import { isMainPageDetails, isPopup, PageSelectionContext, SelectPage } from "@focuson-nw/pages";
+import { LensProps, LensState } from "@focuson-nw/state";
+import { Lenses } from "@focuson-nw/lens";
+import { DateFn, HasDateFn, sortedEntries } from "@focuson-nw/utils";
 
 
 export interface IndexPageProps<S, Context extends PageSelectionContext<S>> extends LensProps<S, S, Context> {

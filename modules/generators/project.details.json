@@ -1,13 +1,13 @@
 {
   "template":    "noreact",
-  "name":        "@focuson/generators",
+  "name":        "@focuson-nw/generators",
   "description": "Code generators",
   "details":     {
     "test":         true,
     "publish":      false,
     "links":        [
-      "@focuson/utils",
-      "@focuson/files"
+      "@focuson-nw/utils",
+      "@focuson-nw/files"
     ],
     "extraDeps":    {},
     "extraDevDeps": {},

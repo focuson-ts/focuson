@@ -1,6 +1,6 @@
-import { PageSelectionContext, replaceTextUsingPath } from "@focuson/pages";
-import { safeString } from "@focuson/utils";
-import { LensState } from "@focuson/state";
+import { PageSelectionContext, replaceTextUsingPath } from "@focuson-nw/pages";
+import { safeString } from "@focuson-nw/utils";
+import { LensState } from "@focuson-nw/state";
 
 export interface GuardLayoutProps <S,C>{
   state: LensState<S, any, C>

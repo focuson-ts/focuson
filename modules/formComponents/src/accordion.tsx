@@ -1,5 +1,5 @@
-import { LensProps, reasonFor } from '@focuson/state';
-import { PageSelectionContext } from "@focuson/pages";
+import { LensProps, reasonFor } from '@focuson-nw/state';
+import { PageSelectionContext } from "@focuson-nw/pages";
 
 export interface AccordionProps<S, T, Context> extends LensProps<S, string[], Context> {
     id: string;

@@ -1,6 +1,6 @@
-import { applyFetcher } from '@focuson/fetcher';
+import { applyFetcher } from '@focuson-nw/fetcher';
 import { simpleFetcherWithMessages } from "./tagFetcher.fixture";
-import { defaultFetchFn, fetchWithPrefix, setIsNodeFetchForTests } from "@focuson/utils";
+import { defaultFetchFn, fetchWithPrefix, setIsNodeFetchForTests } from "@focuson-nw/utils";
 import { firstPageSelectedState } from "./page.fixture";
 
 

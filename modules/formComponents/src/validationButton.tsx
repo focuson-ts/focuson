@@ -1,4 +1,4 @@
-import { findValidityDetails, focusPageClassName } from "@focuson/pages";
+import { findValidityDetails, focusPageClassName } from "@focuson-nw/pages";
 
 
 export interface ValidationButtonProps<S, C> {

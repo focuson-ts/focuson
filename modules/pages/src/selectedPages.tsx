@@ -1,6 +1,6 @@
 import { page, PageSelectionContext } from "./pageSelection";
-import { LensProps, reasonFor } from "@focuson/state";
-import { DateFn, decamelize, HasDateFn, PageMode } from "@focuson/utils";
+import { LensProps, reasonFor } from "@focuson-nw/state";
+import { DateFn, decamelize, HasDateFn, PageMode } from "@focuson-nw/utils";
 import {wrapWithErrors} from "./errors";
 import {getRefForValidateLogicToButton} from "./validity";
 

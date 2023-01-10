@@ -6,10 +6,10 @@ import { PaymentTypeDd } from "../commonEnums";
 import { LabelAndDropDownCD, LayoutCd, TableCD, TableWithCheckboxInputCD, UnpaidCardOrMisuseItemsCD } from "../../common/componentsD";
 
 // import { ExampleDataD, ExampleRepeatingD, NatNumDd, PaymentTypeDd } from "../common";
-// import { BooleanDD, DateDD, IntegerDD, ManyLineStringDD, MoneyDD, OneLineStringDD, StringDD, StringPrimitiveDD } from "@focuson/forms";
+// import { BooleanDD, DateDD, IntegerDD, ManyLineStringDD, MoneyDD, OneLineStringDD, StringDD, StringPrimitiveDD } from "@focuson-nw/forms";
 // import { EAccountDisplayTypeDD } from "../eAccount/eAccountsSummary.dataD";
 // import { yesNoDD } from "../occupationAndIncome/occupationAndIncome.dataD";
-// import { commonParamsWithLabel, DisplayCompD, intValidationParams, LabelAndDropDownCD, TableCD } from "@focuson/forms/dist/src/common/componentsD";
+// import { commonParamsWithLabel, DisplayCompD, intValidationParams, LabelAndDropDownCD, TableCD } from "@focuson-nw/forms/dist/src/common/componentsD";
 // import { TableWithCheckboxInputCD } from "../../forms/tableWithCheckboxInputD"
 
 export const accountOverviewFacilitiesLineDataD: ExampleDataD = {

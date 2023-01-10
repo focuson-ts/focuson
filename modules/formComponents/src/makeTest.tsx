@@ -1,7 +1,7 @@
-import { LensProps } from "@focuson/state";
-import { FocusOnContext, traceL } from "@focuson/focuson";
-import { fromPathGivenState, HasPageSelectionLens } from "@focuson/pages";
-import { safeArray } from "@focuson/utils";
+import { LensProps } from "@focuson-nw/state";
+import { FocusOnContext, traceL } from "@focuson-nw/focuson";
+import { fromPathGivenState, HasPageSelectionLens } from "@focuson-nw/pages";
+import { safeArray } from "@focuson-nw/utils";
 
 
 export function MakeTest<S, C> ( { state }: LensProps<S, any, C> ) {

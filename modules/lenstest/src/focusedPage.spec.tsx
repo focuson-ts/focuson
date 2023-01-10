@@ -1,8 +1,8 @@
 import { mount, shallow } from "enzyme";
-import { SelectedPage } from "@focuson/pages";
+import { SelectedPage } from "@focuson-nw/pages";
 import { dataDefinedState, emptyState, lensStateWith, PageSpecState, rootState } from "./page.fixture";
 import { enzymeSetup } from "./enzymeAdapterSetup";
-import { PageMode } from "@focuson/utils";
+import { PageMode } from "@focuson-nw/utils";
 
 
 enzymeSetup ()

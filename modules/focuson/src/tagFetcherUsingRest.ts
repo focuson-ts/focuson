@@ -1,12 +1,12 @@
-import { Optional, Transform } from '@focuson/lens';
+import { Optional, Transform } from '@focuson-nw/lens';
 
-// import { createSimpleMessage, HasPageSelection, HasSimpleMessages, PageSelection, SimpleMessage } from "@focuson/pages";
-import { areAllDefined, arraysEqual, NameAnd, safeArray } from "@focuson/utils";
-import { TagHolder, tagOps } from "@focuson/template";
-import { OneRestDetails, RestChangeCommands, RestCommand, RestDetails } from "@focuson/rest";
+// import { createSimpleMessage, HasPageSelection, HasSimpleMessages, PageSelection, SimpleMessage } from "@focuson-nw/pages";
+import { areAllDefined, arraysEqual, NameAnd, safeArray } from "@focuson-nw/utils";
+import { TagHolder, tagOps } from "@focuson-nw/template";
+import { OneRestDetails, RestChangeCommands, RestCommand, RestDetails } from "@focuson-nw/rest";
 import { makeTagLens } from "./tagFetcher";
 import { FocusOnContext } from "./config";
-import { LensState } from "@focuson/state";
+import { LensState } from "@focuson-nw/state";
 
 
 export interface FetcherUsingRestConfig {

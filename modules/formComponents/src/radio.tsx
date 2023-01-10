@@ -1,8 +1,8 @@
-import { NameAnd } from "@focuson/utils";
+import { NameAnd } from "@focuson-nw/utils";
 import { CommonStateProps, LabelAlignment } from "./common";
 import { Label } from "./label";
-import { reasonFor } from "@focuson/state";
-import { FocusOnContext } from "@focuson/focuson";
+import { reasonFor } from "@focuson-nw/state";
+import { FocusOnContext } from "@focuson-nw/focuson";
 
 export interface RadioProps<S, T, Context> extends CommonStateProps<S, T, Context>, LabelAlignment {
   enums: NameAnd<string>;

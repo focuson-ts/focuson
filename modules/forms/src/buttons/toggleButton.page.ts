@@ -6,7 +6,7 @@ import { EnabledBy, enabledByString } from "./enabledBy";
 
 function makeToggleButton<B extends ToggleButtonInPage<G>, G> (): ButtonCreator<ToggleButtonInPage<G>, G> {
   return {
-    import: '@focuson/form_components',
+    import: '@focuson-nw/form_components',
     makeButton: ( createButton ) => {
       const { params, parent, name, button } = createButton
       const { value, buttonText } = button

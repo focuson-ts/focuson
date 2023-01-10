@@ -1,12 +1,12 @@
-import { LensProps, LensState } from "@focuson/state";
+import { LensProps, LensState } from "@focuson-nw/state";
 
 import { currentPageSelection, HasPageSelectionLens, mainPage, mainPageFrom, PageParams, PageSelection, PageSelectionContext } from "./pageSelection";
 import { FocusedPage } from "./focusedPage";
 import { isArbitraryPageDetails, isMainPageDetails, isModalPageDetails, MainPageDetails, MultiPageDetails, OnePageDetails, PageConfig } from "./pageConfig";
 import { DefaultTemplate, PageTemplateProps } from "./PageTemplate";
 import { Loading } from "./loading";
-import { lensBuilder, Lenses, NameAndLens, Optional, parsePath } from "@focuson/lens";
-import { PageMode, safeArray, safeObject, safeString } from "@focuson/utils";
+import { lensBuilder, Lenses, NameAndLens, Optional, parsePath } from "@focuson-nw/lens";
+import { PageMode, safeArray, safeObject, safeString } from "@focuson-nw/utils";
 import { ModalContext } from "./modal/modalCommitAndCancelButton";
 
 export interface HasSelectedPageDebug {

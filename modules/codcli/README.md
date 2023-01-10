@@ -1,11 +1,11 @@
 # Code on Demand CLI
 
-This is a cli tool to help with the [Code On Demand project](https://www.npmjs.com/package/@focuson/codeondemand). 
+This is a cli tool to help with the [Code On Demand project](https://www.npmjs.com/package/@focuson-nw/codeondemand). 
 It transpiles normal react components suitable for use as code on demand components
 
 # Installing
 ```shell
-npm i --global  @focuson/cod
+npm i --global  @focuson-nw/cod
 ```
 
 To validate it worked: the following should give a 'usage message'

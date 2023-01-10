@@ -1,14 +1,14 @@
-import { LensState, reasonFor } from "@focuson/state";
+import { LensState, reasonFor } from "@focuson-nw/state";
 import { fromPathGivenState, mainPage, page, PageOps, PageParams, PageSelection, PageSelectionContext, SetToLengthOnClose } from "../pageSelection";
-import { displayTransformsInState, Optional, Transform } from "@focuson/lens";
-import { CopyCommand, DeleteCommand, HasCloseOnePage, HasRestCommandL, InputProcessorsConfig, ModalChangeCommands, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand, SetChangeCommand } from "@focuson/rest";
-import { anyIntoPrimitive, CopyDetails, DateFn, PageMode, safeArray, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
+import { displayTransformsInState, Optional, Transform } from "@focuson-nw/lens";
+import { CopyCommand, DeleteCommand, HasCloseOnePage, HasRestCommandL, InputProcessorsConfig, ModalChangeCommands, modalCommandProcessors, ModalProcessorsConfig, processChangeCommandProcessor, RestCommand, SetChangeCommand } from "@focuson-nw/rest";
+import { anyIntoPrimitive, CopyDetails, DateFn, PageMode, safeArray, SimpleMessage, stringToSimpleMsg, toArray } from "@focuson-nw/utils";
 import { CustomButtonType, getButtonClassName } from "../common";
 import { isMainPageDetails, MultiPageDetails } from "../pageConfig";
 import { HasSimpleMessageL } from "../simpleMessage";
-import { HasTagHolderL } from "@focuson/template";
+import { HasTagHolderL } from "@focuson-nw/template";
 import { wrapWithErrors } from "../errors";
-import { RestLoadWindowWithoutRestProps } from "@focuson/rest";
+import { RestLoadWindowWithoutRestProps } from "@focuson-nw/rest";
 
 
 export interface ModalDebug {

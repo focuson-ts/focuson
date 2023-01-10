@@ -1,13 +1,13 @@
-import { disabledFrom, HasDateFn, NameAnd, safeObject, toArray } from "@focuson/utils";
-import { reasonFor } from "@focuson/state";
+import { disabledFrom, HasDateFn, NameAnd, safeObject, toArray } from "@focuson-nw/utils";
+import { reasonFor } from "@focuson-nw/state";
 import { CommonStateProps, DropDownOnChangeProps, LabelAlignment } from "./common";
 import { Label } from "./label";
 import { makeInputChangeTxs } from "./labelAndInput";
 
 import { ChangeEvent } from "react";
 import { HasButtons, makeButtons } from "./makeButtons";
-import { HasPathToLens, HasSimpleMessageL, PageSelectionContext } from "@focuson/pages";
-import { HasCloseOnePage, HasRestCommandL } from "@focuson/rest";
+import { HasPathToLens, HasSimpleMessageL, PageSelectionContext } from "@focuson-nw/pages";
+import { HasCloseOnePage, HasRestCommandL } from "@focuson-nw/rest";
 
 export interface DropdownProps<S, T, Context> extends CommonStateProps<S, T, Context>, DropDownOnChangeProps<S, Context>, HasButtons {
   enums: NameAnd<string | undefined>;

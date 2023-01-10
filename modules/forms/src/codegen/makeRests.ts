@@ -2,7 +2,7 @@ import { AllLensRestParams, findIds, isCommonLens, isRestLens, LensRestParam, Re
 import { domainName, domainsFileName, pageDomainName, restDetailsName, restFileName } from "./names";
 import { TSParams } from "./config";
 import { allRestAndActions, RefD, RestDefnInPageProperties } from "../common/pageD";
-import { NameAnd, safeObject, SimpleMessage, sortedEntries, toArray, unique } from "@focuson/utils";
+import { NameAnd, safeObject, SimpleMessage, sortedEntries, toArray, unique } from "@focuson-nw/utils";
 import { addStringToEndOfAllButLast, indentList, lensFocusQueryFor } from "./codegen";
 import { lensFocusQueryWithSlashAndTildaFromIdentity, lensFocusQueryWithTildaFromPage } from "./lens";
 
@@ -61,19 +61,19 @@ export const makeRest = <G> ( params: TSParams, p: RefD<G> ) => ( restName: stri
 };
 export function makeRestImports<G> ( params: TSParams, p: RefD<G> ) {
   return [
-    `import { OneRestDetails, justInfoToSuccessMessagesPostProcessor } from "@focuson/rest"`,
+    `import { OneRestDetails, justInfoToSuccessMessagesPostProcessor } from "@focuson-nw/rest"`,
     `import * as domains from "${domainsFileName ( '..', params, p )}"`,
-    `import { createSimpleMessage, DateFn, defaultDateFn,  SimpleMessage, testDateFn } from "@focuson/utils"`,
-    `import { Lenses, NameAndLens} from "@focuson/lens"`,
-    `import { extractMessages } from "@focuson/pages";`,
+    `import { createSimpleMessage, DateFn, defaultDateFn,  SimpleMessage, testDateFn } from "@focuson-nw/utils"`,
+    `import { Lenses, NameAndLens} from "@focuson-nw/lens"`,
+    `import { extractMessages } from "@focuson-nw/pages";`,
     `` ]
 }
 
 export function makeRestDetailsPage<G> ( params: TSParams, ps: RefD<G>[] ): string[] {
   const imports = [
-    `import { RestDetails, OneRestDetails,  } from "@focuson/rest"`,
-    `import { createSimpleMessage, DateFn, defaultDateFn, RestAction, insertBefore, SimpleMessage } from "@focuson/utils"`,
-    `import { Lenses, NameAndLens} from "@focuson/lens"`,
+    `import { RestDetails, OneRestDetails,  } from "@focuson-nw/rest"`,
+    `import { createSimpleMessage, DateFn, defaultDateFn, RestAction, insertBefore, SimpleMessage } from "@focuson-nw/utils"`,
+    `import { Lenses, NameAndLens} from "@focuson-nw/lens"`,
     `import { ${params.stateName} , commonIds, identityL} from "./${params.commonFile}";`,
     `` ]
   const imp = unique ( allRestAndActions ( ps ).map ( ( [ pd, name, rd, rad ] ) => `import { ${restDetailsName ( pd, name, rd.rest )} } from '${restFileName ( '.', params, pd )}';` ), x => x );

@@ -1,7 +1,7 @@
-import { LensProps, LensState, reasonFor } from "@focuson/state";
+import { LensProps, LensState, reasonFor } from "@focuson-nw/state";
 import { FocusedPage, TitleDetails } from "./focusedPage";
-import { PageMode } from "@focuson/utils";
-import { HasCloseOnePage } from "@focuson/rest";
+import { PageMode } from "@focuson-nw/utils";
+import { HasCloseOnePage } from "@focuson-nw/rest";
 
 
 export interface PageTemplateProps<S, D, Context> extends LensProps<S, D, Context> {

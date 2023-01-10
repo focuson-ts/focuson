@@ -1,7 +1,7 @@
 import { Layout } from "./layout";
-import { FocusOnContext } from "@focuson/focuson";
-import { LensState } from "@focuson/state";
-import { ConfirmProps, openConfirmWindow } from "@focuson/pages";
+import { FocusOnContext } from "@focuson-nw/focuson";
+import { LensState } from "@focuson-nw/state";
+import { ConfirmProps, openConfirmWindow } from "@focuson-nw/pages";
 import { useEffect, useRef } from "react";
 
 

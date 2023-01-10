@@ -21,14 +21,14 @@ dependancies (other than devDependencies)
 
 ## Example projects
 * [An example showing how much simpler lens code is than the normal copy code](https://github.com/focuson-ts/focuson/tree/master/examples/lens/dragon)
-* [State management in react](https://www.npmjs.com/package/@focuson/state)
+* [State management in react](https://www.npmjs.com/package/@focuson-nw/state)
 
 # Downloading
 
 You can install this project by
 
  ```shell
-npm install @focuson/lens
+npm install @focuson-nw/lens
 ```
 
 # Where are the tests?

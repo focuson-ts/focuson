@@ -37,7 +37,7 @@
   "license": "MIT",
   "main": "dist/index",
   "types": "dist/index",
-  "repository": "github:focuson-ts/focuson",
+  "repository": "github:LewisT543/focuson-nw",
   "scripts": {
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
@@ -53,5 +53,5 @@
     "test": true,
     "tsc": true
   },
-  "name": "@focuson/nonfunctionals"
+  "name": "@focuson-nw/nonfunctionals"
 }

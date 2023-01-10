@@ -1,4 +1,4 @@
-import { apply, applyOrDefault, checkIsFunction, copyWithFieldSet, NameAnd, or, safeObject, useOrDefault } from "@focuson/utils";
+import { apply, applyOrDefault, checkIsFunction, copyWithFieldSet, NameAnd, or, safeObject, useOrDefault } from "@focuson-nw/utils";
 
 
 export const identityOptics = <State> ( description?: string ): Iso<State, State> => new Iso ( x => x, x => x, description ? description : "I" );

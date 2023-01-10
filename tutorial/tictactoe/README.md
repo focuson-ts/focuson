@@ -17,7 +17,7 @@ cd tictactoe
 # Add dependencies
 
 ```shell
- yarn add @focuson/state
+ yarn add @focuson-nw/state
 ```
 
 ## Create the data representation

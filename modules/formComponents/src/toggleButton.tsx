@@ -1,6 +1,6 @@
-import { LensProps, reasonFor } from '@focuson/state';
-import { PageSelectionContext, replaceTextUsingPath } from "@focuson/pages";
-import { wrapWithErrors } from "@focuson/pages";
+import { LensProps, reasonFor } from '@focuson-nw/state';
+import { PageSelectionContext, replaceTextUsingPath } from "@focuson-nw/pages";
+import { wrapWithErrors } from "@focuson-nw/pages";
 
 
 export interface ToggleButtonProps<S, T, Context> extends LensProps<S, boolean, Context> {

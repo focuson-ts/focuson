@@ -1,9 +1,9 @@
 import { enzymeSetup } from "./enzymeAdapterSetup";
 import { mount } from "enzyme";
-import { SelectedItem, SelectedItemDisplayProps } from "@focuson/form_components";
-import { PageMode } from "@focuson/utils";
-import { LensState, lensState } from "@focuson/state";
-import { Lenses } from "@focuson/lens";
+import { SelectedItem, SelectedItemDisplayProps } from "@focuson-nw/form_components";
+import { PageMode } from "@focuson-nw/utils";
+import { LensState, lensState } from "@focuson-nw/state";
+import { Lenses } from "@focuson-nw/lens";
 
 
 enzymeSetup ()

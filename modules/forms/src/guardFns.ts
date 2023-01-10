@@ -1,7 +1,7 @@
-import { LensState } from "@focuson/state";
-import { HasDateFn, isBefore, isSameDay } from "@focuson/utils";
+import { LensState } from "@focuson-nw/state";
+import { HasDateFn, isBefore, isSameDay } from "@focuson-nw/utils";
 //@ts-ignore - because the generator project doesn't have form_components as a dependency
-import { parseDate } from '@focuson/form_components'
+import { parseDate } from '@focuson-nw/form_components'
 
 export function balanceZero<S, C> ( s: LensState<S, any, C> ): boolean {
   return true

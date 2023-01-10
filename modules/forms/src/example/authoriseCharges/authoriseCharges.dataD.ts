@@ -3,7 +3,7 @@ import { AccountIdDD, BooleanDD, DateDD, MoneyDD, NatNumDd, StringDD } from "../
 import { TableCD } from "../../common/componentsD";
 import { AuthoriseTableCD, SummaryDetailsCD } from "./custom";
 import { AuthoriseCustomisation } from "./authoriseCharges.customise";
-import { memoise } from "@focuson/utils";
+import { memoise } from "@focuson-nw/utils";
 
 export function operatorEligableDD ( c: AuthoriseCustomisation ): ExampleDataD {
   return memoise ( 'OperatorEligability', c.pageName ) ( () => ({

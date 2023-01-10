@@ -15,9 +15,9 @@
     "react": "16.14.0",
     "react-dom": "16.14.0",
     "typescript": "^4.1.5",
-    "@focuson/lens": "1.44.0",
-    "@focuson/nav": "1.44.0",
-    "@focuson/state": "1.44.0"
+    "@focuson-nw/lens": "1.44.0",
+    "@focuson-nw/nav": "1.44.0",
+    "@focuson-nw/state": "1.44.0"
   },
   "description": "Showing how lens help in 'configure pricing quotation' examples",
   "devDependencies": {
@@ -52,7 +52,7 @@
   "license": "MIT",
   "main": "dist/index",
   "types": "dist/index",
-  "repository": "github:focuson-ts/focuson",
+  "repository": "github:LewisT543/focuson-nw",
   "scripts": {
     "start": "react-scripts start",
     "test": "jest --config jest.config.json",
@@ -77,12 +77,12 @@
     ]
   },
   "template": "react",
-  "name": "@focuson/example_state_cpq",
+  "name": "@focuson-nw/example_state_cpq",
   "details": {
     "links": [
-      "@focuson/lens",
-      "@focuson/nav",
-      "@focuson/state"
+      "@focuson-nw/lens",
+      "@focuson-nw/nav",
+      "@focuson-nw/state"
     ],
     "extraDeps": {},
     "extraDevDeps": {},

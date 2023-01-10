@@ -20,7 +20,7 @@ protection).
 
 # Dependencies
 
-This project is very light weight. The only dependency is on the sister library [the library that implements lens](https://www.npmjs.com/package/@focuson/lens)
+This project is very light weight. The only dependency is on the sister library [the library that implements lens](https://www.npmjs.com/package/@focuson-nw/lens)
 
 Note that although it talks about react, there are no dependency on React or any other library or framework. This code
 is a library that can be used in any project with any other framework. All of the examples are currently
@@ -36,7 +36,7 @@ in each that is itself quite small.
 ## Download
 
 ```shell
-npm install @focuson/state
+npm install @focuson-nw/state
 ````
 
 ## Related projects
@@ -49,10 +49,10 @@ README introduces Lens.
 * [A more complicated example](https://github.com/focuson-ts/focuson/tree/master/tutorial/tictactoe)
 
 ## Examples
-* [@focuson/example_state_cpq - the Redux 'counter' example](https://github.com/focuson-ts/focuson/tree/master/examples/state/counter)
-* [@focuson/example_state_cpq - A 'configure price quote' example](https://github.com/focuson-ts/focuson/tree/master/examples/state/cpq)
-* [@focuson/example_state_cart - The Redux 'shopping cart' example](https://github.com/focuson-ts/focuson/tree/master/examples/state/shopping-cart)
-* [@focuson/example_state_tictactoe - The React tictactoe example](https://github.com/focuson-ts/focuson/tree/master/examples/state/tictactoe)
+* [@focuson-nw/example_state_cpq - the Redux 'counter' example](https://github.com/focuson-ts/focuson/tree/master/examples/state/counter)
+* [@focuson-nw/example_state_cpq - A 'configure price quote' example](https://github.com/focuson-ts/focuson/tree/master/examples/state/cpq)
+* [@focuson-nw/example_state_cart - The Redux 'shopping cart' example](https://github.com/focuson-ts/focuson/tree/master/examples/state/shopping-cart)
+* [@focuson-nw/example_state_tictactoe - The React tictactoe example](https://github.com/focuson-ts/focuson/tree/master/examples/state/tictactoe)
 
 # When should I use this project
 

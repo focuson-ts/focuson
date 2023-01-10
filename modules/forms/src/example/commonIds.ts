@@ -1,5 +1,5 @@
 import { CommonLensRestParam, IntParam, RestParams, StringParam } from "../common/restD";
-import { NameAnd } from "@focuson/utils";
+import { NameAnd } from "@focuson-nw/utils";
 
 export const allCommonIds = {
   brandRef: { ...IntParam, commonLens: 'brandRef', testValue: 10 },

@@ -1,27 +1,27 @@
 import { isMainPage, MainPageD, PageD, RefD, RestDefnInPageProperties } from "../common/pageD";
-import { beforeSeparator, RestAction, safeObject, sortedEntries } from "@focuson/utils";
+import { beforeSeparator, RestAction, safeObject, sortedEntries } from "@focuson-nw/utils";
 import { fetcherName, providerName, restDetailsName, sampleName } from "./names";
 import { isRestLens, makeCommonValueForTest, makeParamValueForTest, postFixForEndpoint, RestD, stateToNameAndUrlAndParamsForState } from "../common/restD";
 import { TSParams } from "./config";
 import { lensFocusQueryWithSlashAndTildaFromIdentity, stateCodeBuilderWithSlashAndTildaFromIdentity } from "./lens";
-import { parsePath } from "@focuson/lens";
+import { parsePath } from "@focuson-nw/lens";
 import { addStringToEndOfAllButLast, indentList, paramsForRestAction } from "./codegen";
-import { getRestTypeDetails, getUrlForRestAction, printRestAction, RestActionDetail, restActionForName } from "@focuson/rest";
+import { getRestTypeDetails, getUrlForRestAction, printRestAction, RestActionDetail, restActionForName } from "@focuson-nw/rest";
 import { CompDataD } from "../common/dataD";
 
 export function makeAllPactsForPage<G> ( params: TSParams, page: RefD<G> ): string[] {
   return [
-    `import { fetchWithPrefix, loggingFetchFn, stringToSimpleMsg, SimpleMessage } from "@focuson/utils";`,
-    `import { loadTree,wouldLoad,FetcherTree } from "@focuson/fetcher";`,
+    `import { fetchWithPrefix, loggingFetchFn, stringToSimpleMsg, SimpleMessage } from "@focuson-nw/utils";`,
+    `import { loadTree,wouldLoad,FetcherTree } from "@focuson-nw/fetcher";`,
     `import { pactWith } from "jest-pact";`,
-    `import { rest, RestCommand, restL,RestToTransformProps } from "@focuson/rest";`,
-    `import { simpleMessagesL} from "@focuson/pages";`,
-    `import { Lenses, massTransform, Transform } from "@focuson/lens";`,
+    `import { rest, RestCommand, restL,RestToTransformProps } from "@focuson-nw/rest";`,
+    `import { simpleMessagesL} from "@focuson-nw/pages";`,
+    `import { Lenses, massTransform, Transform } from "@focuson-nw/lens";`,
     `import * as samples from '../${page.name}/${page.name}.samples'`,
     `import {emptyState, ${params.stateName} , commonIds, identityL, pathToLens } from "../common";`,
     `import * as rests from "../rests";`,
     `import { restUrlMutator } from "../rests";`,
-    `import { restCommandsFromFetchers, traceL } from "@focuson/focuson";`,
+    `import { restCommandsFromFetchers, traceL } from "@focuson-nw/focuson";`,
     `import { config } from "../config";`,
     // ...makeFetcherImports ( params, page ),
     '',

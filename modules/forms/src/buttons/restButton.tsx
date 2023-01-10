@@ -1,11 +1,11 @@
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
-import { decamelize, MessageAndLevel, RequiredCopyDetails, RestAction, RestResult, SimpleMessageLevel, toArray, } from "@focuson/utils";
+import { decamelize, MessageAndLevel, RequiredCopyDetails, RestAction, RestResult, SimpleMessageLevel, toArray, } from "@focuson-nw/utils";
 import { indentList, opt, optT } from "../codegen/codegen";
 import { restDetailsName } from "../codegen/names";
 import { EnabledBy, enabledByString } from "./enabledBy";
 import { ButtonWithControl } from "./allButtons";
-import { CopyResultCommand, DeleteCommand, MessageCommand, RestChangeCommands, RestLoadWindowWithoutRestProps, } from "@focuson/rest";
-import { ConfirmWindow, } from "@focuson/pages";
+import { CopyResultCommand, DeleteCommand, MessageCommand, RestChangeCommands, RestLoadWindowWithoutRestProps, } from "@focuson-nw/rest";
+import { ConfirmWindow, } from "@focuson-nw/pages";
 
 
 function findFullOnSuccess ( onSuccess: RestChangeCommands[], copyDetails: RequiredCopyDetails[], deletes: string[], messages: MessageAndLevel[] ) {
@@ -17,7 +17,7 @@ function findFullOnSuccess ( onSuccess: RestChangeCommands[], copyDetails: Requi
 }
 function makeRestButton<B extends RestButtonInPage<G>, G> (): ButtonCreator<RestButtonInPage<G>, G> {
   return {
-    import: '@focuson/form_components',
+    import: '@focuson-nw/form_components',
     makeButton: ( { params, mainPage, parent, name, button } ) => {
       const { action, confirm, restName, validate, text, deleteOnSuccess, messageOnSuccess, buttonType, copyOnSuccess, onSuccess, onComplete, on404, loader } = button
       // if ( !isMainPage ( parent ) ) throw new Error ( 'Currently rest buttons are only valid on main pages' ) //Note: this is just for 'how do we specify them'

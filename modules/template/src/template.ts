@@ -1,5 +1,5 @@
-import { GetNameFn } from "@focuson/lens";
-import { NameAnd, sortedEntries } from "@focuson/utils";
+import { GetNameFn } from "@focuson-nw/lens";
+import { NameAnd, sortedEntries } from "@focuson-nw/utils";
 
 
 export function addValue<Main, T> ( nL: GetNameFn<Main, T>, name: string, value: T ): GetNameFn<Main, T> {

@@ -17,9 +17,9 @@
     "typescript": "^4.1.5",
     "crypto-js": "^4.0.0",
     "@types/crypto-js": "^4.0.1",
-    "@focuson/lens": "1.44.0",
-    "@focuson/nav": "1.44.0",
-    "@focuson/codeondemand": "1.44.0"
+    "@focuson-nw/lens": "1.44.0",
+    "@focuson-nw/nav": "1.44.0",
+    "@focuson-nw/codeondemand": "1.44.0"
   },
   "description": "Demonstrating the code on demand approach for tic_tac_toe",
   "devDependencies": {
@@ -55,7 +55,7 @@
   "license": "MIT",
   "main": "dist/index",
   "types": "dist/index",
-  "repository": "github:focuson-ts/focuson",
+  "repository": "github:LewisT543/focuson-nw",
   "scripts": {
     "start": "react-scripts start",
     "test": "jest --config jest.config.json",
@@ -63,12 +63,12 @@
   },
   "version": "1.44.0",
   "template": "codeondemand",
-  "name": "@focuson/example_codeondemand_tictactoe",
+  "name": "@focuson-nw/example_codeondemand_tictactoe",
   "details": {
     "links": [
-      "@focuson/lens",
-      "@focuson/nav",
-      "@focuson/codeondemand"
+      "@focuson-nw/lens",
+      "@focuson-nw/nav",
+      "@focuson-nw/codeondemand"
     ],
     "extraDeps": {
       "@types/crypto-js": "^4.0.1"

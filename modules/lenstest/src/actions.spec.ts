@@ -1,7 +1,7 @@
-import { AuthoriseTableData } from "@focuson/form_components";
-import { lensState, LensState } from "@focuson/state";
+import { AuthoriseTableData } from "@focuson-nw/form_components";
+import { lensState, LensState } from "@focuson-nw/state";
 import { approvePendingFees, authoriseApprovedFees } from "../../forms/src/actions";
-import { displayTransformsInState } from "@focuson/lens";
+import { displayTransformsInState } from "@focuson-nw/lens";
 
 const pending: AuthoriseTableData = { status: 'PENDING', type: 'CR', amount: '1.00' }
 const pendingHeld: AuthoriseTableData = { status: 'PENDING', hold: true, type: 'CR', amount: '1.00' }

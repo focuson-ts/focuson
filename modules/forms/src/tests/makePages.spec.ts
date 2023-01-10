@@ -4,7 +4,7 @@ import { RepeatingPageD } from "../example/repeating/repeating.pageD";
 import { CreateEAccountPageD } from "../example/createEAccount/createEAccount.pageD";
 import { paramsForTest } from "./paramsForTest";
 import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
-import { NameAnd } from "@focuson/utils";
+import { NameAnd } from "@focuson-nw/utils";
 
 
 describe ( "makeInitialvalue", () => {
@@ -54,8 +54,8 @@ describe ( "makePages", () => {
 
   it ( "should make the 'pages' description for the generated app", () => {
     expect ( makePages ( paramsForTest, [ EAccountsSummaryPD, RepeatingPageD ], undefined ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "import { identityOptics } from '@focuson/lens';",
-      "import { Loading, MultiPageDetails, simpleMessagesPageConfig } from '@focuson/pages';",
+      "import { identityOptics } from '@focuson-nw/lens';",
+      "import { Loading, MultiPageDetails, simpleMessagesPageConfig } from '@focuson-nw/pages';",
       "import {Context,  FState } from './common';",
       "import { EAccountsSummaryPage } from './EAccountsSummary/EAccountsSummary.render';",
       "import { EAccountsSummary_CreatePlanPage } from './EAccountsSummary/CreatePlan.render';",
@@ -63,8 +63,8 @@ describe ( "makePages", () => {
       "import { Repeating_RepeatingLinePage } from './Repeating/RepeatingLine.render';",
       "import { EAccountsSummaryOptionals } from './EAccountsSummary/EAccountsSummary.optionals'; ",
       "import { RepeatingOptionals } from './Repeating/Repeating.optionals'; ",
-      "import { ConfirmCommitWindow } from '@focuson/pages';",
-      "import { RestLoadWindow } from '@focuson/form_components';",
+      "import { ConfirmCommitWindow } from '@focuson-nw/pages';",
+      "import { RestLoadWindow } from '@focuson-nw/form_components';",
       "",
       "const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Context> (  Loading )",
       "const identity = identityOptics<FState> ();",
@@ -80,13 +80,13 @@ describe ( "makePages", () => {
   } )
   it ( "should create an initial from 'empty'", () => {
     expect ( makePages ( paramsForTest, [ CreateEAccountPageD ], undefined ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "import { identityOptics } from '@focuson/lens';",
-      "import { Loading, MultiPageDetails, simpleMessagesPageConfig } from '@focuson/pages';",
+      "import { identityOptics } from '@focuson-nw/lens';",
+      "import { Loading, MultiPageDetails, simpleMessagesPageConfig } from '@focuson-nw/pages';",
       "import {Context,  FState } from './common';",
       "import { CreateEAccountPage } from './CreateEAccount/CreateEAccount.render';",
       "import { CreateEAccountOptionals } from './CreateEAccount/CreateEAccount.optionals'; ",
-      "import { ConfirmCommitWindow } from '@focuson/pages';",
-      "import { RestLoadWindow } from '@focuson/form_components';",
+      "import { ConfirmCommitWindow } from '@focuson-nw/pages';",
+      "import { RestLoadWindow } from '@focuson-nw/form_components';",
       "",
       "const simpleMessagesConfig = simpleMessagesPageConfig<FState, string, Context> (  Loading )",
       "const identity = identityOptics<FState> ();",
@@ -104,8 +104,8 @@ describe ( "makePages", () => {
       other: { imports: [ `otherImport` ], text: 'otherExtraPage' },
     }
     expect ( makePages ( paramsForTest, [ CreateEAccountPageD ], override ).map ( s => s.replace ( /"/g, "'" ) ) ).toEqual ( [
-      "import { identityOptics } from '@focuson/lens';",
-      "import { Loading, MultiPageDetails, simpleMessagesPageConfig } from '@focuson/pages';",
+      "import { identityOptics } from '@focuson-nw/lens';",
+      "import { Loading, MultiPageDetails, simpleMessagesPageConfig } from '@focuson-nw/pages';",
       "import {Context,  FState } from './common';",
       "import { CreateEAccountPage } from './CreateEAccount/CreateEAccount.render';",
       "import { CreateEAccountOptionals } from './CreateEAccount/CreateEAccount.optionals'; ",

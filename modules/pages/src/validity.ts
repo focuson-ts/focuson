@@ -1,6 +1,6 @@
 import { focusPageClassName } from "./PageTemplate";
-import { createSimpleMessage, DateFn, safeArray, safeString } from "@focuson/utils";
-import { LensState, reasonFor } from "@focuson/state";
+import { createSimpleMessage, DateFn, safeArray, safeString } from "@focuson-nw/utils";
+import { LensState, reasonFor } from "@focuson-nw/state";
 import { HasSimpleMessageL } from "./simpleMessage";
 import React, { useEffect, useRef } from "react";
 import { useRefs } from "./refControls";

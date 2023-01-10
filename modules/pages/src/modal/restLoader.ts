@@ -1,7 +1,7 @@
-import { Optional, Transform } from "@focuson/lens";
-import { RestCommand, RestLoadWindowWithoutRestProps } from "@focuson/rest";
+import { Optional, Transform } from "@focuson-nw/lens";
+import { RestCommand, RestLoadWindowWithoutRestProps } from "@focuson-nw/rest";
 import { applyPageOps, PageSelection } from "../pageSelection";
-import { DateFn, RestAction, safeArray } from "@focuson/utils";
+import { DateFn, RestAction, safeArray } from "@focuson-nw/utils";
 import { ModalContext } from "./modalCommitAndCancelButton";
 
 

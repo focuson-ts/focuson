@@ -1,4 +1,4 @@
-import { errorMonad, errorPromiseMonad } from "@focuson/utils";
+import { errorMonad, errorPromiseMonad } from "@focuson-nw/utils";
 
 describe ( "error monad", () => {
   it ( "call the functions in order", () => {

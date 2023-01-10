@@ -1,9 +1,9 @@
 {
   "template"      : "codeondemand",
-  "name"          : "@focuson/examples_codeondemand_cpq",
+  "name"          : "@focuson-nw/examples_codeondemand_cpq",
   "description"   : "Demonstrating the code on demand approach for configure price quotation",
   "details": {
-    "links"       : ["@focuson/lens", "@focuson/nav", "@focuson/codeondemand"],
+    "links"       : ["@focuson-nw/lens", "@focuson-nw/nav", "@focuson-nw/codeondemand"],
     "extraDeps"   : {},
     "extraDevDeps": {},
     "port": 3006,

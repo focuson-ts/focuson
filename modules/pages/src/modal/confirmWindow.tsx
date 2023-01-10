@@ -1,11 +1,11 @@
 import { closeOnePageTxs, findClosePageTxs, ModalContext } from "./modalCommitAndCancelButton";
-import { LensState, reasonFor } from "@focuson/state";
+import { LensState, reasonFor } from "@focuson-nw/state";
 import { fromPathGivenState, PageSelection, pageSelections, popPage } from "../pageSelection";
-import { Transform } from "@focuson/lens";
+import { Transform } from "@focuson-nw/lens";
 import { DisplayArbitraryPageFn } from "../pageConfig";
 import { replaceTextUsingPath } from "../replace";
-import { ConfirmWindowChangeCommands, confirmWindowCommandProcessors, ModalChangeCommands, processChangeCommandProcessor, RestAndInputProcessorsConfig } from "@focuson/rest";
-import { SimpleMessage, stringToSimpleMsg, toArray } from "@focuson/utils";
+import { ConfirmWindowChangeCommands, confirmWindowCommandProcessors, ModalChangeCommands, processChangeCommandProcessor, RestAndInputProcessorsConfig } from "@focuson-nw/rest";
+import { SimpleMessage, stringToSimpleMsg, toArray } from "@focuson-nw/utils";
 
 export interface ConfirmProps {
   pageName?: string;

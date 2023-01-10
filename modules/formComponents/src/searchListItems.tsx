@@ -1,6 +1,6 @@
 import { CommonStateProps } from "./common";
-import { LensState } from "@focuson/state";
-import { PageMode } from "@focuson/utils";
+import { LensState } from "@focuson-nw/state";
+import { PageMode } from "@focuson-nw/utils";
 
 export interface SearchListItemsCDProps<S, T, Context> extends CommonStateProps<S, T, Context> {
     title: string

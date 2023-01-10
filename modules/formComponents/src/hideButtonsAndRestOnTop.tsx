@@ -1,4 +1,4 @@
-import { NameAnd } from "@focuson/utils";
+import { NameAnd } from "@focuson-nw/utils";
 
 export interface HideButtonsAndRestOnTopProps {
   children: JSX.Element | JSX.Element[];

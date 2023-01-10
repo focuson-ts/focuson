@@ -1,6 +1,6 @@
-import { FocusOnContext } from "@focuson/focuson";
+import { FocusOnContext } from "@focuson-nw/focuson";
 import { CommonStateProps } from "./common";
-import { NameAnd } from "@focuson/utils";
+import { NameAnd } from "@focuson-nw/utils";
 import {Label} from "./label";
 import {Radio} from "./radio";
 

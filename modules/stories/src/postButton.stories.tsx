@@ -1,7 +1,7 @@
 import { Story } from "@storybook/react";
 import { SBookProvider } from "./sbookProvider";
-import { HasPostCommand, PostButton } from "@focuson/poster";
-import { identityOptics } from "@focuson/lens";
+import { HasPostCommand, PostButton } from "@focuson-nw/poster";
+import { identityOptics } from "@focuson-nw/lens";
 
 export default {
   component: PostButton,

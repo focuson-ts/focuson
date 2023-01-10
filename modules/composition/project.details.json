@@ -1,12 +1,12 @@
 {
   "template":    "noreact",
-  "name":        "@focuson/composition",
+  "name":        "@focuson-nw/composition",
   "description": "Composition of functions",
   "details":     {
     "test":         true,
     "publish":      false,
     "links":        [
-      "@focuson/utils"
+      "@focuson-nw/utils"
     ],
     "extraDeps":    {},
     "extraDevDeps": {},

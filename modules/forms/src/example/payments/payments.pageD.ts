@@ -90,7 +90,7 @@ export const PaymentsPageD: ExampleMainPage = {
 }`
     },
     isChaps: {
-      constructedBy: 'code', imports: [ `import {optional} from '@focuson/lens'` ], code: `id => {
+      constructedBy: 'code', imports: [ `import {optional} from '@focuson-nw/lens'` ], code: `id => {
       const paymentType: Optional<FState, string> = id.focusQuery ( 'Payments' ).focusQuery ( 'summary' ).focusQuery ( 'payment' ).focusQuery ( 'paymentType' )
       const getter = ( s: string ): boolean | undefined => s === 'CHAPS'
       const setter = ( s: string, b: boolean ): string | undefined => b ? 'CHAPS' : 'EMT'

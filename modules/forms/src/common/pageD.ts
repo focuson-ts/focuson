@@ -1,8 +1,8 @@
 import { AllDataDD, CompDataD, findAllDataDs, HasGuards, HasLayout, isCompDD, NamesAndDataDs } from "./dataD";
 import { CommonLensRestParam, RestD } from "./restD";
-import { HasName, NameAnd, PageMode, RestAction, safeString, sortedEntries, unique } from "@focuson/utils";
-import { HasTitle } from "@focuson/pages";
-import { getRestTypeDetails, NewPageChangeCommands, RestActionDetail, RestChangeCommands } from "@focuson/rest";
+import { HasName, NameAnd, PageMode, RestAction, safeString, sortedEntries, unique } from "@focuson-nw/utils";
+import { HasTitle } from "@focuson-nw/pages";
+import { getRestTypeDetails, NewPageChangeCommands, RestActionDetail, RestChangeCommands } from "@focuson-nw/rest";
 
 
 export interface DomainDefnInPage<G> {
@@ -135,6 +135,7 @@ export interface ModalPageD<Buttons, G> extends HasLayout, HasGuards<G>, HasName
   modes: PageMode[],
   display: PageDisplay<G>, //importFrom is deprecated
   buttons: ButtonDefnInPage<Buttons>;
+  className?: string,
   shouldModalPageCloseOnClickAway? : boolean
   haveTopRightCrossToCancel? : boolean
 }

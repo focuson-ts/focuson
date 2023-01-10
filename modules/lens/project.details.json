@@ -1,11 +1,11 @@
 {
   "template":    "noreact",
-  "name":        "@focuson/lens",
+  "name":        "@focuson-nw/lens",
   "description": "A simple implementation of lens using type script",
   "details":     {
     "ideify":       true,
     "publish":      true,
-    "links":        ["@focuson/utils"],
+    "links":        ["@focuson-nw/utils"],
     "extraDeps":    {},
     "extraDevDeps": {},
     "tsc":          true

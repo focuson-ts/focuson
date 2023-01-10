@@ -1,5 +1,5 @@
-import { Optional } from "@focuson/lens";
-import { LensState } from "@focuson/state";
+import { Optional } from "@focuson-nw/lens";
+import { LensState } from "@focuson-nw/state";
 
 //Exploring options to see what the actions should look like
 

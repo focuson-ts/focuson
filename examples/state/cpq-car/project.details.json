@@ -1,9 +1,9 @@
 {
   "template":    "react",
-  "name":        "@focuson/example_state_cpq_car",
+  "name":        "@focuson-nw/example_state_cpq_car",
   "description": "A fully featured car leasing cpq",
   "details":     {
-    "links":        ["@focuson/lens", "@focuson/nav", "@focuson/state"],
+    "links":        ["@focuson-nw/lens", "@focuson-nw/nav", "@focuson-nw/state"],
     "extraDeps":    {"react-i18next": "^11.8.5", "i18next": "^19.8.4"},
     "extraDevDeps": {},
     "test":         true,

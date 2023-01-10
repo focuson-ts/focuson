@@ -1,5 +1,5 @@
-import { NameAnd, SimpleMessage } from "@focuson/utils";
-import { Lenses, Optional } from "@focuson/lens";
+import { NameAnd, SimpleMessage } from "@focuson-nw/utils";
+import { Lenses, Optional } from "@focuson-nw/lens";
 
 export type SingleMessagesPostProcessor<MSGs> = ( msgs: MSGs[] ) => MSGs[]
 export type MessagesPostProcessor<MSGs> = NameAnd<SingleMessagesPostProcessor<MSGs>>

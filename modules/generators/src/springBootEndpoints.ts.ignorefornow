@@ -1,4 +1,4 @@
-import { endPointName, isCommonLens, makeParamsForJava, RefD } from "@focuson/forms";
+import { endPointName, isCommonLens, makeParamsForJava, RefD } from "@focuson-nw/forms";
 import { composeMappers, FileAndStrings, firstCall, indent, Indenter, iterateOver, iterateOverChangingAcc, MakeFullAcc, pageAndRestDetailsToRestDetailsArray, RefAndRestDetails, refDToPageAndRestDetailsArray, refDToPageRestDetailAndParamArray, RefRestActionAndMutation0, RefRestActionAndParam, refRestActionToMutationLevel0, RefRestAndAction, stringsMonoid, TaglessMapGenerator } from "./generators";
 
 export interface SpringBootSingleEndpointInterpreter<Acc> {

@@ -1,8 +1,8 @@
-import { LensState, reasonFor } from "@focuson/state";
-import { Lenses, Transform } from "@focuson/lens";
-import { safeArray } from "@focuson/utils";
+import { LensState, reasonFor } from "@focuson-nw/state";
+import { Lenses, Transform } from "@focuson-nw/lens";
+import { safeArray } from "@focuson-nw/utils";
 import { LabelAndStringInput } from "./labelAndInput";
-import { FocusOnContext } from "@focuson/focuson";
+import { FocusOnContext } from "@focuson-nw/focuson";
 import { Layout } from "./layout";
 import { defaultDisplayTitleFn, defaultOnClick, defaultOneRowWithGetValue, DisplayTitleFn, getValueForTable, rawTable, TableProps } from "./table";
 import { LabelAndFixedNumber } from "./labelAndFixedNumber";

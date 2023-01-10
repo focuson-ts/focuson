@@ -1,6 +1,6 @@
 import { RestD } from "../common/restD";
 import { JavaWiringParams } from "./config";
-import { RestAction, safePick } from "@focuson/utils";
+import { RestAction, safePick } from "@focuson-nw/utils";
 import { findQueryMutationResolver, ResolverData } from "./makeJavaFetchersInterface";
 
 

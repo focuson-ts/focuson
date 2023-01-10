@@ -1,5 +1,5 @@
-import { Lenses, Optional } from "@focuson/lens";
-import { FetchFn, safeArray } from "@focuson/utils";
+import { Lenses, Optional } from "@focuson-nw/lens";
+import { FetchFn, safeArray } from "@focuson-nw/utils";
 
 export interface PostDebug {
     postDebug?: boolean

@@ -1,7 +1,7 @@
 import { FetcherTree, loadTree, WouldLoad, wouldLoad } from "./fetcherTree";
-import { LensState, lensState } from "@focuson/state";
-import { Optional } from "@focuson/lens";
-import { FetchFn } from "@focuson/utils";
+import { LensState, lensState } from "@focuson-nw/state";
+import { Optional } from "@focuson-nw/lens";
+import { FetchFn } from "@focuson-nw/utils";
 
 export interface HasFetcherDebug {
   debug?: FetcherDebug

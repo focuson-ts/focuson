@@ -1,5 +1,5 @@
 import { ModalCancelButton, ModalContext } from "./modal/modalCommitAndCancelButton";
-import { LensState } from "@focuson/state";
+import { LensState } from "@focuson-nw/state";
 
 export function Loading<S, C extends ModalContext<S>> ( state: LensState<S, any, C> ) {
   let pageSelections = state.context.pageSelectionL.getOption ( state.main );

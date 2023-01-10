@@ -1,8 +1,8 @@
-import { copyFile, copyFiles, DirectorySpec, templateFile, writeToFile } from "@focuson/files";
+import { copyFile, copyFiles, DirectorySpec, templateFile, writeToFile } from "@focuson-nw/files";
 import { JavaWiringParams } from "../codegen/config";
 import fs from "fs";
 import { foldPagesToRestToMutationsAndResolvers, forEachRest, forEachRestAndActionsUsingRefs, mapRestAndResolverincRefs, RestD } from "../common/restD";
-import { detailsLog, GenerateLogLevel, NameAnd, safeArray, safeObject, safeString, sortedEntries, toArray, unique } from "@focuson/utils";
+import { detailsLog, GenerateLogLevel, NameAnd, safeArray, safeObject, safeString, sortedEntries, toArray, unique } from "@focuson-nw/utils";
 import { allMainPages, allRestAndActions, allRests, PageD, RefD, RestDefnInPageProperties } from "../common/pageD";
 import { addStringToEndOfList, indentList } from "../codegen/codegen";
 import { makeAllJavaVariableName } from "../codegen/makeSample";

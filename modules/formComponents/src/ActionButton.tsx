@@ -1,9 +1,9 @@
-import { LensState, reasonFor } from "@focuson/state";
-import { NameAnd, SimpleMessage } from "@focuson/utils";
-import {  PageSelection, wrapWithErrors } from "@focuson/pages";
-import { CommandButtonChangeCommands, commandButtonCommandProcessors, InputProcessorsConfig, processChangeCommandProcessor } from "@focuson/rest";
-import { Transform } from "@focuson/lens";
-import { FocusOnContext,makeInputProcessorsConfig } from "@focuson/focuson";
+import { LensState, reasonFor } from "@focuson-nw/state";
+import { NameAnd, SimpleMessage } from "@focuson-nw/utils";
+import {  PageSelection, wrapWithErrors } from "@focuson-nw/pages";
+import { CommandButtonChangeCommands, commandButtonCommandProcessors, InputProcessorsConfig, processChangeCommandProcessor } from "@focuson-nw/rest";
+import { Transform } from "@focuson-nw/lens";
+import { FocusOnContext,makeInputProcessorsConfig } from "@focuson-nw/focuson";
 import { CustomButtonType, getButtonClassName } from "./common";
 
 export interface ActionButtonProps<S, C> extends CustomButtonType {

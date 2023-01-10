@@ -1,12 +1,12 @@
 import { RefD } from "../common/pageD";
-import { NameAnd, safeObject, toArray, unique } from "@focuson/utils";
+import { NameAnd, safeObject, toArray, unique } from "@focuson-nw/utils";
 import { JavaWiringParams } from "./config";
 import { mutationClassName, mutationDetailsName, mutationMethodName } from "./names";
 import { AllLensRestParams, RestD } from "../common/restD";
 import { indentList } from "./codegen";
 import { allInputParamNames, allInputParams, AllJavaTypes, allOutputParams, AutoSqlResolver, AutowiredMutationParam, displayParam, getMakeMock, getMessagesForSuccessAndFailure, importForTubles, InputMutationParam, isAutoSqlResolver, isBodyMutationParam, isHasInOut, isInputParam, isManualMutation, isManualMutationThatThrowsException, isMessageMutation, isMultipleMutation, isMutationThatIsaList, isOutputParam, isSelectMutationThatIsAList, isSqlMutationThatIsAList, isSqlOutputParam, isStoredProcOutputParam, javaTypeForOutput, JavaTypePrimitive, ManualMutation, MutationDetail, MutationParam, MutationsForRestAction, nameOrSetParam, OutputMutationParam, parametersFor, paramName, paramNamePathOrValue, PrimaryMutationDetail, requiredmentCheckCodeForJava, RSGetterForJavaType, SelectMutation, setParam, SqlFunctionMutation, SqlMutation, SqlMutationThatIsAList, StoredProcedureMutation } from "../common/resolverD";
-import { applyToTemplate } from "@focuson/template";
-import { restActionForName } from "@focuson/rest";
+import { applyToTemplate } from "@focuson-nw/template";
+import { restActionForName } from "@focuson-nw/rest";
 import { outputParamsDeclaration, paramsDeclaration } from "./makeSpringEndpoint";
 import { isRepeatingDd, Pattern } from "../common/dataD";
 import { getDataFromRS } from "./makeDBFetchers";

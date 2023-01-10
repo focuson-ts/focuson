@@ -1,11 +1,11 @@
 import { enzymeSetup } from "./enzymeAdapterSetup";
-import { WithTextLayout } from "@focuson/form_components";
+import { WithTextLayout } from "@focuson-nw/form_components";
 import { mount } from "enzyme";
-import { HasRestCommands } from "@focuson/rest";
-import { HasPageSelection } from "@focuson/pages";
-import { HasSimpleMessages } from "@focuson/utils";
-import { HasTagHolder } from "@focuson/template";
-import { lensState } from "@focuson/state";
+import { HasRestCommands } from "@focuson-nw/rest";
+import { HasPageSelection } from "@focuson-nw/pages";
+import { HasSimpleMessages } from "@focuson-nw/utils";
+import { HasTagHolder } from "@focuson-nw/template";
+import { lensState } from "@focuson-nw/state";
 import { context } from "./context.fixture";
 
 enzymeSetup ()

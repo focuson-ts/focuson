@@ -1,10 +1,10 @@
-import { NameAndLensFn, Optional } from "@focuson/lens";
-import { LensProps, LensState } from "@focuson/state";
+import { NameAndLensFn, Optional } from "@focuson-nw/lens";
+import { LensProps, LensState } from "@focuson-nw/state";
 import { simpleMessagesLFn } from "./simpleMessage";
 import { FocusedPage } from "./focusedPage";
 import { PageTemplateProps } from "./PageTemplate";
-import { HasSimpleMessages, PageMode, SimpleMessage } from "@focuson/utils";
-import { ModalChangeCommands, NewPageChangeCommands } from "@focuson/rest";
+import { HasSimpleMessages, PageMode, SimpleMessage } from "@focuson-nw/utils";
+import { ModalChangeCommands, NewPageChangeCommands } from "@focuson-nw/rest";
 
 export interface MultiPageDetails<S, Context> {
   [ name: string ]: OnePageDetails<S, any, any, any, Context>
@@ -61,7 +61,7 @@ export function isModalPageDetails<S, D, Msgs, Config extends PageConfig<S, D, M
 }
 
 /** In most applications this will be extended. For example it is quite likely to have a lens from S to the PostCommands added to it if
- * the application uses @focuson/posters.
+ * the application uses @focuson-nw/posters.
  * If customer ids and application ids and other things are needed, this is a great way to inject them: Store the ids in the stage and extend this with lens to them
  *
  * Usually this will be put in a context at the top of the react render chain, and be available to pages underneath.

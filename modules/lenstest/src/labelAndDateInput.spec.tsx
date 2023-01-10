@@ -1,4 +1,4 @@
-import { parseDate } from "@focuson/form_components";
+import { parseDate } from "@focuson-nw/form_components";
 
 
 const firstMay2020 = new Date ( '2020/05/01' )

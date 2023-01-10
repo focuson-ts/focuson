@@ -1,5 +1,5 @@
-import { Lenses, Optional } from "@focuson/lens";
-import { addDebugErrorMessage, post, PostCommand, PostDebug, PostDetails, Posters } from "@focuson/poster";
+import { Lenses, Optional } from "@focuson-nw/lens";
+import { addDebugErrorMessage, post, PostCommand, PostDebug, PostDetails, Posters } from "@focuson-nw/poster";
 
 
 interface TestPostState {

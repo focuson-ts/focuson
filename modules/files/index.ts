@@ -1,5 +1,5 @@
-import { applyToTemplate } from "@focuson/template";
-import { log } from "@focuson/utils";
+import { applyToTemplate } from "@focuson-nw/template";
+import { log } from "@focuson-nw/utils";
 
 
 const fs = require ( 'fs' )//Why comment: because things like story book die if we have this as an import

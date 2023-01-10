@@ -1,9 +1,9 @@
 {
   "template":    "codeondemand",
-  "name":        "@focuson/example_codeondemand_tictactoe",
+  "name":        "@focuson-nw/example_codeondemand_tictactoe",
   "description": "Demonstrating the code on demand approach for tic_tac_toe",
   "details":     {
-    "links":        ["@focuson/lens", "@focuson/nav", "@focuson/codeondemand"],
+    "links":        ["@focuson-nw/lens", "@focuson-nw/nav", "@focuson-nw/codeondemand"],
     "extraDeps":    {"@types/crypto-js": "^4.0.1"},
     "extraDevDeps": {},
     "port":         3005,

@@ -1,7 +1,7 @@
 import { CommonStateProps } from "./common";
-import { decamelize, safeArray } from "@focuson/utils";
-import { LensState, reasonFor } from "@focuson/state";
-import { Transform } from "@focuson/lens";
+import { decamelize, safeArray } from "@focuson-nw/utils";
+import { LensState, reasonFor } from "@focuson-nw/state";
+import { Transform } from "@focuson-nw/lens";
 
 export interface TableWithCheckboxInputProps<S, T, Context> extends CommonStateProps<S, T[], Context> {
   order: (keyof T)[];

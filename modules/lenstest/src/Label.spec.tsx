@@ -1,12 +1,12 @@
 import { shallow } from "enzyme";
 
-import { Label } from "@focuson/form_components";
-import { Lenses } from "@focuson/lens";
-import { lensState } from "@focuson/state";
-import { defaultPageSelectionAndRestCommandsContext, FocusOnContext } from "@focuson/focuson";
-import { MultiPageDetails, PageSelection } from "@focuson/pages";
+import { Label } from "@focuson-nw/form_components";
+import { Lenses } from "@focuson-nw/lens";
+import { lensState } from "@focuson-nw/state";
+import { defaultPageSelectionAndRestCommandsContext, FocusOnContext } from "@focuson-nw/focuson";
+import { MultiPageDetails, PageSelection } from "@focuson-nw/pages";
 import { enzymeSetup } from "./enzymeAdapterSetup";
-import { testDateFn } from "@focuson/utils";
+import { testDateFn } from "@focuson-nw/utils";
 
 
 enzymeSetup ()

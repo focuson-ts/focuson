@@ -1,11 +1,11 @@
-import { simpleMessagesL } from "@focuson/pages";
-import { defaultPageSelectionAndRestCommandsContext, FocusOnConfig, restCountL } from "@focuson/focuson";
+import { simpleMessagesL } from "@focuson-nw/pages";
+import { defaultPageSelectionAndRestCommandsContext, FocusOnConfig, restCountL } from "@focuson-nw/focuson";
 import { commonIds, Context, emptyState, FState } from "./{commonFile}";
-import { defaultDateFn, fetchWithDelay, fetchWithPrefix, loggingFetchFn, loadingCursorFetch, SimpleMessage, stringToSimpleMsg } from "@focuson/utils";
+import { defaultDateFn, fetchWithDelay, fetchWithPrefix, loggingFetchFn, loadingCursorFetch, SimpleMessage, stringToSimpleMsg } from "@focuson-nw/utils";
 import { restDetails, restUrlMutator } from "./{restsFile}";
 import { newFetchers } from "./{fetchersFile}";
 import { pages } from "./{pagesFile}";
-import {MyCombined} from '@focuson/form_components';
+import {MyCombined} from '@focuson-nw/form_components';
 
 
 export const context: Context = {

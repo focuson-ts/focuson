@@ -9,7 +9,7 @@ import { jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
 import { paramsForTest } from "./paramsForTest";
 import { allCommonIds, fromCommonIds } from "../example/commonIds";
 import { accountT, addT } from "../example/database/tableNames";
-import { safeArray, unique } from "@focuson/utils";
+import { safeArray, unique } from "@focuson-nw/utils";
 import { createPlanRestD, eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { jointAccountSql } from "../example/jointAccount/jointAccount.sql";
 import { ExampleDataD } from "../example/common";

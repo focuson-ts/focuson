@@ -1,4 +1,4 @@
-# @focuson/rest
+# @focuson-nw/rest
 
 Higher level libraries in @focuson need to communicate with the backend. This provides the mechanisms to get 'restful' 
 access to them. Specifically the low level code to process `RestCommands`

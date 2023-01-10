@@ -1,7 +1,7 @@
 import { DatePickerProps, DatePickerSelectFn, defaultDatePickerWithExtraTxs, parseDate, RawDatePicker } from "./datePicker";
-import { after, isSameDay, NameAnd, timeOnServerinGMT } from "@focuson/utils";
-import { LensState } from "@focuson/state";
-import { ConfirmProps, ModalContext, openConfirmWindowTxs } from "@focuson/pages";
+import { after, isSameDay, NameAnd, timeOnServerinGMT } from "@focuson-nw/utils";
+import { LensState } from "@focuson-nw/state";
+import { ConfirmProps, ModalContext, openConfirmWindowTxs } from "@focuson-nw/pages";
 
 interface EventDetails extends ConfirmProps {
   time: string,

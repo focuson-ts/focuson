@@ -46,7 +46,7 @@ to run the react code. It would be nice to incorporate the code on demand code i
 backlog'.
 
 ### Command line
-There is a command line tool that transpiles components and json [@focuson/cod](https://www.npmjs.com/package/@focuson/cod). 
+There is a command line tool that transpiles components and json [@focuson-nw/cod](https://www.npmjs.com/package/@focuson-nw/cod). 
 Typically when working I run this tool in a different terminal than the react server.
 
 ## Writing React 'Code on Demand' Components
@@ -83,7 +83,7 @@ ensures that this is only loaded once) That component is rendered
 ## But how do I do state management and side effects and things???
 
 The example projects show some simple examples. [In the 'Configure Price Quoting' example](https://github.com/focuson-ts/focuson/tree/master/examples/codeondemand/cpq) 
-The use of the @focuson/state allows state management to be composed and majority of it is baked into the component. When
+The use of the @focuson-nw/state allows state management to be composed and majority of it is baked into the component. When
 it is better to have a side effect such as 'you win' or 'pay', then contexts can be used to inject functions that can be called.
 
 The resulting code is typically beautifully decoupled (constraints empower, and being forced to only use Context or Props)

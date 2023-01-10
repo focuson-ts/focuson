@@ -1,4 +1,4 @@
-import { LensState } from "@focuson/state";
+import { LensState } from "@focuson-nw/state";
 
 
 export function useRefs ( state: LensState<any, any, any> ): boolean {

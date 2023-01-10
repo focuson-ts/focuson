@@ -1,5 +1,5 @@
-import { NameAnd } from "@focuson/utils";
-import { FocusedProps } from "@focuson/pages";
+import { NameAnd } from "@focuson-nw/utils";
+import { FocusedProps } from "@focuson-nw/pages";
 
 
 export interface UnpaidCardOrMisuseItemsProps<S,C> extends FocusedProps<S, number, C>{

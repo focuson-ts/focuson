@@ -1,11 +1,11 @@
-import { lensState, LensState } from "@focuson/state";
+import { lensState, LensState } from "@focuson-nw/state";
 import { shallow } from "enzyme";
 import { enzymeSetup } from "./enzymeAdapterSetup";
-import { getValueForTable, Table } from "@focuson/form_components";
-import { findJoiner, safeArray } from "@focuson/utils";
-import { TableWithVaryingOrder } from "@focuson/form_components";
-import { HasPageSelection, PageSelectionContext, pageSelectionlens } from "@focuson/pages";
-import { identityOptics } from "@focuson/lens";
+import { getValueForTable, Table } from "@focuson-nw/form_components";
+import { findJoiner, safeArray } from "@focuson-nw/utils";
+import { TableWithVaryingOrder } from "@focuson-nw/form_components";
+import { HasPageSelection, PageSelectionContext, pageSelectionlens } from "@focuson-nw/pages";
+import { identityOptics } from "@focuson-nw/lens";
 
 enzymeSetup ()
 

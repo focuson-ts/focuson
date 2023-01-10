@@ -1,4 +1,4 @@
-import { DirectorySpec, writeToFile } from "@focuson/files";
+import { DirectorySpec, writeToFile } from "@focuson-nw/files";
 import { CombinedParams } from "../codegen/config";
 import { flatMapToModal, MainPageD, RefD } from "../common/pageD";
 import { makeJavaFiles } from "./makeJavaFiles";
@@ -8,7 +8,7 @@ import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 import { MakeButton } from "../codegen/makeButtons";
 import { validate } from "./validateModel";
 import { foldPagesToRestToMutationsAndResolvers } from "../common/restD";
-import { GenerateLogLevel, NameAnd, safeArray, toArray, unique } from "@focuson/utils";
+import { GenerateLogLevel, NameAnd, safeArray, toArray, unique } from "@focuson-nw/utils";
 import * as process from "process";
 import { makeCriticalReport, makeReport, makeReportData } from "../reporting/report";
 import { AppConfig } from "../appConfig";
@@ -63,7 +63,7 @@ export const params: Omit<CombinedParams, 'focusOnVersion'> = {
 
 export const directorySpec: DirectorySpec = {
   main: '.',
-  backup: 'node_modules/@focuson/forms'
+  backup: 'node_modules/@focuson-nw/forms'
 }
 export function maxTuplesFor<G> ( pages: RefD<G>[] ) {
   return foldPagesToRestToMutationsAndResolvers<G, number> ( pages, 0, {

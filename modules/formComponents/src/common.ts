@@ -1,6 +1,6 @@
-import { LensState } from "@focuson/state";
-import {NameAnd, PageMode} from "@focuson/utils";
-import { InputChangeCommands } from "@focuson/rest";
+import { LensState } from "@focuson-nw/state";
+import {NameAnd, PageMode} from "@focuson-nw/utils";
+import { InputChangeCommands } from "@focuson-nw/rest";
 
 
 export interface CommonComponentProps {

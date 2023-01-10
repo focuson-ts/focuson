@@ -1,5 +1,5 @@
 import { Fetcher, MutateFn } from "./fetchers";
-import { Optional } from "@focuson/lens";
+import { Optional } from "@focuson-nw/lens";
 import { partialFnUsageError } from "./errorhandling";
 
 

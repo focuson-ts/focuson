@@ -1,5 +1,5 @@
 
-import {NameAnd} from "@focuson/utils";
+import {NameAnd} from "@focuson-nw/utils";
 import { PrimaryMutations } from "./resolverD";
 import { RefD } from "./pageD";
 import { DataD, DateDDMMYYY_DD, IntegerDD, NatNumDd, RepeatingDataD, StringDD } from "./dataD";

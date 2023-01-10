@@ -1,5 +1,5 @@
 import { DBTable } from "../common/resolverD";
-import { beforeAfterSeparator, beforeSeparator, ints, mapPathPlusInts, NameAnd, safeArray, safeString, toArray, unique } from "@focuson/utils";
+import { beforeAfterSeparator, beforeSeparator, ints, mapPathPlusInts, NameAnd, safeArray, safeString, toArray, unique } from "@focuson-nw/utils";
 import { AllLensRestParams, EntityAndWhere, InsertSqlStrategy, OneTableInsertSqlStrategyForIds, OneTableInsertSqlStrategyForNoIds, RestParams } from "../common/restD";
 import { CompDataD, emptyDataFlatMap, flatMapDD, HasSample, isRepeatingDd, OneDataDD, Pattern, PrimitiveDD } from "../common/dataD";
 import { RefD, RestDefnInPageProperties } from "../common/pageD";

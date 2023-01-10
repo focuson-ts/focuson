@@ -1,14 +1,14 @@
 {
   "template":    "components",
-  "name":        "@focuson/form_components",
-  "description": "Components that can be used by @focuson/forms ",
+  "name":        "@focuson-nw/form_components",
+  "description": "Components that can be used by @focuson-nw/forms ",
   "details":     {
     "ideify":       true,
     "test":         false,
     "publish":      true,
     "links":        [
-      "@focuson/state",
-      "@focuson/focuson"
+      "@focuson-nw/state",
+      "@focuson-nw/focuson"
     ],
     "extraDeps":    {},
     "extraDevDeps": {},

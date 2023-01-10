@@ -1,5 +1,5 @@
-import { HasDependencies } from "@focuson/focuson";
-import { LensProps } from "@focuson/state";
+import { HasDependencies } from "@focuson-nw/focuson";
+import { LensProps } from "@focuson-nw/state";
 
 interface ExternalComponentProps<S,C> extends LensProps<S, any, C>{
   id: string

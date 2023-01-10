@@ -1,7 +1,7 @@
 //Common Data Definitions
 import { DatePicker2CD, DisplayCompD, EndMonthYearDatePickerWithLengthCD, LabelAndCheckboxInputCD, LabelAndDateInputCD, LabelAndDropDownCD, LabelAndMonthYearLengthCD, LabelAndNumberInputCD, LabelAndRadioCD, LabelAndStringInputCD, LabelAndTextAreaCD, LabelAndYNCheckboxInputCD, NumberInputCD, StartMonthYearDatePickerWithLengthCD } from "./componentsD";
 import { ComponentDisplayParams } from "../codegen/makeRender";
-import { BooleanValidations, NameAnd, NumberValidations, safeArray, StringValidations } from "@focuson/utils";
+import { BooleanValidations, NameAnd, NumberValidations, safeArray, StringValidations } from "@focuson-nw/utils";
 import { Guards } from "../buttons/guardButton";
 import { DBTable } from "./resolverD";
 import { DbValues } from "../codegen/makeSqlFromEntities";

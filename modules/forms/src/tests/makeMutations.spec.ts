@@ -4,7 +4,7 @@ import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD"
 import { eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { InputMutationParam, IntegerMutationParam, ManualMutation, MutationParam, NullMutationParam, OutputForManualParam, OutputForSqlMutationParam, OutputForStoredProcMutationParam, PrimaryMutationDetail, StringMutationParam } from "../common/resolverD";
 import { fromCommonIds } from "../example/commonIds";
-import { safeArray, safeObject } from "@focuson/utils";
+import { safeArray, safeObject } from "@focuson-nw/utils";
 import { PaymentsPageD } from "../example/payments/payments.pageD";
 import { newPaymentsRD, ValidatePayeeRD } from "../example/payments/payments.restD";
 import { LinkedAccountDetailsPD } from "../example/linkedAccount/linkedAccountDetails.pageD";

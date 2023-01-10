@@ -1,10 +1,10 @@
 /** Mixed into Fetcher when we want to have a component that normally displays the state (which might well be the most common case
  * An example would be 'go get profile' as a fetcher and then have a <Profile... > component that shows it.
  */
-import { DirtyPrism, Optional } from "@focuson/lens";
+import { DirtyPrism, Optional } from "@focuson-nw/lens";
 import { FetcherDebug } from "./setjson";
 import { partialFnUsageError } from "./errorhandling";
-import { FetchFn } from "@focuson/utils";
+import { FetchFn } from "@focuson-nw/utils";
 
 
 /** One of our design principles is that we separate 'what we do' from 'doing it'. This eases testing enormously.

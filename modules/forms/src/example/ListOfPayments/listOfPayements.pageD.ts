@@ -5,7 +5,7 @@ import { HideButtonsCD } from "../../buttons/hideButtonsCD";
 import { RawButtons } from "../../buttons/allButtons";
 import { AllGuards } from "../../buttons/guardButton";
 import { NatNumDd, OneLineStringDD } from "../../common/dataD";
-import { toArray } from "@focuson/utils";
+import { toArray } from "@focuson-nw/utils";
 
 export const AddressModalPage: ExampleModalPage = {
   pageType: 'ModalPage',

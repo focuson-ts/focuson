@@ -1,11 +1,11 @@
 import React from 'react';
 import { Story } from "@storybook/react";
-import { HasPageSelection, HasSimpleMessageL, ModalButton,  PageSelectionContext, simpleMessagesL } from "@focuson/pages";
+import { HasPageSelection, HasSimpleMessageL, ModalButton,  PageSelectionContext, simpleMessagesL } from "@focuson-nw/pages";
 import { SBookProvider } from "./sbookProvider";
-import { defaultPageSelectionAndRestCommandsContext, defaultPageSelectionContext, FocusOnContext } from "@focuson/focuson";
-import { HasSimpleMessages, testDateFn ,PageMode} from "@focuson/utils";
-import { HasRestCommands } from "@focuson/rest";
-import { HasTagHolder } from "@focuson/template";
+import { defaultPageSelectionAndRestCommandsContext, defaultPageSelectionContext, FocusOnContext } from "@focuson-nw/focuson";
+import { HasSimpleMessages, testDateFn ,PageMode} from "@focuson-nw/utils";
+import { HasRestCommands } from "@focuson-nw/rest";
+import { HasTagHolder } from "@focuson-nw/template";
 
 export default {
   component: ModalButton,

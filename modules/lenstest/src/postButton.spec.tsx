@@ -1,6 +1,6 @@
-import { lensState } from "@focuson/state";
+import { lensState } from "@focuson-nw/state";
 import { mount } from "enzyme";
-import { HasPostCommand, PostButton, postCommandsL } from "@focuson/poster";
+import { HasPostCommand, PostButton, postCommandsL } from "@focuson-nw/poster";
 import { enzymeSetup } from "./enzymeAdapterSetup";
 
 

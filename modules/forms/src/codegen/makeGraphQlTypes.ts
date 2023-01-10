@@ -1,9 +1,9 @@
 import { AllDataDD, AllDataFlatMap, CompDataD, compDataDIn, DataD, emptyDataFlatMap, flatMapDD, isDataDd, isRepeatingDd, OneDataDD } from "../common/dataD";
 import { findMustConstructForRest, findUniqueDataDsAndRestTypeDetails, RestD, RestParams } from "../common/restD";
 import { resolverName } from "./names";
-import { RestAction } from "@focuson/utils";
+import { RestAction } from "@focuson-nw/utils";
 import { paramsForRestAction } from "./codegen";
-import { QueryOrMutation, RestActionDetail, RestTypeDetails } from "@focuson/rest";
+import { QueryOrMutation, RestActionDetail, RestTypeDetails } from "@focuson-nw/rest";
 
 export function makeGraphQlTypeFolder<G> ( { keyword, create, postfix }: RestTypeDetails ): AllDataFlatMap<string, G> {
   return {

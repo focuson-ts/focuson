@@ -1,7 +1,7 @@
 import { isMainPage, isModalPage, MainPageD, PageD } from "../common/pageD";
 import { TSParams } from "./config";
 import { domainName, domainsFileName, emptyFileName, emptyName, pageComponentName, renderFileName, sampleName, samplesFileName } from "./names";
-import { parsePath } from "@focuson/lens";
+import { parsePath } from "@focuson-nw/lens";
 import { stateCodeBuilderWithSlashAndTildaFromIdentity } from "./lens";
 
 
@@ -17,10 +17,10 @@ export function makeOneModalStory<B, G> ( params: TSParams, p: PageD<B, G> ): st
 export function makeOneMainStory<B, G> ( params: TSParams, p: MainPageD<B, G> ): string[] {
   return [
     `import { Story } from "@storybook/react";`,
-    `import {  PageMode } from "@focuson/utils";`,
-    `import { findOneSelectedPageDetails,  PageSelection } from "@focuson/pages";`,
-    `import { SBookProvider } from "@focuson/stories";`,
-    `import { Lenses } from "@focuson/lens";`,
+    `import {  PageMode } from "@focuson-nw/utils";`,
+    `import { findOneSelectedPageDetails,  PageSelection } from "@focuson-nw/pages";`,
+    `import { SBookProvider } from "@focuson-nw/stories";`,
+    `import { Lenses } from "@focuson-nw/lens";`,
     `import { Context, emptyState, ${params.stateName} } from "../${params.commonFile}";`,
     `import { context } from "../config";`,
     `import { pages } from "../pages";`,

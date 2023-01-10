@@ -2,11 +2,11 @@
 import ReactDOM from 'react-dom';
 
 import {SHA256} from 'crypto-js'
-import {getElement, setJsonForFlux} from "@focuson/state";
-import {ComponentFromServer, LoadAndCompileCache, MakeComponentFromServer,ComponentCacheContext} from "@focuson/codeondemand";
+import {getElement, setJsonForFlux} from "@focuson-nw/state";
+import {ComponentFromServer, LoadAndCompileCache, MakeComponentFromServer,ComponentCacheContext} from "@focuson-nw/codeondemand";
 import React from "react";
 import {CpqData} from "./CpqDomain";
-import {Nav} from "@focuson/nav";
+import {Nav} from "@focuson-nw/nav";
 import { context } from "./context";
 
 

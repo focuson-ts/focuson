@@ -1,6 +1,6 @@
 
 
-@focuson/poster is a project to help with 'post' commands in react applications.
+@focuson-nw/poster is a project to help with 'post' commands in react applications.
 
 Many react applications can be split up as follows:
 

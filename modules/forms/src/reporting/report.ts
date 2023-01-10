@@ -1,12 +1,12 @@
 import { dataDsIn, flatMapToModal, isMainData, isMainPage, isModalData, MainPageD, PageD, RestDefnInPageProperties } from "../common/pageD";
 import { indentList } from "../codegen/codegen";
-import { NameAnd, RestAction, safeArray, sortedEntries, toArray, unique } from "@focuson/utils";
+import { NameAnd, RestAction, safeArray, sortedEntries, toArray, unique } from "@focuson-nw/utils";
 import { isModal, isModalButtonInPage, ModalOrMainButtonInPage } from "../buttons/modalButtons";
 import { ButtonD, ButtonWithControl, isButtonWithControl } from "../buttons/allButtons";
 import { GuardWithCondition, isGuardButton } from "../buttons/guardButton";
 import { CompDataD, emptyDataFlatMap, flatMapDD, HasGuards, isCompDD, isRepeatingDd, OneDataDD } from "../common/dataD";
 import { isCommonLens, RestD, RestParams } from "../common/restD";
-import { printRestAction } from "@focuson/rest";
+import { printRestAction } from "@focuson-nw/rest";
 import { findAllTableAndFieldDatasIn } from "../codegen/makeSqlFromEntities";
 import { isRestButtonInPage } from "../buttons/restButton";
 import { CommonParamError, findAllCommonParamsDetails, validateCommonParams } from "../codegen/makeCommon";

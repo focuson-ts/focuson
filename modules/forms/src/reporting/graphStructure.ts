@@ -1,6 +1,6 @@
 import { PageD } from "../common/pageD";
 import { isModal, isModalButtonInPage } from "../buttons/modalButtons";
-import { sortedEntries } from "@focuson/utils";
+import { sortedEntries } from "@focuson-nw/utils";
 import { ButtonD, isButtonWithControl } from "../buttons/allButtons";
 import { indentList } from "../codegen/codegen";
 import { isGuardButton } from "../buttons/guardButton";

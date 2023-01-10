@@ -1,12 +1,12 @@
-import { LensState, reasonFor, SetJsonReasonEvent } from "@focuson/state";
-import { ModalContext } from "@focuson/pages";
+import { LensState, reasonFor, SetJsonReasonEvent } from "@focuson-nw/state";
+import { ModalContext } from "@focuson-nw/pages";
 import { DatePickerProps, RawDatePicker } from "./datePicker";
-import { displayTransformsInState, Transform } from "@focuson/lens";
-import { FocusOnContext } from "@focuson/focuson";
+import { displayTransformsInState, Transform } from "@focuson-nw/lens";
+import { FocusOnContext } from "@focuson-nw/focuson";
 import { LabelAndInputProps, LabelAndTInput, makeInputChangeTxs } from "./labelAndInput";
 import { InputSelectFn, StringTransformer } from "./transformers";
-import { numberOrUndefined, setEndDate, setLength, setStartDate, StartEndDateAndLength, StringValidations } from "@focuson/utils";
-import { InputChangeCommands } from "@focuson/rest";
+import { numberOrUndefined, setEndDate, setLength, setStartDate, StartEndDateAndLength, StringValidations } from "@focuson-nw/utils";
+import { InputChangeCommands } from "@focuson-nw/rest";
 
 
 export interface StartMonthYearDatePickerWithLengthProps<S, C> extends DatePickerProps<S, C> {

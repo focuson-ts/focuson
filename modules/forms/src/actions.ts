@@ -1,8 +1,8 @@
-import { LensState, reasonFor } from "@focuson/state";
-import { AuthoriseTableData } from "@focuson/form_components";
-import { Lenses, Transform } from "@focuson/lens";
-import { safeArray } from "@focuson/utils";
-import { ModalContext, openConfirmWindow } from "@focuson/pages";
+import { LensState, reasonFor } from "@focuson-nw/state";
+import { AuthoriseTableData } from "@focuson-nw/form_components";
+import { Lenses, Transform } from "@focuson-nw/lens";
+import { safeArray } from "@focuson-nw/utils";
+import { ModalContext, openConfirmWindow } from "@focuson-nw/pages";
 
 function sum<D extends AuthoriseTableData> ( ds: D[], crOrDr: 'CR' | 'DR' ): number {
   return safeArray ( ds ).reduce ( ( acc, v ) => v.type == crOrDr ? acc + Number.parseFloat ( v.amount ) : acc, 0 )

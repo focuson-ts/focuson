@@ -1,14 +1,14 @@
 {
   "template":    "noreact",
-  "name":        "@focuson/pages",
+  "name":        "@focuson-nw/pages",
   "description": "Used when we want a simple many page application",
   "details":     {
     "ideify":       true,
     "publish":      true,
     "links":        [
-      "@focuson/state",
-      "@focuson/fetcher",
-      "@focuson/rest"
+      "@focuson-nw/state",
+      "@focuson-nw/fetcher",
+      "@focuson-nw/rest"
     ],
     "extraDeps":    {},
     "extraDevDeps": {},

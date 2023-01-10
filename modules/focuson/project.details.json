@@ -1,12 +1,12 @@
 {
   "template":    "noreact",
-  "name":        "@focuson/focuson",
+  "name":        "@focuson-nw/focuson",
   "description": "Brings together state management, declarative fetching and posting of data to/from apis and some simple page management",
   "details":     {
     "ideify":       true,
     "publish":      true,
     "links":        [
-      "@focuson/pages", "@focuson/poster"
+      "@focuson-nw/pages", "@focuson-nw/poster"
     ],
     "extraDeps":    {},
     "extraDevDeps": {},

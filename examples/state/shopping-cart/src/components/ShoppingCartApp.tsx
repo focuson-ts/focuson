@@ -3,7 +3,7 @@ import React from 'react'
 import {AppData, toCartsProductL, toInventoryProductsL} from "../domain";
 import {Cart} from "./Cart";
 import {Inventory} from "./Inventory";
-import {LensProps} from "@focuson/state";
+import {LensProps} from "@focuson-nw/state";
 import { Context } from "../context";
 
 export function ShoppingCartApp({state}: LensProps<AppData,AppData, Context>) {

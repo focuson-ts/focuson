@@ -1,6 +1,6 @@
 import { allRestAndActions, dataDsIn } from "../common/pageD";
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
-import { sortedEntries } from "@focuson/utils";
+import { sortedEntries } from "@focuson-nw/utils";
 import { CreatePlanPD } from "../example/eAccounts/createPlanPD";
 
 describe ( "dataDsIn", () => {

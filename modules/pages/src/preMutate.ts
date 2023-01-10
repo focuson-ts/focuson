@@ -1,10 +1,10 @@
 //** This clears up the state if it is the first time something is called */
 import { PageSelection, PageSelectionContext } from "./pageSelection";
-import { Lenses, massTransform, Optional, Transform } from "@focuson/lens";
-import { safeArray, toArray } from "@focuson/utils";
+import { Lenses, massTransform, Optional, Transform } from "@focuson-nw/lens";
+import { safeArray, toArray } from "@focuson-nw/utils";
 import { findMainPageDetails, lensForPageDetails } from "./selectedPage";
 import { MultiPageDetails } from "./pageConfig";
-import { ModalProcessorsConfig, newPageCommandProcessors, processChangeCommandProcessor } from "@focuson/rest";
+import { ModalProcessorsConfig, newPageCommandProcessors, processChangeCommandProcessor } from "@focuson-nw/rest";
 
 export var firstTimeHappened: boolean = false
 export function resetFirstTimeHappened(){

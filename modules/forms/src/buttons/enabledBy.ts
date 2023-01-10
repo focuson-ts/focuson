@@ -1,4 +1,4 @@
-import { toArray } from "@focuson/utils";
+import { toArray } from "@focuson-nw/utils";
 
 export interface CustomButtonType {
   buttonType?: 'primary' | 'secondary' | 'button'

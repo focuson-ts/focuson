@@ -1,4 +1,4 @@
-import { LoadInfo, MutateFn } from '@focuson/fetcher';
+import { LoadInfo, MutateFn } from '@focuson-nw/fetcher';
 import { stateAndFromApiFetcher } from "./tagFetcher.fixture";
 import { PageSpecState, secondPageSelectedState } from "./page.fixture";
 

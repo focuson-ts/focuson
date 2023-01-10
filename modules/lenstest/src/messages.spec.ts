@@ -1,7 +1,7 @@
-import { removeOldMessages, simpleMessagesL } from "@focuson/pages";
-import { DateFn, HasSimpleMessages, SimpleMessage } from "@focuson/utils";
-import { infoToSuccessMessagesPostProcessor } from "@focuson/rest";
-import { Lenses } from "@focuson/lens";
+import { removeOldMessages, simpleMessagesL } from "@focuson-nw/pages";
+import { DateFn, HasSimpleMessages, SimpleMessage } from "@focuson-nw/utils";
+import { infoToSuccessMessagesPostProcessor } from "@focuson-nw/rest";
+import { Lenses } from "@focuson-nw/lens";
 
 const msg0: SimpleMessage = { "level": "info", "msg": "the info message", "time": "2022-09-19T16:55:41.018Z" };
 const msg1: SimpleMessage = { "level": "error", "msg": "the error message {/CommonIds/accountId}", "time": "2022-09-19T16:54:41.018Z" };

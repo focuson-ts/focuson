@@ -1,12 +1,12 @@
 {
   "template":    "noreact",
-  "name":        "@focuson/template",
+  "name":        "@focuson-nw/template",
   "description": "Putting the values from lens into strings. For things like urls, or general string substitutio",
   "details":     {
     "ideify":       true,
     "publish":      true,
     "links":        [
-      "@focuson/utils"
+      "@focuson-nw/utils"
     ],
     "extraDeps":    {},
     "extraDevDeps": {},

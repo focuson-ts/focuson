@@ -1,7 +1,7 @@
-import { HasSimpleMessages, safeArray, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson/utils";
+import { HasSimpleMessages, safeArray, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson-nw/utils";
 import { confirmWindowCommandProcessors, CopyCommand, copyCommandProcessor, copyJustStringsCommandProcessor, CopyJustStringsCommands, CopyResultCommand, copyResultCommandProcessor, DeleteCommand, deleteCommandProcessor, DeleteMessageStrictCopySetProcessorsConfig, DeletePageTagsCommand, deletePageTagsCommandProcessor, HasCloseOnePage, MessageCommand, messageCommandProcessor, MinimalPageSelection, modalCommandProcessors, ModalProcessorsConfig, OpenMainPageCommand, OpenModalPageCommand, processOpenMainPageCommandProcessor, processOpenModalPageCommandProcessor, RestAndInputProcessorsConfig, restChangeCommandProcessors, SetChangeCommand, setCommandProcessor, StrictCopyCommand, strictCopyCommandProcessor, TimeStampCommand } from "./changeCommands";
-import { displayTransformsInState, lensBuilder, Lenses, parsePath } from "@focuson/lens";
-import { TagHolder } from "@focuson/template";
+import { displayTransformsInState, lensBuilder, Lenses, parsePath } from "@focuson-nw/lens";
+import { TagHolder } from "@focuson-nw/template";
 
 
 interface abc {

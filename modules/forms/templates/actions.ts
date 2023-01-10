@@ -1,4 +1,4 @@
-import { LensState, reasonFor } from "@focuson/state";
+import { LensState, reasonFor } from "@focuson-nw/state";
 
 
 export function exampleActionThatBlowsAwayTheState<S, C> ( s: LensState<S, any, C>, id: string ) {

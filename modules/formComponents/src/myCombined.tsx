@@ -1,9 +1,9 @@
-import { findThisPageElement, firstTimeHappened, focusPageClassName, PageDetailsForCombine, popPage, resetFirstTimeHappened } from "@focuson/pages";
-import { LensState, reasonFor } from "@focuson/state";
+import { findThisPageElement, firstTimeHappened, focusPageClassName, PageDetailsForCombine, popPage, resetFirstTimeHappened } from "@focuson-nw/pages";
+import { LensState, reasonFor } from "@focuson-nw/state";
 import { Messages } from "./messages";
-import { HasTagHolder } from "@focuson/template";
-import { HasSimpleMessages } from "@focuson/utils";
-import { FocusOnContext, HasEnvironment } from "@focuson/focuson";
+import { HasTagHolder } from "@focuson-nw/template";
+import { HasSimpleMessages } from "@focuson-nw/utils";
+import { FocusOnContext, HasEnvironment } from "@focuson-nw/focuson";
 import { DebugState } from "./debugState";
 import { lastIndexOf } from "./common";
 import { useEffect } from "react";

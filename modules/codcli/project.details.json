@@ -1,6 +1,6 @@
 {
   "template":    "noreact",
-  "name":        "@focuson/cod",
+  "name":        "@focuson-nw/cod",
   "description": "A command line tool to help with the code on demand",
   "details":     {
     "publish":      true,

@@ -1,9 +1,9 @@
 {
   "template":    "react",
-  "name":        "@focuson/example_state_cart",
+  "name":        "@focuson-nw/example_state_cart",
   "description": "The redux 'shopping cart' example' using lens",
   "details":     {
-    "links":        ["@focuson/lens", "@focuson/state"],
+    "links":        ["@focuson-nw/lens", "@focuson-nw/state"],
     "extraDeps":    {},
     "extraDevDeps": {},
     "port":         3008,

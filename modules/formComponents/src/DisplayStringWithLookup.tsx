@@ -1,6 +1,6 @@
 import { CommonStateProps } from "./common";
-import { NameAnd, safeString } from "@focuson/utils";
-import { PageSelectionContext, replaceTextUsingPath } from "@focuson/pages";
+import { NameAnd, safeString } from "@focuson-nw/utils";
+import { PageSelectionContext, replaceTextUsingPath } from "@focuson-nw/pages";
 
 
 export interface DisplayStringWithLookupProps<S, C> extends CommonStateProps<S, string , C> {

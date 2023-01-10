@@ -1,4 +1,4 @@
-import { HowOften } from "@focuson/form_components";
+import { HowOften } from "@focuson-nw/form_components";
 
 export const otherSourcesOfIncomeSample = {
     otherIncomeResponse: [

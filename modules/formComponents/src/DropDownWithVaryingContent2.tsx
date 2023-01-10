@@ -1,8 +1,8 @@
-import { LensState } from "@focuson/state";
+import { LensState } from "@focuson-nw/state";
 import { CommonStateProps, DropDownOnChangeProps } from "./common";
 import { LabelAndDropdown } from "./labelAndDropdown";
-import { NameAnd, safeObject } from "@focuson/utils";
-import { FocusOnContext } from "@focuson/focuson";
+import { NameAnd, safeObject } from "@focuson-nw/utils";
+import { FocusOnContext } from "@focuson-nw/focuson";
 import { HasButtons } from "./makeButtons";
 
 export interface DropDownWithVaryingContent2Props<S, C> extends CommonStateProps<S, string, C>, DropDownOnChangeProps<S, C>, HasButtons {

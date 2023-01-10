@@ -1,6 +1,6 @@
 {
   "template":    "noreact",
-  "name":        "@focuson/utils",
+  "name":        "@focuson-nw/utils",
   "description": "Common utilities for the @focuson project",
   "details":     {
     "ideify":       true,

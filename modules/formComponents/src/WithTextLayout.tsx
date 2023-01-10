@@ -1,6 +1,6 @@
-import { LensState } from "@focuson/state";
-import { FocusOnContext } from "@focuson/focuson";
-import { replaceTextUsingPath } from "@focuson/pages";
+import { LensState } from "@focuson-nw/state";
+import { FocusOnContext } from "@focuson-nw/focuson";
+import { replaceTextUsingPath } from "@focuson-nw/pages";
 
 
 export interface WithTextLayoutProps<S, C> {

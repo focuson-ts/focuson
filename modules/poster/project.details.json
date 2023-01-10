@@ -1,11 +1,11 @@
 {
   "template":    "noreact",
-  "name":        "@focuson/poster",
+  "name":        "@focuson-nw/poster",
   "description": "This allows for declarative 'posting' ",
   "details":     {
     "ideify":       true,
     "publish":      true,
-    "links":        ["@focuson/lens", "@focuson/fetcher"],
+    "links":        ["@focuson-nw/lens", "@focuson-nw/fetcher"],
     "extraDeps":    {},
     "extraDevDeps": {},
     "tsc":          true

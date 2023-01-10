@@ -1,5 +1,5 @@
-import { after, DateInfo, getHoursAndMinutes, isSameDay, millisecondsBetweenServerAndBrowser, setLength, setStartDate, timeOnServerinGMT } from "@focuson/utils";
-import { calculateLength, setEndDate } from "@focuson/utils/src/dateutils";
+import { after, DateInfo, getHoursAndMinutes, isSameDay, millisecondsBetweenServerAndBrowser, setLength, setStartDate, timeOnServerinGMT } from "@focuson-nw/utils";
+import { calculateLength, setEndDate } from "@focuson-nw/utils/src/dateutils";
 
 function quickParser ( s: string ) {return new Date ( Date.parse ( s ) )}
 describe ( "isSameDate", () => {

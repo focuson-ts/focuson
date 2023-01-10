@@ -5,7 +5,7 @@ import { AuthorisedChargesRD, operatorEligabilityRD, SelectOneBrandPageRD, Summa
 import { HideButtonsCD } from "../../buttons/hideButtonsCD";
 import { StringParam } from "../../common/restD";
 import { AuthoriseCustomisation } from "./authoriseCharges.customise";
-import { memoise } from "@focuson/utils";
+import { memoise } from "@focuson-nw/utils";
 import { fromCommonIds } from "../commonIds";
 
 export function SummaryOfChargesPage ( c: AuthoriseCustomisation ): ExampleModalPage {

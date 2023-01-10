@@ -1,6 +1,6 @@
-import { dirtyPrism, DirtyPrism, identityOptics, Iso, Lenses, Optional, orUndefined } from "@focuson/lens";
-import { child, descriptionOf, fetchAndMutate, Fetcher, fetcherTree, FetcherTree, fetcherWhenUndefined, fromTaggedFetcher, Holder, holderIso, ifEEqualsFetcher, lensAndChild, loadSelectedFetcher, loadTree, radioButtonFetcher, ReqFn, wouldLoad } from "@focuson/fetcher";
-import { Tags } from "@focuson/template";
+import { dirtyPrism, DirtyPrism, identityOptics, Iso, Lenses, Optional, orUndefined } from "@focuson-nw/lens";
+import { child, descriptionOf, fetchAndMutate, Fetcher, fetcherTree, FetcherTree, fetcherWhenUndefined, fromTaggedFetcher, Holder, holderIso, ifEEqualsFetcher, lensAndChild, loadSelectedFetcher, loadTree, radioButtonFetcher, ReqFn, wouldLoad } from "@focuson-nw/fetcher";
+import { Tags } from "@focuson-nw/template";
 
 
 export interface SiteMap {

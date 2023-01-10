@@ -1,6 +1,6 @@
-import { FetcherDebug } from "@focuson/fetcher";
-import { ModalDebug, SelectedPageDebug } from "@focuson/pages";
-import { RestDebug } from "@focuson/rest";
+import { FetcherDebug } from "@focuson-nw/fetcher";
+import { ModalDebug, SelectedPageDebug } from "@focuson-nw/pages";
+import { RestDebug } from "@focuson-nw/rest";
 import { AccordionsInDebug, TracingDebug } from "./config";
 import { TagFetcherDebug } from "./tagFetcher";
 

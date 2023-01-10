@@ -3,7 +3,7 @@ import { JointAccountDd } from "../example/jointAccount/jointAccount.dataD";
 import { addressRestD } from "../example/postCodeDemo/addressSearch.restD";
 import { jointAccountRestD } from "../example/jointAccount/jointAccount.restD";
 import { accountT, addT } from "../example/database/tableNames";
-import { safeArray } from "@focuson/utils";
+import { safeArray } from "@focuson-nw/utils";
 import { jointAccountSql } from "../example/jointAccount/jointAccount.sql";
 
 const jointAccountRestDTables = jointAccountRestD.tables

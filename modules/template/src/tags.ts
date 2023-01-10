@@ -1,6 +1,6 @@
 import { expand } from "./template";
-import { GetNameFn, NameAndLens, Optional } from "@focuson/lens";
-import { isRestStateChange, NameAnd, RestAction, toArray, unique } from "@focuson/utils";
+import { GetNameFn, NameAndLens, Optional } from "@focuson-nw/lens";
+import { isRestStateChange, NameAnd, RestAction, toArray, unique } from "@focuson-nw/utils";
 
 
 export type Tags = (string | undefined)[]

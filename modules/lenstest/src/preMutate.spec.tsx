@@ -1,8 +1,8 @@
 //** This clears up the state if it is the first time something is called */
-import { preMutateForPages } from "@focuson/pages";
+import { preMutateForPages } from "@focuson-nw/pages";
 import { context, ContextForTest, emptyState, firstPageSelectedState, invalidPageState, PageSpecState, rootState, stateWith, stateWithFirstTimes } from "./page.fixture";
-import { makeModalProcessorsConfig } from "@focuson/focuson";
-import { PageMode } from "@focuson/utils";
+import { makeModalProcessorsConfig } from "@focuson-nw/focuson";
+import { PageMode } from "@focuson-nw/utils";
 
 
 const config = makeModalProcessorsConfig ( firstPageSelectedState, context )

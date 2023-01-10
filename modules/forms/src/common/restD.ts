@@ -1,10 +1,10 @@
 import { CompDataD, findAllDataDs, findDataDDIn } from "./dataD";
-import { NameAnd, RestAction, safeObject, safeString, sortedEntries, toArray, unique } from "@focuson/utils";
+import { NameAnd, RestAction, safeObject, safeString, sortedEntries, toArray, unique } from "@focuson-nw/utils";
 import { paramsForRestAction } from "../codegen/codegen";
 import { AccessDetails, GuardedMutation, MultipleMutation, MutationDetail, MutationsForRestAction, PrimaryMutationDetail, PrimaryMutations, SelectMutation } from "./resolverD";
 import { MainEntity, WhereFromQuery } from "../codegen/makeSqlFromEntities";
 import { allMainPages, MainPageD, PageD, RefD, RestDefnInPageProperties } from "./pageD";
-import { getRestTypeDetails, InfoToSuccessPostProcessMessage, RestActionDetail, restActionForName, UrlAndParamsForState } from "@focuson/rest";
+import { getRestTypeDetails, InfoToSuccessPostProcessMessage, RestActionDetail, restActionForName, UrlAndParamsForState } from "@focuson-nw/rest";
 import { findChildResolvers, ResolverData } from "../codegen/makeJavaFetchersInterface";
 
 

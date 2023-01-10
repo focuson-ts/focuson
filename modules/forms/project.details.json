@@ -1,15 +1,15 @@
 {
   "template":    "forms",
-  "name":        "@focuson/forms",
+  "name":        "@focuson-nw/forms",
   "description": "Allows us to define data that is stored in a database, or perhaps an api",
   "details":     {
     "ideify":       true,
     "test":         true,
     "publish":      true,
     "links":        [
-      "@focuson/utils",
-      "@focuson/files",
-      "@focuson/focuson"
+      "@focuson-nw/utils",
+      "@focuson-nw/files",
+      "@focuson-nw/focuson"
     ],
     "extraDeps":    {},
     "extraDevDeps": {},

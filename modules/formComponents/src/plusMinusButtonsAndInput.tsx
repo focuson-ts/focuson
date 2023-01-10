@@ -1,8 +1,8 @@
-import { NameAnd } from "@focuson/utils";
-import { LensState, reasonFor } from "@focuson/state";
-import { Transform } from "@focuson/lens";
-import { FocusOnContext } from "@focuson/focuson";
-import { FocusedProps } from "@focuson/pages";
+import { NameAnd } from "@focuson-nw/utils";
+import { LensState, reasonFor } from "@focuson-nw/state";
+import { Transform } from "@focuson-nw/lens";
+import { FocusOnContext } from "@focuson-nw/focuson";
+import { FocusedProps } from "@focuson-nw/pages";
 import { LabelAndNumberInput } from "./labelAndInput";
 import { Label } from "./label";
 import { CustomButtonType, getButtonClassName } from "./common";

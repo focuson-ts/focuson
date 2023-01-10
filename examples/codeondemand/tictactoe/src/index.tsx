@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import {SHA256} from 'crypto-js'
 import {GameContext, GameData, GameDomain, onClickSquare} from "./GameDomain";
-import {getElement} from "@focuson/state";
-import {ComponentCacheContext, ComponentFromServer, LoadAndCompileCache, loadJsonFromUrl, MakeComponentFromServer} from "@focuson/codeondemand";
+import {getElement} from "@focuson-nw/state";
+import {ComponentCacheContext, ComponentFromServer, LoadAndCompileCache, loadJsonFromUrl, MakeComponentFromServer} from "@focuson-nw/codeondemand";
 import React, {useContext} from "react";
 import { context, Context } from "./context";
 

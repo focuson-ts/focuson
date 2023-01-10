@@ -1,6 +1,6 @@
 import React from 'react';
-import { ariaRoleForMessageLevel, SimpleMessage, SimpleMessageLevel, unique } from "@focuson/utils";
-import { LensProps, reasonFor } from "@focuson/state";
+import { ariaRoleForMessageLevel, SimpleMessage, SimpleMessageLevel, unique } from "@focuson-nw/utils";
+import { LensProps, reasonFor } from "@focuson-nw/state";
 
 export interface MessagesProps<S, T, Context> extends LensProps<S, T, Context> {
   pageDisplayTime: string

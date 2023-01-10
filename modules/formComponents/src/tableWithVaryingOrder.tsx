@@ -1,7 +1,7 @@
-import { LensProps, LensState } from "@focuson/state";
+import { LensProps, LensState } from "@focuson-nw/state";
 import { CommonTableProps, Table } from "./table";
-import { NameAnd } from "@focuson/utils";
-import { PageSelectionContext } from "@focuson/pages";
+import { NameAnd } from "@focuson-nw/utils";
+import { PageSelectionContext } from "@focuson-nw/pages";
 
 
 export interface TableWithVaryingOrderProps<S, T, C> extends CommonTableProps<S, T, C> {

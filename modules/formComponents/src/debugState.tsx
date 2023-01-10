@@ -1,10 +1,10 @@
-import { isMassTransformReason, isSetJsonReason, LensProps, LensState, MassTransformReason, reasonFor, SetJsonReason } from "@focuson/state";
-import { findThisPageElement, findValidityForInput, findValidityForRadio, findValidityForSelect, focusPageClassName, fromPathGivenState, HasPageSelectionLens, isMainPageDetails, mainPage, PageSelection, PageSelectionContext } from "@focuson/pages";
-import { HasTagHolder, TagHolder, tagOps } from "@focuson/template";
-import { HasSimpleMessages, safeArray, safeObject, safeString, SimpleMessage, sortedEntries, toArray } from "@focuson/utils";
-import { HasRestCommandL, OneRestDetails, RestDetails } from "@focuson/rest";
-import { FocusOnContext, restCommandsAndWhyFromFetchers, traceL } from "@focuson/focuson";
-import { Lenses, Optional } from "@focuson/lens";
+import { isMassTransformReason, isSetJsonReason, LensProps, LensState, MassTransformReason, reasonFor, SetJsonReason } from "@focuson-nw/state";
+import { findThisPageElement, findValidityForInput, findValidityForRadio, findValidityForSelect, focusPageClassName, fromPathGivenState, HasPageSelectionLens, isMainPageDetails, mainPage, PageSelection, PageSelectionContext } from "@focuson-nw/pages";
+import { HasTagHolder, TagHolder, tagOps } from "@focuson-nw/template";
+import { HasSimpleMessages, safeArray, safeObject, safeString, SimpleMessage, sortedEntries, toArray } from "@focuson-nw/utils";
+import { HasRestCommandL, OneRestDetails, RestDetails } from "@focuson-nw/rest";
+import { FocusOnContext, restCommandsAndWhyFromFetchers, traceL } from "@focuson-nw/focuson";
+import { Lenses, Optional } from "@focuson-nw/lens";
 import { ToggleButton } from "./toggleButton";
 import { AssertPages, MakeTest } from "./makeTest";
 import { LabelAndStringInput } from "./labelAndInput";

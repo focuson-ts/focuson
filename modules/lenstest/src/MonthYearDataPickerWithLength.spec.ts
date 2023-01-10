@@ -1,4 +1,4 @@
-import { addDate } from "@focuson/utils";
+import { addDate } from "@focuson-nw/utils";
 
 describe ( "addDate", () => {
   it ( "should return the original date if we have funny values", () => {

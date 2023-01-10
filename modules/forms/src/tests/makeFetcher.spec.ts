@@ -4,7 +4,7 @@ import { RepeatingPageD } from "../example/repeating/repeating.pageD";
 import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { paramsForTest } from "./paramsForTest";
 import { ListOfPaymentsPagePD } from "../example/ListOfPayments/listOfPayements.pageD";
-import { safeObject } from "@focuson/utils";
+import { safeObject } from "@focuson-nw/utils";
 
 describe ( "makeAllFetchers", () => {
   it ( "should make a fetcher for a single item", () => {

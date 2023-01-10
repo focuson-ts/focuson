@@ -59,22 +59,22 @@ export const commonInputParamsWithTab: DisplayCompParamD = {
 }
 
 export const StringInputCD: DisplayCompD = {
-  import: "@focuson/form_components", name: "StringInput",
+  import: "@focuson-nw/form_components", name: "StringInput",
   params: { ...commonInputParamsWithTab, ...stringValidationParams }
 }
 
 export const NumberInputCD: DisplayCompD = {
-  import: "@focuson/form_components", name: "NumberInput",
+  import: "@focuson-nw/form_components", name: "NumberInput",
   params: { ...commonInputParamsWithTab, ...intValidationParams }
 }
 
 export const CheckboxInputCD: DisplayCompD = {
-  import: "@focuson/form_components", name: "BooleanInput",
+  import: "@focuson-nw/form_components", name: "BooleanInput",
   params: commonInputParams,
 }
 
 export const DisplayStringWithLookupCD: DisplayCompD = {
-  import: "@focuson/form_components", name: "DisplayStringWithLookup",
+  import: "@focuson-nw/form_components", name: "DisplayStringWithLookup",
   params: {
     ...commonParams,
     lookup: { paramType: 'json', needed: 'no' },
@@ -83,7 +83,7 @@ export const DisplayStringWithLookupCD: DisplayCompD = {
   }
 }
 export const WithTextLayoutCD: DisplayCompD = {
-  import: "@focuson/form_components", name: "WithTextLayout",
+  import: "@focuson-nw/form_components", name: "WithTextLayout",
   params: {
     state: { paramType: 'state', needed: 'defaultToPath' },
     text: { paramType: "string", needed: 'yes' },
@@ -94,7 +94,7 @@ export const WithTextLayoutCD: DisplayCompD = {
 }
 
 export const ConfirmChangesToAnyCD: DisplayCompD = {
-  import: "@focuson/form_components", name: "ConfirmChangesToAny",
+  import: "@focuson-nw/form_components", name: "ConfirmChangesToAny",
   params: {
     id: { paramType: 'string', needed: 'id' },
     state: { paramType: 'state', needed: 'defaultToPath' },
@@ -129,7 +129,7 @@ const specificOnChangeAndParentState: DisplayCompParamD = {
   specificOnChange: { paramType: 'json', needed: 'no' },
 }
 export const LabelAndStringInputCD: DisplayCompD = {
-  import: "@focuson/form_components", name: "LabelAndStringInput",
+  import: "@focuson-nw/form_components", name: "LabelAndStringInput",
   params: {
     ...commonParamsWithLabel, ...stringValidationParams, ...enabledByForInputs,
     ...onChangeAndParentState,
@@ -138,7 +138,7 @@ export const LabelAndStringInputCD: DisplayCompD = {
 }
 
 export const LabelAndNumberInputCD: DisplayCompD = {
-  import: "@focuson/form_components", name: "LabelAndNumberInput",
+  import: "@focuson-nw/form_components", name: "LabelAndNumberInput",
   params: {
     ...commonParamsWithLabel, ...intValidationParams, ...enabledByForInputs,
     ...onChangeAndParentState,
@@ -147,15 +147,15 @@ export const LabelAndNumberInputCD: DisplayCompD = {
 }
 
 export const LabelAndCheckboxInputCD: DisplayCompD = {
-  import: "@focuson/form_components", name: "LabelAndBooleanInput",
+  import: "@focuson-nw/form_components", name: "LabelAndBooleanInput",
   params: { ...commonParamsWithLabel, ...onChangeAndParentState, ...enabledByForInputs, }
 }
 export const LabelAndYNCheckboxInputCD: DisplayCompD = {
-  import: "@focuson/form_components", name: "LabelAndYNBooleanInput",
+  import: "@focuson-nw/form_components", name: "LabelAndYNBooleanInput",
   params: { ...commonParamsWithLabel, ...stringValidationParams, ...onChangeAndParentState, ...enabledByForInputs, }
 }
 export const LabelAndDateInputCD: DisplayCompD = {
-  import: "@focuson/form_components", name: "LabelAndDateInput",
+  import: "@focuson-nw/form_components", name: "LabelAndDateInput",
   params: {
     ...commonParamsWithLabel,
     datesExcluded: { paramType: 'path', needed: 'no' },
@@ -167,7 +167,7 @@ export const LabelAndDateInputCD: DisplayCompD = {
   }
 }
 export const DatePicker2CD: DisplayCompD = {
-  import: "@focuson/form_components", name: "DatePicker",
+  import: "@focuson-nw/form_components", name: "DatePicker",
   params: {
     ...commonParamsWithLabel,
     ...specificOnChangeAndParentState,
@@ -183,7 +183,7 @@ export const DatePicker2CD: DisplayCompD = {
   }
 }
 export const DatePickerForPaymentsCD: DisplayCompD = {
-  import: "@focuson/form_components", name: "DatePickerForPayments",
+  import: "@focuson-nw/form_components", name: "DatePickerForPayments",
   params: {
     ...DatePicker2CD.params,
     pathToDateInfo: { paramType: 'path', needed: 'yes' },
@@ -219,7 +219,7 @@ export const LabelAndMonthYearLengthCD: DisplayCompD = {
   }
 }
 export const LabelAndDropDownFromDataCD: DisplayCompD = {
-  import: "@focuson/form_components",
+  import: "@focuson-nw/form_components",
   name: "LabelAndDropDownFromData",
   params: {
     ...commonParamsWithLabel,
@@ -236,7 +236,7 @@ export const LabelAndDropDownFromDataCD: DisplayCompD = {
 }
 
 export const DataDrivenFixedOptionDropDownAndDetailsCD: DisplayCompD = {
-  import: "@focuson/form_components", name: "DataDrivenFixedOptionDropDownAndDetails",
+  import: "@focuson-nw/form_components", name: "DataDrivenFixedOptionDropDownAndDetails",
   params: {
     ...commonParamsWithLabel,
     ...specificOnChangeAndParentState,
@@ -248,7 +248,7 @@ export const DataDrivenFixedOptionDropDownAndDetailsCD: DisplayCompD = {
 }
 
 export const GuardLayoutCD: DisplayCompD = {
-  import: "@focuson/form_components",
+  import: "@focuson-nw/form_components",
   name: "GuardLayout",
   params: {
     state: { paramType: 'state', needed: 'defaultToPath' },
@@ -276,12 +276,12 @@ export const tableParams: DisplayCompParamD = {
 
 }
 export const TableCD: DisplayCompD = {
-  import: "@focuson/form_components",   //so that I can write the import statement for the react component
+  import: "@focuson-nw/form_components",   //so that I can write the import statement for the react component
   name: "Table",                        //The name of the react component
   params: tableParams
 }
 export const TableWithHighLightIfOverCD: DisplayCompD = {
-  import: "@focuson/form_components",   //so that I can write the import statement for the react component
+  import: "@focuson-nw/form_components",   //so that I can write the import statement for the react component
   name: "TableWithHighLightIfOver",                        //The name of the react component
   params: {
     ...tableParams,
@@ -291,7 +291,7 @@ export const TableWithHighLightIfOverCD: DisplayCompD = {
   }
 }
 export const TableWithHighLightIfOverDataDependantCD: DisplayCompD = {
-  import: "@focuson/form_components",   //so that I can write the import statement for the react component
+  import: "@focuson-nw/form_components",   //so that I can write the import statement for the react component
   name: "TableWithHighLightIfOverDataDependant",                        //The name of the react component
   params: {
     ...tableParams,
@@ -301,7 +301,7 @@ export const TableWithHighLightIfOverDataDependantCD: DisplayCompD = {
   }
 }
 export const TableWithVaryingOrderCD: DisplayCompD = {
-  import: "@focuson/form_components",   //so that I can write the import statement for the react component
+  import: "@focuson-nw/form_components",   //so that I can write the import statement for the react component
   name: "TableWithVaryingOrder",                        //The name of the react component
   params: {
     ...tableParams,
@@ -310,7 +310,7 @@ export const TableWithVaryingOrderCD: DisplayCompD = {
   }
 }
 export const StructureTableCD: DisplayCompD = {
-  import: "@focuson/form_components",   //so that I can write the import statement for the react component
+  import: "@focuson-nw/form_components",   //so that I can write the import statement for the react component
   name: "StructureTable",                        //The name of the react component
   params: {                             //configuration parameter for the react component
     ...tableParams,
@@ -319,7 +319,7 @@ export const StructureTableCD: DisplayCompD = {
 }
 
 export const SelectedItemCD: DisplayCompD = {
-  import: "@focuson/form_components",
+  import: "@focuson-nw/form_components",
   name: "SelectedItem",
   params: {
     ...commonParams,
@@ -345,12 +345,12 @@ export const LayoutCd: DisplayCompD = {
     buttons: { paramType: 'json', needed: "no" },
     allButtons: { paramType: 'object', needed: 'defaultToButtons' }
   },
-  import: "@focuson/form_components",
+  import: "@focuson-nw/form_components",
   name: "Layout"
 }
 export const GuardsAndMessageTitleLayoutCD: DisplayCompD = {
   name: 'GuardsAndMessageTitleLayout',
-  import: "@focuson/form_components",
+  import: "@focuson-nw/form_components",
   params: {
     messages: { paramType: 'guardAndMessage', needed: 'yes' },
     state: { paramType: 'state', needed: 'defaultToPath' },
@@ -361,7 +361,7 @@ export const GuardsAndMessageTitleLayoutCD: DisplayCompD = {
 
 export const TwoElementWithTitleLayoutCD: DisplayCompD = {
   params: { title: { paramType: 'object', needed: 'defaultToLabel' } },
-  import: "@focuson/form_components",
+  import: "@focuson-nw/form_components",
   name: "TwoElementWithTitleLayout"
 }
 
@@ -369,7 +369,7 @@ export const TwoElementWithTitleLayoutCD: DisplayCompD = {
 export const enumParams: DisplayCompParamD = { enums: { needed: 'defaultToEnum', paramType: 'object' } }
 
 export const RadioCD: DisplayCompD = {
-  import: "@focuson/form_components",
+  import: "@focuson-nw/form_components",
   name: "Radio",
   params: {
     ...commonParams, ...enumParams,
@@ -377,7 +377,7 @@ export const RadioCD: DisplayCompD = {
   }
 }
 export const LabelAndRadioCD: DisplayCompD = {
-  import: "@focuson/form_components",
+  import: "@focuson-nw/form_components",
   name: "LabelAndRadio",
   params: {
     ...commonParamsWithLabel, ...enumParams,
@@ -388,12 +388,12 @@ export const LabelAndRadioCD: DisplayCompD = {
 
 
 export const OptionalCD: DisplayCompD = {
-  import: '@focuson/form_components',
+  import: '@focuson-nw/form_components',
   name: "Optional",
   params: { ...commonParamsWithLabel }
 }
 export const DropDownCD: DisplayCompD = {
-  import: '@focuson/form_components',
+  import: '@focuson-nw/form_components',
   name: "Dropdown",
   params: {
     ...commonParams, ...enumParams,
@@ -405,7 +405,7 @@ export const DropDownCD: DisplayCompD = {
   }
 }
 export const LabelAndDropDownCD: DisplayCompD = {
-  import: '@focuson/form_components',
+  import: '@focuson-nw/form_components',
   name: "LabelAndDropdown",
   params: {
     ...commonParamsWithLabel, ...enumParams,
@@ -417,7 +417,7 @@ export const LabelAndDropDownCD: DisplayCompD = {
   }
 }
 export const LabelAndDropDownWithVaryingContentCD: DisplayCompD = {
-  import: '@focuson/form_components',
+  import: '@focuson-nw/form_components',
   name: "LabelAndDropDownWithVaryingContent",
   params: {
     ...commonParamsWithLabel,
@@ -431,7 +431,7 @@ export const LabelAndDropDownWithVaryingContentCD: DisplayCompD = {
   }
 }
 export const LabelAndDropDownWithVaryingContent2CD: DisplayCompD = {
-  import: '@focuson/form_components',
+  import: '@focuson-nw/form_components',
   name: "LabelAndDropDownWithVaryingContent2",
   params: {
     ...commonParamsWithLabel,
@@ -447,7 +447,7 @@ export const LabelAndDropDownWithVaryingContent2CD: DisplayCompD = {
   }
 }
 export const LabelAndTextAreaCD: DisplayCompD = {
-  import: '@focuson/form_components',
+  import: '@focuson-nw/form_components',
   name: "LabelAndTextarea",
   params: {
     ...validationParams,
@@ -462,7 +462,7 @@ export const LabelAndTextAreaCD: DisplayCompD = {
 }
 
 export const TableWithCheckboxInputCD: DisplayCompD = {
-  import: '@focuson/form_components',
+  import: '@focuson-nw/form_components',
   name: "TableWithCheckboxInput",
   params: {
     ...commonParams,
@@ -473,13 +473,13 @@ export const TableWithCheckboxInputCD: DisplayCompD = {
 }
 
 export const UnpaidCardOrMisuseItemsCD: DisplayCompD = {
-  import: '@focuson/form_components',
+  import: '@focuson-nw/form_components',
   name: "PlusMinusButtonsAndInput",
   params: { ...commonParamsWithLabel, ...intValidationParams, flags: { paramType: "pageState", needed: "yes" } },
 }
 
 export const CheckboxAndNumberCD: DisplayCompD = {
-  import: '@focuson/form_components',
+  import: '@focuson-nw/form_components',
   name: "CheckboxAndNumber",
   params: {
     ...commonParams,
@@ -490,7 +490,7 @@ export const CheckboxAndNumberCD: DisplayCompD = {
 }
 
 export const ExternalComponentCD: DisplayCompD = {
-  import: '@focuson/form_components',
+  import: '@focuson-nw/form_components',
   name: "ExternalComponent",
   params: {
     id: { paramType: 'object', needed: 'id' }, //object because it is calculated

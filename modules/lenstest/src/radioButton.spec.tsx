@@ -1,8 +1,8 @@
 import { enzymeSetup } from "./enzymeAdapterSetup";
 import { mount } from "enzyme";
-import { LabelAndRadio } from "@focuson/form_components";
-import { LensState, lensState } from "@focuson/state";
-import { FocusOnContext } from "@focuson/focuson";
+import { LabelAndRadio } from "@focuson-nw/form_components";
+import { LensState, lensState } from "@focuson-nw/state";
+import { FocusOnContext } from "@focuson-nw/focuson";
 import exp from "constants";
 
 enzymeSetup ()

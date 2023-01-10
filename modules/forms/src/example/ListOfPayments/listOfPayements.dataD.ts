@@ -2,7 +2,7 @@ import { ExampleDataD, ExampleRepeatingD } from "../common";
 
 import { CheckboxAndNumberCD, DataDrivenFixedOptionDropDownAndDetailsCD, LabelAndDropDownCD, LayoutCd, SelectedItemCD, TableCD } from "../../common/componentsD";
 import { AccountIdDD, BooleanDD, BooleanPrimitiveDD, DataD, DateDD, NatNumDd, OneLineStringDD, ReadOnlyStringDD, RepeatingDataD, StringDD, StringPrimitiveDD } from "../../common/dataD";
-import { CustomerStatus } from "@focuson/form_components";
+import { CustomerStatus } from "@focuson-nw/form_components";
 import { AllGuards } from "../../buttons/guardButton";
 import { accountT, clientAddress_C60T, clientNames_C10T, postCodeSearchTable } from "../database/tableNames";
 

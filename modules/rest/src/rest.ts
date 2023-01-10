@@ -1,6 +1,6 @@
-import { reqFor, Tags, UrlConfig } from "@focuson/template";
-import { beforeAfterSeparator, defaultDateFn, FetchFn, isRestStateChange, NameAnd, RequiredCopyDetails, RestAction, RestStateChange, safeArray, safeObject, sortedEntries, toArray } from "@focuson/utils";
-import { identityOptics, lensBuilder, Lenses, massTransform, Optional, parsePath, Transform } from "@focuson/lens";
+import { reqFor, Tags, UrlConfig } from "@focuson-nw/template";
+import { beforeAfterSeparator, defaultDateFn, FetchFn, isRestStateChange, NameAnd, RequiredCopyDetails, RestAction, RestStateChange, safeArray, safeObject, sortedEntries, toArray } from "@focuson-nw/utils";
+import { identityOptics, lensBuilder, Lenses, massTransform, Optional, parsePath, Transform } from "@focuson-nw/lens";
 import { ChangeCommand, CopyResultCommand, DeleteCommand, HasCloseOnePage, MessageCommand, MinimalPageSelection, ModalChangeCommands, processChangeCommandProcessor, RestAndInputProcessorsConfig, restChangeCommandProcessors, RestChangeCommands } from "./changeCommands";
 import { MessagesPostProcessor, processAllMessageProcessors } from "./messages";
 

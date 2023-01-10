@@ -1,6 +1,6 @@
-import { FocusOnContext } from '@focuson/focuson';
-import { reasonFor } from '@focuson/state';
-import { disabledFrom, NameAnd } from '@focuson/utils';
+import { FocusOnContext } from '@focuson-nw/focuson';
+import { reasonFor } from '@focuson-nw/state';
+import { disabledFrom, NameAnd } from '@focuson-nw/utils';
 
 import { CommonStateProps, InputEnabledProps, InputOnChangeProps, LabelAlignment } from "./common";
 import { Label } from './label';

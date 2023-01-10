@@ -1,5 +1,5 @@
 import { dataDsIn, flatMapToModal, isMainPage, PageD } from "../common/pageD";
-import { safeArray } from "@focuson/utils";
+import { safeArray } from "@focuson-nw/utils";
 
 
 function validateName ( prefix: string, name: string, ) {

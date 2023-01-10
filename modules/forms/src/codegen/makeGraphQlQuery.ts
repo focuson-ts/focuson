@@ -2,8 +2,8 @@ import { AllDataFlatMap, DataD, flatMapDD, OneDataDD, PrimitiveDD, RepeatingData
 import { AllLensRestParams, RestD } from "../common/restD";
 import { addStringToStartOfFirst, indent, paramsForRestAction } from "./codegen";
 import { queryName, resolverName } from "./names";
-import { asMultilineJavaString, RestAction } from "@focuson/utils";
-import { getRestTypeDetails } from "@focuson/rest";
+import { asMultilineJavaString, RestAction } from "@focuson-nw/utils";
+import { getRestTypeDetails } from "@focuson-nw/rest";
 
 
 function makeQueryFolder<G> (): AllDataFlatMap<string, G> {

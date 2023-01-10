@@ -1,11 +1,11 @@
-import { focusPageClassName, fromPathFromRaw, fromPathGivenState, HasPageSelection, HasPathToLens, HasSimpleMessageL, mainPage, mainPageFrom, MultiPageDetails, PageDetailsForCombine, PageSelection, PageSelectionContext, pageSelectionlens, preMutateForPages, rawCloseOnePageTxs, simpleMessagesL } from "@focuson/pages";
-import { HasPostCommand, HasPostCommandLens } from "@focuson/poster";
-import { FetcherTree, loadTree } from "@focuson/fetcher";
-import { lensState, LensState } from "@focuson/state";
-import { identityOptics, identityOptional, Lenses, massTransform, NameAndLens, Optional, Transform } from "@focuson/lens";
-import { DateFn, defaultDateFn, errorMonad, FetchFn, HasDateFn, HasSimpleMessages, NameAnd, RestAction, safeArray, safeString, SimpleMessage, SimpleMessageLevel, stringToSimpleMsg } from "@focuson/utils";
-import { HasCloseOnePage, HasMessagesPostProcessor, HasRestCommandL, HasRestCommands, InputProcessorsConfig, ModalProcessorsConfig, rest, RestAndInputProcessorsConfig, RestCommand, RestCommandAndTxs, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson/rest";
-import { HasTagHolder, TagHolder } from "@focuson/template";
+import { focusPageClassName, fromPathFromRaw, fromPathGivenState, HasPageSelection, HasPathToLens, HasSimpleMessageL, mainPage, mainPageFrom, MultiPageDetails, PageDetailsForCombine, PageSelection, PageSelectionContext, pageSelectionlens, preMutateForPages, rawCloseOnePageTxs, simpleMessagesL } from "@focuson-nw/pages";
+import { HasPostCommand, HasPostCommandLens } from "@focuson-nw/poster";
+import { FetcherTree, loadTree } from "@focuson-nw/fetcher";
+import { lensState, LensState } from "@focuson-nw/state";
+import { identityOptics, identityOptional, Lenses, massTransform, NameAndLens, Optional, Transform } from "@focuson-nw/lens";
+import { DateFn, defaultDateFn, errorMonad, FetchFn, HasDateFn, HasSimpleMessages, NameAnd, RestAction, safeArray, safeString, SimpleMessage, SimpleMessageLevel, stringToSimpleMsg } from "@focuson-nw/utils";
+import { HasCloseOnePage, HasMessagesPostProcessor, HasRestCommandL, HasRestCommands, InputProcessorsConfig, ModalProcessorsConfig, rest, RestAndInputProcessorsConfig, RestCommand, RestCommandAndTxs, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson-nw/rest";
+import { HasTagHolder, TagHolder } from "@focuson-nw/template";
 import { AllFetcherUsingRestConfig, restCommandsFromFetchers } from "./tagFetcherUsingRest";
 import { FocusOnDebug } from "./debug";
 

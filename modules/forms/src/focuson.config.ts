@@ -30,7 +30,7 @@ import { loaderPageD } from "./example/loader/loader.pageD";
 import { tablePageD } from "./example/tables/table.pageD";
 import {accountTypeRefD, RefConfiguration, timeDataRefD} from "./common/dateInfoRefD";
 import {onlySchema} from "./example/database/tableNames";
-import {NameAnd} from "@focuson/utils";
+import {NameAnd} from "@focuson-nw/utils";
 import {PrimaryMutations} from "./common/resolverD";
 import {RestParams} from "./common/restD";
 import {allCommonIds, fromCommonIds} from "./example/commonIds";

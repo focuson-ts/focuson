@@ -1,4 +1,4 @@
-import { beforeAfterSeparator, checkDates } from "@focuson/utils";
+import { beforeAfterSeparator, checkDates } from "@focuson-nw/utils";
 import { DateCheck, insertBefore } from "../../utils/src/utils";
 
 

@@ -1,6 +1,6 @@
-import { NameAnd, safeArray } from "@focuson/utils";
-import { LensState, reasonFor } from "@focuson/state";
-import { FocusOnContext } from "@focuson/focuson";
+import { NameAnd, safeArray } from "@focuson-nw/utils";
+import { LensState, reasonFor } from "@focuson-nw/state";
+import { FocusOnContext } from "@focuson-nw/focuson";
 import { CommonStateProps, LabelAlignment } from "./common";
 import { Label } from "./label";
 import DatePicker from "react-datepicker";

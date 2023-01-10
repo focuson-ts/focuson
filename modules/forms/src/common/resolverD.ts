@@ -1,4 +1,4 @@
-import { MessageAndLevel, NameAnd, RestAction, SimpleMessageLevel, toArray, unique } from "@focuson/utils";
+import { MessageAndLevel, NameAnd, RestAction, SimpleMessageLevel, toArray, unique } from "@focuson-nw/utils";
 import { JavaWiringParams } from "../codegen/config";
 import { indentList } from "../codegen/codegen";
 import { Pattern } from "./dataD";

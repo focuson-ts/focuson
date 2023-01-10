@@ -1,4 +1,4 @@
-# @focuson/forms
+# @focuson-nw/forms
 
 * [Release notes](https://github.com/focuson-ts/focuson/blob/master/RELEASES.md)
 * [A cookbook of 'howtos' Cookbook](cookbooks/index.md)

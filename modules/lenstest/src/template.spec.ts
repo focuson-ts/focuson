@@ -1,5 +1,5 @@
-import { GetOptioner, Lenses, nameLensFn } from "@focuson/lens";
-import { applyToTemplate, applyToTemplateOrUndefinedIfNoParamsPresent, expand } from "@focuson/template";
+import { GetOptioner, Lenses, nameLensFn } from "@focuson-nw/lens";
+import { applyToTemplate, applyToTemplateOrUndefinedIfNoParamsPresent, expand } from "@focuson-nw/template";
 
 
 interface TemplateTestState {

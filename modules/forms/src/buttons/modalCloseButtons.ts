@@ -1,8 +1,8 @@
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
 import { opt, optObj, optT } from "../codegen/codegen";
 import { CustomButtonType, EnabledBy, enabledByString } from "./enabledBy";
-import { ModalChangeCommands } from "@focuson/rest";
-import { ConfirmWindow } from "@focuson/pages";
+import { ModalChangeCommands } from "@focuson-nw/rest";
+import { ConfirmWindow } from "@focuson-nw/pages";
 
 
 export interface ModalCommitButtonInPage extends EnabledBy {
@@ -31,7 +31,7 @@ export type ModalCancelButtonInPage = ModalCancelButtonInPageWithConfirm | Modal
 
 export function makeModalCommitButton<B extends ModalCommitButtonInPage, G> (): ButtonCreator<B, G> {
   return ({
-    import: "@focuson/pages",
+    import: "@focuson-nw/pages",
     makeButton: ( { name, button } ) => {
       const id = '{`${id}`.' + button.text ? button.text : name + "}"
       return [ [ `<ModalCommitButton id=${makeIdForButton ( button.text ? button.text : name )} ${enabledByString ( button )}`,
@@ -59,7 +59,7 @@ export const makeModalCancelButton: <G> ( imp: string ) => ButtonCreator<ModalCo
 
 export function makeModalCloseButtons<G> (): MakeButton<G> {
   return {
-    ModalCancelButton: makeModalCancelButton ( "@focuson/pages" ),
+    ModalCancelButton: makeModalCancelButton ( "@focuson-nw/pages" ),
     ModalCommitButton: makeModalCommitButton (),
     // ModalConfirmWindowButton: makeModalConfirmWindowButton ()
   }

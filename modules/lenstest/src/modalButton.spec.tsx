@@ -1,12 +1,12 @@
-import { LensState, lensState } from "@focuson/state";
+import { LensState, lensState } from "@focuson-nw/state";
 import { mount } from "enzyme";
 
-import { HasPageSelection, ModalButton, ModalCommitButton, ModalContext, PageDetailsForCombine, pageSelectionlens, rawCloseOnePageTxs, simpleMessagesL } from "@focuson/pages";
-import { Lenses, Optional } from "@focuson/lens";
-import { SimpleMessage, testDateFn } from "@focuson/utils";
+import { HasPageSelection, ModalButton, ModalCommitButton, ModalContext, PageDetailsForCombine, pageSelectionlens, rawCloseOnePageTxs, simpleMessagesL } from "@focuson-nw/pages";
+import { Lenses, Optional } from "@focuson-nw/lens";
+import { SimpleMessage, testDateFn } from "@focuson-nw/utils";
 
-import { HasRestCommands, RestCommand, restL } from "@focuson/rest";
-import { TagHolder } from "@focuson/template";
+import { HasRestCommands, RestCommand, restL } from "@focuson-nw/rest";
+import { TagHolder } from "@focuson-nw/template";
 import { enzymeSetup } from "./enzymeAdapterSetup";
 
 enzymeSetup ()

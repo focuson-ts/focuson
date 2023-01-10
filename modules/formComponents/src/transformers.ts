@@ -1,8 +1,8 @@
 import { makeInputChangeTxs } from "./labelAndInput";
-import { FocusOnContext } from "@focuson/focuson";
-import { LensState, reasonFor } from "@focuson/state";
-import { InputChangeCommands } from "@focuson/rest";
-import { disabledFrom } from "@focuson/utils";
+import { FocusOnContext } from "@focuson-nw/focuson";
+import { LensState, reasonFor } from "@focuson-nw/state";
+import { InputChangeCommands } from "@focuson-nw/rest";
+import { disabledFrom } from "@focuson-nw/utils";
 
 
 export type InputSelectFn = <S, T, Context extends FocusOnContext<S>> ( state: LensState<S, T, Context>, id: string, value: T, parentState: LensState<S, any, Context> | undefined, onChange: undefined | InputChangeCommands | InputChangeCommands[], changesCanExecute: boolean | undefined ) => void

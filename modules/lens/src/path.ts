@@ -1,5 +1,5 @@
 import { Lenses, NameAndLens, NameAndLensFn, Optional } from "../index";
-import { NameAnd } from "@focuson/utils";
+import { NameAnd } from "@focuson-nw/utils";
 
 export interface PathBuilder<Build> {
   zero: ( initial: string ) => Build;

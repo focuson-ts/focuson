@@ -1,7 +1,7 @@
-import { lensState, LensState } from "@focuson/state";
+import { lensState, LensState } from "@focuson-nw/state";
 import { shallow } from "enzyme";
 import { ModalButtonStateForTest } from "./modalButton.integration.spec";
-import { DeleteStateButton } from "@focuson/form_components";
+import { DeleteStateButton } from "@focuson-nw/form_components";
 import { enzymeSetup } from "./enzymeAdapterSetup";
 
 enzymeSetup ()

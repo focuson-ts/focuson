@@ -1,7 +1,7 @@
-import { Lens, Optional } from "@focuson/lens";
+import { Lens, Optional } from "@focuson-nw/lens";
 
-import { createSimpleMessage, DateFn, SimpleMessage } from "@focuson/utils";
-import { Tags } from "@focuson/template";
+import { createSimpleMessage, DateFn, SimpleMessage } from "@focuson-nw/utils";
+import { Tags } from "@focuson-nw/template";
 
 
 

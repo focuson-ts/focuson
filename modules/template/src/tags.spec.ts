@@ -1,5 +1,5 @@
 import { nameToLens, reqFor, tags, url, UrlConfig } from "./tags";
-import { identityOptics, Lenses } from "@focuson/lens";
+import { identityOptics, Lenses } from "@focuson-nw/lens";
 
 interface ChildTagTestState {
   c?: string

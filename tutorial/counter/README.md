@@ -20,7 +20,7 @@ cd counter
 # Add dependencies
 
 ```shell
- yarn add @focuson/state
+ yarn add @focuson-nw/state
 ```
 
 # Replace index.tsx

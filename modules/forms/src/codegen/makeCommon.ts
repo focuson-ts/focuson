@@ -2,10 +2,10 @@ import { MainPageD, RefD } from "../common/pageD";
 import { domainsFileName, hasDomainForPage } from "./names";
 import { addStringToEndOfAllButLast, indentList } from "./codegen";
 import { TSParams } from "./config";
-import { applyToTemplate } from "@focuson/template";
-import { DirectorySpec, loadFile } from "@focuson/files";
+import { applyToTemplate } from "@focuson-nw/template";
+import { DirectorySpec, loadFile } from "@focuson-nw/files";
 import { AllLensRestParams, CommonLensRestParam, flatMapCommonParams, flatMapParams, isCommonLens, RestD } from "../common/restD";
-import { NameAnd, PageMode, sortedEntries, unique } from "@focuson/utils";
+import { NameAnd, PageMode, sortedEntries, unique } from "@focuson-nw/utils";
 import { AppConfig } from "../appConfig";
 
 export function makeFullState<G> ( params: TSParams, pds: RefD<G>[] ): string[] {
@@ -38,14 +38,14 @@ export function makeCommon<G> ( appConfig: AppConfig, params: TSParams, pds: Ref
   const pageDomainsImport: string[] = pds.map ( p => `import { ${hasDomainForPage ( p )} } from '${domainsFileName ( '.', params, p )}';` )
   let paramsWithSamples = findAllCommonParamsWithSamples ( pds );
   return [
-    `import { fromPathFromRaw, HasPageSelection, PageSelectionContext, pageSelectionlens} from '@focuson/pages'`,
-    `import { defaultDateFn, HasSimpleMessages, SimpleMessage, NameAnd, PageMode } from '@focuson/utils';`,
-    `import {  OnTagFetchErrorFn } from '@focuson/fetcher';`,
-    `import { identityOptics,NameAndLens, Optional } from '@focuson/lens';`,
-    `import { HasTagHolder } from '@focuson/template';`,
-    ` import { HasRestCommands } from '@focuson/rest'`,
-    `import { commonTagFetchProps, defaultPageSelectionAndRestCommandsContext, FocusOnContext, HasFocusOnDebug, HasRestCount, HasEnvironment} from '@focuson/focuson';`,
-    `import { LensProps } from '@focuson/state';`,
+    `import { fromPathFromRaw, HasPageSelection, PageSelectionContext, pageSelectionlens} from '@focuson-nw/pages'`,
+    `import { defaultDateFn, HasSimpleMessages, SimpleMessage, NameAnd, PageMode } from '@focuson-nw/utils';`,
+    `import {  OnTagFetchErrorFn } from '@focuson-nw/fetcher';`,
+    `import { identityOptics,NameAndLens, Optional } from '@focuson-nw/lens';`,
+    `import { HasTagHolder } from '@focuson-nw/template';`,
+    ` import { HasRestCommands } from '@focuson-nw/rest'`,
+    `import { commonTagFetchProps, defaultPageSelectionAndRestCommandsContext, FocusOnContext, HasFocusOnDebug, HasRestCount, HasEnvironment} from '@focuson-nw/focuson';`,
+    `import { LensProps } from '@focuson-nw/state';`,
     `import { pages } from "./pages";`,
     `import { newFetchers } from "./${params.fetchersFile}";`,
     `import { restDetails } from "./${params.restsFile}";`,

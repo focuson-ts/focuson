@@ -1,9 +1,9 @@
 import { Children, CSSProperties, MutableRefObject } from "react";
-import { FocusOnContext, makeModalProcessorsConfig } from "@focuson/focuson";
-import { LensProps } from "@focuson/state";
-import { inputCommandProcessors, processChangeCommandProcessor } from "@focuson/rest";
-import { replaceTextUsingPath } from "@focuson/pages";
-import { NameAnd, safeArray, safeObject, safeString } from "@focuson/utils";
+import { FocusOnContext, makeModalProcessorsConfig } from "@focuson-nw/focuson";
+import { LensProps } from "@focuson-nw/state";
+import { inputCommandProcessors, processChangeCommandProcessor } from "@focuson-nw/rest";
+import { replaceTextUsingPath } from "@focuson-nw/pages";
+import { NameAnd, safeArray, safeObject, safeString } from "@focuson-nw/utils";
 
 export type LayoutButtons = NameAnd<string[]>
 

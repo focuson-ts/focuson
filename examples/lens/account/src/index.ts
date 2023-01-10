@@ -1,4 +1,4 @@
-import { Lenses } from "@focuson/lens";
+import { Lenses } from "@focuson-nw/lens";
 
 export interface Account {
   main: Customer;

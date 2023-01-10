@@ -1,5 +1,5 @@
-import { LensProps, LensState } from "@focuson/state";
-import { NameAnd, PageMode } from "@focuson/utils";
+import { LensProps, LensState } from "@focuson-nw/state";
+import { NameAnd, PageMode } from "@focuson-nw/utils";
 import { ContextForDropdown, LabelAndDropdown } from "./labelAndDropdown";
 
 

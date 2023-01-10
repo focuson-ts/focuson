@@ -7,7 +7,7 @@ describe ( 'makeOptionals', () => {
   it ( "should take the data out of the pageD and make a composite of the optionals from all the pages", () => {
     expect ( makeVariables ( paramsForTest,  OccupationAndIncomeSummaryPD  ) ).toEqual ( [
       "import {FState, identityL } from '../common';",
-      "import { Lenses, NameAndLensFn, Optional } from '@focuson/lens'",
+      "import { Lenses, NameAndLensFn, Optional } from '@focuson-nw/lens'",
       "",
       "export const OccupationAndIncomeSummaryOptionals: NameAndLensFn<FState> = {",
       "  selected: id => id.focusQuery ( 'OccupationAndIncomeSummary' ).focusQuery ( 'selectedItem' ),",
@@ -20,7 +20,7 @@ describe ( 'makeOptionals', () => {
   it ('should allow variables to reference variables', () =>{
     expect ( makeVariables ( paramsForTest,  ListOfPaymentsPagePD  ) ).toEqual ( [
       "import {FState, identityL } from '../common';",
-      "import { Lenses, NameAndLensFn, Optional } from '@focuson/lens'",
+      "import { Lenses, NameAndLensFn, Optional } from '@focuson-nw/lens'",
       "",
       "export const ListOfPaymentsPageOptionals: NameAndLensFn<FState> = {",
       "  selectedItem: id => id.focusQuery('ListOfPaymentsPage').focusQuery('display').chainNthFromPath(id.focusQuery('ListOfPaymentsPage').focusQuery('selected')),",

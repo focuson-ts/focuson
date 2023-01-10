@@ -1,5 +1,5 @@
 import { SimpleDisplayComp } from "./common/componentsD";
-import { loadFile } from "@focuson/files";
+import { loadFile } from "@focuson-nw/files";
 
 export interface AppConfig {
   fetch: string;
@@ -18,7 +18,7 @@ export const javaOutputRoot = '../formJava'
 export const tsRoot = "../formTs"
 export const focusOnVersion: string = JSON.parse ( loadFile ( 'package.json' ) ).version
 
-const MyCombineCD: SimpleDisplayComp = { import: "@focuson/form_components", name: "MyCombined" }
+const MyCombineCD: SimpleDisplayComp = { import: "@focuson-nw/form_components", name: "MyCombined" }
 let details: any = undefined;
 try {
   details = JSON.parse ( loadFile ( 'project.details.json' ) ).details;

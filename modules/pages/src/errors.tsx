@@ -1,4 +1,4 @@
-import { safeFlatten } from "@focuson/utils";
+import { safeFlatten } from "@focuson-nw/utils";
 import { useRef } from "react";
 
 export interface ErrorhandlingProps {

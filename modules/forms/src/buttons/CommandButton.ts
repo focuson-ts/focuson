@@ -1,12 +1,12 @@
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
 import { opt, optT } from "../codegen/codegen";
-import { decamelize, toArray } from "@focuson/utils";
+import { decamelize, toArray } from "@focuson-nw/utils";
 import { EnabledBy, enabledByString } from "./enabledBy";
-import { CommandButtonChangeCommands } from "@focuson/rest";
+import { CommandButtonChangeCommands } from "@focuson-nw/rest";
 
 function makeCommandButton<G> (): ButtonCreator<CommandButtonInPage, G> {
   return {
-    import: "@focuson/form_components",
+    import: "@focuson-nw/form_components",
     makeButton:
       ( createButton ) => {
         const { params, parent, name, button } = createButton

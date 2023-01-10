@@ -1,4 +1,4 @@
-import { NameAnd, PageMode, toArray } from "@focuson/utils";
+import { NameAnd, PageMode, toArray } from "@focuson-nw/utils";
 import { guardName } from "../codegen/names";
 import { stateQueryForGuards } from "../codegen/lens";
 import { MainPageD, PageD } from "../common/pageD";
@@ -44,22 +44,22 @@ export const AllGuardCreator: MakeGuard<AllGuards> = {
 
 
   'before': {
-    imports: [ `import {checkDates} from '@focuson/utils'` ],
+    imports: [ `import {checkDates} from '@focuson-nw/utils'` ],
     makeGuardVariable: ( params, mainP, page, name, guard: ADateB ) =>
       `const ${guardName ( name )} =  checkDates(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.aPath )}.optJson(), ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.bPath )}.optJson(),'<')`
   },
   'beforeOrEquals': {
-    imports: [ `import {checkDates} from '@focuson/utils'` ],
+    imports: [ `import {checkDates} from '@focuson-nw/utils'` ],
     makeGuardVariable: ( params, mainP, page, name, guard: ADateB ) =>
       `const ${guardName ( name )} =  checkDates(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.aPath )}.optJson(), ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.bPath )}.optJson(),'<=')`
   },
   'afterOrEquals': {
-    imports: [ `import {checkDates} from '@focuson/utils'` ],
+    imports: [ `import {checkDates} from '@focuson-nw/utils'` ],
     makeGuardVariable: ( params, mainP, page, name, guard: ADateB ) =>
       `const ${guardName ( name )} =  checkDates(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.aPath )}.optJson(), ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.bPath )}.optJson(),'>=')`
   },
   'after': {
-    imports: [ `import {checkDates} from '@focuson/utils'` ],
+    imports: [ `import {checkDates} from '@focuson-nw/utils'` ],
     makeGuardVariable: ( params, mainP, page, name, guard: ADateB ) =>
       `const ${guardName ( name )} =  checkDates(${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.aPath )}.optJson(), ${stateQueryForGuards ( errorPrefix ( mainP, page, name, guard ), params, mainP, page, guard.bPath )}.optJson(),'>')`
   },

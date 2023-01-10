@@ -1,9 +1,9 @@
-import { isRestStateChange, RestAction, RestStateChange, safeObject, sortedEntries } from "@focuson/utils";
+import { isRestStateChange, RestAction, RestStateChange, safeObject, sortedEntries } from "@focuson-nw/utils";
 import { ButtonCreator, makeIdForButton } from "./makeButtons";
 import { ModalOrMainButtonInPage } from "../buttons/modalButtons";
 import { AllLensRestParams, RestD, RestParams, RestStateDetails } from "../common/restD";
-import { parsePath, stateCodeBuilder } from "@focuson/lens";
-import { getRestTypeDetails } from "@focuson/rest";
+import { parsePath, stateCodeBuilder } from "@focuson-nw/lens";
+import { getRestTypeDetails } from "@focuson-nw/rest";
 
 export const importsDot = ( ...names: string[] ): string[] => names.map ( name => {
   const s = noExtension ( name )

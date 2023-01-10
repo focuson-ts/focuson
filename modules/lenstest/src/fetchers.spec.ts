@@ -1,6 +1,6 @@
-import { applyFetcher, ifErrorFetcher, not200MeansError, fetchAndMutate, Fetcher, fetcher, fetcherWhenUndefined, fromTaggedFetcher, Holder, holderIso, lensFetcher, loadDirectly, LoadFn, loadInfo, loadSelectedFetcher, markerFetcher, radioButtonFetcher, ReqFn, TaggedFetcher } from "@focuson/fetcher";
-import { dirtyPrism, identityOptics } from "@focuson/lens";
-import { Tags } from "@focuson/template";
+import { applyFetcher, ifErrorFetcher, not200MeansError, fetchAndMutate, Fetcher, fetcher, fetcherWhenUndefined, fromTaggedFetcher, Holder, holderIso, lensFetcher, loadDirectly, LoadFn, loadInfo, loadSelectedFetcher, markerFetcher, radioButtonFetcher, ReqFn, TaggedFetcher } from "@focuson-nw/fetcher";
+import { dirtyPrism, identityOptics } from "@focuson-nw/lens";
+import { Tags } from "@focuson-nw/template";
 
 
 const shouldLoadTrue = <T extends any> ( t: T ): string[] => [];

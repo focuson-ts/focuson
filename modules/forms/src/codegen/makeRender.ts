@@ -2,7 +2,7 @@ import { AllDataDD, CompDataD, DisplayParamDD, HasGuards, HasLayout, isDataDd, i
 import { commonParamsWithLabel, DisplayCompD, OneDisplayCompParamD, SimpleDisplayComp } from "../common/componentsD";
 import { dataDsIn, isMainPage, isModalPage, MainPageD, PageD } from "../common/pageD";
 
-import { decamelize, NameAnd, safeArray, safeObject, sortedEntries, toArray, unique, unsortedEntries, Validations } from "@focuson/utils";
+import { decamelize, NameAnd, safeArray, safeObject, sortedEntries, toArray, unique, unsortedEntries, Validations } from "@focuson-nw/utils";
 import { componentName, domainName, domainsFileName, emptyFileName, guardName, modalImportFromFileName, modalPageComponentName, optionalsFileName, optionalsName, pageComponentName, pageDomainName } from "./names";
 import { addButtonsFromVariables, allControlButtonsOnPage, hasNeedsHistory, MakeButton, makeButtonsVariable, makeGuardButtonVariables } from "./makeButtons";
 import { focusOnFor, indentList, noExtension } from "./codegen";
@@ -10,7 +10,7 @@ import { TSParams } from "./config";
 import { ButtonD } from "../buttons/allButtons";
 import { GuardWithCondition, MakeGuard } from "../buttons/guardButton";
 import { stateFocusQueryWithTildaFromPage, stateQueryForParams, stateQueryForPathsFnParams } from "./lens";
-import { mapTitleDetails } from "@focuson/pages";
+import { mapTitleDetails } from "@focuson-nw/pages";
 
 
 export type AllComponentData<G> = ComponentData<G> | ErrorComponentData
@@ -355,13 +355,13 @@ export function createAllReactComponents<B extends ButtonD, G extends GuardWithC
   const pageComponents = pages.flatMap ( p => createReactPageComponent ( params, makeGuard, makeButton, mainP, p ) )
 
   const imports = [
-    `import { LensProps } from "@focuson/state";`,
-    `import { FocusOnContext } from '@focuson/focuson';`,
-    `import {  focusedPage, focusedPageWithExtraState, fullState, pageState, replaceTextUsingPath} from "@focuson/pages";`,
+    `import { LensProps } from "@focuson-nw/state";`,
+    `import { FocusOnContext } from '@focuson-nw/focuson';`,
+    `import {  focusedPage, focusedPageWithExtraState, fullState, pageState, replaceTextUsingPath} from "@focuson-nw/pages";`,
     `import { Context, FocusedProps, ${params.stateName}, identityL } from "../${params.commonFile}";`,
-    `import { Lenses } from '@focuson/lens';`,
-    `import { DisplayGuards, Guard, GuardButton } from "@focuson/form_components";`,
-    `import { defaultDateFn, safeNumber, safeArray, safeString, applyOrDefault, requireBypassingReactCheck} from "@focuson/utils";`,
+    `import { Lenses } from '@focuson-nw/lens';`,
+    `import { DisplayGuards, Guard, GuardButton } from "@focuson-nw/form_components";`,
+    `import { defaultDateFn, safeNumber, safeArray, safeString, applyOrDefault, requireBypassingReactCheck} from "@focuson-nw/utils";`,
     `import * as action from '../actions'`,
     `import { ${optionalsName ( mainP )} } from "${optionalsFileName ( `..`, params, mainP )}";`,
   ]

@@ -1,4 +1,4 @@
-import { DirtyPrism, Optional } from "@focuson/lens";
+import { DirtyPrism, Optional } from "@focuson-nw/lens";
 import { partialFnUsageError } from "./errorhandling";
 import { Fetcher, loadInfo, LoadInfo, MutateFn, ReqFn } from "./fetchers";
 

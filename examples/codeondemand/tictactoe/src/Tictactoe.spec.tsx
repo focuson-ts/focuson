@@ -4,8 +4,8 @@ import React from 'react';
 import {enzymeSetup} from './enzymeAdapterSetup';
 import {shallow, ShallowWrapper} from "enzyme";
 
-import {Lens, Lenses} from "@focuson/lens";
-import {focusOnNth, LensState, lensState} from "@focuson/state";
+import {Lens, Lenses} from "@focuson-nw/lens";
+import {focusOnNth, LensState, lensState} from "@focuson-nw/state";
 import {BoardData, GameData, NoughtOrCross} from "./GameDomain";
 import {Board} from "./render/Board";
 import {Game} from "./render/Game";

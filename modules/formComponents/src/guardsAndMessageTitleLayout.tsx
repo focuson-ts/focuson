@@ -1,5 +1,5 @@
-import { ModalContext, replaceTextUsingPath } from "@focuson/pages";
-import { LensProps } from "@focuson/state";
+import { ModalContext, replaceTextUsingPath } from "@focuson-nw/pages";
+import { LensProps } from "@focuson-nw/state";
 
 export type GuardAndMessage = [ string[], string ]
 export interface GuardsAndMessageTitleLayoutProps<S, C> extends LensProps<S, any, C> {

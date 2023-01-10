@@ -1,14 +1,14 @@
-import { NameAnd, safeArray, unique } from "@focuson/utils";
+import { NameAnd, safeArray, unique } from "@focuson-nw/utils";
 import { CommonStateProps, InputOnChangeProps, LabelAlignment } from "./common";
 import { format, parse } from 'date-fns';
-import { LensState, reasonFor, SetJsonReasonEvent } from "@focuson/state";
-import { HasPathToLens, ModalContext } from "@focuson/pages";
+import { LensState, reasonFor, SetJsonReasonEvent } from "@focuson-nw/state";
+import { HasPathToLens, ModalContext } from "@focuson-nw/pages";
 import { Label } from "./label";
 import { makeButtons } from "./makeButtons";
 import ReactDatePicker from "react-datepicker";
 import { useEffect } from "react";
 import { CustomError, setEdited } from "./CustomError";
-import { Transform } from "@focuson/lens";
+import { Transform } from "@focuson-nw/lens";
 import { makeInputChangeTxs } from "./labelAndInput";
 
 

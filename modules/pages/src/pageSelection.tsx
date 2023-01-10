@@ -1,11 +1,11 @@
-import { identityOptics, Lens, lensBuilder, NameAndLensFn, Optional, parsePath, prefixNameAndLens, Transform } from "@focuson/lens";
-import { LensState } from "@focuson/state";
+import { identityOptics, Lens, lensBuilder, NameAndLensFn, Optional, parsePath, prefixNameAndLens, Transform } from "@focuson-nw/lens";
+import { LensState } from "@focuson-nw/state";
 import { HasMultiPageDetails, isMainPageDetails } from "./pageConfig";
-import { CopyDetails, PageMode, safeArray, safeObject } from "@focuson/utils";
-import { MinimalPageSelection, ModalChangeCommands, RestCommand } from "@focuson/rest";
+import { CopyDetails, PageMode, safeArray, safeObject } from "@focuson-nw/utils";
+import { MinimalPageSelection, ModalChangeCommands, RestCommand } from "@focuson-nw/rest";
 import { PageDetailsForCombine } from "./selectedPage";
 
-import { RestLoadWindowWithoutRestProps } from "@focuson/rest";
+import { RestLoadWindowWithoutRestProps } from "@focuson-nw/rest";
 
 
 export interface PagePosition {

@@ -3,8 +3,8 @@ import { TSParams } from "./config";
 import { modalName, modalPageComponentName, optionalsFileName, optionalsName, pageComponentName, pageInState, renderFileName } from "./names";
 import { addStringToEndOfAllButLast, indentList } from "./codegen";
 import { makeEmptyData } from "./makeSample";
-import { NameAnd, safeArray, toArray } from "@focuson/utils";
-import { Lenses } from "@focuson/lens";
+import { NameAnd, safeArray, toArray } from "@focuson-nw/utils";
+import { Lenses } from "@focuson-nw/lens";
 
 
 export function makeInitialValue<B, G> ( display: PageDisplay<G>, name: string, initialValue: undefined | InitialValue ) {
@@ -47,11 +47,11 @@ export interface ExtraPage {
 export function makePages<B, G> ( params: TSParams, ps: MainPageD<B, G>[], extraPages: NameAnd<ExtraPage> | undefined ): string[] {
   const realExtraPages: NameAnd<ExtraPage> = extraPages ? extraPages : {
     confirm: {
-      imports: [ 'import { ConfirmCommitWindow } from "@focuson/pages";' ],
+      imports: [ 'import { ConfirmCommitWindow } from "@focuson-nw/pages";' ],
       text: `pageType: 'Arbitrary', config: simpleMessagesConfig, pageFunction: ConfirmCommitWindow()`
     },
     restLoader: {
-      imports: [ 'import { RestLoadWindow } from "@focuson/form_components";'],
+      imports: [ 'import { RestLoadWindow } from "@focuson-nw/form_components";'],
       text: `pageType: 'Arbitrary', config: simpleMessagesConfig, pageFunction: RestLoadWindow`
     }
   }
@@ -62,8 +62,8 @@ export function makePages<B, G> ( params: TSParams, ps: MainPageD<B, G>[], extra
   ] )
   const optionalImports = ps.map ( p => `import { ${optionalsName ( p )} } from "${optionalsFileName ( '.', params, p )}"; ` )
   return [
-    `import { identityOptics } from "@focuson/lens";`,
-    `import { Loading, MultiPageDetails, simpleMessagesPageConfig } from "@focuson/pages";`,
+    `import { identityOptics } from "@focuson-nw/lens";`,
+    `import { Loading, MultiPageDetails, simpleMessagesPageConfig } from "@focuson-nw/pages";`,
     `import {Context,  ${params.stateName} } from "./${params.commonFile}";`,
     ...renderImports,
     ...optionalImports,

@@ -1,6 +1,6 @@
-import { LensProps, LensState } from "@focuson/state";
-import { NameAnd, PageMode } from "@focuson/utils";
-import { Lenses } from "@focuson/lens";
+import { LensProps, LensState } from "@focuson-nw/state";
+import { NameAnd, PageMode } from "@focuson-nw/utils";
+import { Lenses } from "@focuson-nw/lens";
 import { HasButtons } from "./makeButtons";
 
 export interface SelectedItemDisplayProps<S, T, Context> {

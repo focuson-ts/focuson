@@ -1,9 +1,9 @@
 import { CommonStateProps } from "./common";
-import { decamelize, findJoiner, makeIntoString, NameAnd, numberOrUndefined, safeArray } from "@focuson/utils";
-import { LensState, reasonFor } from "@focuson/state";
-import { Lenses, Transform } from "@focuson/lens";
+import { decamelize, findJoiner, makeIntoString, NameAnd, numberOrUndefined, safeArray } from "@focuson-nw/utils";
+import { LensState, reasonFor } from "@focuson-nw/state";
+import { Lenses, Transform } from "@focuson-nw/lens";
 import { CSSProperties } from "react";
-import { PageSelectionContext, replaceTextUsingPath } from "@focuson/pages";
+import { PageSelectionContext, replaceTextUsingPath } from "@focuson-nw/pages";
 
 export interface CommonTableProps<S, T, Context> extends CommonStateProps<S, T[], Context> {
   /** If set then the selected index will be copied here as the table items are selected. */

@@ -1,8 +1,8 @@
-import { identityOptics, Lenses, NameAndLens } from "@focuson/lens";
-import { createSimpleMessage, testDateFn } from "@focuson/utils";
+import { identityOptics, Lenses, NameAndLens } from "@focuson-nw/lens";
+import { createSimpleMessage, testDateFn } from "@focuson-nw/utils";
 import { PageSpecState, SecondPageDomain } from "./page.fixture";
-import { commonTagFetchProps, pageAndTagFetcher, simpleTagFetcher } from "@focuson/focuson";
-import { Fetcher } from "@focuson/fetcher";
+import { commonTagFetchProps, pageAndTagFetcher, simpleTagFetcher } from "@focuson-nw/focuson";
+import { Fetcher } from "@focuson-nw/fetcher";
 
 function withMessages<T> () {
   return commonTagFetchProps<PageSpecState, T> ( ( s: T, date ) => [ createSimpleMessage ( 'info', `${s}`, date ) ], testDateFn ) ()

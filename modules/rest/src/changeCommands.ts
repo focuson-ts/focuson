@@ -1,6 +1,6 @@
-import { identityOptional, Optional, replaceTextFn, Transform } from "@focuson/lens";
-import { TagHolder } from "@focuson/template";
-import { anyIntoPrimitive, CopyDetails, DateFn, filterObject, PageMode, RestAction, SimpleMessageLevel, toArray } from "@focuson/utils";
+import { identityOptional, Optional, replaceTextFn, Transform } from "@focuson-nw/lens";
+import { TagHolder } from "@focuson-nw/template";
+import { anyIntoPrimitive, CopyDetails, DateFn, filterObject, PageMode, RestAction, SimpleMessageLevel, toArray } from "@focuson-nw/utils";
 
 
 export interface ChangeCommand {

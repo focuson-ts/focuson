@@ -1,4 +1,4 @@
-import { memoise } from "@focuson/utils"
+import { memoise } from "@focuson-nw/utils"
 
 describe ( "memoisation", () => {
   it ( "should return the value if already in and generate it if it isn't in", () => {

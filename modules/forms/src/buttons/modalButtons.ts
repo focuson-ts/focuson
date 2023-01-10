@@ -1,12 +1,12 @@
 import { DataD } from "../common/dataD";
 import { CommonRestOnCommit, isRestOnCommitRefresh, MainPageD, ModalPageD, PageD, RestOnCommit } from "../common/pageD";
-import { CopyStringDetails, PageOps, PageParams, SetToLengthOnClose } from "@focuson/pages";
+import { CopyStringDetails, PageOps, PageParams, SetToLengthOnClose } from "@focuson-nw/pages";
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
 import { indentList, opt, optObj, optT } from "../codegen/codegen";
 import { emptyName, modalName, restDetailsName } from "../codegen/names";
 import { EnabledBy, enabledByString } from "./enabledBy";
-import { CopyDetails, decamelize, PageMode, toArray, toArrayOrUndefined } from "@focuson/utils";
-import { ModalChangeCommands, RestCommand, RestLoadWindowWithoutRestProps, } from "@focuson/rest";
+import { CopyDetails, decamelize, PageMode, toArray, toArrayOrUndefined } from "@focuson-nw/utils";
+import { ModalChangeCommands, RestCommand, RestLoadWindowWithoutRestProps, } from "@focuson-nw/rest";
 import { stateQueryForParams } from "../codegen/lens";
 
 
@@ -71,7 +71,7 @@ function singleToList<T> ( ts: T | T[] ): T[] {
 }
 function makeModalButtonInPage<G> (): ButtonCreator<ModalOrMainButtonInPage<G>, G> {
   return {
-    import: "@focuson/pages",
+    import: "@focuson-nw/pages",
     makeButton:
       ( { params, mainPage, parent, name, button } ) => {
         const {

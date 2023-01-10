@@ -1,4 +1,4 @@
-import { lensBuilder, Lenses, NameAndLensFn, Optional, parsePath, PathBuilder, prefixNameAndLens, stateCodeBuilder, stateCodeInitials, tokenisePath } from "@focuson/lens";
+import { lensBuilder, Lenses, NameAndLensFn, Optional, parsePath, PathBuilder, prefixNameAndLens, stateCodeBuilder, stateCodeInitials, tokenisePath } from "@focuson-nw/lens";
 
 describe ( 'tokenisepath', () => {
   it ( "should extract the prefix as a token, replacing 'no prefix with ''", () => {

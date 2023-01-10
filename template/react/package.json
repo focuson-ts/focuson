@@ -49,7 +49,7 @@
   "license":         "MIT",
   "main":            "dist/index",
   "types":           "dist/index",
-  "repository":      "github:focuson-ts/focuson",
+  "repository":      "github:LewisT543/focuson-nw",
   "scripts":         {
     "start":      "react-scripts start",
     "test":       "jest --config jest.config.json",

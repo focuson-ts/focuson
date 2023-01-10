@@ -1,5 +1,5 @@
-import { LensProps, LensState, reasonFor } from "@focuson/state";
-import { NameAnd } from "@focuson/utils";
+import { LensProps, LensState, reasonFor } from "@focuson-nw/state";
+import { NameAnd } from "@focuson-nw/utils";
 
 
 export interface SummaryTableData {

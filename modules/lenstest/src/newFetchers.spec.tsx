@@ -1,11 +1,11 @@
-import { OneRestDetails, PageSelectionForDeleteRestWindowCommand, RestCommand, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson/rest";
-import { createSimpleMessage, RestAction, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson/utils";
-import { AllFetcherUsingRestConfig, defaultPageSelectionAndRestCommandsContext, FocusOnConfig, FocusOnContext, FocusOnDebug, HasRestCount, processRestsAndFetchers, restCommandsFromFetchers, restCountL, traceL } from "@focuson/focuson";
-import { TagHolder } from "@focuson/template";
-import { identityOptics, Lenses, NameAndLens, Optional } from "@focuson/lens";
-import { MultiPageDetails, PageSelection, pageSelectionlens, simpleMessagesL, simpleMessagesPageConfig } from "@focuson/pages";
+import { OneRestDetails, PageSelectionForDeleteRestWindowCommand, RestCommand, RestDetails, restL, RestToTransformProps, restToTransforms } from "@focuson-nw/rest";
+import { createSimpleMessage, RestAction, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson-nw/utils";
+import { AllFetcherUsingRestConfig, defaultPageSelectionAndRestCommandsContext, FocusOnConfig, FocusOnContext, FocusOnDebug, HasRestCount, processRestsAndFetchers, restCommandsFromFetchers, restCountL, traceL } from "@focuson-nw/focuson";
+import { TagHolder } from "@focuson-nw/template";
+import { identityOptics, Lenses, NameAndLens, Optional } from "@focuson-nw/lens";
+import { MultiPageDetails, PageSelection, pageSelectionlens, simpleMessagesL, simpleMessagesPageConfig } from "@focuson-nw/pages";
 import React from "react";
-import { justInfoToSuccessMessagesPostProcessor } from "@focuson/rest/src/messages";
+import { justInfoToSuccessMessagesPostProcessor } from "@focuson-nw/rest/src/messages";
 
 
 interface NewFetcherDomain {

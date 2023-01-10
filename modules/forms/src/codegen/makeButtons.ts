@@ -1,5 +1,5 @@
 import { MainPageD, PageD } from "../common/pageD";
-import { NameAnd, safeObject, sortedEntries } from "@focuson/utils";
+import { NameAnd, safeObject, sortedEntries } from "@focuson-nw/utils";
 import { TSParams } from "./config";
 import { ButtonD, ButtonWithControl, isButtonWithControl } from "../buttons/allButtons";
 import { addBrackets, addStringToStartOfFirst, indentList } from "./codegen";

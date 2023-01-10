@@ -1,6 +1,6 @@
 import { TSParams } from "./config";
 import { MainPageD, VariableByCodeD, VariableByPathD } from "../common/pageD";
-import { safeArray, safeObject, unique } from "@focuson/utils";
+import { safeArray, safeObject, unique } from "@focuson-nw/utils";
 import { addStringToEndOfAllButLast, indentList } from "./codegen";
 import { optionalsName } from "./names";
 import { lensFocusQueryWithSlashAndTildaFromIdFn } from "./lens";
@@ -17,7 +17,7 @@ const walkPathOptions = <B, G> ( p: MainPageD<B, G> ) => ( fn: ( name: string, p
 
 export function makeVariables<B, G> ( params: TSParams, p: MainPageD<B, G> ): string[] {
   const imports = walkCodeOptions ( p ) ( ( name, opt ) => safeArray ( opt.imports ) )
-  const allImports = unique ( [ `import {${params.stateName}, identityL } from '../common';`, `import { Lenses, NameAndLensFn, Optional } from '@focuson/lens'`, ...imports ], x => x )
+  const allImports = unique ( [ `import {${params.stateName}, identityL } from '../common';`, `import { Lenses, NameAndLensFn, Optional } from '@focuson-nw/lens'`, ...imports ], x => x )
   return [ ...allImports, '',
     `export const ${optionalsName ( p )}: NameAndLensFn<${params.stateName}> = {`,
     ...indentList ( addStringToEndOfAllButLast ( ',' ) ( makeCodeVariables ( params, p ) ) ),

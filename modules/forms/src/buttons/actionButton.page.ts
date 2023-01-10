@@ -1,15 +1,15 @@
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
-import { NameAnd, safeObject, toArray } from "@focuson/utils";
+import { NameAnd, safeObject, toArray } from "@focuson-nw/utils";
 import { indentList, opt, optObj, optT } from "../codegen/codegen";
 import { CustomButtonType, EnabledBy, enabledByString } from "./enabledBy";
 import { ButtonWithControl } from "./allButtons";
 import { stateForButtonWithPath, stateQueryForPathsFnButtonParams } from "../codegen/lens";
-import { ChangeCommand, CommandButtonChangeCommands } from "@focuson/rest";
+import { ChangeCommand, CommandButtonChangeCommands } from "@focuson-nw/rest";
 
 
 function makeActionButton<B extends ActionButtonInPage, G> (): ButtonCreator<ActionButtonInPage, G> {
   return {
-    import: '@focuson/form_components',
+    import: '@focuson-nw/form_components',
     needsHistory: true,
     makeButton: data => {
       const { params, mainPage, parent, name, button } = data

@@ -1,7 +1,7 @@
-import { identityOptics, Optional } from "@focuson/lens";
+import { identityOptics, Optional } from "@focuson-nw/lens";
 import { applyFetcher, Fetcher } from "./fetchers";
 import { FetcherDebug, wouldLoadSummary } from "./setjson";
-import { defaultFetchFn, FetchFn } from "@focuson/utils";
+import { defaultFetchFn, FetchFn } from "@focuson-nw/utils";
 
 export interface FetcherTree<State> {
   fetchers: Fetcher<State, any>[],

@@ -1,11 +1,11 @@
-import { Iso, Lens, Lenses, NameAndLens, Optional } from '@focuson/lens';
+import { Iso, Lens, Lenses, NameAndLens, Optional } from '@focuson-nw/lens';
 
-// import { createSimpleMessage, HasPageSelection, HasSimpleMessages, PageSelection, SimpleMessage } from "@focuson/pages";
-import { areAllDefined, arraysEqual, DateFn, HasSimpleMessages, or, SimpleMessage } from "@focuson/utils";
+// import { createSimpleMessage, HasPageSelection, HasSimpleMessages, PageSelection, SimpleMessage } from "@focuson-nw/pages";
+import { areAllDefined, arraysEqual, DateFn, HasSimpleMessages, or, SimpleMessage } from "@focuson-nw/utils";
 
-import { defaultErrorMessage, Fetcher, ifEEqualsFetcher, loadInfo, MutateFn, OnTagFetchErrorFn, partialFnUsageError, updateTagsAndMessagesOnError } from "@focuson/fetcher";
-import { HasTagHolder, TagHolder, tagOps, Tags, UrlConfig } from "@focuson/template";
-import { HasPageSelection, PageSelection } from "@focuson/pages";
+import { defaultErrorMessage, Fetcher, ifEEqualsFetcher, loadInfo, MutateFn, OnTagFetchErrorFn, partialFnUsageError, updateTagsAndMessagesOnError } from "@focuson-nw/fetcher";
+import { HasTagHolder, TagHolder, tagOps, Tags, UrlConfig } from "@focuson-nw/template";
+import { HasPageSelection, PageSelection } from "@focuson-nw/pages";
 
 
 /** The things common across the application S is the full state for our application, T is what we are loading, MSGS is how any messages are represented */

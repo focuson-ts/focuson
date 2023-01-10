@@ -1,13 +1,13 @@
 import { isCommonLens, postFixForEndpoint, RestD, RestParams, stateToNameAndUrlAndParamsForState } from "../common/restD";
 import { endPointName, mutationClassName, mutationMethodName, mutationVariableName, queryClassName, queryName, queryPackage, restControllerName, restControllerPackage, sampleName, sqlMapName, sqlMapPackageName, wiringName } from "./names";
 import { JavaWiringParams } from "./config";
-import { actionsEqual, beforeSeparator, isRestStateChange, RestAction, safeArray, safeObject, toArray, unique } from "@focuson/utils";
+import { actionsEqual, beforeSeparator, isRestStateChange, RestAction, safeArray, safeObject, toArray, unique } from "@focuson-nw/utils";
 import { indentList, paramsForRestAction } from "./codegen";
 import { CompDataD, isRepeatingDd } from "../common/dataD";
 import { RefD } from "../common/pageD";
-import { getRestTypeDetails, getUrlForRestAction, RestActionDetail, restActionForName, restActionToDetails } from "@focuson/rest";
+import { getRestTypeDetails, getUrlForRestAction, RestActionDetail, restActionForName, restActionToDetails } from "@focuson-nw/rest";
 import { AccessCondition, allInputParamNames, allOutputParams, displayParam, importForTubles, isMessageMutation, isSelectMutationThatIsAList, isSqlMutationThatIsAList, javaTypeForOutput, MutationDetail, parametersFor } from "../common/resolverD";
-import { applyToTemplateOrUndefinedIfNoParamsPresent } from "@focuson/template";
+import { applyToTemplateOrUndefinedIfNoParamsPresent } from "@focuson-nw/template";
 
 
 function makeCommaIfHaveParams<G> ( errorPrefix: string, r: RestD<G>, restAction: RestAction ) {

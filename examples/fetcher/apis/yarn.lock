@@ -310,9 +310,9 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@focuson/lens@0.2.31":
+"@focuson-nw/lens@0.2.31":
   version "0.2.31"
-  resolved "https://registry.yarnpkg.com/@focuson/lens/-/lens-0.2.31.tgz#fc7773e07c73a29a9fde230c3e462066f6d89495"
+  resolved "https://registry.yarnpkg.com/@focuson-nw/lens/-/lens-0.2.31.tgz#fc7773e07c73a29a9fde230c3e462066f6d89495"
   integrity sha512-UxXeLFirkmFGGOau/CoZIYvdXcjM5OXpVJtUFVHOejUmRnimXBQlXcfu5zXuijPSIdabiklhN2dj3qodz8q7gg==
 
 "@istanbuljs/load-nyc-config@^1.0.0":

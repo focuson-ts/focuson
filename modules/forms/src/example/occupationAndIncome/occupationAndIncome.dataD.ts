@@ -2,7 +2,7 @@ import { additionalInformationDD } from "./additionalInformation/additionalInfor
 import { businessDetailsMainDD } from "./businessDetails/businessDetails.dataD";
 import { otherSourcesOfIncomeDataDD } from "./otherSourcesOfIncome/otherSourcesOfIncome.dataD";
 import { occupationAndIncomeSample } from "./occupationAndIncome.sample";
-import { CustomerStatus, EmploymentType, YesNo } from "@focuson/form_components";
+import { CustomerStatus, EmploymentType, YesNo } from "@focuson-nw/form_components";
 import { ExampleDataD, ExampleRepeatingD } from "../common";
 import { DateDD, DateWithDatePickerDD, IntegerDD, MonthYearWithDatePickerDD, OneLineStringDD, StringDD, StringPrimitiveDD } from "../../common/dataD";
 import { commonParams, DisplayCompD, LabelAndDropDownCD, LayoutCd, SelectedItemCD, TableCD } from "../../common/componentsD";
@@ -172,7 +172,7 @@ export const dropdownsDD: ExampleDataD = {
 
 /* ---------------- OCCUPATIONS LIST START ---------------- */
 export const ListItemsCD: DisplayCompD = {
-  import: '@focuson/form_components',
+  import: '@focuson-nw/form_components',
   name: "ListItemsCD",
   params: {
     ...commonParams,

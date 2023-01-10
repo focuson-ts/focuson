@@ -1,6 +1,6 @@
-import { Lenses, Optional } from "@focuson/lens";
-import { LensState } from "@focuson/state";
-import { createSimpleMessage, DateFn, HasSimpleMessages, SimpleMessage, SimpleMessageLevel, stringToSimpleMsg, toArray } from "@focuson/utils";
+import { Lenses, Optional } from "@focuson-nw/lens";
+import { LensState } from "@focuson-nw/state";
+import { createSimpleMessage, DateFn, HasSimpleMessages, SimpleMessage, SimpleMessageLevel, stringToSimpleMsg, toArray } from "@focuson-nw/utils";
 
 export interface HasSimpleMessageL<S> {
   simpleMessagesL: Optional<S, SimpleMessage[]>

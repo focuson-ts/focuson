@@ -1,4 +1,4 @@
-import { lensState, LensState } from '@focuson/state';
+import { lensState, LensState } from '@focuson-nw/state';
 import { State, Store } from '@sambego/storybook-state';
 import { StateObject } from "@sambego/storybook-state/Store";
 import { ReactNode } from "react";

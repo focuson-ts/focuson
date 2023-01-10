@@ -1,12 +1,12 @@
 import { ButtonCreator, MakeButton, makeIdForButton } from "../codegen/makeButtons";
 import { opt } from "../codegen/codegen";
 import { stateForButtonWithPath } from "../codegen/lens";
-import { decamelize, toArray } from "@focuson/utils";
+import { decamelize, toArray } from "@focuson-nw/utils";
 import { CustomButtonType } from "./enabledBy";
 
 function makeDeleteStateButton<G> (): ButtonCreator<DeleteStateButtonInPage, G> {
   return {
-    import: "@focuson/form_components",
+    import: "@focuson-nw/form_components",
     makeButton:
       ( createButton ) => {
         const { params, parent, name, button } = createButton

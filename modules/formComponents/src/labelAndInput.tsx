@@ -2,14 +2,14 @@ import { CommonStateProps, InputOnChangeProps, LabelAlignment } from "./common";
 import { Input, } from "./input";
 import { Label } from "./label";
 import { BooleanTransformer, BooleanYNTransformer, isCheckboxProps, NumberTransformer, StringTransformer, TransformerProps } from "./transformers";
-import { BooleanValidations, defaultDateFn, HasDateFn, NameAnd, NumberValidations, SimpleMessage, stringToSimpleMsg, StringValidations, toArray } from "@focuson/utils";
+import { BooleanValidations, defaultDateFn, HasDateFn, NameAnd, NumberValidations, SimpleMessage, stringToSimpleMsg, StringValidations, toArray } from "@focuson-nw/utils";
 
-import { LensState } from "@focuson/state";
-import { Transform } from "@focuson/lens";
-import { FocusOnContext, makeInputProcessorsConfig } from "@focuson/focuson";
-import { HasCloseOnePage, InputChangeCommands, inputCommandProcessors, InputProcessorsConfig, processChangeCommandProcessor } from "@focuson/rest";
+import { LensState } from "@focuson-nw/state";
+import { Transform } from "@focuson-nw/lens";
+import { FocusOnContext, makeInputProcessorsConfig } from "@focuson-nw/focuson";
+import { HasCloseOnePage, InputChangeCommands, inputCommandProcessors, InputProcessorsConfig, processChangeCommandProcessor } from "@focuson-nw/rest";
 import { makeButtons } from "./makeButtons";
-import { HasPageSelectionLens, HasPathToLens, HasSimpleMessageL, PageSelection } from "@focuson/pages";
+import { HasPageSelectionLens, HasPathToLens, HasSimpleMessageL, PageSelection } from "@focuson-nw/pages";
 import { CustomError } from "./CustomError";
 
 export interface LabelAndInputProps<S, T, Context> extends CommonStateProps<S, T, Context>, LabelAlignment, InputOnChangeProps<S, Context> {

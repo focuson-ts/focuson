@@ -1,7 +1,7 @@
-import { RestCommand, RestDetails } from "@focuson/rest";
+import { RestCommand, RestDetails } from "@focuson-nw/rest";
 import { AllFetcherUsingRestConfig, findRestCommands } from "./tagFetcherUsingRest";
-import { TagHolder } from "@focuson/template";
-import { Optional, Transform } from "@focuson/lens";
+import { TagHolder } from "@focuson-nw/template";
+import { Optional, Transform } from "@focuson-nw/lens";
 import { FocusOnContext } from "./config";
 
 

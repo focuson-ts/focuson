@@ -1,7 +1,7 @@
 import { CommonStateProps } from "./common";
 import { LabelAndBooleanInput } from "./labelAndInput";
-import { FocusOnContext } from "@focuson/focuson";
-import { LensState } from "@focuson/state";
+import { FocusOnContext } from "@focuson-nw/focuson";
+import { LensState } from "@focuson-nw/state";
 
 
 export interface CheckboxAndNumberProps<S, Context> extends CommonStateProps<S, boolean, Context> {

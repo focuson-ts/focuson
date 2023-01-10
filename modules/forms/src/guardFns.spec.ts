@@ -1,5 +1,5 @@
-import { HasDateFn } from "@focuson/utils";
-import { lensState } from "@focuson/state";
+import { HasDateFn } from "@focuson-nw/utils";
+import { lensState } from "@focuson-nw/state";
 import { isDifferentDayOrIsBeforeFull } from "./guardFns";
 
 function quickParser ( s: string ) {return new Date ( Date.parse ( s ) )}

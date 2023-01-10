@@ -2,11 +2,11 @@ import { mapRestAndActions, mapRestAndResolver, RestD } from "../common/restD";
 import { AllDataDD, AllDataFlatMap, DataD, emptyDataFlatMap, flatMapDD, isPrimDd, isRepeatingDd, OneDataDD, PrimitiveDD, RepeatingDataD, sampleFromDataD } from "../common/dataD";
 import { fetcherInterfaceForResolverName, fetcherInterfaceName, fetcherPackageName, fetcherVariableName, fetcherVariableNameForResolver, resolverName, sampleName, wiringName, wiringPackage } from "./names";
 import { JavaWiringParams } from "./config";
-import { applyToTemplate } from "@focuson/template";
-import { DirectorySpec, loadFile } from "@focuson/files";
-import { RestAction, unique } from "@focuson/utils";
+import { applyToTemplate } from "@focuson-nw/template";
+import { DirectorySpec, loadFile } from "@focuson-nw/files";
+import { RestAction, unique } from "@focuson-nw/utils";
 import { PageD, RefD } from "../common/pageD";
-import { getRestTypeDetails } from "@focuson/rest";
+import { getRestTypeDetails } from "@focuson-nw/rest";
 import { Ref } from "react";
 
 

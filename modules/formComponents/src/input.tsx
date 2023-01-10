@@ -1,9 +1,9 @@
 import { CommonStateProps, InputEnabledProps, InputOnChangeProps } from "./common";
 
 import { BooleanTransformer, BooleanYNTransformer, CheckboxProps, isCheckboxProps, NumberTransformer, StringProps, StringTransformer, TransformerProps } from "./transformers";
-import { BooleanValidations, disabledFrom, NameAnd, NumberValidations, StringValidations } from "@focuson/utils";
+import { BooleanValidations, disabledFrom, NameAnd, NumberValidations, StringValidations } from "@focuson-nw/utils";
 
-import { FocusOnContext } from "@focuson/focuson";
+import { FocusOnContext } from "@focuson-nw/focuson";
 import { setEdited } from "./CustomError";
 
 

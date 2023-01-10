@@ -1,11 +1,11 @@
 {
   "template":    "noreact",
-  "name":        "@focuson/files",
+  "name":        "@focuson-nw/files",
   "description": "File manipulation: loading/saving",
   "details":     {
     "ideify":       true,
     "publish":      true,
-    "links":        ["@focuson/template"],
+    "links":        ["@focuson-nw/template"],
     "extraDeps":    {},
     "extraDevDeps": {},
     "tsc":          true

@@ -1,4 +1,4 @@
-import { NameAnd, safeArray } from "@focuson/utils";
+import { NameAnd, safeArray } from "@focuson-nw/utils";
 import { ButtonFromPage } from "./buttonFromPage";
 
 export interface HasButtons{

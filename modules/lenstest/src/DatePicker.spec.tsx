@@ -1,12 +1,12 @@
-import { acceptDateForTest, DateErrorMessage, DateInfo, DatePicker, DateRange, defaultDateErrorMessage, errorsAnd, firstAllowedDate, MyCombined, parseDate, validateDateInfo } from "@focuson/form_components";
-import { lensState } from "@focuson/state";
+import { acceptDateForTest, DateErrorMessage, DateInfo, DatePicker, DateRange, defaultDateErrorMessage, errorsAnd, firstAllowedDate, MyCombined, parseDate, validateDateInfo } from "@focuson-nw/form_components";
+import { lensState } from "@focuson-nw/state";
 import { mount } from "enzyme";
-import { HasPageSelection, HasPathToLens, ModalContext, pageSelectionlens } from "@focuson/pages";
-import { HasTagHolder } from "@focuson/template";
-import { HasSimpleMessages } from "@focuson/utils";
+import { HasPageSelection, HasPathToLens, ModalContext, pageSelectionlens } from "@focuson-nw/pages";
+import { HasTagHolder } from "@focuson-nw/template";
+import { HasSimpleMessages } from "@focuson-nw/utils";
 import { enzymeSetup } from "./enzymeAdapterSetup";
-import { HasEnvironment } from "@focuson/focuson";
-import { Lenses, Optional } from "@focuson/lens";
+import { HasEnvironment } from "@focuson-nw/focuson";
+import { Lenses, Optional } from "@focuson-nw/lens";
 
 enzymeSetup ()
 const dateFormat = 'dd/MM/yyyy'

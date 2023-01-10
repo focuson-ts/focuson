@@ -1,6 +1,6 @@
-import { createSimpleMessage, FetchFn, HasSimpleMessages, insertBefore, isRestStateChange, RestAction, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson/utils";
+import { createSimpleMessage, FetchFn, HasSimpleMessages, insertBefore, isRestStateChange, RestAction, SimpleMessage, stringToSimpleMsg, testDateFn } from "@focuson-nw/utils";
 import { HasRestCommands, massFetch, OneRestDetails, rest, RestCommand, RestDetails, restL, restReq, RestToTransformProps } from "./rest";
-import { identityOptics, lensBuilder, Lenses, NameAndLens, Optional, parsePath } from "@focuson/lens";
+import { identityOptics, lensBuilder, Lenses, NameAndLens, Optional, parsePath } from "@focuson-nw/lens";
 import { CopyResultCommand, DeleteCommand, HasCloseOnePage, MinimalPageSelection } from "./changeCommands";
 import { justInfoToSuccessMessagesPostProcessor } from "./messages";
 

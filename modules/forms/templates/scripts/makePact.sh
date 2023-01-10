@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 file="src/allPacts.ts"
-echo 'import { FetchFn } from "@focuson/utils";
+echo 'import { FetchFn } from "@focuson-nw/utils";
 export const allPacts: [string, string, number, any][]=[' > "$file"
 find pact/pacts -type f -name "*.json"  | xargs -L1 cat |  jq  -c '.interactions[]|[.request.method,.request.path,.response.status, .response.body]' | sed '$!s/$/,/' >> $file
 echo ']

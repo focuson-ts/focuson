@@ -18,7 +18,7 @@ library 'more polished'
 
 ## State
 
-The state is just a blob of Json. It can come from anywhere. It could easily be the state of the '@focuson/state'
+The state is just a blob of Json. It can come from anywhere. It could easily be the state of the '@focuson-nw/state'
 project, but can also be 'just a javascript object'.
 
 In the state we record 'what we want to be loaded' and 'what we have loaded'. The job of this project is to make that '

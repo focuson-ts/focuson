@@ -1,10 +1,10 @@
-import { lensState } from "@focuson/state";
-import { identityOptics } from "@focuson/lens";
-import { focusedPage, HasPageSelection, Loading, MultiPageDetails, PageConfig,simpleMessagesPageConfig } from "@focuson/pages";
-import { HasSimpleMessages, PageMode, SimpleMessage, testDateFn } from "@focuson/utils";
-import { defaultPageSelectionAndRestCommandsContext, FocusOnContext } from "@focuson/focuson";
-import { HasTagHolder } from "@focuson/template";
-import { HasRestCommands, RestCommand } from "@focuson/rest";
+import { lensState } from "@focuson-nw/state";
+import { identityOptics } from "@focuson-nw/lens";
+import { focusedPage, HasPageSelection, Loading, MultiPageDetails, PageConfig,simpleMessagesPageConfig } from "@focuson-nw/pages";
+import { HasSimpleMessages, PageMode, SimpleMessage, testDateFn } from "@focuson-nw/utils";
+import { defaultPageSelectionAndRestCommandsContext, FocusOnContext } from "@focuson-nw/focuson";
+import { HasTagHolder } from "@focuson-nw/template";
+import { HasRestCommands, RestCommand } from "@focuson-nw/rest";
 
 
 export interface PageSpecState extends HasPageSelection, HasSimpleMessages, HasTagHolder, HasRestCommands {

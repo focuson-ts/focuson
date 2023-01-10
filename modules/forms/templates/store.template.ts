@@ -1,16 +1,16 @@
 import { applyMiddleware } from 'redux'
 import { legacy_createStore, Store } from '@reduxjs/toolkit'
 import { Context, emptyState, FState, identityL } from "./common";
-import { defaultDateFn, errorMonad, errorPromiseMonad, fetchWithDelay, fetchWithPrefix, loggingFetchFn, safeArray, SimpleMessage, stringToSimpleMsg } from "@focuson/utils";
-import { lensState, LensState } from "@focuson/state";
+import { defaultDateFn, errorMonad, errorPromiseMonad, fetchWithDelay, fetchWithPrefix, loggingFetchFn, safeArray, SimpleMessage, stringToSimpleMsg } from "@focuson-nw/utils";
+import { lensState, LensState } from "@focuson-nw/state";
 import { Reducer } from "react";
-import { dispatchRestAndFetchCommands, FocusOnConfig, FocusOnContext, FocusOnDebug, HasFocusOnDebug, restCountL, traceL, makeModalProcessorsConfig, Dependencies} from "@focuson/focuson";
-import { Lens, Lenses, massTransform, Transform } from "@focuson/lens";
-import { pageSelectionlens, preMutateForPages, simpleMessagesL, removeOldMessages } from "@focuson/pages";
+import { dispatchRestAndFetchCommands, FocusOnConfig, FocusOnContext, FocusOnDebug, HasFocusOnDebug, restCountL, traceL, makeModalProcessorsConfig, Dependencies} from "@focuson-nw/focuson";
+import { Lens, Lenses, massTransform, Transform } from "@focuson-nw/lens";
+import { pageSelectionlens, preMutateForPages, simpleMessagesL, removeOldMessages } from "@focuson-nw/pages";
 import { newFetchers } from "./fetchers";
 import { restDetails, restUrlMutator } from "./rests";
 import { pages } from "./pages";
-import { RestCommand, RestCommandAndTxs, restL } from "@focuson/rest";
+import { RestCommand, RestCommandAndTxs, restL } from "@focuson-nw/rest";
 import { config, context, start } from "./config";
 
 export interface FocusOnSetMainAction<S> {

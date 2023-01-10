@@ -1,6 +1,6 @@
 import { ExampleDataD } from "../common";
 import { BooleanDD, ManyLineStringDD, NatNumDd, PrimitiveDD, StringDD } from "../../common/dataD";
-import { MessageCommand } from "@focuson/rest";
+import { MessageCommand } from "@focuson-nw/rest";
 import { yesNoDD } from "../SingleOccupation/singleOccupation.dataD";
 import { LabelAndDropDownCD, LabelAndDropDownWithVaryingContent2CD, LabelAndDropDownWithVaryingContentCD } from "../../common/componentsD";
 

@@ -5,8 +5,8 @@
   "version":         "{versionNumber}",
   "private":         true,
   "dependencies":    {
-    "@focuson/focuson":         "{focusOnVersion}",
-    "@focuson/form_components": "{focusOnVersion}",
+    "@focuson-nw/focuson":         "{focusOnVersion}",
+    "@focuson-nw/form_components": "{focusOnVersion}",
     "react-datepicker":         "4.7.0",
     "@types/react-datepicker":  "4.4.1",
     "decamelize":               "^4.0.0"
@@ -17,7 +17,7 @@
     "public/icons"
   ],
   "devDependencies": {
-    "@focuson/stories":                   "{focusOnVersion}",
+    "@focuson-nw/stories":                   "{focusOnVersion}",
     "react":                              "16.14.0",
     "react-dom":                          "16.14.0",
     "react-scripts":                      "4.0.3",

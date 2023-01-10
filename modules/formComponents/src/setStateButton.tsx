@@ -1,9 +1,9 @@
-import { LensState, reasonFor } from "@focuson/state";
-import { findValidityDetails, fromPathGivenState, PageSelectionContext, pageState } from "@focuson/pages";
-import { Lens, massTransform, Optional, Transform } from "@focuson/lens";
-import { toArray } from "@focuson/utils";
+import { LensState, reasonFor } from "@focuson-nw/state";
+import { findValidityDetails, fromPathGivenState, PageSelectionContext, pageState } from "@focuson-nw/pages";
+import { Lens, massTransform, Optional, Transform } from "@focuson-nw/lens";
+import { toArray } from "@focuson-nw/utils";
 import { CustomButtonType, getButtonClassName } from "./common";
-import { wrapWithErrors } from "@focuson/pages";
+import { wrapWithErrors } from "@focuson-nw/pages";
 
 
 export interface SetStateButtonProps<S, T, C> extends CustomButtonType {

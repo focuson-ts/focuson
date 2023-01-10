@@ -1,8 +1,8 @@
-import { DirtyPrism, firstIn2, Iso, iso, Optional } from "@focuson/lens";
+import { DirtyPrism, firstIn2, Iso, iso, Optional } from "@focuson-nw/lens";
 import { Fetcher, loadDirectly, loadInfo, MutateFn, ReqFn } from "./fetchers";
 import { not200MeansError, partialFnUsageError } from "./errorhandling";
-import { areAllDefined, arraysEqual } from "@focuson/utils";
-import { Tags } from "@focuson/template";
+import { areAllDefined, arraysEqual } from "@focuson-nw/utils";
+import { Tags } from "@focuson-nw/template";
 
 
 /** This is one of the more used fetchers: it allows us to have a set of tags (which are usually part of the selection state). In a shopping cart
