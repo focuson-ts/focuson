@@ -15,8 +15,8 @@
     "react": "16.14.0",
     "react-dom": "16.14.0",
     "typescript": "^4.1.5",
-    "@focuson/lens": "1.44.1",
-    "@focuson/state": "1.44.1"
+    "@focuson-nw/lens": "1.44.1",
+    "@focuson-nw/state": "1.44.1"
   },
   "description": "Demonstrating how lens can simplify state management in React",
   "devDependencies": {
@@ -51,7 +51,7 @@
   "license": "MIT",
   "main": "dist/index",
   "types": "dist/index",
-  "repository": "github:focuson-ts/focuson",
+  "repository": "github:LewisT543/focuson-nw",
   "scripts": {
     "start": "react-scripts start",
     "test": "jest --config jest.config.json",
@@ -76,15 +76,15 @@
     ]
   },
   "template": "react",
-  "name": "@focuson/example_state_tictactoe",
+  "name": "@focuson-nw/example_state_tictactoe",
   "details": {
     "extraDeps": {
-      "@focuson/lens": "<version>"
+      "@focuson-nw/lens": "<version>"
     },
     "extraDevDeps": {},
     "links": [
-      "@focuson/lens",
-      "@focuson/state"
+      "@focuson-nw/lens",
+      "@focuson-nw/state"
     ],
     "port": 3004,
     "test": true,

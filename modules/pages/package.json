@@ -12,9 +12,9 @@
     ]
   },
   "dependencies": {
-    "@focuson/state": "1.44.1",
-    "@focuson/fetcher": "1.44.1",
-    "@focuson/rest": "1.44.1"
+    "@focuson-nw/state": "1.44.1",
+    "@focuson-nw/fetcher": "1.44.1",
+    "@focuson-nw/rest": "1.44.1"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -41,7 +41,7 @@
   "license": "MIT",
   "main": "dist/index",
   "types": "dist/index",
-  "repository": "github:focuson-ts/focuson",
+  "repository": "github:LewisT543/focuson-nw",
   "scripts": {
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
@@ -53,13 +53,13 @@
     "ideify": true,
     "publish": true,
     "links": [
-      "@focuson/state",
-      "@focuson/fetcher",
-      "@focuson/rest"
+      "@focuson-nw/state",
+      "@focuson-nw/fetcher",
+      "@focuson-nw/rest"
     ],
     "extraDeps": {},
     "extraDevDeps": {},
     "tsc": true
   },
-  "name": "@focuson/pages"
+  "name": "@focuson-nw/pages"
 }

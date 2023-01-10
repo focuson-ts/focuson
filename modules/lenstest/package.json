@@ -15,13 +15,13 @@
     "react": "16.14.0",
     "react-dom": "16.14.0",
     "typescript": "^4.1.5",
-    "@focuson/pages": "1.44.1",
-    "@focuson/template": "1.44.1",
-    "@focuson/focuson": "1.44.1",
-    "@focuson/form_components": "1.44.1",
-    "@focuson/forms": "1.44.1"
+    "@focuson-nw/pages": "1.44.1",
+    "@focuson-nw/template": "1.44.1",
+    "@focuson-nw/focuson": "1.44.1",
+    "@focuson-nw/form_components": "1.44.1",
+    "@focuson-nw/forms": "1.44.1"
   },
-  "description": "Tests the lens defined in @focuson/lens, the state defined in @focuson/state, and the fetchers in @focuson/fetcher",
+  "description": "Tests the lens defined in @focuson-nw/lens, the state defined in @focuson-nw/state, and the fetchers in @focuson-nw/fetcher",
   "devDependencies": {
     "@types/react": "16.14.0",
     "@testing-library/jest-dom": "^5.11.6",
@@ -54,7 +54,7 @@
   "license": "MIT",
   "main": "dist/index",
   "types": "dist/index",
-  "repository": "github:focuson-ts/focuson",
+  "repository": "github:LewisT543/focuson-nw",
   "scripts": {
     "start": "react-scripts start",
     "test": "jest --config jest.config.json",
@@ -79,16 +79,16 @@
     ]
   },
   "template": "react",
-  "name": "@focuson/lenstest",
+  "name": "@focuson-nw/lenstest",
   "details": {
     "ideify": true,
     "publish": true,
     "links": [
-      "@focuson/pages",
-      "@focuson/template",
-      "@focuson/focuson",
-      "@focuson/form_components",
-      "@focuson/forms"
+      "@focuson-nw/pages",
+      "@focuson-nw/template",
+      "@focuson-nw/focuson",
+      "@focuson-nw/form_components",
+      "@focuson-nw/forms"
     ],
     "extraDeps": {},
     "extraDevDeps": {},

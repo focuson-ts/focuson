@@ -12,16 +12,13 @@
     ]
   },
   "dependencies": {
-    "@focuson-nw/utils": "1.44.1",
-    "@focuson-nw/files": "1.44.1",
-    "@focuson-nw/focuson": "1.44.1"
+    "@focuson-nw/utils": "1.44.1"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
     "npm-check-updates": "^10.0.0",
     "typescript": "^4.1.5",
     "@testing-library/jest-dom": "^5.11.5",
-    "@types/fs-extra": "^9.0.13",
     "@testing-library/user-event": "^12.2.0",
     "@types/jest": "^26.0.15",
     "jest": "^26.6.0",
@@ -32,15 +29,7 @@
     "README.md",
     "dist/index.js",
     "dist/index.d.ts",
-    "dist/src/buttons",
-    "dist/src/codegen",
-    "dist/src/common",
-    "dist/src/makeFiles",
-    "dist/src/reporting",
-    "dist/src/appConfig.d.ts",
-    "dist/src/appConfig.js",
-    "dist/src/appConfig.js",
-    "templates/"
+    "dist/src/"
   ],
   "keywords": [
     "functionalprogramming",
@@ -56,23 +45,18 @@
     "test:watch": "npm run test -- --watch"
   },
   "version": "1.44.1",
-  "template": "forms",
-  "description": "Allows us to define data that is stored in a database, or perhaps an api",
+  "template": "noreact",
+  "description": "Composition of functions",
   "details": {
-    "ideify": true,
-    "test": true,
-    "publish": true,
+    "test": false,
+    "publish": false,
     "links": [
-      "@focuson-nw/utils",
-      "@focuson-nw/files",
-      "@focuson-nw/focuson"
+      "@focuson-nw/utils"
     ],
     "extraDeps": {},
     "extraDevDeps": {},
-    "generator": true,
-    "tsc": true,
-    "javaPort": 8080,
-    "tsPort": 3000
+    "generator": false,
+    "tsc": true
   },
-  "name": "@focuson-nw/forms"
+  "name": "@focuson-nw/composition"
 }
