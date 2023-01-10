@@ -1,0 +1,13 @@
+{
+  "template":    "noreact",
+  "name":        "@focuson/state",
+  "description": "Uses the lens defined in @focuson/lens to implement state for tools such as react",
+  "details":     {
+    "ideify":       true,
+    "publish":      true,
+    "links":        ["@focuson/lens"],
+    "extraDeps":    {},
+    "extraDevDeps": {},
+    "tsc":          true
+  }
+}

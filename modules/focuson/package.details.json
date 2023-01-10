@@ -1,0 +1,15 @@
+{
+  "template":    "noreact",
+  "name":        "@focuson/focuson",
+  "description": "Brings together state management, declarative fetching and posting of data to/from apis and some simple page management",
+  "details":     {
+    "ideify":       true,
+    "publish":      true,
+    "links":        [
+      "@focuson/pages", "@focuson/poster"
+    ],
+    "extraDeps":    {},
+    "extraDevDeps": {},
+    "tsc":          true
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "template":    "noreact",
+  "name":        "@focuson/stories",
+  "description": "Storybook showing the components' ",
+  "details":     {
+    "ideify":       true,
+    "publish":      true,
+    "links":        ["@focuson/focuson"],
+    "extraDeps":    {},
+    "extraDevDeps": {
+      "@sambego/storybook-state":           "^2.0.1",
+      "@storybook/addon-actions":           "^6.4.4",
+      "@storybook/addon-docs":              "^6.4.4",
+      "@storybook/addon-essentials":        "^6.4.4",
+      "@storybook/addon-links":             "^6.4.4",
+      "@storybook/addon-storyshots":        "^6.4.4",
+      "@storybook/node-logger":             "^6.4.4",
+      "@storybook/preset-create-react-app": "^3.2.0",
+      "@storybook/react":                   "^6.4.4"
+    },
+    "test":         false,
+    "tsc":          true
+  }
+}
