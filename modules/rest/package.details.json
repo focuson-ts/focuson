@@ -1,14 +1,24 @@
 {
-  "template":    "noreact",
-  "name":        "@focuson/rest",
+  "template": "typescript",
+  "name": "@focuson/rest",
   "description": "This allows for declarative 'rest actions'. Get/Update/Create... ",
-  "details":     {
-    "ideify":       true,
-    "publish":      true,
-    "links":        ["@focuson/lens", "@focuson/fetcher"],
-    "extraDeps":    {},
-    "extraDevDeps": {},
-    "tsc":          true,
-    "test":         true
+  "details": {
+    "publish": false,
+    "test": true,
+    "links": [
+      "@focuson/lens",
+      "@focuson/fetcher"
+    ],
+    "compile": true,
+    "extraDeps": {},
+    "extraDevDeps": {
+      "npm-check-updates": "^10.0.0"
+    },
+    "extraBins": {},
+    "keywords": [
+      "functionalprogramming",
+      "lens",
+      "optics"
+    ]
   }
 }

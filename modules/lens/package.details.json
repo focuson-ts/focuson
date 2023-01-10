@@ -1,14 +1,23 @@
 {
-  "template":    "noreact",
-  "name":        "@focuson/lens",
+  "template": "typescript",
+  "name": "@focuson/lens",
   "description": "A simple implementation of lens using type script",
-  "details":     {
-    "ideify":       true,
-    "publish":      true,
-    "links":        ["@focuson/utils"],
-    "extraDeps":    {},
-    "extraDevDeps": {},
-    "tsc":          true
-  },
-  "test":        false
+  "details": {
+    "publish": false,
+    "test": true,
+    "links": [
+      "@focuson/utils"
+    ],
+    "compile": true,
+    "extraDeps": {},
+    "extraDevDeps": {
+      "npm-check-updates": "^10.0.0"
+    },
+    "extraBins": {},
+    "keywords": [
+      "functionalprogramming",
+      "lens",
+      "optics"
+    ]
+  }
 }

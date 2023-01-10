@@ -1,14 +1,44 @@
 {
-  "template":    "react",
-  "name":        "@focuson/lenstest",
+  "template": "javascript",
+  "name": "@focuson/lenstest",
   "description": "Tests the lens defined in @focuson/lens, the state defined in @focuson/state, and the fetchers in @focuson/fetcher",
-  "details":     {
-    "ideify":       true,
-    "publish":      true,
-    "links":        ["@focuson/pages", "@focuson/template", "@focuson/focuson", "@focuson/form_components","@focuson/forms"],
-    "extraDeps":    {},
-    "extraDevDeps": {},
-    "test":         true,
-    "tsc":          true
+  "details": {
+    "publish": false,
+    "test": true,
+    "links": [
+      "@focuson/pages",
+      "@focuson/template",
+      "@focuson/focuson",
+      "@focuson/form_components",
+      "@focuson/forms"
+    ],
+    "extraDeps": {
+      "react": "16.14.0",
+      "react-dom": "16.14.0",
+      "typescript": "^4.1.5"
+    },
+    "extraDevDeps": {
+      "@types/react": "16.14.0",
+      "@testing-library/jest-dom": "^5.11.6",
+      "@testing-library/react": "^11.2.2",
+      "@testing-library/user-event": "^12.2.2",
+      "@types/jest": "^26.0.15",
+      "@types/node": "^14.14.9",
+      "enzyme-adapter-react-16": "^1.15.6",
+      "enzyme": "^3.11.0",
+      "@types/enzyme": "^3.10.12",
+      "@types/enzyme-adapter-react-16": "^1.0.6",
+      "jest": "26.6.0",
+      "jest-dom": "2.1.1",
+      "react-scripts": "^4.0.1",
+      "ts-jest": "^26.4.4"
+    },
+    "extraBins": {},
+    "keywords": [
+      "functionalprogramming",
+      "lens",
+      "react",
+      "optics"
+    ]
   }
 }

@@ -1,17 +1,25 @@
 {
-  "template":    "noreact",
-  "name":        "@focuson/pages",
+  "template": "typescript",
+  "name": "@focuson/pages",
   "description": "Used when we want a simple many page application",
-  "details":     {
-    "ideify":       true,
-    "publish":      true,
-    "links":        [
+  "details": {
+    "publish": false,
+    "test": true,
+    "links": [
       "@focuson/state",
       "@focuson/fetcher",
       "@focuson/rest"
     ],
-    "extraDeps":    {},
-    "extraDevDeps": {},
-    "tsc":          true
+    "compile": true,
+    "extraDeps": {},
+    "extraDevDeps": {
+      "npm-check-updates": "^10.0.0"
+    },
+    "extraBins": {},
+    "keywords": [
+      "functionalprogramming",
+      "lens",
+      "optics"
+    ]
   }
 }

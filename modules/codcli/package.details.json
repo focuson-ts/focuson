@@ -1,22 +1,30 @@
 {
-  "template":    "noreact",
-  "name":        "@focuson/cod",
+  "template": "typescript",
+  "name": "@focuson/cod",
   "description": "A command line tool to help with the code on demand",
-  "details":     {
-    "publish":      true,
-    "links":        [],
-    "tsc":          true,
-    "extraDeps":    {
-      "@babel/core":              "^7.12.9",
-      "@babel/preset-env":        "^7.12.7",
-      "@babel/preset-react":      "^7.12.7",
+  "details": {
+    "publish": false,
+    "test": true,
+    "links": [],
+    "compile": true,
+    "extraDeps": {
+      "@babel/core": "^7.12.9",
+      "@babel/preset-env": "^7.12.7",
+      "@babel/preset-react": "^7.12.7",
       "@babel/preset-typescript": "^7.12.7",
-      "commander":                "^6.2.0",
-      "crypto-js":                "^4.0.0"
+      "commander": "^6.2.0",
+      "crypto-js": "^4.0.0"
     },
-    "extraDevDeps": {},
-    "extraBins":    {
+    "extraDevDeps": {
+      "npm-check-updates": "^10.0.0"
+    },
+    "extraBins": {
       "cod": "./dist/index.js"
-    }
+    },
+    "keywords": [
+      "functionalprogramming",
+      "lens",
+      "optics"
+    ]
   }
 }

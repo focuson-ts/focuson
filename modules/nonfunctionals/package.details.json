@@ -1,13 +1,21 @@
 {
-  "template":    "noreact",
-  "name":        "@focuson/nonfunctionals",
+  "template": "typescript",
+  "name": "@focuson/nonfunctionals",
   "description": "A library that allows wrapping of functions and kleislis with non functional capablities",
-  "details":     {
-    "publish":      true,
-    "links":        [],
-    "extraDeps":    {},
-    "extraDevDeps": {},
-    "test":         true,
-    "tsc":          true
+  "details": {
+    "publish": false,
+    "test": true,
+    "links": [],
+    "compile": true,
+    "extraDeps": {},
+    "extraDevDeps": {
+      "npm-check-updates": "^10.0.0"
+    },
+    "extraBins": {},
+    "keywords": [
+      "functionalprogramming",
+      "lens",
+      "optics"
+    ]
   }
 }
