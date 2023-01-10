@@ -1,16 +1,15 @@
 {
-  "browserslist": {
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ],
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ]
-  },
+  "name": "@focuson/forms",
+  "description": "Allows us to define data that is stored in a database, or perhaps an api",
+  "version": "1.44.1",
+  "bin": {},
+  "keywords": [
+    "functionalprogramming",
+    "lens",
+    "optics"
+  ],
+  "license": "MIT",
+  "repository": "github:focuson-ts/focuson",
   "dependencies": {
     "@focuson/utils": "1.44.1",
     "@focuson/files": "1.44.1",
@@ -28,6 +27,9 @@
     "ts-jest": "^26.4.4"
   },
   "files": [
+    "dist/index.js",
+    "dist/index.d.ts",
+    "dist/src/",
     "LICENSE.md",
     "README.md",
     "dist/index.js",
@@ -42,37 +44,28 @@
     "dist/src/appConfig.js",
     "templates/"
   ],
-  "keywords": [
-    "functionalprogramming",
-    "lens",
-    "optics"
-  ],
-  "license": "MIT",
   "main": "dist/index",
   "types": "dist/index",
-  "repository": "github:focuson-ts/focuson",
   "scripts": {
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "1.44.1",
-  "template": "forms",
-  "description": "Allows us to define data that is stored in a database, or perhaps an api",
-  "details": {
-    "ideify": true,
-    "test": true,
-    "publish": true,
-    "links": [
-      "@focuson/utils",
-      "@focuson/files",
-      "@focuson/focuson"
+  "browserslist": {
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version",
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
     ],
-    "extraDeps": {},
-    "extraDevDeps": {},
-    "generator": true,
-    "tsc": true,
-    "javaPort": 8080,
-    "tsPort": 3000
-  },
-  "name": "@focuson/forms"
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all",
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ]
+  }
 }

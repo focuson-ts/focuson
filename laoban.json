@@ -1,40 +1,13 @@
 {
-  "templateDir":    "${laobanDirectory}/template",
-  "versionFile":    "${laobanDirectory}/template/version.txt",
-  "log":            ".log",
-  "status":         ".status",
-  "profile":        ".profile",
-  "packageManager": "yarn",
   "parents":        [
     "@laoban@/laoban.json/core.laoban.json",
     "@laoban@/laoban.json/javascript.laoban.json",
     "@laoban@/laoban.json/typescript.laoban.json",
     "@laoban@/laoban.json/typescript.publish.laoban.json",
-    "@laoban@/laoban.json/typescript.focuson.laoban.json",
-    "@laoban@/laoban.json/typescript.ls.laoban.json",
-    "@laoban@/laoban.json/typescript.pact.laoban.json",
-    "@laoban@/laoban.json/typescript.sprintboot.laoban.json"
+    "@laoban@/laoban.json/focuson.laoban.json",
+    "@laoban@/laoban.json/ls.laoban.json",
+    "@laoban@/laoban.json/springboot.laoban.json"
   ],
-  "scripts":        {
-    "ls-orgcmd": {
-      "description": "lists the projects that have code on demand",
-      "guard":       "${packageDetails.details.orgcmd}",
-      "commands":    [
-        "js:process.cwd()"
-      ]
-    },
-    "orgcmd":    {
-      "description": "makes the code on demand using orgcmd",
-      "guard":       "${packageDetails.details.orgcmd}",
-      "commands":    [
-        {
-          "name":    "orgcmd",
-          "command": "orgcmd build -f",
-          "status":  true
-        }
-      ]
-    }
-  },
   "templates":      {
     "codeondemand": "template\\codeondemand",
     "components":   "template\\components",

@@ -5,10 +5,6 @@
       "target": ".npmrc"
     },
     {
-      "file": ".template.json",
-      "target": ".template.json"
-    },
-    {
       "file": "babel.config.json",
       "target": "babel.config.json"
     },
@@ -20,7 +16,7 @@
       "target": "package.json",
       "file": "package.json",
       "type": "${}",
-      "postProcess": "json"
+      "postProcess": "jsonMergeInto(@laoban@/templates/javascript/package.json)"
     },
     {
       "file": "tsconfig.json",

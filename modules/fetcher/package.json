@@ -1,16 +1,15 @@
 {
-  "browserslist": {
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ],
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ]
-  },
+  "name": "@focuson/fetcher",
+  "description": "Used when we want to fetch data from APIs in order to display it. This provides a declarative and composable approach to state management",
+  "version": "1.44.1",
+  "bin": {},
+  "keywords": [
+    "functionalprogramming",
+    "lens",
+    "optics"
+  ],
+  "license": "MIT",
+  "repository": "github:focuson-ts/focuson",
   "dependencies": {
     "@focuson/lens": "1.44.1",
     "@focuson/template": "1.44.1",
@@ -27,39 +26,37 @@
     "ts-jest": "^26.4.4"
   },
   "files": [
+    "dist/index.js",
+    "dist/index.d.ts",
+    "dist/src/",
     "LICENSE.md",
     "README.md",
     "dist/index.js",
     "dist/index.d.ts",
     "dist/src/"
   ],
-  "keywords": [
-    "functionalprogramming",
-    "lens",
-    "optics"
-  ],
-  "license": "MIT",
   "main": "dist/index",
   "types": "dist/index",
-  "repository": "github:focuson-ts/focuson",
   "scripts": {
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "1.44.1",
-  "template": "noreact",
-  "description": "Used when we want to fetch data from APIs in order to display it. This provides a declarative and composable approach to state management",
-  "details": {
-    "ideify": true,
-    "publish": true,
-    "links": [
-      "@focuson/lens",
-      "@focuson/template",
-      "@focuson/state"
+  "browserslist": {
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version",
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
     ],
-    "extraDeps": {},
-    "extraDevDeps": {},
-    "tsc": true
-  },
-  "name": "@focuson/fetcher"
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all",
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ]
+  }
 }

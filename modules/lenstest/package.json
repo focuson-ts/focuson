@@ -1,27 +1,26 @@
 {
-  "browserslist": {
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ],
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ]
-  },
+  "name": "@focuson/lenstest",
+  "description": "This is a project that allows code to be (safely) fetched on demand from a server. The url holding the code is including in the json",
+  "version": "1.44.1",
+  "bin": {},
+  "keywords": [
+    "functionalprogramming",
+    "lens",
+    "react",
+    "optics"
+  ],
+  "license": "MIT",
+  "repository": "github:focuson-ts/focuson",
   "dependencies": {
-    "react": "16.14.0",
-    "react-dom": "16.14.0",
-    "typescript": "^4.1.5",
     "@focuson/pages": "1.44.1",
     "@focuson/template": "1.44.1",
     "@focuson/focuson": "1.44.1",
     "@focuson/form_components": "1.44.1",
-    "@focuson/forms": "1.44.1"
+    "@focuson/forms": "1.44.1",
+    "react": "16.14.0",
+    "react-dom": "16.14.0",
+    "typescript": "^4.1.5"
   },
-  "description": "Tests the lens defined in @focuson/lens, the state defined in @focuson/state, and the fetchers in @focuson/fetcher",
   "devDependencies": {
     "@types/react": "16.14.0",
     "@testing-library/jest-dom": "^5.11.6",
@@ -39,29 +38,41 @@
     "ts-jest": "^26.4.4"
   },
   "files": [
+    "dist/index.js",
+    "dist/index.d.ts",
+    "dist/src/",
     "LICENSE.md",
     "README.md",
     "dist/index.js",
     "dist/index.d.ts",
     "dist/src/"
   ],
-  "keywords": [
-    "functionalprogramming",
-    "lens",
-    "react",
-    "optics"
-  ],
-  "license": "MIT",
   "main": "dist/index",
   "types": "dist/index",
-  "repository": "github:focuson-ts/focuson",
   "scripts": {
-    "start": "react-scripts start",
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch",
+    "start": "react-scripts start",
     "storybook": "start-storybook -p 6006 -s public"
   },
-  "version": "1.44.1",
+  "browserslist": {
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version",
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all",
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ]
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -77,22 +88,5 @@
         }
       }
     ]
-  },
-  "template": "react",
-  "name": "@focuson/lenstest",
-  "details": {
-    "ideify": true,
-    "publish": true,
-    "links": [
-      "@focuson/pages",
-      "@focuson/template",
-      "@focuson/focuson",
-      "@focuson/form_components",
-      "@focuson/forms"
-    ],
-    "extraDeps": {},
-    "extraDevDeps": {},
-    "test": true,
-    "tsc": true
   }
 }
