@@ -1,6 +1,6 @@
 {
   "templateDir": "${laobanDirectory}/template",
-  "versionFile": "${templateDir}/version.txt",
+  "versionFile": "${laobanDirectory}/template/version.txt",
   "log": ".log",
   "status": ".status",
   "profile": ".profile",
