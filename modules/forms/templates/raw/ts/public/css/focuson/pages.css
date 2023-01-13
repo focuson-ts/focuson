@@ -36,9 +36,8 @@
     margin: auto;
     padding: 10px;
     background-color: white;
-    border: 5px solid var(--modal-border-color, black);
     border-radius: 0.5rem;
-    width: 70%;
+    width: 95%;
 }
 
 .show-modal {
