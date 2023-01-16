@@ -6,7 +6,7 @@
 .tooltip-wrap .errormessage {
     display: none;
     position: absolute;
-    bottom: 2rem;
+    bottom: 2.3rem;
     left: 5%;
     right: 5%;
     background-color: #fff;
@@ -456,8 +456,9 @@ button[id^="selectPage"] {
 
 .buttons-in-card >.button-span > .tooltip-wrap > button{
     margin-bottom: 1rem;
+    padding-left: 1.8rem;
+    padding-right: 1.8rem;
 }
-
 
 .buttons-in-card >.button-span > .tooltip-wrap > .primary-btn {
     margin-bottom: 1rem;
