@@ -29,6 +29,10 @@
     padding: 32px;
 }
 
+.dialog.confirm-window button {
+    display: none
+}
+
 .dialog-header {
     color: var(--h3-brand-colour);
     font-size: var(--h3-font-size);
