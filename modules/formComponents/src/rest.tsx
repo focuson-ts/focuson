@@ -5,6 +5,7 @@ import { CommonStateProps, CustomButtonType, getButtonClassName } from "./common
 import { closeOnePageTxs, confirmIt, ConfirmWindow, getRefForValidateLogicToButton, hasValidationErrorAndReport, isConfirmWindow, ModalContext, openConfirmWindow, openRestLoadWindowTxs, RestLoadWindowProps, wrapWithErrors } from "@focuson-nw/pages";
 import { useRef } from "react";
 import { Transform } from "@focuson-nw/lens";
+import {HosLoader} from "./hosLoader";
 
 export interface RestButtonProps<S, C, MSGs> extends CommonStateProps<S, any, C>, CustomButtonType {
   rest: string;
@@ -28,10 +29,7 @@ export function RestLoadWindow<S, C extends ModalContext<S>> ( state: LensState<
     const txs = closeOnePageTxs ( 'RestLoadWindow', state, toArray ( onClose ) )
     state.massTransform ( reasonFor ( 'RestLoadWindow', "onChange", id, JSON.stringify ( { rest, action } ) ) ) ( ...txs )
   }
-  return <div className={className ? className : 'dialog confirm-window'}>
-    {msg && <p>{msg}</p>}
-    <button onClick={onClick}>{button ? button : 'close'}</button>
-  </div>
+  return <HosLoader className={className} msg={msg} button={button} onClick={onClick}/>
 }
 
 

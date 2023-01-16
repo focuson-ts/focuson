@@ -29,10 +29,6 @@
     padding: 32px;
 }
 
-.dialog.confirm-window button {
-    display: none
-}
-
 .dialog-header {
     color: var(--h3-brand-colour);
     font-size: var(--h3-font-size);
@@ -110,4 +106,81 @@
     width: var(--close-cross-icon-width);
     margin-top: var(--close-cross-icon-margin);
 }
+
+/* HOS SPINNER CSS - START */
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 16px;
+}
+
+.wrapper-overlay-fixed {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(255, 255, 255, .5);
+    z-index: 1;
+}
+
+.content-block {
+    display:flex;
+    flex-direction:column;
+}
+
+.content-text-block {
+    margin-top: 6rem;
+    display:flex;
+    flex-direction:column;
+}
+
+.wrapper-overlay {
+    min-width: 20rem;
+}
+
+.dialog .wrapper-overlay button {
+    display: none
+}
+
+@keyframes spinner {
+    0%, 100% { opacity: 0; }
+    10% { opacity: 3; }
+}
+.non-branded{
+    box-sizing: border-box;
+    width:20px;
+    height:20px
+}
+
+.non-branded div{
+    width: 0.4rem;
+    box-sizing: border-box;
+    height: 3rem;
+    margin-top: -4rem;
+    margin-left: -0.25rem;
+    position: absolute;
+    border-radius: 24px;
+    left: 50%;
+    top: 50%;
+    border-top: 2rem solid darkgray;
+    transform: rotate(calc(var(--i) * 33deg));
+    transform-origin: 50% 100%;
+    animation: spinner 1.2s calc((var(--i) - 32) * 0.1s) infinite;
+}
+
+.non-branded div:nth-child(1) { --i: 0; }
+.non-branded div:nth-child(2) { --i: 1; }
+.non-branded div:nth-child(3) { --i: 2; }
+.non-branded div:nth-child(4) { --i: 3; }
+.non-branded div:nth-child(5) { --i: 4; }
+.non-branded div:nth-child(6) { --i: 5; }
+.non-branded div:nth-child(7) { --i: 6; }
+.non-branded div:nth-child(8) { --i: 7; }
+.non-branded div:nth-child(9) { --i: 8; }
+.non-branded div:nth-child(10) { --i: 9; }
+.non-branded div:nth-child(11) { --i: 10; }
+.non-branded div:nth-child(12) { --i: 11; }
+.non-branded div:nth-child(12) { --i: 13; }
+
+/* HOS SPINNER CSS - START */
 
