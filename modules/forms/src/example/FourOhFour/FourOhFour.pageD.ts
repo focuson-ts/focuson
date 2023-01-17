@@ -18,7 +18,7 @@ export const FourOhFourPageD: ExampleMainPage = {
   buttons: {
     single: {
       control: 'RestButton', restName: 'single', result: 'nothing', action: 'get',
-      loader: { msg: 'Some Message', button: 'ButtonText' },
+      loader: { msg: 'Some Message' },
       // onSuccess: {command: 'deleteRestWindow', rest: "FourOhFourPage_single_FourOhFourRestDetails", action: 'get'},
       on404:  { command: 'message', msg: 'single 404 {/CommonIds/accountId}' },
       onSuccess: { command: 'message', msg: `single 404 - on success. Shouldn't see this if a 404 {/CommonIds/accountId}` },
