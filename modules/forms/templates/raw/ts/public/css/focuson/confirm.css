@@ -29,6 +29,17 @@
     padding: 32px;
 }
 
+.dialog.loading {
+    position: relative;
+    top: 0;
+    left: 0;
+    /* width: calc(960px * 0.6); */
+    transform: none;
+    background-color: var(--white);
+    z-index: 400;
+    padding: 32px;
+}
+
 .dialog-header {
     color: var(--h3-brand-colour);
     font-size: var(--h3-font-size);

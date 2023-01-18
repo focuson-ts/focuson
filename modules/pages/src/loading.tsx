@@ -3,7 +3,7 @@ import {LensState} from "@focuson-nw/state";
 
 export function Loading<S, C extends ModalContext<S>> ( state: LensState<S, any, C> ) {
   return (
-    <div className={'dialog confirm-window'}>
+    <div className={'dialog loading'}>
       <div className="wrapper wrapper-overlay">
         <div className="content-block">
           <div className="content-loader">
@@ -27,7 +27,7 @@ export function Loading<S, C extends ModalContext<S>> ( state: LensState<S, any,
         </div>
         <div className="content-text-block">
           <div className="content-text">
-            <p>'Loading, please wait...'</p>
+            <p>Please wait...</p>
           </div>
         </div>
       </div>
