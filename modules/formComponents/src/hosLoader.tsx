@@ -34,7 +34,7 @@ export const HosLoader = ({className, msg, button, onClick }: HosLoaderProps) =>
           <div className="content-text">
             {message}
           </div>
-          <button onClick={onClick}>{button ? button : 'close'}</button>
+          {button ? <button onClick={onClick}>{button ? button : 'close'}</button> : <></>}
         </div>
       </div>
     </div>
