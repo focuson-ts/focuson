@@ -12,7 +12,7 @@
     ]
   },
   "dependencies": {
-    "@focuson-nw/utils": "2.0.4"
+    "@focuson-nw/utils": "2.0.7"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -44,7 +44,7 @@
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
-  "version": "2.0.4",
+  "version": "2.0.7",
   "template": "noreact",
   "description": "Composition of functions",
   "details": {

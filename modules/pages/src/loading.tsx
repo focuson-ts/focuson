@@ -1,8 +1,36 @@
-import { ModalCancelButton, ModalContext } from "./modal/modalCommitAndCancelButton";
-import { LensState } from "@focuson-nw/state";
-import {HosLoader} from "@focuson-nw/form_components/dist/src/hosLoader";
+import {ModalContext} from "./modal/modalCommitAndCancelButton";
+import {LensState} from "@focuson-nw/state";
 
 export function Loading<S, C extends ModalContext<S>> ( state: LensState<S, any, C> ) {
-  let pageSelections = state.context.pageSelectionL.getOption ( state.main );
-  return <HosLoader className={undefined} msg={undefined} button={undefined} onClick={undefined} />
+  return (
+    <div className={'dialog confirm-window'}>
+      <div className="wrapper wrapper-overlay">
+        <div className="content-block">
+          <div className="content-loader">
+            <div className="non-branded">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+          </div>
+        </div>
+        <div className="content-text-block">
+          <div className="content-text">
+            <p>'Loading, please wait...'</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }

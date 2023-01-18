@@ -51,6 +51,7 @@ export * from './src/validationButton'
 export * from './src/plusMinusButtonsAndInput'
 export * from './src/tableWithCheckboxInput'
 export * from './src/WithTextLayout'
+export * from './src/hosLoader'
 export { makeButtons } from "./src/makeButtons";
 
 
