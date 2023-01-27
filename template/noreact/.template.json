@@ -1,25 +1,25 @@
 {
   "files": [
     {
-      "file": ".npmrc",
+      "file":   ".npmrc",
       "target": ".npmrc"
     },
     {
-      "file": "babel.config.json",
+      "file":   "babel.config.json",
       "target": "babel.config.json"
     },
     {
-      "file": "jest.config.json",
+      "file":   "jest.config.json",
       "target": "jest.config.json"
     },
     {
-      "target": "package.json",
-      "file": "package.json",
-      "type": "${}",
-      "postProcess": "jsonMergeInto(@laoban@/templates/javascript/package.json)"
+      "target":      "package.json",
+      "file":        "package.json",
+      "type":        "${}",
+      "postProcess": "packageJson(@laoban@/templates/javascript/package.json)"
     },
     {
-      "file": "tsconfig.json",
+      "file":   "tsconfig.json",
       "target": "tsconfig.json"
     }
   ]

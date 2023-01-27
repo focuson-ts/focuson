@@ -1,11 +1,22 @@
 {
+  "name": "@focuson/example_fetcher_api",
+  "description": "A relatively complex example of fetchers showing",
+  "version": "1.44.1",
+  "main": "dist/index",
+  "types": "dist/index",
   "browserslist": {
     "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version",
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
     ],
     "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all",
       ">0.2%",
       "not dead",
       "not op_mini all"
@@ -25,6 +36,9 @@
     "ts-jest": "^26.4.4"
   },
   "files": [
+    "dist/index.js",
+    "dist/index.d.ts",
+    "dist/src/",
     "LICENSE.md",
     "README.md",
     "dist/index.js",
@@ -37,24 +51,9 @@
     "optics"
   ],
   "license": "MIT",
-  "main": "dist/index",
-  "types": "dist/index",
   "repository": "github:focuson-ts/focuson",
   "scripts": {
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
-  },
-  "version": "1.44.1",
-  "template": "noreact",
-  "description": "A relatively complex example of fetchers showing",
-  "details": {
-    "links": [
-      "@focuson/lens"
-    ],
-    "extraDeps": {},
-    "extraDevDeps": {},
-    "test": false,
-    "tsc": true
-  },
-  "name": "@focuson/example_fetcher_api"
+  }
 }

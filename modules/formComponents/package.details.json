@@ -2,16 +2,12 @@
   "template":    "components",
   "name":        "@focuson/form_components",
   "description": "Components that can be used by @focuson/forms ",
-  "details":     {
-    "ideify":       true,
-    "test":         false,
-    "publish":      true,
-    "links":        [
-      "@focuson/state",
-      "@focuson/focuson"
-    ],
-    "extraDeps":    {},
-    "extraDevDeps": {},
-    "tsc":          true
+  "links":       [
+    "@focuson/state",
+    "@focuson/focuson"
+  ],
+  "guards":      {
+    "test":    false,
+    "publish": true
   }
 }

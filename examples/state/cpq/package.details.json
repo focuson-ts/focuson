@@ -1,0 +1,10 @@
+{
+  "template":    "react",
+  "name":        "@focuson/example_state_cpq",
+  "description": "Showing how lens help in 'configure pricing quotation' examples",
+  "links":       ["@focuson/lens", "@focuson/nav", "@focuson/state"],
+  "guards":      {
+    "port":    3002,
+    "publish": false
+  }
+}

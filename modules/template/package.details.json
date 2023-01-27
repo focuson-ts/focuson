@@ -2,15 +2,8 @@
   "template":    "noreact",
   "name":        "@focuson/template",
   "description": "Putting the values from lens into strings. For things like urls, or general string substitutio",
-  "details":     {
-    "ideify":       true,
-    "publish":      true,
-    "links":        [
-      "@focuson/utils"
-    ],
-    "extraDeps":    {},
-    "extraDevDeps": {},
-    "tsc":          true,
-    "test":         true
+  "links":       ["@focuson/utils"],
+  "guards":      {
+    "publish": true
   }
 }

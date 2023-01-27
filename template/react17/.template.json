@@ -16,7 +16,8 @@
       "target": "package.json",
       "file": "package.json",
       "type": "${}",
-      "postProcess": "jsonMergeInto(@laoban@/templates/javascript/package.json)"
+      "postProcess": ["jsonMergeInto(@laoban@/templates/javascript/package.json,$packageDetails.packageJson,$links)", "packageJsonSort"]
+
     },
     {
       "file": "tsconfig.json",

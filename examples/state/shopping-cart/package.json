@@ -1,6 +1,14 @@
 {
+  "name": "@focuson/example_state_cart",
+  "description": "This is a project that allows code to be (safely) fetched on demand from a server. The url holding the code is including in the json",
+  "version": "1.44.1",
+  "main": "dist/index",
+  "types": "dist/index",
   "browserslist": {
     "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version",
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
@@ -8,17 +16,19 @@
     "production": [
       ">0.2%",
       "not dead",
+      "not op_mini all",
+      ">0.2%",
+      "not dead",
       "not op_mini all"
     ]
   },
   "dependencies": {
+    "@focuson/lens": "1.44.1",
+    "@focuson/state": "1.44.1",
     "react": "16.14.0",
     "react-dom": "16.14.0",
-    "typescript": "^4.1.5",
-    "@focuson/lens": "1.44.1",
-    "@focuson/state": "1.44.1"
+    "typescript": "^4.1.5"
   },
-  "description": "The redux 'shopping cart' example' using lens",
   "devDependencies": {
     "@types/react": "16.14.0",
     "@testing-library/jest-dom": "^5.11.6",
@@ -35,30 +45,6 @@
     "react-scripts": "^4.0.1",
     "ts-jest": "^26.4.4"
   },
-  "files": [
-    "LICENSE.md",
-    "README.md",
-    "dist/index.js",
-    "dist/index.d.ts",
-    "dist/src/"
-  ],
-  "keywords": [
-    "functionalprogramming",
-    "lens",
-    "react",
-    "optics"
-  ],
-  "license": "MIT",
-  "main": "dist/index",
-  "types": "dist/index",
-  "repository": "github:focuson-ts/focuson",
-  "scripts": {
-    "start": "react-scripts start",
-    "test": "jest --config jest.config.json",
-    "test:watch": "npm run test -- --watch",
-    "storybook": "start-storybook -p 6006 -s public"
-  },
-  "version": "1.44.1",
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -75,16 +61,28 @@
       }
     ]
   },
-  "template": "react",
-  "name": "@focuson/example_state_cart",
-  "details": {
-    "links": [
-      "@focuson/lens",
-      "@focuson/state"
-    ],
-    "extraDeps": {},
-    "extraDevDeps": {},
-    "port": 3008,
-    "tsc": true
+  "files": [
+    "dist/index.js",
+    "dist/index.d.ts",
+    "dist/src/",
+    "LICENSE.md",
+    "README.md",
+    "dist/index.js",
+    "dist/index.d.ts",
+    "dist/src/"
+  ],
+  "keywords": [
+    "functionalprogramming",
+    "lens",
+    "react",
+    "optics"
+  ],
+  "license": "MIT",
+  "repository": "github:focuson-ts/focuson",
+  "scripts": {
+    "test": "jest --config jest.config.json",
+    "test:watch": "npm run test -- --watch",
+    "start": "react-scripts start",
+    "storybook": "start-storybook -p 6006 -s public"
   }
 }

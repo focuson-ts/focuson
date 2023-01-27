@@ -1,0 +1,15 @@
+{
+  "template":    "react",
+  "name":        "@focuson/example_state_cpq_car",
+  "description": "A fully featured car leasing cpq",
+  "links":       ["@focuson/lens", "@focuson/nav", "@focuson/state"],
+  "packageJson": {
+    "dependencies": {
+      "react-i18next": "^11.8.5", "i18next": "^19.8.4"
+    }
+  },
+  "guards":      {
+    "port":    3010,
+    "publish": false
+  }
+}

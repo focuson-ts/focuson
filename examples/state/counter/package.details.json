@@ -1,0 +1,10 @@
+{
+  "template":    "react",
+  "name":        "@focuson/example_state_counter",
+  "description": "The redux 'counter' example' using lens",
+  "links":       ["@focuson/lens", "@focuson/state"],
+  "guards":      {
+    "port":    3001,
+    "publish": false
+  }
+}

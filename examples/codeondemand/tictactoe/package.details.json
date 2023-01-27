@@ -1,0 +1,21 @@
+{
+  "template":    "codeondemand",
+  "name":        "@focuson/example_codeondemand_tictactoe",
+  "description": "Demonstrating the code on demand approach for tic_tac_toe",
+  "links":       ["@focuson/lens", "@focuson/nav", "@focuson/codeondemand"],
+  "packageJson": {
+    "dependencies":    {
+      "crypto-js": "^4.0.0"
+    },
+    "devDependencies": {
+      "@types/crypto-js":                   "^4.0.1",
+      "@wojtekmaj/enzyme-adapter-react-17": "^0.6.2"
+    }
+  },
+  "guards":      {
+    "port":    3005,
+    "publish": false,
+    "compile": false,
+    "test":    false
+  }
+}

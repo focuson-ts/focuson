@@ -1,6 +1,15 @@
 {
+  "name": "@focuson/examples_codeondemand_cpq",
+  "description": "This is a project that allows code to be (safely) fetched on demand from a server. The url holding the code is including in the json",
+  "version": "1.44.1",
+  "main": "dist/index",
+  "types": "dist/index",
+  "aaa": 1,
   "browserslist": {
     "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version",
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
@@ -8,20 +17,24 @@
     "production": [
       ">0.2%",
       "not dead",
+      "not op_mini all",
+      ">0.2%",
+      "not dead",
       "not op_mini all"
     ]
   },
   "dependencies": {
+    "@focuson/lens": "1.44.1",
+    "@focuson/nav": "1.44.1",
+    "@focuson/codeondemand": "1.44.1",
     "react": "16.14.0",
     "react-dom": "16.14.0",
     "typescript": "^4.1.5",
-    "crypto-js": "^4.0.0",
-    "@focuson/lens": "1.44.1",
-    "@focuson/nav": "1.44.1",
-    "@focuson/codeondemand": "1.44.1"
+    "crypto-js": "^4.0.0"
   },
-  "description": "Demonstrating the code on demand approach for configure price quotation",
   "devDependencies": {
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.2",
+    "@types/react-dom": "16.9.17",
     "@babel/preset-typescript": "^7.12.7",
     "@types/react": "16.14.0",
     "@testing-library/jest-dom": "^5.11.6",
@@ -39,6 +52,9 @@
     "ts-jest": "^26.4.4"
   },
   "files": [
+    "dist/index.js",
+    "dist/index.d.ts",
+    "dist/src/",
     "LICENSE.md",
     "README.md",
     "dist/index.js",
@@ -52,28 +68,10 @@
     "optics"
   ],
   "license": "MIT",
-  "main": "dist/index",
-  "types": "dist/index",
   "repository": "github:focuson-ts/focuson",
   "scripts": {
-    "start": "react-scripts start",
     "test": "jest --config jest.config.json",
-    "test:watch": "npm run test -- --watch"
-  },
-  "version": "1.44.1",
-  "template": "codeondemand",
-  "name": "@focuson/examples_codeondemand_cpq",
-  "details": {
-    "links": [
-      "@focuson/lens",
-      "@focuson/nav",
-      "@focuson/codeondemand"
-    ],
-    "extraDeps": {},
-    "extraDevDeps": {},
-    "port": 3006,
-    "test": true,
-    "tsc": false,
-    "orgcmd": true
+    "test:watch": "npm run test -- --watch",
+    "start": "react-scripts start"
   }
 }

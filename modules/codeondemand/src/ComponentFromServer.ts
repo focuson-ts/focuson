@@ -1,7 +1,7 @@
 //Copyright (c)2020-2022 Philip Rice. <br />Permission is hereby granted, free of charge, to any person obtaining a copyof this software and associated documentation files (the Software), to dealin the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  <br />The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED AS
 import { LoadAndCompileCache } from "./LoadAndCompileCache";
 import React, { useContext } from "react";
-import { Lens } from "@focuson/lens";
+import { Lens, Optional } from "@focuson/lens";
 import { LensProps, LensState, setJsonForFlux } from "@focuson/state";
 import { ComponentCacheContext } from "./ComponentCacheContext";
 
@@ -22,7 +22,7 @@ export function loadJsonFromUrl<Main, Context> ( description: string,
 
 interface LensPropsWithRender<Main, T, Child, Context> extends LensProps<Main, T, Context> {
   render: string
-  lens: Lens<T, Child>
+  lens: Optional<T, Child>
 }
 
 export interface MakeComponentFromServer<ReactElement> {<Main, T, Context> ( props: LensState<Main, T, Context> ): ReactElement}

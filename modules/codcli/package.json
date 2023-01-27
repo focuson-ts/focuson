@@ -2,16 +2,29 @@
   "name": "@focuson/cod",
   "description": "A command line tool to help with the code on demand",
   "version": "1.44.1",
+  "main": "dist/index",
+  "types": "dist/index",
   "bin": {
     "cod": "./dist/index.js"
   },
-  "keywords": [
-    "functionalprogramming",
-    "lens",
-    "optics"
-  ],
-  "license": "MIT",
-  "repository": "github:focuson-ts/focuson",
+  "browserslist": {
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version",
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all",
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ]
+  },
   "dependencies": {
     "@babel/core": "^7.12.9",
     "@babel/preset-env": "^7.12.7",
@@ -40,28 +53,15 @@
     "dist/index.d.ts",
     "dist/src/"
   ],
-  "main": "dist/index",
-  "types": "dist/index",
+  "keywords": [
+    "functionalprogramming",
+    "lens",
+    "optics"
+  ],
+  "license": "MIT",
+  "repository": "github:focuson-ts/focuson",
   "scripts": {
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
-  },
-  "browserslist": {
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version",
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ],
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all",
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ]
   }
 }

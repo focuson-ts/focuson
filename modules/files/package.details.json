@@ -2,13 +2,9 @@
   "template":    "noreact",
   "name":        "@focuson/files",
   "description": "File manipulation: loading/saving",
-  "details":     {
-    "ideify":       true,
-    "publish":      true,
-    "links":        ["@focuson/template"],
-    "extraDeps":    {},
-    "extraDevDeps": {},
-    "tsc":          true
-  },
-  "test":        false
+  "links":       ["@focuson/template"],
+  "guards":      {
+    "publish": true,
+    "test":    false
+  }
 }

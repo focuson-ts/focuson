@@ -2,12 +2,8 @@
   "template":    "noreact",
   "name":        "@focuson/nonfunctionals",
   "description": "A library that allows wrapping of functions and kleislis with non functional capablities",
-  "details":     {
-    "publish":      true,
-    "links":        [],
-    "extraDeps":    {},
-    "extraDevDeps": {},
-    "test":         true,
-    "tsc":          true
+  "links":       [],
+  "guards":     {
+    "publish": true
   }
 }

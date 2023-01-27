@@ -1,0 +1,12 @@
+{
+  "template":    "noreact",
+  "name":        "@focuson/composition",
+  "description": "Composition of functions",
+  "links":       [
+    "@focuson/utils"
+  ],
+  "guards":      {
+    "test":    false,
+    "publish": false
+  }
+}

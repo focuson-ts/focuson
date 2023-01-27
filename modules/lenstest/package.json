@@ -2,15 +2,26 @@
   "name": "@focuson/lenstest",
   "description": "This is a project that allows code to be (safely) fetched on demand from a server. The url holding the code is including in the json",
   "version": "1.44.1",
-  "bin": {},
-  "keywords": [
-    "functionalprogramming",
-    "lens",
-    "react",
-    "optics"
-  ],
-  "license": "MIT",
-  "repository": "github:focuson-ts/focuson",
+  "main": "dist/index",
+  "types": "dist/index",
+  "browserslist": {
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version",
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all",
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ]
+  },
   "dependencies": {
     "@focuson/pages": "1.44.1",
     "@focuson/template": "1.44.1",
@@ -37,42 +48,6 @@
     "react-scripts": "^4.0.1",
     "ts-jest": "^26.4.4"
   },
-  "files": [
-    "dist/index.js",
-    "dist/index.d.ts",
-    "dist/src/",
-    "LICENSE.md",
-    "README.md",
-    "dist/index.js",
-    "dist/index.d.ts",
-    "dist/src/"
-  ],
-  "main": "dist/index",
-  "types": "dist/index",
-  "scripts": {
-    "test": "jest --config jest.config.json",
-    "test:watch": "npm run test -- --watch",
-    "start": "react-scripts start",
-    "storybook": "start-storybook -p 6006 -s public"
-  },
-  "browserslist": {
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version",
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ],
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all",
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ]
-  },
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -88,5 +63,29 @@
         }
       }
     ]
+  },
+  "files": [
+    "dist/index.js",
+    "dist/index.d.ts",
+    "dist/src/",
+    "LICENSE.md",
+    "README.md",
+    "dist/index.js",
+    "dist/index.d.ts",
+    "dist/src/"
+  ],
+  "keywords": [
+    "functionalprogramming",
+    "lens",
+    "react",
+    "optics"
+  ],
+  "license": "MIT",
+  "repository": "github:focuson-ts/focuson",
+  "scripts": {
+    "test": "jest --config jest.config.json",
+    "test:watch": "npm run test -- --watch",
+    "start": "react-scripts start",
+    "storybook": "start-storybook -p 6006 -s public"
   }
 }

@@ -21,7 +21,7 @@ export const focusOnVersion: string = JSON.parse ( loadFile ( 'package.json' ) )
 const MyCombineCD: SimpleDisplayComp = { import: "@focuson/form_components", name: "MyCombined" }
 let details: any = undefined;
 try {
-  details = JSON.parse ( loadFile ( 'project.details.json' ) ).details;
+  details = JSON.parse ( loadFile ( 'package.details.json' ) ).details;
 } catch ( e: any ) {
 }
 export const javaPort = details?.javaPort ? details.javaPort : 8080

@@ -2,13 +2,13 @@
   "template":    "noreact",
   "name":        "@focuson/utils",
   "description": "Common utilities for the @focuson project",
-  "details":     {
-    "ideify":       true,
-    "publish":      true,
-    "links":        [],
-    "extraDeps":    {"node-fetch": "2.6.1"},
-    "extraDevDeps": {},
-    "test":         false,
-    "tsc":          true
+  "packageJson": {
+    "dependencies": {
+      "node-fetch": "2.6.1"
+    }
+  },
+  "guards":      {
+    "publish": true,
+    "test":    false
   }
 }

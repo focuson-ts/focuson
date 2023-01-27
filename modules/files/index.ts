@@ -5,7 +5,7 @@ import { log } from "@focuson/utils";
 const fs = require ( 'fs' )//Why comment: because things like story book die if we have this as an import
 
 export function writeToFile ( name: string, contents: () => string[], logDepth?: number ) {
-  if ( logDepth >= 0 ) log ( logDepth, name )
+  if ( logDepth && logDepth >= 0 ) log ( logDepth, name )
   try {
     const text = contents ().join ( '\n' );
     fs.writeFileSync ( name, text )
@@ -74,8 +74,8 @@ export interface GetFileResult {
  * @returns list of { path:absolute path, file: name, isDir:is directory } of files and dirs in targetpath
  */
 export const GetFilelistRecursively2 = (( targetpath: string, depth: number = -1 ): GetFileResult[] => {
-  let result = [];
-  let dirs = fs.readdirSync ( targetpath );
+  let result: GetFileResult[] = [];
+  let dirs: string[] = fs.readdirSync ( targetpath );
   dirs.forEach ( file => {
     let filepath = targetpath + "/" + file;
     let isDir = fs.lstatSync ( filepath ).isDirectory ();
@@ -105,7 +105,7 @@ export const CopyFilesRecursively = (( srcpath: string, destpath: string, depth:
     if ( node.isDir ) {
       if ( !fs.existsSync ( destpath ) ) fs.mkdirSync ( newpath );
     } else {
-      fs.copyFile ( node.path, newpath, err => {if ( err ) throw err} );
+      fs.copyFile ( node.path, newpath, ( err: any ) => {if ( err ) throw err} );
     }
   } );
 });

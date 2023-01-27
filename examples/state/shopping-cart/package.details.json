@@ -1,0 +1,11 @@
+{
+  "template":    "react",
+  "name":        "@focuson/example_state_cart",
+  "description": "The redux 'shopping cart' example' using lens",
+  "links":       ["@focuson/lens", "@focuson/state"],
+  "guards":      {
+    "port":    3008,
+    "publish": false,
+    "test":    false
+  }
+}

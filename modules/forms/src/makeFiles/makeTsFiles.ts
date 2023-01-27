@@ -45,7 +45,7 @@ export const makeTsFiles = <G extends GuardWithCondition> ( logLevel: GenerateLo
     fs.mkdirSync ( `${tsPublic}/icons/focuson`, { recursive: true } )
     themes.forEach ( theme => fs.mkdirSync ( `${tsPublic}/themes/${theme}/icons`, { recursive: true } ) )
     fs.mkdirSync ( `${tsStoryBook}`, { recursive: true } )
-    templateFile ( tsRoot + "/project.details.json", 'templates/ts.projectDetails.json', {
+    templateFile ( tsRoot + "/package.details.json", 'templates/ts.projectDetails.json', {
       ...params,
       versionNumber: appConfig.versionNumber,
       applicationName: params.applicationName.toLowerCase (),

@@ -86,7 +86,7 @@ export const makeJavaFiles = ( logLevel: GenerateLogLevel, appConfig: AppConfig,
     ...params, applicationName: params.applicationName.toLowerCase (),
     javaPort: appConfig.javaPort
   };
-  templateFile ( javaAppRoot + "/project.details.json", 'templates/java.projectDetails.json', templateWithPortAndAppName, directorySpec )
+  templateFile ( javaAppRoot + "/package.details.json", 'templates/java.projectDetails.json', templateWithPortAndAppName, directorySpec )
   templateFile ( javaAppRoot + "/application.properties", "templates/application.properties", templateWithPortAndAppName, directorySpec )
   copyFile ( javaAppRoot + '/.gitignore', 'templates/raw/gitignore', directorySpec )
 

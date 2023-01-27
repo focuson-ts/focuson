@@ -2,16 +2,13 @@
   "template":    "noreact",
   "name":        "@focuson/fetcher",
   "description": "Used when we want to fetch data from APIs in order to display it. This provides a declarative and composable approach to state management",
-  "details":     {
-    "ideify":       true,
-    "publish":      true,
-    "links":        [
-      "@focuson/lens",
-      "@focuson/template",
-      "@focuson/state"
-    ],
-    "extraDeps":    {},
-    "extraDevDeps": {},
-    "tsc":          true
+  "links":       [
+    "@focuson/lens",
+    "@focuson/template",
+    "@focuson/state"
+  ],
+  "guards":      {
+    "publish": true,
+    "test": false
   }
 }

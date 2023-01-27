@@ -2,14 +2,26 @@
   "name": "@focuson/state",
   "description": "Uses the lens defined in @focuson/lens to implement state for tools such as react",
   "version": "1.44.1",
-  "bin": {},
-  "keywords": [
-    "functionalprogramming",
-    "lens",
-    "optics"
-  ],
-  "license": "MIT",
-  "repository": "github:focuson-ts/focuson",
+  "main": "dist/index",
+  "types": "dist/index",
+  "browserslist": {
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version",
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all",
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ]
+  },
   "dependencies": {
     "@focuson/lens": "1.44.1"
   },
@@ -33,28 +45,15 @@
     "dist/index.d.ts",
     "dist/src/"
   ],
-  "main": "dist/index",
-  "types": "dist/index",
+  "keywords": [
+    "functionalprogramming",
+    "lens",
+    "optics"
+  ],
+  "license": "MIT",
+  "repository": "github:focuson-ts/focuson",
   "scripts": {
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
-  },
-  "browserslist": {
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version",
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ],
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all",
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ]
   }
 }
