@@ -1,6 +1,5 @@
 import { maxTuplesFor } from "../makeFiles/generate";
 import { AccountOverviewMainPage } from "../example/accountOverview/accountOverview.pageD";
-import { resolverRestD, resolversRefD } from "../example/resolvers/resolvers.refD";
 
 
 describe ( 'maxTuples', () => {

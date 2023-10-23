@@ -1,6 +1,10 @@
 {
   "files": [
     {
+      "file":   ".env",
+      "target": ".env"
+    },
+    {
       "file":   ".npmrc",
       "target": ".npmrc"
     },
@@ -15,7 +19,7 @@
     {
       "target":      "package.json",
       "file":        "package.json",
-      "type":        "${}",
+      "templated":   "${}",
       "postProcess": "packageJson(@laoban@/templates/javascript/package.json)"
     },
     {

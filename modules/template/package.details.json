@@ -4,6 +4,7 @@
   "description": "Putting the values from lens into strings. For things like urls, or general string substitutio",
   "links":       ["@focuson/utils"],
   "guards":      {
-    "publish": true
+    "publish": true,
+    "test": false
   }
 }

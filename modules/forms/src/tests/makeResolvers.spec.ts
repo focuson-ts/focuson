@@ -5,14 +5,11 @@ import { chequeCreditBooksRestD } from "../example/chequeCreditBooks/chequeCredi
 import { EAccountsSummaryPD } from "../example/eAccounts/eAccountsSummary.pageD";
 import { eAccountsSummaryRestD } from "../example/eAccounts/eAccountsSummary.restD";
 import { findChildResolvers, findQueryMutationResolver } from "../codegen/makeJavaFetchersInterface";
-import { safeArray, safeObject } from "@focuson/utils";
+import { safeObject } from "@focuson/utils";
 import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { postcodeWithResolversRestD } from "../example/postCodeDemo/addressSearch.restD";
 import { ListOfPaymentsPagePD } from "../example/ListOfPayments/listOfPayements.pageD";
 import { accountAndAddressDetailsRD } from "../example/ListOfPayments/listOfPayements.restD";
-import { makeMutations } from "../codegen/makeMutations";
-import { LinkedAccountDetailsPD } from "../example/linkedAccount/linkedAccountDetails.pageD";
-import { collectionSummaryRD } from "../example/linkedAccount/linkedAccountDetails.restD";
 import { AuthoriseChargesPD } from "../example/authoriseCharges/authoriseCharges.pageD";
 import { SummaryOfChargeDatesRD } from "../example/authoriseCharges/authoriseCharges.restD";
 import { DirectDebitAC } from "../example/authoriseCharges/authoriseCharges.customise";

@@ -10,7 +10,7 @@
     "examples/poster/*",
     "examples/forms/*"
   ],
-  "name": "ts-lens",
+  "name": "focuson",
   "description": "This is the 'master project' with many child projects. There is no code in this project: it is all managed in child projects",
   "keywords": [
     "functionalprogramming",

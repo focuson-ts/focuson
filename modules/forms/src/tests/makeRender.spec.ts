@@ -10,7 +10,7 @@ import { PostCodeMainPage } from "../example/postCodeDemo/addressSearch.pageD";
 import { listOccupationsModalPD, OccupationAndIncomeSummaryPD } from "../example/occupationAndIncome/occupationAndIncome.pageD";
 import { oneOccupationIncomeDetailsDD } from "../example/occupationAndIncome/occupationAndIncome.dataD";
 import { paramsForTest } from "./paramsForTest";
-import { makeGuardButtonVariables } from "../codegen/makeButtons";
+
 import { ListOfPaymentsPagePD } from "../example/ListOfPayments/listOfPayements.pageD";
 
 //

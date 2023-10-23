@@ -1,6 +1,18 @@
 {
   "files": [
     {
+      "file":   ".storybook/main.ts",
+      "target": ".storybook/main.ts"
+    },
+    {
+      "file":   ".storybook/preview.ts",
+      "target": ".storybook/preview.ts"
+    },
+    {
+      "file":   ".env",
+      "target": ".env"
+    },
+    {
       "file":   ".npmrc",
       "target": ".npmrc"
     },
@@ -15,16 +27,12 @@
     {
       "target":      "package.json",
       "file":        "package.json",
-      "type":        "${}",
+      "templated":   "${}",
       "postProcess": "packageJson(@laoban@/templates/javascript/package.json)"
     },
     {
       "file":   "tsconfig.json",
       "target": "tsconfig.json"
-    },
-    {
-      "file":   "src/enzymeAdapterSetup.ts",
-      "target": "src/enzymeAdapterSetup.ts"
     }
   ]
 }
