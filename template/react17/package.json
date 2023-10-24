@@ -18,6 +18,7 @@
   },
   "description":     "This is a project that allows code to be (safely) fetched on demand from a server. The url holding the code is including in the json",
   "devDependencies": {
+    "eslint":                        "^8.52.0",
     "typescript":                         "^5.2.2",
     "@types/jest":                        "29.1.1",
     "@types/node":                        "^18.0.0",

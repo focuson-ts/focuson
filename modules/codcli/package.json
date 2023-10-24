@@ -29,6 +29,7 @@
     "debug": "^4.3.4"
   },
   "devDependencies": {
+    "eslint": "^8.52.0",
     "typescript": "^5.2.2",
     "@testing-library/jest-dom": "^6.1.4",
     "@types/jest": "29.1.1",
