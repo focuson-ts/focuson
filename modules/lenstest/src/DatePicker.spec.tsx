@@ -1,14 +1,14 @@
 import { acceptDateForTest, DateErrorMessage, DateInfo, DatePicker, DateRange, defaultDateErrorMessage, errorsAnd, firstAllowedDate, MyCombined, parseDate, validateDateInfo } from "@focuson/form_components";
 import { lensState } from "@focuson/state";
-import { mount } from "enzyme";
+
 import { HasPageSelection, HasPathToLens, ModalContext, pageSelectionlens } from "@focuson/pages";
 import { HasTagHolder } from "@focuson/template";
 import { HasSimpleMessages } from "@focuson/utils";
-import { enzymeSetup } from "./enzymeAdapterSetup";
 import { HasEnvironment } from "@focuson/focuson";
-import { Lenses, Optional } from "@focuson/lens";
+import { Lenses } from "@focuson/lens";
+import { fireEvent, render, screen } from '@testing-library/react';
 
-enzymeSetup ()
+
 const dateFormat = 'dd/MM/yyyy'
 
 const otherDateErrorMessage: DateErrorMessage = {
@@ -323,19 +323,31 @@ describe ( "DatePicker", () => {
   const datePicker = ( state: StateForDatePicker, props: SomeProps, dateRange: DateRange<StateForDatePicker, Context>, remember: ( s: StateForDatePicker ) => void ) =>
     DatePicker ( { ...props, id: 'someId', label: 'someLabel', state: lensState ( state, remember, '', context ).focusOn ( 'theDate' ), dateFormat: 'dd/MM/yyyy', dateRange: {}, allButtons: {} } );
 
-  it ( "should display the undefined date, required is false, readonly undefined", () => {
-    const picker = mount ( datePicker ( { ...emptyState, date: undefined }, { required: false }, {}, () => {} ) )
-    expect ( picker.html ().replace ( /"/g, "'" ) ).toEqual (
-      "<div class='labelAndDate '><label class='input-label'>someLabel</label><div class=' '><div class='react-datepicker-wrapper'><div class='react-datepicker__input-container'><input type='text' id='someId' placeholder='Select a date' class='' value=''></div></div></div></div>" )
-    const input = picker.find ( "input" )
-    input.simulate ( 'click' )
-    expect ( picker.html ().replace ( /"/g, "'" ) ).toContain ( "<div class='react-datepicker__tab-loop__start' tabindex='0'>" )
-  } )
-  it ( "should display the undefined date, required is true, readonly undefined - looking for marker that says 'I am needed'", () => {
-    const picker = mount ( datePicker ( { ...emptyState, date: undefined }, { required: false }, {}, () => {} ) )
-    expect ( picker.html ().replace ( /"/g, "'" ) ).toEqual (
-      "<div class='labelAndDate '><label class='input-label'>someLabel</label><div class=' '><div class='react-datepicker-wrapper'><div class='react-datepicker__input-container'><input type='text' id='someId' placeholder='Select a date' class='' value=''></div></div></div></div>" )
-  } )
+
+  it("should display the undefined date, required is false, readonly undefined", () => {
+
+    render(datePicker({ ...emptyState, date: undefined }, { required: false }, {}, () => {}));
+
+    // Assert the initial structure
+    expect(screen.getByLabelText('someLabel')).toBeInTheDocument();
+    const input = screen.getByPlaceholderText('Select a date');
+    expect(input).toHaveValue('');
+
+    // Simulate click on the input
+    fireEvent.click(input);
+
+    // Assertion after click
+    expect(screen.getByText("<div class='react-datepicker__tab-loop__start' tabindex='0'>")).toBeInTheDocument();
+  });
+
+
+  it("should display the undefined date, required is true, readonly undefined - looking for marker that says 'I am needed'", () => {
+
+    render(datePicker({ ...emptyState, date: undefined }, { required: true }, {}, () => {}));
+
+    // Assert that the specific marker "I am needed" is present.
+    expect(screen.getByText('I am needed')).toBeInTheDocument();
+  });
 
 
 } )

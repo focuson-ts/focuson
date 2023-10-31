@@ -74,7 +74,7 @@ export const rawTable = <S, T, Context extends PageSelectionContext<S>> (
     let maxCountInt = maxCount ? Number.parseInt ( maxCount ) : 0;
     let count = 0;
     let tableBody = json.length === 0 && emptyData ?
-      <tr id={`${id}[0]`}>
+      <tr id={`${id}[0]`} >
         <td colSpan={titles.length}>{emptyData}</td>
       </tr> :
       json.map ( ( row, i ) => filter ( row ) && (maxCount === undefined || count++ < maxCountInt) ? oneRow ( row, i, selectedClass ( i ), rights, onClick ) : null );

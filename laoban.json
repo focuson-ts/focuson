@@ -14,7 +14,6 @@
     "forms":        "template\\forms",
     "generated":    "template\\generated",
     "noreact":      "template\\noreact",
-    "react":        "template\\react",
-    "react17":      "template\\react17"
+    "react":        "template\\react"
   }
 }

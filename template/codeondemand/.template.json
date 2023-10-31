@@ -21,10 +21,6 @@
     {
       "file":   "tsconfig.json",
       "target": "tsconfig.json"
-    },
-    {
-      "file":   "src/enzymeAdapterSetup.ts",
-      "target": "src/enzymeAdapterSetup.ts"
     }
   ]
 }

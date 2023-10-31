@@ -1,14 +1,15 @@
-import { enzymeSetup } from "./enzymeAdapterSetup";
+
 import { WithTextLayout } from "@focuson/form_components";
-import { mount } from "enzyme";
+
 import { HasRestCommands } from "@focuson/rest";
 import { HasPageSelection } from "@focuson/pages";
 import { HasSimpleMessages } from "@focuson/utils";
 import { HasTagHolder } from "@focuson/template";
 import { lensState } from "@focuson/state";
 import { context } from "./context.fixture";
+import { render } from "@testing-library/react";
 
-enzymeSetup ()
+
 
 interface WithTextLayoutState extends HasRestCommands, HasPageSelection, HasSimpleMessages, HasTagHolder {
   data?: string
@@ -24,9 +25,9 @@ const empty: WithTextLayoutState = {
 //   childrenClassName?: string
 function withText ( text: string, holderClassName?: string, textClassName?: string, childrenClassName?: string ) {
   const state = lensState ( empty, () => {}, '', context () )
-  return mount ( <WithTextLayout text={text} state={state.focusOn ( 'data' )} textClassName={textClassName} holderClassName={holderClassName} childrenClassName={childrenClassName}>
+  return render ( <WithTextLayout text={text} state={state.focusOn ( 'data' )} textClassName={textClassName} holderClassName={holderClassName} childrenClassName={childrenClassName}>
     <p>Children</p>
-  </WithTextLayout> ).html ()
+  </WithTextLayout> ).container.innerHTML
 }
 describe ( "WithTextLayout", () => {
   it ( 'should render ', () => {

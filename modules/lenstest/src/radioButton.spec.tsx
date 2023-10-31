@@ -1,11 +1,7 @@
-import { enzymeSetup } from "./enzymeAdapterSetup";
-import { mount } from "enzyme";
 import { LabelAndRadio } from "@focuson/form_components";
 import { LensState, lensState } from "@focuson/state";
 import { FocusOnContext } from "@focuson/focuson";
-import exp from "constants";
-
-enzymeSetup ()
+import { render, screen, fireEvent} from "@testing-library/react";
 
 interface RadioButtonStateForText {
   a?: string
@@ -15,14 +11,15 @@ const enumForTest = {
   a: "A",
   b: "B"
 }
-function makeComponent ( state: RadioButtonStateForText, setMain: ( m: RadioButtonStateForText ) => void ) {
+function renderComponent ( state: RadioButtonStateForText, setMain: ( m: RadioButtonStateForText ) => void ) {
   // @ts-ignore - because we aren't using any of the focus on context stuff
   let lensState1: LensState<RadioButtonStateForText, RadioButtonStateForText, FocusOnContext<RadioButtonStateForText>> = lensState ( state, setMain, '', {} );
-  return mount ( <LabelAndRadio label='someLabel' allButtons={{}} enums={enumForTest} state={lensState1.focusOn ( 'a' )} id='someId'/> )
+  return render ( <LabelAndRadio label='someLabel' allButtons={{}} enums={enumForTest} state={lensState1.focusOn ( 'a' )} id='someId'/> )
 }
 describe ( "LabelAndRadio", () => {
   it ( "should render", () => {
-    expect ( makeComponent ( { a: undefined }, () => {} ).html ().replace ( /"/g, "'" ) ).toEqual (
+    let component = renderComponent ( { a: undefined }, () => {} ).container.innerHTML.replace ( /"/g, "'" );
+    expect ( component ).toEqual (
       "<div class='labelRadioButton'><label class='input-label'>someLabel</label>" +
       "<div class='radio-group-container ' id='someId'><div class='radio-container   '>" +
       "<input id='someIdA' type='radio' name='someId' value=''><span class='checkmark'></span>" +
@@ -31,28 +28,34 @@ describe ( "LabelAndRadio", () => {
       "<span class='checkmark'></span><label for='someIdB' class='input-label'>B</label></div></div></div>" )
   } )
   it ( "should render for value a", () => {
-    let html = makeComponent ( { a: 'a' }, () => {} ).html ().replace ( /"/g, "'" );
+    let html = renderComponent ( { a: 'a' }, () => {} ).container.innerHTML.replace ( /"/g, "'" );
     expect ( html ).toContain (
       "<div class='radio-container  checked '><input id='someIdA' type='radio' name='someId' value='a' checked=''>" )
     expect ( html ).not.toContain (
       "<div class='radio-container  checked '><input id='someIdB'" )
   } )
   it ( "should render for invalid value", () => {
-    let html = makeComponent ( { a: 'A' }, () => {} ).html ().replace ( /"/g, "'" );
+    let html = renderComponent ( { a: 'A' }, () => {} ).container.innerHTML.replace ( /"/g, "'" );
     expect ( html ).toContain (
       "<div class='radio-container   '><input id='someIdA' type='radio' name='someId' value='A'>" )
     expect ( html ).toContain (
       "<div class='radio-container   '><input id='someIdB' type='radio' name='someId' value='A'>" )
     expect ( html ).not.toContain ( "checked" )
   } )
-  it ( "should click and change value", () => {
-    var remembered: any = undefined
-    const component = makeComponent ( { a: 'A' }, x => remembered = x );
-    const radios = component.find ( '.radio-container' )
-    expect ( radios ).toHaveLength ( 2 )
-    radios.at ( 0 ).simulate ( 'click' )
-    expect ( remembered ).toEqual ( { "a": "a" } )
-    radios.at ( 1 ).simulate ( 'click' )
-    expect ( remembered ).toEqual ( { "a": "b" } )
-  } )
+  it("should click and change value", () => {
+    let remembered: any = undefined;
+
+    renderComponent({ a: 'A' }, x => remembered = x);
+
+    const radios = screen.getAllByRole('radio'); // Fetch all radio inputs using screen
+    expect(radios).toHaveLength(2);
+
+    fireEvent.click(radios[0]);
+    expect(remembered).toEqual({ "a": "a" });
+
+    fireEvent.click(radios[1]);
+    expect(remembered).toEqual({ "a": "b" });
+  });
+
+
 } )

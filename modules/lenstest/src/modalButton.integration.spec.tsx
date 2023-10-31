@@ -1,14 +1,11 @@
 import { fromPathFromRaw, HasPageSelection, ModalButton, ModalCommitButton, MultiPageDetails, PageDetailsForCombine, pageSelectionlens, rawCloseOnePageTxs, simpleMessagesL } from "@focuson/pages";
 import { HasRestCommands, restL } from "@focuson/rest";
 import { lensState, LensState } from "@focuson/state";
-import { shallow } from "enzyme";
 import { FocusOnContext } from "@focuson/focuson";
-import { enzymeSetup } from "./enzymeAdapterSetup";
 import { SimpleMessage, testDateFn } from "@focuson/utils";
 import { identityOptics, Lenses } from "@focuson/lens";
-import { HasTagHolder, TagHolder } from "@focuson/template";
-
-enzymeSetup ()
+import { HasTagHolder } from "@focuson/template";
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 
 
 interface ModalChildData {
@@ -32,7 +29,7 @@ export interface ModalButtonStateForTest extends HasPageSelection, HasRestComman
 }
 const emptyS: ModalButtonStateForTest = {
   messages: [],
-  tags:{},
+  tags: {},
   pageSelection: [ { "pageName": "mainPage", "pageMode": "view", time: 'now' } ],
   restCommands: [],
   mainPage: {}
@@ -60,7 +57,7 @@ type Context = FocusOnContext<ModalButtonStateForTest>
 const pageDetails: MultiPageDetails<ModalButtonStateForTest, Context> = { mainPage: { lens: identityOptics<ModalButtonStateForTest> ().focusQuery ( 'mainPage' ), pageType: 'MainPage', pageFunction: () => <span/>, config: {}, pageMode: 'edit' } }
 const context: Context = {
   restL: restL<ModalButtonStateForTest> (),
-  combine: ( state, pages: PageDetailsForCombine[] ): JSX.Element => <div>{pages.map ( p => p.element )}</div>,
+  combine: ( _, pages: PageDetailsForCombine[] ): JSX.Element => <div>{pages.map ( p => p.element )}</div>,
   pageSelectionL: pageSelectionlens (),
   simpleMessagesL: simpleMessagesL (),
   pathToLens: fromPathFromRaw ( pageSelectionlens (), pageDetails ),
@@ -72,135 +69,172 @@ const context: Context = {
   closeOnePageTxs: rawCloseOnePageTxs,
   tagHolderL: Lenses.identity<ModalButtonStateForTest> ().focusQuery ( 'tags' ),
   currentState<D, C> ( state: LensState<ModalButtonStateForTest, any, C> ): LensState<ModalButtonStateForTest, D, C> {return state},
-  messagePostProcessor:{},
+  messagePostProcessor: {},
   mockJwt: true
 }
 
 function displayAndGetButton ( s: ModalButtonStateForTest, setMain: ( s: ModalButtonStateForTest ) => void, fn: ( s: LensState<ModalButtonStateForTest, PageData, Context> ) => JSX.Element ) {
-  const comp = shallow ( fn ( lensState<ModalButtonStateForTest, Context> ( s, setMain, 'ModalButton', context ).focusOn ( 'mainPage' ) ) )
-  return comp.find ( "button" )
-
+  cleanup();
+  render ( fn ( lensState<ModalButtonStateForTest, Context> ( s, setMain, 'ModalButton', context ).focusOn ( 'mainPage' ) ) );
+  return screen.getByRole ( 'button' );
 }
 
-describe ( "modal buttons", () => {
-  describe ( "with single child", () => {
-    it ( "should copy", () => {
-      var remembered: any = {}
-      const button = displayAndGetButton ( dataS, s => remembered = s, state =>
-        <ModalButton text='someTitle' id='someId' state={state} copy={[ { from: '~/child' } ]} focusOn={'~/temp'} modal={'someModal'} pageMode='view' dateFn={testDateFn}/> )
-      button.simulate ( 'click' )
+describe ( 'modal buttons', () => {
+  describe ( 'with single child', () => {
+    it ( 'should copy', () => {
+      let remembered: any = {};
+
+      const button = displayAndGetButton ( dataS, s => { remembered = s; }, state =>
+        <ModalButton text='someTitle' id='someId' state={state} copy={[ { from: '~/child' } ]} focusOn={'~/temp'} modal={'someModal'} pageMode='view' dateFn={testDateFn}/>
+      );
+
+      fireEvent.click ( button );
+
       expect ( remembered ).toEqual ( {
         messages: [],
-        "tags": {},
+        tags: {},
         mainPage: {
-          "child": { "data": "a" },
-          "temp": { "data": "a" }
+          child: { data: "a" },
+          temp: { data: "a" }
         },
-        "restCommands": [],
-        "pageSelection": [ { "pageName": "mainPage", "pageMode": "view", "time": "now", }, { "focusOn": "~/temp", "firstTime": true, "pageMode": "view", "pageName": "someModal", "time": "timeForTest", } ],
-      } )
-    } )
-    it ( "should create empty", () => {
-      var remembered: any = {}
-      const button = displayAndGetButton ( emptyS, s => remembered = s, state =>
-        <ModalButton text='someTitle' id='someId' state={state} createEmpty={{ data: 'data' }} focusOn={'~/temp'} modal={'someModal'} pageMode='view' dateFn={testDateFn}/> )
-      button.simulate ( 'click' )
-      expect ( remembered ).toEqual ( {
-        messages: [],
-        "tags": {},
-        "pageSelection": [ { "pageName": "mainPage", "pageMode": "view", "time": "now", }, { "focusOn": "~/temp", "firstTime": true, "pageMode": "view", "pageName": "someModal", "time": "timeForTest", } ],
-        "restCommands": [],
-        mainPage: { "temp": { "data": "data" } }
-      } )
-    } )
-    it ( "should copyJustString", () => {
-      var remembered: any = {}
-      const state = { ...emptyS, a: { x: 'somedata', y: 'other' } }
-      const button = displayAndGetButton ( state, s => remembered = s, state =>
-        <ModalButton text='someTitle' id='someId' state={state} copyJustString={[ { from: '/a', to: '/b', joiner: '*' } ]} focusOn={'~/temp'} modal={'someModal'} pageMode='view' dateFn={testDateFn}/> )
-      button.simulate ( 'click' )
-      expect ( remembered ).toEqual ( {
-        ...state,
-        "b": "somedata*other",
-        "pageSelection": [ { "pageName": "mainPage", "pageMode": "view", "time": "now", }, { "focusOn": "~/temp", "firstTime": true, "pageMode": "view", "pageName": "someModal", "time": "timeForTest", } ]
-      } )
-    } )
-    it ( "should handle copyJustString when target is not there", () => {
-      var remembered: any = {}
-      const button = displayAndGetButton ( emptyS, s => remembered = s, state =>
-        <ModalButton text='someTitle' id='someId' state={state} copyJustString={[ { from: '/a', to: '/b', joiner: '*' } ]} focusOn={'~/temp'} modal={'someModal'} pageMode='view' dateFn={testDateFn}/> )
-      button.simulate ( 'click' )
-      expect ( remembered ).toEqual ( {
-        ...emptyS,
-        "pageSelection": [ { "pageName": "mainPage", "pageMode": "view", "time": "now", }, { "focusOn": "~/temp", "firstTime": true, "pageMode": "view", "pageName": "someModal", "time": "timeForTest", } ]
-      } )
-    } )
-
-    it ( "should create empty, then copy back", () => {
-      var remembered: any = {}
-      displayAndGetButton ( emptyS, s => remembered = s, state =>
-        <ModalButton text='someTitle' id='someId' state={state} focusOn='~/temp'
-                     createEmpty={{ data: 'data' }}
-                     modal={'someModal'}
-                     copyOnClose={[ { to: '~/data' } ]}
-                     pageMode='view' dateFn={testDateFn}/> )
-        .simulate ( 'click' )
-      expect ( remembered ).toEqual ( {
-        messages: [],
-        "tags": {},
-        "pageSelection": [
-          { "pageName": "mainPage", "pageMode": "view", "time": "now", },
-          {
-            "focusOn": '~/temp', "firstTime": true, "pageMode": "view", "pageName": "someModal",
-            copyOnClose: [ { to: "~/data" } ], "time": "timeForTest",
-          } ],
-        "restCommands": [],
-        mainPage: { "temp": { "data": "data" } }
-      } )
-
-      var remembered1: any = {}
-      displayAndGetButton ( remembered, s => remembered1 = s, state => <ModalCommitButton id='id' state={state}/> ).simulate ( 'click' )
-      console.log ( JSON.stringify ( remembered1, null, 2 ) )
-      expect ( remembered1 ).toEqual ( {
-        messages: [],
-        "tags": {},
-        "mainPage": { "temp": { "data": "data" }, "data": { "data": "data" } },
-        "pageSelection": [ { "pageMode": "view", "pageName": "mainPage", "time": "now", } ],
-        "restCommands": []
-      } )
-    } )
-    it ( "should create empty, then copy back with a rest command", () => {
-      var remembered: any = {}
-      displayAndGetButton ( emptyS, s => remembered = s, state =>
-        <ModalButton text='someTitle' id='someId' state={state}
-                     focusOn='~/temp' createEmpty={{ data: 'data' }}
-                     rest={{ name: 'restName', restAction: 'update' }} modal={'someModal'}
-                     copyOnClose={[ { to: '~/data' } ]} pageMode='view' dateFn={testDateFn}/> )
-        .simulate ( 'click' )
-      expect ( remembered ).toEqual ( {
-        "mainPage": { "temp": { "data": "data" } },
-        "messages": [],
-        "tags": {},
-        "pageSelection": [
-          { "pageMode": "view", "pageName": "mainPage", "time": "now", },
-          {
-            "copyOnClose": [ { "to": "~/data" } ],
-            "firstTime": true, "focusOn": "~/temp", "pageMode": "view", "pageName": "someModal",
-            "rest": { "name": "restName", "restAction": "update" }, "time": "timeForTest",
-          }
+        restCommands: [],
+        pageSelection: [
+          { pageName: "mainPage", pageMode: "view", time: "now" },
+          { focusOn: "~/temp", firstTime: true, pageMode: "view", pageName: "someModal", time: "timeForTest" },
         ],
-        "restCommands": []
-      } )
+      } );
+    } );
+  } );
 
-      var remembered1: any = {}
-      displayAndGetButton ( remembered, s => remembered1 = s, state => <ModalCommitButton id='id' state={state}/> ).simulate ( 'click' )
-      expect ( remembered1 ).toEqual ( {
-        messages: [],
-        "tags": {},
-        "mainPage": { "temp": { "data": "data" }, "data": { "data": "data" } },
-        "pageSelection": [ { "pageMode": "view", "pageName": "mainPage", "time": "now", } ],
-        "restCommands": [ { "name": "restName", "restAction": "update" } ]
-      } )
+
+  it ( 'should create empty', () => {
+    let remembered: any = {};
+
+    const button = displayAndGetButton ( emptyS, s => { remembered = s; }, state =>
+      <ModalButton text='someTitle' id='someId' state={state} createEmpty={{ data: 'data' }} focusOn={'~/temp'} modal={'someModal'} pageMode='view' dateFn={testDateFn}/>
+    );
+
+    fireEvent.click ( button );
+
+    expect ( remembered ).toEqual ( {
+      messages: [],
+      tags: {},
+      pageSelection: [
+        { pageName: "mainPage", pageMode: "view", time: "now" },
+        { focusOn: "~/temp", firstTime: true, pageMode: "view", pageName: "someModal", time: "timeForTest" },
+      ],
+      restCommands: [],
+      mainPage: { "temp": { "data": "data" } }
+    } );
+  } );
+  it ( "should copyJustString", () => {
+    let remembered: any = {};
+    const state = { ...emptyS, a: { x: 'somedata', y: 'other' } };
+
+
+    displayAndGetButton ( state, s => { remembered = s; }, state =>
+      <ModalButton text='someTitle' id='someId' state={state} copyJustString={[ { from: '/a', to: '/b', joiner: '*' } ]} focusOn={'~/temp'} modal={'someModal'} pageMode='view' dateFn={testDateFn}/>
+    )
+
+    fireEvent.click ( screen.getByText ( 'someTitle' ) );
+
+    expect ( remembered ).toEqual ( {
+      ...state,
+      "b": "somedata*other",
+      "pageSelection": [
+        { "pageName": "mainPage", "pageMode": "view", "time": "now" },
+        { "focusOn": "~/temp", "firstTime": true, "pageMode": "view", "pageName": "someModal", "time": "timeForTest" }
+      ]
+    } );
+  } );
+  it ( "should handle copyJustString when target is not there", () => {
+    let remembered: any = {};
+
+
+    displayAndGetButton ( emptyS, s => { remembered = s; }, state =>
+      <ModalButton text='someTitle' id='someId' state={state} copyJustString={[ { from: '/a', to: '/b', joiner: '*' } ]} focusOn={'~/temp'} modal={'someModal'} pageMode='view' dateFn={testDateFn}/>
+    )
+
+    fireEvent.click ( screen.getByText ( 'someTitle' ) );
+
+    expect ( remembered ).toEqual ( {
+      ...emptyS,
+      "pageSelection": [
+        { "pageName": "mainPage", "pageMode": "view", "time": "now" },
+        { "focusOn": "~/temp", "firstTime": true, "pageMode": "view", "pageName": "someModal", "time": "timeForTest" }
+      ]
+    } );
+  } );
+
+
+  it ( "should create empty, then copy back", () => {
+    let remembered: any = {}
+    displayAndGetButton ( emptyS, s => remembered = s, state =>
+      <ModalButton text='someTitle' id='someId' state={state} focusOn='~/temp'
+                   createEmpty={{ data: 'data' }}
+                   modal={'someModal'}
+                   copyOnClose={[ { to: '~/data' } ]}
+                   pageMode='view' dateFn={testDateFn}/> );
+    fireEvent.click ( screen.getByText ( 'someTitle' ) );
+    expect ( remembered ).toEqual ( {
+      messages: [],
+      "tags": {},
+      "pageSelection": [
+        { "pageName": "mainPage", "pageMode": "view", "time": "now", },
+        {
+          "focusOn": '~/temp', "firstTime": true, "pageMode": "view", "pageName": "someModal",
+          copyOnClose: [ { to: "~/data" } ], "time": "timeForTest",
+        } ],
+      "restCommands": [],
+      mainPage: { "temp": { "data": "data" } }
+    } )
+
+    let remembered1: any = {}
+    displayAndGetButton ( remembered, s => remembered1 = s, state => <ModalCommitButton id='id' state={state}/> )
+    fireEvent.click ( screen.getByRole ( 'button' ) );
+    console.log ( JSON.stringify ( remembered1, null, 2 ) )
+    expect ( remembered1 ).toEqual ( {
+      messages: [],
+      "tags": {},
+      "mainPage": { "temp": { "data": "data" }, "data": { "data": "data" } },
+      "pageSelection": [ { "pageMode": "view", "pageName": "mainPage", "time": "now", } ],
+      "restCommands": []
+    } )
+  } )
+  it ( "should create empty, then copy back with a rest command", () => {
+    let remembered: any = {}
+    displayAndGetButton ( emptyS, s => remembered = s, state =>
+      <ModalButton text='someTitle' id='someId' state={state}
+                   focusOn='~/temp' createEmpty={{ data: 'data' }}
+                   rest={{ name: 'restName', restAction: 'update' }} modal={'someModal'}
+                   copyOnClose={[ { to: '~/data' } ]} pageMode='view' dateFn={testDateFn}/> )
+    fireEvent.click ( screen.getByText ( 'someTitle' ) );
+    expect ( remembered ).toEqual ( {
+      "mainPage": { "temp": { "data": "data" } },
+      "messages": [],
+      "tags": {},
+      "pageSelection": [
+        { "pageMode": "view", "pageName": "mainPage", "time": "now", },
+        {
+          "copyOnClose": [ { "to": "~/data" } ],
+          "firstTime": true, "focusOn": "~/temp", "pageMode": "view", "pageName": "someModal",
+          "rest": { "name": "restName", "restAction": "update" }, "time": "timeForTest",
+        }
+      ],
+      "restCommands": []
+    } )
+
+    let remembered1: any = {}
+    displayAndGetButton ( remembered, s => remembered1 = s, state => <ModalCommitButton id='id' state={state}/> )
+
+    fireEvent.click ( screen.getByRole ( 'button' ) );
+
+    expect ( remembered1 ).toEqual ( {
+      messages: [],
+      "tags": {},
+      "mainPage": { "temp": { "data": "data" }, "data": { "data": "data" } },
+      "pageSelection": [ { "pageMode": "view", "pageName": "mainPage", "time": "now", } ],
+      "restCommands": [ { "name": "restName", "restAction": "update" } ]
     } )
   } )
 } )
@@ -208,10 +242,10 @@ describe ( "modal buttons", () => {
 
 describe ( "with nested child", () => {
   it ( "should copy", () => {
-    var remembered: any = {}
-    const button = displayAndGetButton ( nestedS, s => remembered = s, state =>
+    let remembered: any = {}
+    displayAndGetButton ( nestedS, s => remembered = s, state =>
       <ModalButton text='someTitle' id='someId' state={state} copy={[ { from: '~/nested/child' } ]} focusOn='~/temp' modal={'someModal'} pageMode='view' dateFn={testDateFn}/> )
-    button.simulate ( 'click' )
+    fireEvent.click ( screen.getByText ( 'someTitle' ) );
     expect ( remembered ).toEqual ( {
       messages: [],
       "tags": {},
@@ -224,11 +258,11 @@ describe ( "with nested child", () => {
     } )
   } )
   it ( "should create empty, then copy back", () => {
-    var remembered: any = {}
+    let remembered: any = {}
     displayAndGetButton ( emptyNestedS, s => remembered = s, state =>
       <ModalButton text='someTitle' id='someId' state={state} focusOn='~/temp' createEmpty={{ data: 'data' }} modal={'someModal'}
                    copyOnClose={[ { to: '~/nested/data' } ]} pageMode='view' dateFn={testDateFn}/> )
-      .simulate ( 'click' )
+    fireEvent.click ( screen.getByText ( 'someTitle' ) );
     expect ( remembered ).toEqual ( {
       messages: [],
       "tags": {},
@@ -242,8 +276,9 @@ describe ( "with nested child", () => {
       mainPage: { "temp": { "data": "data" }, nested: {} }
     } )
 
-    var remembered1: any = {}
-    displayAndGetButton ( remembered, s => remembered1 = s, state => <ModalCommitButton id='id' state={state}/> ).simulate ( 'click' )
+    let remembered1: any = {}
+    displayAndGetButton ( remembered, s => remembered1 = s, state => <ModalCommitButton id='id' state={state}/> )
+    fireEvent.click ( screen.getByRole ( 'button' ) );
     expect ( remembered1 ).toEqual ( {
       messages: [],
       "tags": {},
@@ -254,11 +289,11 @@ describe ( "with nested child", () => {
   } )
 
   it ( "should create empty, then copy back with a rest command", () => {
-    var remembered: any = {}
+    let remembered: any = {}
     displayAndGetButton ( emptyNestedS, s => remembered = s, state =>
       <ModalButton text='someTitle' id='someId' state={state} focusOn='~/temp' createEmpty={{ data: 'data' }} rest={{ name: 'restName', restAction: 'update' }}
                    modal={'someModal'} copyOnClose={[ { to: '~/nested/data' } ]} pageMode='view' dateFn={testDateFn}/> )
-      .simulate ( 'click' )
+    fireEvent.click ( screen.getByText ( 'someTitle' ) );
     expect ( remembered ).toEqual ( {
       messages: [],
       "tags": {},
@@ -272,8 +307,9 @@ describe ( "with nested child", () => {
       mainPage: { "temp": { "data": "data" }, nested: {} }
     } )
 
-    var remembered1: any = {}
-    displayAndGetButton ( remembered, s => remembered1 = s, state => <ModalCommitButton id='id' state={state}/> ).simulate ( 'click' )
+    let remembered1: any = {}
+    displayAndGetButton ( remembered, s => remembered1 = s, state => <ModalCommitButton id='id' state={state}/> )
+    fireEvent.click ( screen.getByRole ( 'button' ) );
     expect ( remembered1 ).toEqual ( {
       messages: [],
       "tags": {},
@@ -287,10 +323,10 @@ describe ( "with nested child", () => {
 
 describe ( "with lists of data", () => {
   it ( "should copy from [1]", () => {
-    var remembered: any = {}
-    const button = displayAndGetButton ( listS, s => remembered = s, state =>
+    let remembered: any = {}
+    displayAndGetButton ( listS, s => remembered = s, state =>
       <ModalButton text='someTitle' id='someId' state={state} copy={[ { from: '~/list[1]' } ]} focusOn='~/temp' modal={'someModal'} pageMode='view' dateFn={testDateFn}/> )
-    button.simulate ( 'click' )
+    fireEvent.click ( screen.getByText ( 'someTitle' ) );
     expect ( remembered ).toEqual ( {
       messages: [],
       "tags": {},
@@ -304,21 +340,21 @@ describe ( "with lists of data", () => {
     } )
   } )
   it ( "should copy from [last]", () => {
-    var remembered: any = {}
-    const button = displayAndGetButton ( listS, s => remembered = s, state =>
+    let remembered: any = {}
+    displayAndGetButton ( listS, s => remembered = s, state =>
       <ModalButton text='someTitle' id='someId' state={state}
                    copy={[ { from: '~/list[$last]' } ]}
                    focusOn='~/temp' modal={'someModal'} pageMode='view' dateFn={testDateFn}/> )
-    button.simulate ( 'click' )
+    fireEvent.click ( screen.getByText ( 'someTitle' ) );
     expect ( remembered.mainPage.temp ).toEqual ( { data: '2' } )
   } )
   it ( "should copy from [~/index]", () => {
-    var remembered: any = {}
-    const button = displayAndGetButton ( listS, s => remembered = s, state =>
+    let remembered: any = {}
+    displayAndGetButton ( listS, s => remembered = s, state =>
       <ModalButton text='someTitle' id='someId' state={state}
                    copy={[ { from: '~/list/[~/index]' } ]}
                    focusOn='~/temp' modal={'someModal'} pageMode='view' dateFn={testDateFn}/> )
-    button.simulate ( 'click' )
+    fireEvent.click ( screen.getByText ( 'someTitle' ) );
     expect ( remembered.mainPage.temp ).toEqual ( { data: '1' } )
   } )
 
@@ -326,11 +362,11 @@ describe ( "with lists of data", () => {
 
 
 it ( "should create empty, then copy back", () => {
-  var remembered: any = {}
+  let remembered: any = {}
   displayAndGetButton ( emptyNestedS, s => remembered = s, state =>
     <ModalButton text='someTitle' id='someId' state={state} focusOn='~/temp' createEmpty={{ data: 'data' }} modal={'someModal'}
                  copyOnClose={[ { to: '~/nested/data' } ]} pageMode='view' dateFn={testDateFn}/> )
-    .simulate ( 'click' )
+  fireEvent.click ( screen.getByText ( 'someTitle' ) );
   expect ( remembered ).toEqual ( {
     messages: [],
     "tags": {},
@@ -343,8 +379,9 @@ it ( "should create empty, then copy back", () => {
     mainPage: { "temp": { "data": "data" }, nested: {} }
   } )
 
-  var remembered1: any = {}
-  displayAndGetButton ( remembered, s => remembered1 = s, state => <ModalCommitButton id='id' state={state}/> ).simulate ( 'click' )
+  let remembered1: any = {}
+  displayAndGetButton ( remembered, s => remembered1 = s, state => <ModalCommitButton id='id' state={state}/> )
+  fireEvent.click ( screen.getByRole ( 'button' ));
   expect ( remembered1 ).toEqual ( {
     messages: [],
     "tags": {},
@@ -355,11 +392,11 @@ it ( "should create empty, then copy back", () => {
 } )
 
 it ( "should create empty, then copy back with a rest command", () => {
-  var remembered: any = {}
+  let remembered: any = {}
   displayAndGetButton ( emptyNestedS, s => remembered = s, state =>
     <ModalButton text='someTitle' id='someId' state={state} focusOn='~/temp' createEmpty={{ data: 'data' }} rest={{ name: 'restName', restAction: 'update' }}
                  modal={'someModal'} copyOnClose={[ { to: '~/nested/data' } ]} pageMode='view' dateFn={testDateFn}/> )
-    .simulate ( 'click' )
+  fireEvent.click ( screen.getByText ( 'someTitle' ) );
   expect ( remembered ).toEqual ( {
     messages: [],
     "tags": {},
@@ -373,8 +410,9 @@ it ( "should create empty, then copy back with a rest command", () => {
     mainPage: { "temp": { "data": "data" }, nested: {} }
   } )
 
-  var remembered1: any = {}
-  displayAndGetButton ( remembered, s => remembered1 = s, state => <ModalCommitButton id='id' state={state}/> ).simulate ( 'click' )
+  let remembered1: any = {}
+  displayAndGetButton ( remembered, s => remembered1 = s, state => <ModalCommitButton id='id' state={state}/> )
+  fireEvent.click ( screen.getByRole ( 'button' ) );
   expect ( remembered1 ).toEqual ( {
     messages: [],
     "tags": {},

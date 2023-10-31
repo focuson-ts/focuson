@@ -1,6 +1,5 @@
-import { enzymeSetup } from "./enzymeAdapterSetup";
+
 import { DisplayStringWithLookup } from "@focuson/form_components";
-import { mount } from "enzyme";
 import { HasRestCommands } from "@focuson/rest";
 import { HasPageSelection } from "@focuson/pages";
 import { HasSimpleMessages } from "@focuson/utils";
@@ -8,8 +7,7 @@ import { HasTagHolder } from "@focuson/template";
 import { lensState } from "@focuson/state";
 import { context } from "./context.fixture";
 import { FocusOnContext } from "@focuson/focuson";
-
-enzymeSetup ()
+import { render } from "@testing-library/react";
 
 interface DisplayStringWithLookupState extends HasRestCommands, HasPageSelection, HasSimpleMessages, HasTagHolder {
   data?: string
@@ -27,7 +25,7 @@ function displayString ( data: string | undefined, ifUndefined?: string, classNa
   const state = lensState ( { ...empty, data }, () => {}, '', context () )
   // @ts-ignore
   const focusedState: LensState<DisplayStringWithLookupState, string, FocusOnContext<DisplayStringWithLookupState>> = state.focusOn ( 'data' );
-  return mount ( <DisplayStringWithLookup lookup={lookup} state={focusedState} className={className} ifUndefined={ifUndefined} id='someId'/> ).html ()
+  return render ( <DisplayStringWithLookup lookup={lookup} state={focusedState} className={className} ifUndefined={ifUndefined} id='someId'/> ).container.innerHTML
 }
 describe ( "DisplayStringWithLookup", () => {
   it ( 'should render with undefined', () => {
