@@ -7,6 +7,7 @@
   },
   "guards":      {
     "port":    3004,
-    "publish": false
+    "publish": false,
+    "test":    false
   }
 }

@@ -45,7 +45,7 @@ export function SimpleGame ( { state }: GameProps<GameData, GameData> ) {
 
 
 export function NextMove ( { state }: GameProps<GameData, NoughtOrCross> ) {
-  return (<div> Next Move{state.json ()}</div>)
+  return (<div data-testid="next-move"> Next Move{state.json ()}</div>)
 }
 
 export function Board ( { state }: LensProps2<GameData, BoardData, NoughtOrCross, Context> ) {
