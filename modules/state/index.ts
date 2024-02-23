@@ -254,6 +254,7 @@ export class LensState2<Main, T1, T2, Context> {
     return new LensState3<Main, T1, T2, T3, Context> ( this.main, this.lens1, this.lens2, lens, this.dangerouslySetMain, this.context )
   }
 
+
   state1 (): LensState<Main, T1, Context> {
     return new LensState<Main, T1, Context> ( this.main, this.dangerouslySetMain, this.lens1, this.context )
   }
@@ -332,6 +333,15 @@ export class LensState3<Main, T1, T2, T3, Context> {
     this.lens3 = lens3;
     this.dangerouslySetMain = dangerouslySetMain;
     this.context = context
+  }
+  state12 (): LensState2<Main, T1, T2, Context> {
+    return new LensState2<Main, T1, T2, Context> ( this.main, this.lens1, this.lens2, this.dangerouslySetMain, this.context )
+  }
+  state23 (): LensState2<Main, T2, T3, Context> {
+    return new LensState2<Main, T2, T3, Context> ( this.main, this.lens2, this.lens3, this.dangerouslySetMain, this.context )
+  }
+  state13 (): LensState2<Main, T1, T3, Context> {
+    return new LensState2<Main, T1, T3, Context> ( this.main, this.lens1, this.lens3, this.dangerouslySetMain, this.context )
   }
 
   state1 (): LensState<Main, T1, Context> {

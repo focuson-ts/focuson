@@ -1,7 +1,7 @@
 {
   "name": "@focuson/cod",
   "description": "A command line tool to help with the code on demand",
-  "version": "1.44.2",
+  "version": "1.44.3",
   "main": "dist/index",
   "types": "dist/index",
   "bin": {

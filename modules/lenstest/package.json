@@ -1,7 +1,7 @@
 {
   "name": "@focuson/lenstest",
   "description": "Tests the lens defined in @focuson/lens, the state defined in @focuson/state, and the fetchers in @focuson/fetcher",
-  "version": "1.44.2",
+  "version": "1.44.3",
   "main": "dist/index",
   "types": "dist/index",
   "browserslist": {
@@ -17,11 +17,11 @@
     ]
   },
   "dependencies": {
-    "@focuson/pages": "1.44.2",
-    "@focuson/template": "1.44.2",
-    "@focuson/focuson": "1.44.2",
-    "@focuson/form_components": "1.44.2",
-    "@focuson/forms": "1.44.2",
+    "@focuson/pages": "1.44.3",
+    "@focuson/template": "1.44.3",
+    "@focuson/focuson": "1.44.3",
+    "@focuson/form_components": "1.44.3",
+    "@focuson/forms": "1.44.3",
     "debug": "^4.3.4"
   },
   "devDependencies": {

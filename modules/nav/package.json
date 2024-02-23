@@ -1,7 +1,7 @@
 {
   "name": "@focuson/nav",
   "description": "A nav bar that allows json files to be used to display rendered components",
-  "version": "1.44.2",
+  "version": "1.44.3",
   "main": "dist/index",
   "types": "dist/index",
   "browserslist": {

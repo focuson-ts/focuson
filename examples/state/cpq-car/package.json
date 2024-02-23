@@ -1,7 +1,7 @@
 {
   "name": "@focuson/example_state_cpq_car",
   "description": "A fully featured car leasing cpq",
-  "version": "1.44.2",
+  "version": "1.44.3",
   "main": "dist/index",
   "types": "dist/index",
   "browserslist": {
@@ -19,9 +19,9 @@
   "dependencies": {
     "react-i18next": "^11.8.5",
     "i18next": "^19.8.4",
-    "@focuson/lens": "1.44.2",
-    "@focuson/nav": "1.44.2",
-    "@focuson/state": "1.44.2",
+    "@focuson/lens": "1.44.3",
+    "@focuson/nav": "1.44.3",
+    "@focuson/state": "1.44.3",
     "debug": "^4.3.4"
   },
   "devDependencies": {

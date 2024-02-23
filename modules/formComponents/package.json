@@ -1,7 +1,7 @@
 {
   "name": "@focuson/form_components",
   "description": "Components that can be used by @focuson/forms ",
-  "version": "1.44.2",
+  "version": "1.44.3",
   "main": "dist/index",
   "types": "dist/index",
   "browserslist": {
@@ -23,8 +23,8 @@
     ]
   },
   "dependencies": {
-    "@focuson/state": "1.44.2",
-    "@focuson/focuson": "1.44.2",
+    "@focuson/state": "1.44.3",
+    "@focuson/focuson": "1.44.3",
     "@types/react-datepicker": "^4.4.1",
     "react-datepicker": "^4.7.0"
   },

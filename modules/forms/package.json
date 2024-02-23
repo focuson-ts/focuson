@@ -1,7 +1,7 @@
 {
   "name": "@focuson/forms",
   "description": "Allows us to define data that is stored in a database, or perhaps an api",
-  "version": "1.44.2",
+  "version": "1.44.3",
   "main": "dist/index",
   "types": "dist/index",
   "browserslist": {
@@ -23,9 +23,9 @@
     ]
   },
   "dependencies": {
-    "@focuson/utils": "1.44.2",
-    "@focuson/files": "1.44.2",
-    "@focuson/focuson": "1.44.2"
+    "@focuson/utils": "1.44.3",
+    "@focuson/files": "1.44.3",
+    "@focuson/focuson": "1.44.3"
   },
   "devDependencies": {
     "eslint": "^8.52.0",
