@@ -1,7 +1,7 @@
 {
   "name": "@focuson/utils",
   "description": "Common utilities for the @focuson project",
-  "version": "1.44.1",
+  "version": "1.44.2",
   "main": "dist/index",
   "types": "dist/index",
   "browserslist": {

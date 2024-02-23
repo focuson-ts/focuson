@@ -1,7 +1,7 @@
 {
   "name": "@focuson/generators",
   "description": "Code generators",
-  "version": "1.44.1",
+  "version": "1.44.2",
   "main": "dist/index",
   "types": "dist/index",
   "browserslist": {
@@ -17,8 +17,8 @@
     ]
   },
   "dependencies": {
-    "@focuson/utils": "1.44.1",
-    "@focuson/files": "1.44.1",
+    "@focuson/utils": "1.44.2",
+    "@focuson/files": "1.44.2",
     "debug": "^4.3.4"
   },
   "devDependencies": {

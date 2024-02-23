@@ -1,7 +1,7 @@
 {
   "name": "@focuson/pages",
   "description": "Used when we want a simple many page application",
-  "version": "1.44.1",
+  "version": "1.44.2",
   "main": "dist/index",
   "types": "dist/index",
   "browserslist": {
@@ -17,9 +17,9 @@
     ]
   },
   "dependencies": {
-    "@focuson/state": "1.44.1",
-    "@focuson/fetcher": "1.44.1",
-    "@focuson/rest": "1.44.1",
+    "@focuson/state": "1.44.2",
+    "@focuson/fetcher": "1.44.2",
+    "@focuson/rest": "1.44.2",
     "debug": "^4.3.4"
   },
   "devDependencies": {

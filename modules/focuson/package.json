@@ -1,7 +1,7 @@
 {
   "name": "@focuson/focuson",
   "description": "Brings together state management, declarative fetching and posting of data to/from apis and some simple page management",
-  "version": "1.44.1",
+  "version": "1.44.2",
   "main": "dist/index",
   "types": "dist/index",
   "browserslist": {
@@ -17,8 +17,8 @@
     ]
   },
   "dependencies": {
-    "@focuson/pages": "1.44.1",
-    "@focuson/poster": "1.44.1",
+    "@focuson/pages": "1.44.2",
+    "@focuson/poster": "1.44.2",
     "debug": "^4.3.4"
   },
   "devDependencies": {

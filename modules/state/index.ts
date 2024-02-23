@@ -142,6 +142,9 @@ export class LensState<Main, T, Context> implements HasOptional<Main, T> {
   doubleUp (): LensState2<Main, T, T, Context> {
     return this.addSecond ( this.optional )
   }
+  tripleUp (): LensState3<Main, T, T, T, Context> {
+    return this.addSecond ( this.optional ).addThird ( this.optional )
+  }
 
   massTransform ( reason: any ): ( ...ts: Transform<Main, any>[] ) => void {
     return ( ...ts: Transform<Main, any>[] ) => {
@@ -247,7 +250,7 @@ export class LensState2<Main, T1, T2, Context> {
     this.context = context
   }
 
-  addThird<T3> ( lens: Lens<Main, T3> ) {
+  addThird<T3> ( lens: Optional<Main, T3> ) {
     return new LensState3<Main, T1, T2, T3, Context> ( this.main, this.lens1, this.lens2, lens, this.dangerouslySetMain, this.context )
   }
 
@@ -420,5 +423,8 @@ export class LensState3<Main, T1, T2, T3, Context> {
 
 export interface LensProps2<Main, T1, T2, Context> {
   state: LensState2<Main, T1, T2, Context>
+}
+export interface LensProps3<Main, T1, T2, T3, Context> {
+  state: LensState3<Main, T1, T2, T3, Context>;
 }
 

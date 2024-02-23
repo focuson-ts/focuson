@@ -1,7 +1,7 @@
 {
   "name": "@focuson/fetcher",
   "description": "Used when we want to fetch data from APIs in order to display it. This provides a declarative and composable approach to state management",
-  "version": "1.44.1",
+  "version": "1.44.2",
   "main": "dist/index",
   "types": "dist/index",
   "browserslist": {
@@ -17,9 +17,9 @@
     ]
   },
   "dependencies": {
-    "@focuson/lens": "1.44.1",
-    "@focuson/template": "1.44.1",
-    "@focuson/state": "1.44.1",
+    "@focuson/lens": "1.44.2",
+    "@focuson/template": "1.44.2",
+    "@focuson/state": "1.44.2",
     "debug": "^4.3.4"
   },
   "devDependencies": {

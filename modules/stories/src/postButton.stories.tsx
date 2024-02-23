@@ -15,6 +15,7 @@ interface ForPostButton {
   args?: any
 }
 
+
 interface StateForPostButton extends HasPostCommand<StateForPostButton, any> {}
 
 const Template: Story<ForPostButton> = ( args: ForPostButton ) =>

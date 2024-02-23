@@ -1,7 +1,7 @@
 {
   "name": "@focuson/nonfunctionals",
   "description": "A library that allows wrapping of functions and kleislis with non functional capablities",
-  "version": "1.44.1",
+  "version": "1.44.2",
   "main": "dist/index",
   "types": "dist/index",
   "browserslist": {

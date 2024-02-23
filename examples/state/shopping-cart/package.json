@@ -1,7 +1,7 @@
 {
   "name": "@focuson/example_state_cart",
   "description": "The redux 'shopping cart' example' using lens",
-  "version": "1.44.1",
+  "version": "1.44.2",
   "main": "dist/index",
   "types": "dist/index",
   "browserslist": {
@@ -17,8 +17,8 @@
     ]
   },
   "dependencies": {
-    "@focuson/lens": "1.44.1",
-    "@focuson/state": "1.44.1",
+    "@focuson/lens": "1.44.2",
+    "@focuson/state": "1.44.2",
     "debug": "^4.3.4"
   },
   "devDependencies": {

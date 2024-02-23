@@ -1,7 +1,7 @@
 {
   "name": "@focuson/example_lens_dragon",
   "description": "Showing how lens help in 'normal programming' without any link to react",
-  "version": "1.44.1",
+  "version": "1.44.2",
   "main": "dist/index",
   "types": "dist/index",
   "browserslist": {
@@ -17,7 +17,7 @@
     ]
   },
   "dependencies": {
-    "@focuson/lens": "1.44.1",
+    "@focuson/lens": "1.44.2",
     "debug": "^4.3.4"
   },
   "devDependencies": {
