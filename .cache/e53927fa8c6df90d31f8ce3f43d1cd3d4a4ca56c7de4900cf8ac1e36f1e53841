@@ -1,0 +1,18 @@
+{
+  "templates": {
+    "typescript": "@laoban@/templates/typescript_405"
+  },
+  "scripts":   {
+    "compile":    {
+      "description": "Compiles the projects",
+      "inLinksOrder": true,
+      "guard":       {"value": "${packageDetails.guards.compile}", "default": true},
+      "commands":    [{"name": "compile", "command": "tsc --noEmit false --outDir dist", "status": true}]
+    },
+    "ls-compile": {
+      "description": "lists projects that will be compiled",
+      "guard":       "${packageDetails.guards.compile}",
+      "commands":    ["js:process.cwd()"]
+    }
+  }
+}

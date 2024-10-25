@@ -1,0 +1,18 @@
+{
+  "template": "typescript",
+  "name": "@focuson/lens",
+  "description": "simple optics library for typescript",
+  "packageJson": {
+    "dependencies": {
+    },
+    "devDependencies": {}
+  },
+  "links": [
+    "@focuson/utils"
+  ],
+  "guards": {
+    "compile": true,
+    "publish": true,
+    "test": false
+  }
+}

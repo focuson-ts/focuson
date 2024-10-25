@@ -1,0 +1,18 @@
+{
+  "template": "typescript",
+  "name": "@focuson/events",
+  "description": "Simple lens based events for an event source",
+  "packageJson": {
+    "dependencies": {
+    },
+    "devDependencies": {}
+  },
+  "links": [
+
+  ],
+  "guards": {
+    "compile": true,
+    "publish": true,
+    "test": false
+  }
+}

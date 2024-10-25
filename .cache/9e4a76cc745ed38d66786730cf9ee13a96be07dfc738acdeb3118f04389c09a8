@@ -1,0 +1,28 @@
+{
+  "scripts": {
+    "pack":       {
+      "description":  "does everything for a publish except the actual 'npm publish'",
+      "guard":        "${packageDetails.guards.publish}",
+      "comment":      "why the --noEmit --outDir? Answer: using react_scripts we have to turn these off",
+      "commands":     [
+        {"name": "compile", "command": "tsc --noEmit false --outDir dist", "status": true},
+        {"name": "pack", "command": "${packageManager} pack", "status": true}
+      ],
+      "inLinksOrder": true
+    },
+    "publish":    {
+      "description":  "publishes the projects to npmjs",
+      "guard":        "${packageDetails.guards.publish}",
+      "commands":     [
+        {"name": "compile", "command": "tsc --noEmit false --outDir dist", "status": true},
+        {"name": "publish", "command": "${packageManager} publish --access public", "status": true}
+      ],
+      "inLinksOrder": true, "showShell": true
+    },
+    "ls-publish": {
+      "description": "lists the projects that can be published",
+      "guard":       "${packageDetails.guards.publish}",
+      "commands":    ["js:process.cwd()"], "inLinksOrder": true
+    }
+  }
+}

@@ -1,14 +1,7 @@
 {
   "private": true,
   "workspaces": [
-    "modules/*",
-    "examples/lens/*",
-    "examples/state/*",
-    "examples/codeondemand/*",
-    "examples/fetcher/*",
-    "examples/focuson/*",
-    "examples/poster/*",
-    "examples/forms/*"
+    "modules/**"
   ],
   "name": "ts-lens",
   "description": "This is the 'master project' with many child projects. There is no code in this project: it is all managed in child projects",
@@ -18,17 +11,16 @@
     "optics"
   ],
   "license": "MIT",
-  "repository": "github:focuson-ts/focuson",
+  "repository": "git@github.com:focuson-ts/focuson.git",
   "scripts": {
-    "test": "jest --config jest.config.json",
-    "test:watch": "npm run test -- --watch"
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html",
+    "test": "jest"
   },
   "author": "phil <phil.rice@validoc.org>",
-  "dependencies": {
-    "react": "^16.14.0"
-  },
-  "resolutions": {
-    "//": "See https://github.com/facebook/create-react-app/issues/11773",
-    "react-error-overlay": "6.0.9"
+  "devDependencies": {
+    "@parcel/packager-raw-url": "2.9.3",
+    "@parcel/transformer-webmanifest": "2.9.3",
+    "process": "^0.11.10"
   }
 }

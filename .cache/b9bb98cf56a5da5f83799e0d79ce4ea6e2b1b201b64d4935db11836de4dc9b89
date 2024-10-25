@@ -1,0 +1,40 @@
+{
+  "packageManager": "yarn",
+  "templateDir":    "${laobanDirectory}/templates",
+  "templates":      {
+    "javascript": "@laoban@/templates/javascript"
+  },
+  "versionFile":    "${laobanDirectory}/version.txt",
+  "log":            ".log",
+  "status":         ".status",
+  "profile":        ".profile",
+  "scripts":        {
+    "clean": {
+      "description": "Cleans up laoban (removing cache/status/profile/logs...", "commands": [
+        {"command": "file:rm(${status})"},
+        {"command": "file:rm(${profile})"},
+        {"command": "file:rmDir(${laobanDirectory}/.session)"},
+        {"command": "file:rmDir(${cacheDir})"},
+        {"command": "file:rm(.package.details.test.json)"},
+        {"command": "file:rm(${laobanDirectory}/.version.test.txt)"},
+        {"command": "file:rm(${laobanDirectory}/.laoban.test.json)"},
+        {"command": "file:rmLog()"}
+      ]
+    },
+    "log":   {
+      "description": "Shows the last log from the last command",
+      "commands":    ["file:tail(${log})"],
+
+      "noLogOverwrite": true
+    },
+    "logtail":   {
+      "description": "Shows the last file lines of the log from the last command",
+      "commands":    ["file:tail(${log})"],
+
+      "noLogOverwrite": true
+    }
+  },
+  "properties":     {
+    "license": "MIT"
+  }
+}

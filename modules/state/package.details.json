@@ -1,0 +1,23 @@
+{
+  "template": "react_library",
+  "name": "@focuson/state",
+  "description": "Simple state for react using lenses.",
+  "packageJson": {
+    "dependencies": {
+    },
+    "devDependencies": {
+    },
+    "peerDependencies": {
+      "react": ">=18.0.0"
+    }
+  },
+  "links": [
+    "@focuson/events",
+    "@focuson/utils"
+  ],
+  "guards": {
+    "compile": true,
+    "publish": true,
+    "test": false
+  }
+}

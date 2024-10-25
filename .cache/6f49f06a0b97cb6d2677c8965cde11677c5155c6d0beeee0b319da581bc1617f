@@ -1,0 +1,20 @@
+{
+  "templates": {
+    "typescript_react": "@laoban@/templates/typescript_react"
+  },
+  "scripts":   {
+    "run-react": {
+      "description": "${packageManager} start for all  projects that have a port defined in package.details.json",
+      "guard":       "${packageDetails.guards.port}",
+      "commands":    ["${packageManager} start"],
+      "env":         {"PORT": "${packageDetails.guards.port}"}
+    },
+    "ls-react":  {
+      "description": "lists the package that have a port defined in package.details.json",
+      "guard":       "${packageDetails.guards.port}",
+      "commands":    [
+        "js: '${packageDetails.name}'.padEnd(40)+ ' React ${packageDetails.guards.port} Java ${packageDetails.guards.javaPort}'"
+      ]
+    }
+  }
+}

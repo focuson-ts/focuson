@@ -1,4 +1,9 @@
 {
+  "name": "@focuson/utils",
+  "description": "Simple utils for typescript",
+  "version": "2.0.0",
+  "main": "dist/index",
+  "types": "dist/index",
   "browserslist": {
     "development": [
       "last 1 chrome version",
@@ -12,51 +17,44 @@
     ]
   },
   "dependencies": {
-    "node-fetch": "2.6.1"
+    "debug": "^4.3.4"
   },
   "devDependencies": {
-    "@types/node": "^14.14.7",
-    "npm-check-updates": "^10.0.0",
-    "typescript": "^4.1.5",
-    "@testing-library/jest-dom": "^5.11.5",
-    "@testing-library/user-event": "^12.2.0",
-    "@types/jest": "^26.0.15",
-    "jest": "^26.6.0",
-    "ts-jest": "^26.4.4"
+    "typescript": "^5.2.2",
+    "@testing-library/jest-dom": "^6.1.4",
+    "@types/jest": "^29.0.0",
+    "@types/node": "^14.0.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "**/*.stories.*"
+        ],
+        "rules": {
+          "import/no-anonymous-default-export": "off"
+        }
+      }
+    ]
   },
   "files": [
-    "LICENSE.md",
-    "README.md",
     "dist/index.js",
     "dist/index.d.ts",
     "dist/src/"
   ],
   "keywords": [
-    "functionalprogramming",
-    "lens",
-    "optics"
+    "indexing"
   ],
   "license": "MIT",
-  "main": "dist/index",
-  "types": "dist/index",
-  "repository": "github:focuson-ts/focuson",
+  "repository": " git@github.com:focuson-ts/focuson.git",
   "scripts": {
-    "test": "jest --config jest.config.json",
+    "test": "jest --config jest.config.json --env node",
     "test:watch": "npm run test -- --watch"
-  },
-  "version": "1.44.1",
-  "template": "noreact",
-  "name": "@focuson/utils",
-  "description": "Common utilities for the @focuson project",
-  "details": {
-    "ideify": true,
-    "publish": true,
-    "links": [],
-    "extraDeps": {
-      "node-fetch": "2.6.1"
-    },
-    "extraDevDeps": {},
-    "test": false,
-    "tsc": true
   }
 }

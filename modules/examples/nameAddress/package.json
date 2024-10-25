@@ -1,0 +1,68 @@
+{
+  "name": "@focuson/example_name_address",
+  "description": "Shows how the lenses are used in react for a simple form.",
+  "version": "2.0.0",
+  "browserslist": {
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ]
+  },
+  "dependencies": {
+    "@focuson/state": "2.0.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "@testing-library/jest-dom": "6.1.5",
+    "@testing-library/react": "14.0.0",
+    "@testing-library/user-event": "14.4.3",
+    "web-vitals": "3.3.1"
+  },
+  "devDependencies": {
+    "@types/jest": "29.5.3",
+    "@types/node": "20.5.7",
+    "@types/react": "18.3.1",
+    "@types/react-dom": "18.3.1",
+    "typescript": "5.6.3",
+    "parcel": "2.9.3"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "**/*.stories.*"
+        ],
+        "rules": {
+          "import/no-anonymous-default-export": "off"
+        }
+      }
+    ]
+  },
+  "files": [
+    "dist/index.js",
+    "dist/index.d.ts",
+    "dist/src/",
+    "build/"
+  ],
+  "keywords": [
+    "react",
+    "runbook"
+  ],
+  "license": "MIT",
+  "repository": " git@github.com:focuson-ts/focuson.git",
+  "scripts": {
+    "start": "parcel public/index.html",
+    "build": "parcel build public/index.html",
+    "test": "jest --config jest.config.json",
+    "test:watch": "npm run test -- --watch"
+  }
+}

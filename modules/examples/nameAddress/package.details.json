@@ -1,0 +1,18 @@
+{
+  "template": "react",
+  "name": "@focuson/example_name_address",
+  "description": "Shows how the lenses are used in react for a simple form.",
+  "packageJson": {
+    "dependencies": {
+    },
+    "devDependencies": {}
+  },
+  "links": [
+    "@focuson/state"
+  ],
+  "guards": {
+    "compile": true,
+    "publish": true,
+    "test": false
+  }
+}

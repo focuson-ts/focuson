@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "test":         {
+      "description": "runs ${packageManager} test",
+      "inLinksOrder": true, "showShell": true,
+      "guard":       {"value": "${packageDetails.guards.test}", "default": true},
+      "commands":    [{"name": "test", "command": "${packageManager} test", "status": true}]
+    },
+    "ls-tests":     {
+      "description": "lists the projects with tests in them",
+      "guard":       "${packageDetails.guards.test}",
+      "commands":    ["js:process.cwd()"]
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "template": "typescript",
+  "name": "@focuson/utils",
+  "description": "Simple utils for typescript",
+  "packageJson": {
+    "dependencies": {
+    },
+    "devDependencies": {}
+  },
+  "links": [
+
+  ],
+  "guards": {
+    "compile": true,
+    "publish": true,
+    "test": false
+  }
+}

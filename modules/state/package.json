@@ -1,4 +1,7 @@
 {
+  "name": "@focuson/state",
+  "description": "Simple state for react using lenses.",
+  "version": "2.0.0",
   "browserslist": {
     "development": [
       "last 1 chrome version",
@@ -12,50 +15,53 @@
     ]
   },
   "dependencies": {
-    "@focuson/lens": "1.44.1"
+    "@focuson/events": "2.0.0",
+    "@focuson/utils": "2.0.0",
+    "debug": ""
   },
   "devDependencies": {
-    "@types/node": "^14.14.7",
-    "npm-check-updates": "^10.0.0",
-    "typescript": "^4.1.5",
-    "@testing-library/jest-dom": "^5.11.5",
-    "@testing-library/user-event": "^12.2.0",
-    "@types/jest": "^26.0.15",
-    "jest": "^26.6.0",
-    "ts-jest": "^26.4.4"
+    "@babel/preset-react": "",
+    "@types/react": "",
+    "@types/react-dom": "",
+    "parcel": "2.9.3",
+    "typescript": "5.6.3"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "**/*.stories.*"
+        ],
+        "rules": {
+          "import/no-anonymous-default-export": "off"
+        }
+      }
+    ]
   },
   "files": [
-    "LICENSE.md",
-    "README.md",
     "dist/index.js",
     "dist/index.d.ts",
-    "dist/src/"
+    "dist/src/",
+    "build/"
   ],
   "keywords": [
-    "functionalprogramming",
-    "lens",
-    "optics"
+    "react",
+    "runbook"
   ],
   "license": "MIT",
-  "main": "dist/index",
-  "types": "dist/index",
-  "repository": "github:focuson-ts/focuson",
+  "peerDependencies": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "repository": " git@github.com:focuson-ts/focuson.git",
   "scripts": {
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html",
     "test": "jest --config jest.config.json",
     "test:watch": "npm run test -- --watch"
-  },
-  "version": "1.44.1",
-  "template": "noreact",
-  "description": "Uses the lens defined in @focuson/lens to implement state for tools such as react",
-  "details": {
-    "ideify": true,
-    "publish": true,
-    "links": [
-      "@focuson/lens"
-    ],
-    "extraDeps": {},
-    "extraDevDeps": {},
-    "tsc": true
-  },
-  "name": "@focuson/state"
+  }
 }

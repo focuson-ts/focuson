@@ -1,0 +1,21 @@
+{
+  "template": "react_library",
+  "name": "@focuson/components",
+  "description": "The core react components for focuson",
+  "packageJson": {
+    "dependencies": {
+    },
+    "devDependencies": {}
+  },
+  "links": [
+    "@focuson/events",
+    "@focuson/lens",
+    "@focuson/state",
+    "@focuson/utils"
+  ],
+  "guards": {
+    "compile": true,
+    "publish": true,
+    "test": false
+  }
+}
